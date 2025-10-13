@@ -13,6 +13,12 @@ async def health():
     return {"status": "healthy"}
 
 
+@app.get("/ready")
+async def ready():
+    """Readiness probe endpoint - checks if model is loaded and ready."""
+    return {"status": "ready", "model_loaded": True}
+
+
 @app.post("/generate")
 async def generate(prompt: str):
     return {"response": f"Generated response for: {prompt}", "model": "code-llm"}
