@@ -1,0 +1,7 @@
+{
+  "name": "ui-domain-finance",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ui/domain-finance",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:ui", "domain:finance"]
+}

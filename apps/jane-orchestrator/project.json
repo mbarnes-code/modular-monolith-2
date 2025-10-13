@@ -1,0 +1,23 @@
+{
+  "name": "jane-orchestrator",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/jane-orchestrator",
+  "projectType": "application",
+  "tags": ["type:app", "framework:fastapi", "language:python"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m uvicorn src.api.main:app --reload --port 8000",
+        "cwd": "apps/jane-orchestrator"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m pytest",
+        "cwd": "apps/jane-orchestrator"
+      }
+    }
+  }
+}
