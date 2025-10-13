@@ -1,0 +1,126 @@
+version: '3.8'
+
+services:
+  jane-ui:
+    build:
+      context: ../../
+      dockerfile: apps/jane-ui/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=staging
+      - NEXT_PUBLIC_API_URL=http://jane-orchestrator:8000
+      - LOG_LEVEL=INFO
+    restart: unless-stopped
+    depends_on:
+      - jane-orchestrator
+    networks:
+      - jane-network
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  jane-orchestrator:
+    build:
+      context: ../../
+      dockerfile: apps/jane-orchestrator/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=staging
+      - LOG_LEVEL=INFO
+      - CYBER_LLM_URL=http://cyber-llm:8001
+      - MTG_LLM_URL=http://mtg-llm:8002
+      - CODE_LLM_URL=http://code-llm:8003
+    restart: unless-stopped
+    depends_on:
+      - cyber-llm
+      - mtg-llm
+      - code-llm
+    networks:
+      - jane-network
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  cyber-llm:
+    build:
+      context: ../../
+      dockerfile: apps/cyber-llm-server/Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - ENVIRONMENT=staging
+      - LOG_LEVEL=INFO
+      - MODEL_NAME=cyber-model
+    restart: unless-stopped
+    networks:
+      - jane-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+
+  mtg-llm:
+    build:
+      context: ../../
+      dockerfile: apps/mtg-llm-server/Dockerfile
+    ports:
+      - "8002:8002"
+    environment:
+      - ENVIRONMENT=staging
+      - LOG_LEVEL=INFO
+      - MODEL_NAME=mtg-model
+    restart: unless-stopped
+    networks:
+      - jane-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+
+  code-llm:
+    build:
+      context: ../../
+      dockerfile: apps/code-llm-server/Dockerfile
+    ports:
+      - "8003:8003"
+    environment:
+      - ENVIRONMENT=staging
+      - LOG_LEVEL=INFO
+      - MODEL_NAME=code-model
+    restart: unless-stopped
+    networks:
+      - jane-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+
+networks:
+  jane-network:
+    driver: bridge

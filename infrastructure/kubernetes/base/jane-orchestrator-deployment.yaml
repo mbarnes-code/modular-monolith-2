@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jane-orchestrator
+  labels:
+    app: jane-orchestrator
+    app.kubernetes.io/name: jane-orchestrator
+    app.kubernetes.io/component: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jane-orchestrator
+  template:
+    metadata:
+      labels:
+        app: jane-orchestrator
+    spec:
+      containers:
+      - name: jane-orchestrator
+        image: jane-orchestrator:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: CYBER_LLM_URL
+          value: "http://cyber-llm:8001"
+        - name: MTG_LLM_URL
+          value: "http://mtg-llm:8002"
+        - name: CODE_LLM_URL
+          value: "http://code-llm:8003"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jane-orchestrator
+  labels:
+    app: jane-orchestrator
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: jane-orchestrator

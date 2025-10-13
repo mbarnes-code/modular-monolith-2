@@ -1,0 +1,24 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.black-formatter",
+    "nrwl.angular-console",
+    "ms-azuretools.vscode-docker",
+    "redhat.vscode-yaml",
+    "hashicorp.terraform",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "rust-lang.rust-analyzer",
+    "redhat.java",
+    "vscjava.vscode-java-pack",
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "streetsidesoftware.code-spell-checker",
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-preview-github-styles"
+  ]
+}

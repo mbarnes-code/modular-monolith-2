@@ -1,0 +1,194 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.REGISTRY_URL }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      
+      - name: Generate version
+        id: version
+        run: |
+          VERSION=$(date +%Y%m%d)-${GITHUB_SHA::7}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Generated version: $VERSION"
+      
+      - name: Build and push Jane UI
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/jane-ui/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.REGISTRY_URL }}/jane-ui:${{ steps.version.outputs.version }}
+            ${{ secrets.REGISTRY_URL }}/jane-ui:latest
+          cache-from: type=registry,ref=${{ secrets.REGISTRY_URL }}/jane-ui:latest
+          cache-to: type=inline
+      
+      - name: Build and push Jane Orchestrator
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/jane-orchestrator/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.REGISTRY_URL }}/jane-orchestrator:${{ steps.version.outputs.version }}
+            ${{ secrets.REGISTRY_URL }}/jane-orchestrator:latest
+          cache-from: type=registry,ref=${{ secrets.REGISTRY_URL }}/jane-orchestrator:latest
+          cache-to: type=inline
+      
+      - name: Build and push Cyber LLM Server
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/cyber-llm-server/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.REGISTRY_URL }}/cyber-llm:${{ steps.version.outputs.version }}
+            ${{ secrets.REGISTRY_URL }}/cyber-llm:latest
+          cache-from: type=registry,ref=${{ secrets.REGISTRY_URL }}/cyber-llm:latest
+          cache-to: type=inline
+      
+      - name: Build and push MTG LLM Server
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/mtg-llm-server/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.REGISTRY_URL }}/mtg-llm:${{ steps.version.outputs.version }}
+            ${{ secrets.REGISTRY_URL }}/mtg-llm:latest
+          cache-from: type=registry,ref=${{ secrets.REGISTRY_URL }}/mtg-llm:latest
+          cache-to: type=inline
+      
+      - name: Build and push Code LLM Server
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/code-llm-server/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.REGISTRY_URL }}/code-llm:${{ steps.version.outputs.version }}
+            ${{ secrets.REGISTRY_URL }}/code-llm:latest
+          cache-from: type=registry,ref=${{ secrets.REGISTRY_URL }}/code-llm:latest
+          cache-to: type=inline
+
+  deploy-staging:
+    name: Deploy to Staging
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event.inputs.environment == 'staging' || github.event.inputs.environment == ''
+    environment:
+      name: staging
+      url: https://staging.example.com
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+      
+      - name: Configure kubectl
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_STAGING }}" | base64 -d > ~/.kube/config
+      
+      - name: Update image tags
+        run: |
+          cd infrastructure/kubernetes/overlays/staging
+          kustomize edit set image \
+            jane-ui=${{ secrets.REGISTRY_URL }}/jane-ui:${{ needs.build-and-push.outputs.version }} \
+            jane-orchestrator=${{ secrets.REGISTRY_URL }}/jane-orchestrator:${{ needs.build-and-push.outputs.version }} \
+            cyber-llm=${{ secrets.REGISTRY_URL }}/cyber-llm:${{ needs.build-and-push.outputs.version }} \
+            mtg-llm=${{ secrets.REGISTRY_URL }}/mtg-llm:${{ needs.build-and-push.outputs.version }} \
+            code-llm=${{ secrets.REGISTRY_URL }}/code-llm:${{ needs.build-and-push.outputs.version }}
+      
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -k infrastructure/kubernetes/overlays/staging/
+          kubectl rollout status deployment/staging-jane-ui -n jane-services --timeout=5m
+          kubectl rollout status deployment/staging-jane-orchestrator -n jane-services --timeout=5m
+      
+      - name: Run smoke tests
+        run: |
+          # Add smoke test commands here
+          echo "Running smoke tests..."
+
+  deploy-production:
+    name: Deploy to Production
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event.inputs.environment == 'production'
+    environment:
+      name: production
+      url: https://jane.example.com
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+      
+      - name: Configure kubectl
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_PRODUCTION }}" | base64 -d > ~/.kube/config
+      
+      - name: Update image tags
+        run: |
+          cd infrastructure/kubernetes/overlays/production
+          kustomize edit set image \
+            jane-ui=${{ secrets.REGISTRY_URL }}/jane-ui:${{ needs.build-and-push.outputs.version }} \
+            jane-orchestrator=${{ secrets.REGISTRY_URL }}/jane-orchestrator:${{ needs.build-and-push.outputs.version }} \
+            cyber-llm=${{ secrets.REGISTRY_URL }}/cyber-llm:${{ needs.build-and-push.outputs.version }} \
+            mtg-llm=${{ secrets.REGISTRY_URL }}/mtg-llm:${{ needs.build-and-push.outputs.version }} \
+            code-llm=${{ secrets.REGISTRY_URL }}/code-llm:${{ needs.build-and-push.outputs.version }}
+      
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -k infrastructure/kubernetes/overlays/production/
+          kubectl rollout status deployment/prod-jane-ui -n jane-services --timeout=10m
+          kubectl rollout status deployment/prod-jane-orchestrator -n jane-services --timeout=10m
+      
+      - name: Run smoke tests
+        run: |
+          # Add smoke test commands here
+          echo "Running production smoke tests..."
+      
+      - name: Notify deployment
+        if: success()
+        run: |
+          echo "Deployment to production completed successfully"
+          # Add notification logic (Slack, email, etc.)

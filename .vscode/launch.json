@@ -1,0 +1,127 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Jane UI",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["nx", "serve", "jane-ui"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "Debug Jane Orchestrator",
+      "type": "python",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "src.api.main:app",
+        "--reload",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ],
+      "cwd": "${workspaceFolder}/apps/jane-orchestrator",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/jane-orchestrator"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Cyber LLM Server",
+      "type": "python",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "src.api.main:app",
+        "--reload",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8001"
+      ],
+      "cwd": "${workspaceFolder}/apps/cyber-llm-server",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/cyber-llm-server"
+      },
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Debug MTG LLM Server",
+      "type": "python",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "src.api.main:app",
+        "--reload",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8002"
+      ],
+      "cwd": "${workspaceFolder}/apps/mtg-llm-server",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/mtg-llm-server"
+      },
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Debug Code LLM Server",
+      "type": "python",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "src.api.main:app",
+        "--reload",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8003"
+      ],
+      "cwd": "${workspaceFolder}/apps/code-llm-server",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/code-llm-server"
+      },
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Attach to Docker Container",
+      "type": "python",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "/app"
+        }
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug All Services",
+      "configurations": [
+        "Debug Jane UI",
+        "Debug Jane Orchestrator",
+        "Debug Cyber LLM Server",
+        "Debug MTG LLM Server",
+        "Debug Code LLM Server"
+      ],
+      "stopAll": true
+    }
+  ]
+}
