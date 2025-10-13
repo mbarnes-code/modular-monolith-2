@@ -221,16 +221,17 @@ jane-monorepo/
 |------------|---------|-------|
 | Node.js | 20.x | Specified in .nvmrc |
 | Python | 3.12.x | Specified in .python-version |
-| Next.js | 15.5.2 | Exact version (no ^ or ~) |
-| React | 19.1.0 | Exact version (no ^ or ~) |
-| React DOM | 19.1.0 | Exact version (no ^ or ~) |
+| Next.js | 15.5.4 | Exact version (no ^ or ~) |
+| React | 19.2.0 | Exact version (no ^ or ~) |
+| React DOM | 19.2.0 | Exact version (no ^ or ~) |
 | NX | 21.6.4 | Exact version (no ^ or ~) |
-| TypeScript | 5.8.3 | Exact version (no ^ or ~) |
-| FastAPI | 0.115.0 | Exact version (==) |
-| Django | 4.2.0 | Exact version (==) |
-| SQLAlchemy | 2.0.0 | Exact version (==) |
-| Uvicorn | 0.34.2 | Exact version (==) |
-| Pydantic | 2.0.0 | Exact version (==) |
+| TypeScript | 5.9.3 | Exact version (no ^ or ~) |
+| FastAPI | 0.119.0 | Exact version (==) |
+| Django | 5.2.7 | Exact version (==) |
+| SQLAlchemy | 2.0.44 | Exact version (==) |
+| Uvicorn | 0.37.0 | Exact version (==) |
+| Pydantic | 2.12.0 | Exact version (==) |
+| vLLM | 0.11.0 | Exact version (==) |
 | Rust | 1.70+ | For specific integrations |
 | Java | 17 LTS | For specific integrations |
 
