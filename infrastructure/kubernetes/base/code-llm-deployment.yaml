@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-llm
+  labels:
+    app: code-llm
+    app.kubernetes.io/name: code-llm
+    app.kubernetes.io/component: llm-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: code-llm
+  template:
+    metadata:
+      labels:
+        app: code-llm
+    spec:
+      containers:
+      - name: code-llm
+        image: code-llm:latest
+        ports:
+        - containerPort: 8003
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: MODEL_NAME
+          value: "code-model"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8003
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8003
+          initialDelaySeconds: 30
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: code-llm
+  labels:
+    app: code-llm
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8003
+    targetPort: 8003
+    protocol: TCP
+  selector:
+    app: code-llm

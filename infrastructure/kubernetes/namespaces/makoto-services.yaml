@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: makoto-services
+  labels:
+    name: makoto-services
+    app.kubernetes.io/name: makoto-services
+    app.kubernetes.io/part-of: jane-monorepo

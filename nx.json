@@ -10,10 +10,27 @@
       "dependsOn": ["^build"]
     },
     "test": {
-      "cache": true
+      "cache": true,
+      "dependsOn": ["^build"]
     },
     "lint": {
       "cache": true
+    },
+    "deploy": {
+      "cache": false,
+      "dependsOn": ["build"]
+    },
+    "affected:build": {
+      "cache": true
+    },
+    "affected:test": {
+      "cache": true
+    },
+    "affected:lint": {
+      "cache": true
+    },
+    "affected:deploy": {
+      "cache": false
     }
   },
   "namedInputs": {
@@ -44,7 +61,7 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test"]
+        "cacheableOperations": ["build", "lint", "test", "affected:build", "affected:test", "affected:lint"]
       }
     }
   }

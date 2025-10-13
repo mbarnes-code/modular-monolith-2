@@ -20,6 +20,27 @@ pip-delete-this-directory.txt
 *.egg-info/
 dist/
 build/
+.tox/
+.eggs/
+*.egg
+
+# Rust
+target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+.gradle/
+build/
+.m2/
+.classpath
+.project
+.settings/
 
 # Testing
 coverage/
@@ -27,6 +48,9 @@ coverage/
 .coverage.*
 htmlcov/
 .nyc_output
+*.cover
+.hypothesis/
+.pytest_cache/
 
 # Production builds
 dist/
@@ -47,12 +71,13 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# IDE
-.vscode/
+# IDE - Keep .vscode as it contains recommended settings
 .idea/
 *.swp
 *.swo
 *~
+*.iml
+.vscode/settings.json.user
 
 # NX
 .nx/
@@ -65,5 +90,13 @@ temp/
 .terraform/
 .terraform.lock.hcl
 
+# Kubernetes
+kubeconfig
+
+# Docker
+.dockerignore
+
 # OS
 Thumbs.db
+.AppleDouble
+.LSOverride
