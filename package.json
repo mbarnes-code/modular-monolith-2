@@ -1,0 +1,32 @@
+{
+  "name": "jane-monorepo",
+  "version": "1.0.0",
+  "description": "NX Monorepo with FastAPI, Next.js 15, React 19, and LLM servers",
+  "scripts": {
+    "test": "nx test",
+    "build": "nx build",
+    "lint": "nx lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "devDependencies": {
+    "@nx/eslint": "21.6.4",
+    "@nx/js": "21.6.4",
+    "@nx/next": "21.6.4",
+    "@nx/react": "21.6.4",
+    "@nx/workspace": "21.6.4",
+    "@types/node": "22.13.6",
+    "@types/react": "19.0.6",
+    "@types/react-dom": "19.0.6",
+    "eslint": "9.20.0",
+    "nx": "21.6.4",
+    "typescript": "5.7.3"
+  },
+  "dependencies": {
+    "next": "15.5.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  }
+}

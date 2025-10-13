@@ -1,0 +1,23 @@
+{
+  "name": "orchestrator",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/orchestrator",
+  "projectType": "application",
+  "tags": ["type:app", "framework:fastapi", "language:python"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m uvicorn main:app --reload --port 8000",
+        "cwd": "apps/orchestrator"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m pytest",
+        "cwd": "apps/orchestrator"
+      }
+    }
+  }
+}
