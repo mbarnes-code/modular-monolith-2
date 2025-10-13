@@ -17,7 +17,12 @@
     "@nx/next": "21.6.4",
     "@nx/react": "21.6.4",
     "@nx/workspace": "21.6.4",
-    "nx": "21.6.4"
+    "@types/node": "22.13.6",
+    "@types/react": "19.0.6",
+    "@types/react-dom": "19.0.6",
+    "eslint": "9.20.0",
+    "nx": "21.6.4",
+    "typescript": "5.7.3"
   },
   "dependencies": {
     "next": "15.5.2",
