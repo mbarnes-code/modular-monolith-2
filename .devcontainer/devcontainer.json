@@ -1,0 +1,66 @@
+{
+  "name": "Modular Monolith Development",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "postCreateCommand": "chmod +x setup-codespace.sh && ./setup-codespace.sh",
+  "forwardPorts": [3000, 8000, 8001, 8002, 8003],
+  "portsAttributes": {
+    "3000": {
+      "label": "Jane UI (Next.js)",
+      "onAutoForward": "notify"
+    },
+    "8000": {
+      "label": "Jane Orchestrator (FastAPI)",
+      "onAutoForward": "notify"
+    },
+    "8001": {
+      "label": "Cyber LLM Server",
+      "onAutoForward": "ignore"
+    },
+    "8002": {
+      "label": "MTG LLM Server", 
+      "onAutoForward": "ignore"
+    },
+    "8003": {
+      "label": "Code LLM Server",
+      "onAutoForward": "ignore"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.flake8",
+        "ms-python.pylint",
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-eslint",
+        "nrwl.angular-console",
+        "ms-vscode.makefile-tools",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/python/current/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.provider": "black",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit"
+        },
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "nx.enableTelemetry": false
+      }
+    }
+  },
+  "remoteUser": "codespace"
+}

@@ -255,6 +255,7 @@ Create workflows that use these tools in sequence(like with n8n)
 
 curl -LsSf https://astral.sh/uv/install.sh | sh
 uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+make install
 
 
 commander spellbook Optimization Opportunities (Post-Migration)

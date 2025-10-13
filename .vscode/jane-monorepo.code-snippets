@@ -1,0 +1,151 @@
+{
+  // TypeScript/JavaScript Snippets
+  "NX Library Import": {
+    "prefix": "nximport",
+    "body": [
+      "import { $2 } from '@jane-monorepo/$1';$0"
+    ],
+    "description": "Import from NX monorepo library"
+  },
+
+  "React Component with Types": {
+    "prefix": "nxcomponent",
+    "body": [
+      "import React from 'react';",
+      "",
+      "interface ${1:ComponentName}Props {",
+      "  $2",
+      "}",
+      "",
+      "export const $1: React.FC<$1Props> = ({ $3 }) => {",
+      "  return (",
+      "    <div>$0</div>",
+      "  );",
+      "};",
+      "",
+      "export default $1;"
+    ],
+    "description": "Create React component with TypeScript interface"
+  },
+
+  "FastAPI Route": {
+    "prefix": "fastapi-route",
+    "body": [
+      "@router.${1:get}(\"/${2:endpoint}\")",
+      "async def ${3:function_name}($4) -> ${5:ResponseType}:",
+      "    \"\"\"$6\"\"\"",
+      "    $0"
+    ],
+    "description": "FastAPI route definition"
+  },
+
+  "FastAPI Model": {
+    "prefix": "fastapi-model",
+    "body": [
+      "from pydantic import BaseModel",
+      "from typing import Optional",
+      "",
+      "class ${1:ModelName}(BaseModel):",
+      "    \"\"\"$2\"\"\"",
+      "    $0",
+      "",
+      "    class Config:",
+      "        from_attributes = True"
+    ],
+    "description": "Pydantic model for FastAPI"
+  },
+
+  "Python Async Function": {
+    "prefix": "async-func",
+    "body": [
+      "async def ${1:function_name}($2) -> ${3:ReturnType}:",
+      "    \"\"\"$4\"\"\"",
+      "    $0"
+    ],
+    "description": "Python async function with type hints"
+  },
+
+  "NX Project Configuration": {
+    "prefix": "nx-project",
+    "body": [
+      "{",
+      "  \"name\": \"${1:project-name}\",",
+      "  \"$schema\": \"../../node_modules/nx/schemas/project-schema.json\",",
+      "  \"sourceRoot\": \"${2:apps/project-name/src}\",",
+      "  \"projectType\": \"${3:application}\",",
+      "  \"targets\": {",
+      "    \"build\": {",
+      "      \"executor\": \"@nx/${4:js}:${5:tsc}\",",
+      "      \"outputs\": [\"{options.outputPath}\"],",
+      "      \"options\": {",
+      "        \"outputPath\": \"dist/${2:apps/project-name}\",",
+      "        \"main\": \"${2}/main.${6:ts}\",",
+      "        \"tsConfig\": \"${2}/tsconfig.app.json\"$0",
+      "      }",
+      "    }",
+      "  }",
+      "}"
+    ],
+    "description": "NX project.json configuration"
+  },
+
+  "Docker Health Check": {
+    "prefix": "docker-health",
+    "body": [
+      "HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\",
+      "  CMD curl -f http://localhost:${1:8000}/health || exit 1"
+    ],
+    "description": "Docker healthcheck instruction"
+  },
+
+  "Environment Variable": {
+    "prefix": "env-var",
+    "body": [
+      "${1:VARIABLE_NAME}=${2:default_value}"
+    ],
+    "description": "Environment variable definition"
+  },
+
+  "TypeScript Interface": {
+    "prefix": "ts-interface",
+    "body": [
+      "export interface ${1:InterfaceName} {",
+      "  ${2:property}: ${3:type};$0",
+      "}"
+    ],
+    "description": "TypeScript interface definition"
+  },
+
+  "Jest Test Suite": {
+    "prefix": "jest-describe",
+    "body": [
+      "describe('${1:TestSuite}', () => {",
+      "  beforeEach(() => {",
+      "    $2",
+      "  });",
+      "",
+      "  it('should ${3:test description}', () => {",
+      "    $0",
+      "  });",
+      "});"
+    ],
+    "description": "Jest test suite with describe and it blocks"
+  },
+
+  "Python Test Function": {
+    "prefix": "pytest-func",
+    "body": [
+      "def test_${1:function_name}():",
+      "    \"\"\"Test ${2:description}.\"\"\"",
+      "    # Arrange",
+      "    $3",
+      "",
+      "    # Act",
+      "    $4",
+      "",
+      "    # Assert",
+      "    assert $0"
+    ],
+    "description": "Python test function with pytest structure"
+  }
+}

@@ -1,0 +1,261 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // Frontend Development
+    {
+      "name": "Debug Jane UI (Next.js)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["nx", "serve", "jane-ui"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug Jane UI (Build)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["nx", "build", "jane-ui"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+
+    // Backend Services - Development Mode
+    {
+      "name": "Debug Jane Orchestrator",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "src.api.main:app",
+        "--reload",
+        "--host", "0.0.0.0",
+        "--port", "8000",
+        "--log-level", "debug"
+      ],
+      "cwd": "${workspaceFolder}/apps/jane-orchestrator",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/jane-orchestrator",
+        "DEBUG": "1",
+        "ENVIRONMENT": "development"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "stopOnEntry": false
+    },
+    {
+      "name": "Debug Cyber LLM Server",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "src.api.main:app",
+        "--reload",
+        "--host", "0.0.0.0",
+        "--port", "8001",
+        "--log-level", "debug"
+      ],
+      "cwd": "${workspaceFolder}/apps/cyber-llm-server",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/cyber-llm-server",
+        "DEBUG": "1",
+        "ENVIRONMENT": "development"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Debug MTG LLM Server",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "src.api.main:app",
+        "--reload",
+        "--host", "0.0.0.0",
+        "--port", "8002",
+        "--log-level", "debug"
+      ],
+      "cwd": "${workspaceFolder}/apps/mtg-llm-server",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/mtg-llm-server",
+        "DEBUG": "1",
+        "ENVIRONMENT": "development"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Code LLM Server",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "src.api.main:app",
+        "--reload",
+        "--host", "0.0.0.0",
+        "--port", "8003",
+        "--log-level", "debug"
+      ],
+      "cwd": "${workspaceFolder}/apps/code-llm-server",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/code-llm-server",
+        "DEBUG": "1",
+        "ENVIRONMENT": "development"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+
+    // Test Runners
+    {
+      "name": "Debug Python Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "-v",
+        "--tb=short",
+        "${workspaceFolder}/apps/jane-orchestrator/tests"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/jane-orchestrator"
+      }
+    },
+    {
+      "name": "Debug Current Python Test File",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-v", "${file}"],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Debug TypeScript Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["nx", "test", "jane-ui"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+
+    // Utility Debugging
+    {
+      "name": "Python: Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Python: Current File with Args",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "args": ["${input:pythonArgs}"]
+    },
+
+    // Docker Debugging
+    {
+      "name": "Attach to Orchestrator Docker",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/apps/jane-orchestrator",
+          "remoteRoot": "/app"
+        }
+      ],
+      "justMyCode": false
+    },
+    {
+      "name": "Attach to LLM Server Docker",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5679
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "/app"
+        }
+      ],
+      "justMyCode": false
+    }
+  ],
+  "compounds": [
+    {
+      "name": "🚀 Debug All Services",
+      "configurations": [
+        "Debug Jane Orchestrator",
+        "Debug Cyber LLM Server",
+        "Debug MTG LLM Server",
+        "Debug Code LLM Server"
+      ],
+      "stopAll": true,
+      "presentation": {
+        "hidden": false,
+        "group": "Main",
+        "order": 1
+      }
+    },
+    {
+      "name": "🌐 Debug Full Stack",
+      "configurations": [
+        "Debug Jane UI (Next.js)",
+        "Debug Jane Orchestrator"
+      ],
+      "stopAll": true,
+      "presentation": {
+        "hidden": false,
+        "group": "Main",
+        "order": 2
+      }
+    },
+    {
+      "name": "🧪 Debug Backend + Tests",
+      "configurations": [
+        "Debug Jane Orchestrator",
+        "Debug Python Tests"
+      ],
+      "stopAll": true,
+      "presentation": {
+        "hidden": false,
+        "group": "Testing",
+        "order": 1
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "pythonArgs",
+      "description": "Python script arguments",
+      "default": "",
+      "type": "promptString"
+    }
+  ]
+}

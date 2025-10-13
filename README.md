@@ -95,14 +95,49 @@ jane-monorepo/
 - Python 3.12.x
 - npm
 
-## Setup
+## Quick Start (Codespace/New Environment)
+
+For new codespaces or fresh environments, use our automated setup scripts:
+
+### 🚀 Full Setup (Recommended)
+
+```bash
+./setup-codespace.sh
+```
+
+This script will:
+
+- Update and upgrade system packages
+- Install UV (modern Python package installer)
+- Install specify-cli for project specification management
+- Install all Node.js and Python dependencies
+- Verify all tools and configurations
+- Set up environment files
+- Test basic functionality
+
+### ⚡ Quick Setup (Minimal)
+
+```bash
+./quick-setup.sh
+```
+
+A faster version that installs only the essentials.
+
+### 🔧 Manual Setup
+
+If you prefer manual installation:
 
 1. Install Node.js dependencies:
    ```bash
    npm install
    ```
 
-2. Install Python dependencies for each service:
+2. Install Python dependencies using the Makefile:
+   ```bash
+   make install
+   ```
+
+   Or manually for each service:
    ```bash
    pip install -r apps/jane-orchestrator/requirements.txt
    pip install -r apps/cyber-llm-server/requirements.txt

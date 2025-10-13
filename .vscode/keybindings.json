@@ -1,0 +1,71 @@
+[
+  {
+    "key": "ctrl+shift+b",
+    "command": "workbench.action.tasks.build",
+    "when": "!inDebugMode"
+  },
+  {
+    "key": "ctrl+shift+t",
+    "command": "workbench.action.tasks.test",
+    "when": "!inDebugMode"
+  },
+  {
+    "key": "ctrl+shift+r",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Serve Jane UI"
+  },
+  {
+    "key": "ctrl+shift+o",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Serve Jane Orchestrator"
+  },
+  {
+    "key": "ctrl+shift+d",
+    "command": "workbench.action.debug.selectandstart"
+  },
+  {
+    "key": "ctrl+shift+g",
+    "command": "workbench.action.tasks.runTask",
+    "args": "NX: Graph"
+  },
+  {
+    "key": "ctrl+shift+f5",
+    "command": "workbench.action.debug.restart"
+  },
+  {
+    "key": "ctrl+shift+f9",
+    "command": "workbench.action.debug.stop"
+  },
+  {
+    "key": "ctrl+k ctrl+f",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Format All"
+  },
+  {
+    "key": "ctrl+k ctrl+l",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Lint All"
+  },
+  {
+    "key": "ctrl+k ctrl+c",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Setup: Clean All"
+  },
+  {
+    "key": "ctrl+k ctrl+i",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Setup: Install Dependencies"
+  },
+  {
+    "key": "ctrl+shift+p",
+    "command": "workbench.action.showCommands"
+  },
+  {
+    "key": "ctrl+k ctrl+s",
+    "command": "workbench.action.openGlobalKeybindings"
+  },
+  {
+    "key": "ctrl+k ctrl+w",
+    "command": "workbench.action.openWorkspaceSettings"
+  }
+]

@@ -1,0 +1,288 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    // Development Tasks
+    {
+      "label": "Serve Jane UI",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "jane-ui"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "webpack is watching the files",
+          "endsPattern": "Local:.*http://localhost:3000"
+        }
+      }
+    },
+    {
+      "label": "Serve Jane Orchestrator",
+      "type": "shell",
+      "command": "uvicorn",
+      "args": [
+        "src.api.main:app",
+        "--reload",
+        "--host", "0.0.0.0",
+        "--port", "8000"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/apps/jane-orchestrator",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/apps/jane-orchestrator"
+        }
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "INFO:.*Started server process",
+          "endsPattern": "INFO:.*Uvicorn running on"
+        }
+      }
+    },
+
+    // Build Tasks
+    {
+      "label": "Build All",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "run-many", "--target=build", "--all"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc", "$eslint-stylish"]
+    },
+    {
+      "label": "Build Jane UI",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "jane-ui"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc", "$eslint-stylish"]
+    },
+
+    // Test Tasks
+    {
+      "label": "Test All",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "run-many", "--target=test", "--all"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Python Services",
+      "type": "shell",
+      "command": "pytest",
+      "args": ["-v", "apps/jane-orchestrator/tests"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+
+    // Lint Tasks
+    {
+      "label": "Lint All",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "run-many", "--target=lint", "--all"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "label": "Format All",
+      "type": "shell",
+      "command": "npx",
+      "args": ["prettier", "--write", "."],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+
+    // Docker Tasks
+    {
+      "label": "Docker: Build All",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["-f", "infrastructure/docker/docker-compose.yml", "build"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Start All Services",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["-f", "infrastructure/docker/docker-compose.yml", "up", "-d"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Stop All Services",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["-f", "infrastructure/docker/docker-compose.yml", "down"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+
+    // Development Environment
+    {
+      "label": "Setup: Install Dependencies",
+      "type": "shell",
+      "command": "make",
+      "args": ["install"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Setup: Clean All",
+      "type": "shell",
+      "command": "make",
+      "args": ["clean"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+
+    // NX Specific Tasks
+    {
+      "label": "NX: Affected Build",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "affected:build"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc", "$eslint-stylish"]
+    },
+    {
+      "label": "NX: Affected Test",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "affected:test"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "NX: Graph",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "graph"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
