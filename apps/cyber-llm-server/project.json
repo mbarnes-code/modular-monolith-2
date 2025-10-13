@@ -1,0 +1,23 @@
+{
+  "name": "cyber-llm-server",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/cyber-llm-server",
+  "projectType": "application",
+  "tags": ["type:app", "framework:fastapi", "language:python", "service:llm"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m uvicorn src.server:app --reload --port 8001",
+        "cwd": "apps/cyber-llm-server"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m pytest",
+        "cwd": "apps/cyber-llm-server"
+      }
+    }
+  }
+}

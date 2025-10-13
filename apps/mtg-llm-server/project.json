@@ -1,0 +1,23 @@
+{
+  "name": "mtg-llm-server",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/mtg-llm-server",
+  "projectType": "application",
+  "tags": ["type:app", "framework:fastapi", "language:python", "service:llm"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m uvicorn src.server:app --reload --port 8002",
+        "cwd": "apps/mtg-llm-server"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m pytest",
+        "cwd": "apps/mtg-llm-server"
+      }
+    }
+  }
+}
