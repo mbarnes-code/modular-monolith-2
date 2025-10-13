@@ -17,16 +17,16 @@
     "@nx/next": "21.6.4",
     "@nx/react": "21.6.4",
     "@nx/workspace": "21.6.4",
-    "@types/node": "22.13.6",
-    "@types/react": "19.0.6",
-    "@types/react-dom": "19.0.6",
-    "eslint": "9.20.0",
+    "@types/node": "24.7.2",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.1",
+    "eslint": "9.37.0",
     "nx": "21.6.4",
-    "typescript": "5.8.3"
+    "typescript": "5.9.3"
   },
   "dependencies": {
-    "next": "15.5.2",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "next": "15.5.4",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
   }
 }
