@@ -1,0 +1,7 @@
+{
+  "name": "ui-domain-mtg",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ui/domain-mtg",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:ui", "domain:mtg", "language:typescript", "framework:react"]
+}

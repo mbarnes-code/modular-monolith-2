@@ -1,0 +1,23 @@
+{
+  "name": "llm-server-2",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/llm-server-2",
+  "projectType": "application",
+  "tags": ["type:app", "framework:fastapi", "language:python", "service:llm"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m uvicorn main:app --reload --port 8002",
+        "cwd": "apps/llm-server-2"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m pytest",
+        "cwd": "apps/llm-server-2"
+      }
+    }
+  }
+}

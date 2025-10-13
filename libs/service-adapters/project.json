@@ -1,0 +1,7 @@
+{
+  "name": "service-adapters",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/service-adapters",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:shared", "language:typescript"]
+}

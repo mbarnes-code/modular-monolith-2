@@ -1,0 +1,7 @@
+{
+  "name": "ui-domain-productivity",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ui/domain-productivity",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:ui", "domain:productivity", "language:typescript", "framework:react"]
+}

@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  orchestrator:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.orchestrator
+    ports:
+      - "8000:8000"
+    networks:
+      - jane-network
+
+  llm-server-1:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.llm-server
+      args:
+        SERVER_NAME: llm-server-1
+        SERVER_PORT: 8001
+    ports:
+      - "8001:8001"
+    networks:
+      - jane-network
+
+  llm-server-2:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.llm-server
+      args:
+        SERVER_NAME: llm-server-2
+        SERVER_PORT: 8002
+    ports:
+      - "8002:8002"
+    networks:
+      - jane-network
+
+  llm-server-3:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.llm-server
+      args:
+        SERVER_NAME: llm-server-3
+        SERVER_PORT: 8003
+    ports:
+      - "8003:8003"
+    networks:
+      - jane-network
+
+  ui:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.ui
+    ports:
+      - "3000:3000"
+    depends_on:
+      - orchestrator
+    networks:
+      - jane-network
+
+networks:
+  jane-network:
+    driver: bridge

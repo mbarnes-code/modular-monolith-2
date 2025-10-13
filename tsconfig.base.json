@@ -1,0 +1,28 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2022",
+    "module": "esnext",
+    "lib": ["es2022", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@jane-monorepo/shared/types": ["libs/shared/types/index.ts"],
+      "@jane-monorepo/shared/utils": ["libs/shared/utils/index.ts"],
+      "@jane-monorepo/service-adapters": ["libs/service-adapters/index.ts"],
+      "@jane-monorepo/ui/core": ["libs/ui/core/index.ts"],
+      "@jane-monorepo/ui/domain-security": ["libs/ui/domain-security/index.ts"],
+      "@jane-monorepo/ui/domain-mtg": ["libs/ui/domain-mtg/index.ts"],
+      "@jane-monorepo/ui/domain-productivity": ["libs/ui/domain-productivity/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

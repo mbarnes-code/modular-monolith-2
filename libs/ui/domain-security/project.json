@@ -1,0 +1,7 @@
+{
+  "name": "ui-domain-security",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ui/domain-security",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:ui", "domain:security", "language:typescript", "framework:react"]
+}
