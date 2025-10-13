@@ -32,7 +32,7 @@ This directory contains comprehensive VS Code configuration optimized for the Ja
 - **Backend Services**: All FastAPI services with proper environment setup
 - **Test Debugging**: Python pytest and TypeScript test runners
 - **Docker Debugging**: Attach to containerized services
-- **Compound Configurations**: 
+- **Compound Configurations**:
   - 🚀 Debug All Services
   - 🌐 Debug Full Stack (UI + API)
   - 🧪 Debug Backend + Tests
