@@ -1,0 +1,31 @@
+# This file is part of BlackArch Linux ( https://www.blackarch.org/ ).
+# See COPYING for license details.
+
+pkgname=yay
+pkgver=12.5.2
+pkgrel=1
+pkgdesc='Yet another yogurt. Pacman wrapper and AUR helper written in go.'
+arch=('x86_64' 'aarch64')
+groups=('blackarch' 'blackarch-misc')
+url='https://github.com/Jguer/yay'
+license=('GPL3')
+depends=('pacman' 'git')
+makedepends=('go-pie')
+optdepends=('sudo')
+source=("https://github.com/Jguer/$pkgname/archive/v$pkgver.tar.gz")
+sha512sums=('13560e3f62817cf0575d818eb410778cdd48ed02e712c63cf8cb2b0f4976a80df7426c330074af4d73928c2f0667534d158041accef51a3aba74651a822ce321')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  EXTRA_GOFLAGS="-gcflags all=-trimpath=${PWD} -asmflags all=-trimpath=${PWD}" \
+    LDFLAGS="-linkmode external -extldflags \"${LDFLAGS}\"" \
+    make VERSION="$pkgver" DESTDIR="$pkgdir" build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make VERSION="$pkgver" DESTDIR="$pkgdir" PREFIX=/usr install
+}
+

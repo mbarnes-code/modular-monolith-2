@@ -1,0 +1,81 @@
+{
+    "generic": {
+        "server-error": "Произошла непредвиденная ошибка"
+    },
+    "recipe": {
+        "unique-name-error": "Название рецепта должно быть уникальным",
+        "recipe-created": "Рецепт создан",
+        "recipe-defaults": {
+            "ingredient-note": "1 Чашка муки",
+            "step-text": "Шаги рецепта, как и другие поля на странице рецепта, поддерживают синтаксис Markdown.\n\n**Добавить ссылку**\n\n[Моя Ссылка](https://demo.mealie.io)\n"
+        },
+        "servings-text": {
+            "makes": "Получается",
+            "serves": "Порций",
+            "serving": "Порция",
+            "servings": "Порции",
+            "yield": "Количество порций",
+            "yields": "Можно получить"
+        }
+    },
+    "mealplan": {
+        "no-recipes-match-your-rules": "Нет рецептов, соответствующих вашим правилам"
+    },
+    "user": {
+        "user-updated": "Пользователь обновлен",
+        "password-updated": "Пароль обновлен",
+        "invalid-current-password": "Неправильный текущий пароль",
+        "ldap-update-password-unavailable": "Не удается обновить пароль, пользователь контролируется LDAP"
+    },
+    "group": {
+        "report-deleted": "Отчет удален."
+    },
+    "exceptions": {
+        "permission_denied": "У вас нет прав для выполнения этого действия",
+        "no-entry-found": "Запрашиваемый ресурс не найден",
+        "integrity-error": "Ошибка целостности базы данных",
+        "username-conflict-error": "Это имя пользователя уже занято",
+        "email-conflict-error": "Этот адрес эл. почты уже используется"
+    },
+    "notifications": {
+        "generic-created": "{name} был создан",
+        "generic-updated": "{name} был обновлён",
+        "generic-created-with-url": "{name} был создан, {url}",
+        "generic-updated-with-url": "{name} был обновлен, {url}",
+        "generic-duplicated": "Копия {name} была создана",
+        "generic-deleted": "{name} был удален",
+        "logged-out": "Выполнен выход"
+    },
+    "datetime": {
+        "year": "год|лет",
+        "day": "день|дней",
+        "hour": "час|часов",
+        "minute": "минута|минут",
+        "second": "секунда|секунд",
+        "millisecond": "миллисекунда|миллисекунд",
+        "microsecond": "микросекунда|микросекунд"
+    },
+    "emails": {
+        "password": {
+            "subject": "Mealie забыла пароль",
+            "header_text": "Забыл пароль",
+            "message_top": "Вы запросили сброс пароля.",
+            "message_bottom": "Пожалуйста, нажмите на кнопку снизу для сброса пароля.",
+            "button_text": "Сбросить пароль"
+        },
+        "invitation": {
+            "subject": "Приглашение присоединиться к Mealie",
+            "header_text": "Вы приглашены!",
+            "message_top": "Вас пригласили присоединиться к Mealie.",
+            "message_bottom": "Пожалуйста, нажмите на кнопку выше, чтобы принять приглашение.",
+            "button_text": "Принять приглашение"
+        },
+        "test": {
+            "subject": "Тестовое Письмо Mealie",
+            "header_text": "Тестовое Письмо",
+            "message_top": "Это тестовое письмо.",
+            "message_bottom": "Пожалуйста, нажмите на кнопку сверху, чтобы протестировать эл. Почту.",
+            "button_text": "Открыть Mealie"
+        }
+    }
+}
