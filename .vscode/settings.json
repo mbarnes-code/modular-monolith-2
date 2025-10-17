@@ -174,12 +174,7 @@
   // Extension-specific Settings
   "prettier.configPath": ".prettierrc",
   "eslint.workingDirectories": ["apps", "libs"],
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
 
   // Tailwind CSS (for Next.js UI)
   "tailwindCSS.includeLanguages": {
@@ -190,5 +185,7 @@
     "tw`([^`]*)",
     ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
     ["classnames\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-  ]
+  ],
+  "containers.containerCommand": "docker",
+  "containers.enableComposeLanguageService": true
 }
