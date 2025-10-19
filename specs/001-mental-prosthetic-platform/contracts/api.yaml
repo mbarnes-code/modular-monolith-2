@@ -1,0 +1,669 @@
+openapi: 3.0.3
+info:
+  title: Mental Prosthetic Platform API
+  description: Unified API for ADHD/autism executive function support platform
+  version: 1.0.0
+  contact:
+    name: Mental Prosthetic Platform
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+paths:
+  # User Profile Management
+  /api/user/profile:
+    get:
+      summary: Get user profile
+      operationId: getUserProfile
+      tags: [User Management]
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+    put:
+      summary: Update user profile
+      operationId: updateUserProfile
+      tags: [User Management]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileUpdate'
+      responses:
+        '200':
+          description: Profile updated successfully
+
+  # Authentication & Session Management
+  /api/auth/login:
+    post:
+      summary: Authenticate user
+      operationId: login
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /api/auth/refresh:
+    post:
+      summary: Refresh authentication token
+      operationId: refreshToken
+      tags: [Authentication]
+      responses:
+        '200':
+          description: Token refreshed successfully
+
+  # Unified Dashboard
+  /api/dashboard:
+    get:
+      summary: Get unified dashboard data
+      operationId: getDashboard
+      tags: [Dashboard]
+      responses:
+        '200':
+          description: Dashboard data retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardData'
+
+  # Integrated Tools Management
+  /api/tools:
+    get:
+      summary: List all integrated tools
+      operationId: listTools
+      tags: [Tools]
+      parameters:
+        - name: domain
+          in: query
+          schema:
+            type: string
+            enum: [Security, Productivity, MTG, Infrastructure]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [Pending, InProgress, Completed, Failed]
+      responses:
+        '200':
+          description: Tools list retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IntegratedTool'
+
+  /api/tools/{toolId}/status:
+    get:
+      summary: Get tool integration status
+      operationId: getToolStatus
+      tags: [Tools]
+      parameters:
+        - name: toolId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Tool status retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolStatus'
+
+  # Task Management
+  /api/tasks:
+    get:
+      summary: List user tasks
+      operationId: listTasks
+      tags: [Tasks]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [Todo, InProgress, Completed, Cancelled]
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [Low, Medium, High, Critical]
+        - name: toolId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Tasks retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    
+    post:
+      summary: Create new task
+      operationId: createTask
+      tags: [Tasks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /api/tasks/{taskId}:
+    get:
+      summary: Get task details
+      operationId: getTask
+      tags: [Tasks]
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+    
+    put:
+      summary: Update task
+      operationId: updateTask
+      tags: [Tasks]
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+      responses:
+        '200':
+          description: Task updated successfully
+
+  # AI Assistant Integration
+  /api/ai/chat:
+    post:
+      summary: Chat with AI assistant
+      operationId: chatWithAI
+      tags: [AI Assistant]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                context:
+                  type: object
+                  additionalProperties: true
+      responses:
+        '200':
+          description: AI response received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIResponse'
+
+  /api/ai/task-breakdown:
+    post:
+      summary: Request AI task breakdown
+      operationId: requestTaskBreakdown
+      tags: [AI Assistant]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                  format: uuid
+                complexity:
+                  type: string
+                  enum: [Simple, Detailed, Adaptive]
+      responses:
+        '200':
+          description: Task breakdown generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskBreakdown'
+
+  # Service Adapter Endpoints
+  /api/adapters/security/{action}:
+    post:
+      summary: Execute security tool action
+      operationId: executeSecurityAction
+      tags: [Service Adapters]
+      parameters:
+        - name: action
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Action executed successfully
+
+  /api/adapters/productivity/{action}:
+    post:
+      summary: Execute productivity tool action
+      operationId: executeProductivityAction
+      tags: [Service Adapters]
+      parameters:
+        - name: action
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Action executed successfully
+
+  /api/adapters/mtg/{action}:
+    post:
+      summary: Execute MTG tool action
+      operationId: executeMTGAction
+      tags: [Service Adapters]
+      parameters:
+        - name: action
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Action executed successfully
+
+  # WebSocket Endpoints (documented for reference)
+  /ws/ai:
+    get:
+      summary: WebSocket connection for real-time AI communication
+      description: Establishes WebSocket connection for real-time AI interactions
+      tags: [WebSocket]
+      responses:
+        '101':
+          description: WebSocket connection established
+
+  /ws/sync:
+    get:
+      summary: WebSocket connection for real-time synchronization
+      description: Establishes WebSocket connection for real-time data sync
+      tags: [WebSocket]
+      responses:
+        '101':
+          description: WebSocket connection established
+
+components:
+  schemas:
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+        adhdSettings:
+          $ref: '#/components/schemas/ADHDSettings'
+        autismSettings:
+          $ref: '#/components/schemas/AutismSettings'
+        aiPersonality:
+          $ref: '#/components/schemas/AIPersonality'
+        createdAt:
+          type: string
+          format: date-time
+        lastActiveAt:
+          type: string
+          format: date-time
+
+    ADHDSettings:
+      type: object
+      properties:
+        reminderFrequency:
+          type: string
+          enum: [Never, Low, Medium, High]
+        taskBreakdownPreference:
+          type: string
+          enum: [Simple, Detailed, Adaptive]
+        focusSessionLength:
+          type: integer
+          minimum: 5
+          maximum: 120
+
+    AutismSettings:
+      type: object
+      properties:
+        sensoryMode:
+          type: string
+          enum: [Minimal, Standard, Rich]
+        routineReminders:
+          type: boolean
+        communicationStyle:
+          type: string
+          enum: [Direct, Structured, Adaptive]
+
+    AIPersonality:
+      type: object
+      properties:
+        communicationStyle:
+          type: string
+        reminderTone:
+          type: string
+          enum: [Gentle, Direct, Encouraging]
+        proactiveLevel:
+          type: string
+          enum: [Low, Medium, High]
+
+    IntegratedTool:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        domain:
+          type: string
+          enum: [Security, Productivity, MTG, Infrastructure]
+        integrationStatus:
+          type: string
+          enum: [Pending, InProgress, Completed, Failed]
+        businessLogicPreserved:
+          type: boolean
+        capabilities:
+          type: array
+          items:
+            type: string
+        migrationDate:
+          type: string
+          format: date-time
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [Todo, InProgress, Completed, Cancelled]
+        priority:
+          type: string
+          enum: [Low, Medium, High, Critical]
+        dueDate:
+          type: string
+          format: date-time
+        estimatedDuration:
+          type: integer
+        sourceToolId:
+          type: string
+          format: uuid
+        aiBreakdown:
+          type: array
+          items:
+            type: object
+        tags:
+          type: array
+          items:
+            type: string
+        executiveFunctionType:
+          type: string
+          enum: [Planning, Organization, TimeManagement, WorkingMemory]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    AIResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        suggestions:
+          type: array
+          items:
+            type: string
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        contextUsed:
+          type: object
+          additionalProperties: true
+
+    TaskBreakdown:
+      type: object
+      properties:
+        taskId:
+          type: string
+          format: uuid
+        subtasks:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              estimatedDuration:
+                type: integer
+              order:
+                type: integer
+        strategy:
+          type: string
+        difficulty:
+          type: string
+          enum: [Easy, Medium, Hard]
+
+    DashboardData:
+      type: object
+      properties:
+        activeTasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        toolStatuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolStatus'
+        aiInsights:
+          type: array
+          items:
+            type: string
+        syncStatus:
+          $ref: '#/components/schemas/SyncStatus'
+
+    ToolStatus:
+      type: object
+      properties:
+        toolId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [Online, Offline, Error, Syncing]
+        lastSync:
+          type: string
+          format: date-time
+        errorMessage:
+          type: string
+
+    SyncStatus:
+      type: object
+      properties:
+        overall:
+          type: string
+          enum: [Synced, Syncing, Error]
+        components:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              status:
+                type: string
+              lastUpdate:
+                type: string
+                format: date-time
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        expiresIn:
+          type: integer
+        user:
+          $ref: '#/components/schemas/UserProfile'
+
+    UserProfileUpdate:
+      type: object
+      properties:
+        displayName:
+          type: string
+        adhdSettings:
+          $ref: '#/components/schemas/ADHDSettings'
+        autismSettings:
+          $ref: '#/components/schemas/AutismSettings'
+        aiPersonality:
+          $ref: '#/components/schemas/AIPersonality'
+
+    TaskCreate:
+      type: object
+      required: [title, sourceToolId]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum: [Low, Medium, High, Critical]
+        dueDate:
+          type: string
+          format: date-time
+        estimatedDuration:
+          type: integer
+        sourceToolId:
+          type: string
+          format: uuid
+        tags:
+          type: array
+          items:
+            type: string
+        executiveFunctionType:
+          type: string
+          enum: [Planning, Organization, TimeManagement, WorkingMemory]
+
+    TaskUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [Todo, InProgress, Completed, Cancelled]
+        priority:
+          type: string
+          enum: [Low, Medium, High, Critical]
+        dueDate:
+          type: string
+          format: date-time
+        actualDuration:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

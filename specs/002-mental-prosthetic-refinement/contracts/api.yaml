@@ -1,0 +1,1156 @@
+openapi: 3.0.3
+info:
+  title: Mental Prosthetic Platform API
+  description: |
+    Unified API for 37 executive function tools consolidated into a modular monolith.
+    Serves ADHD/autism support across Security, Productivity, MTG, and Infrastructure domains.
+  version: 1.0.0
+  contact:
+    name: Mental Prosthetic Platform
+    email: support@mentalProsthetic.local
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://localhost:8000/api/v1
+    description: Local development server
+  - url: https://jane-orchestrator.local:8000/api/v1
+    description: Home server deployment
+
+security:
+  - JWTAuth: []
+
+paths:
+  # Authentication & User Management
+  /auth/login:
+    post:
+      summary: User authentication
+      description: Authenticate user and establish session across all 37 tools
+      operationId: loginUser
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "adhd_user"
+                password:
+                  type: string
+                  format: password
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: "bearer"
+                  expires_in:
+                    type: integer
+                    example: 3600
+                  user_profile:
+                    $ref: '#/components/schemas/UserProfile'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/refresh:
+    post:
+      summary: Refresh authentication token
+      operationId: refreshToken
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  expires_in:
+                    type: integer
+
+  # Security Domain (13 tools) - Performance Tier: <1s
+  /security/incidents:
+    get:
+      summary: List security incidents
+      description: Retrieve security incidents with MISP integration
+      operationId: listSecurityIncidents
+      tags:
+        - Security
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [open, investigating, resolved, closed]
+        - name: severity
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high, critical]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+      responses:
+        '200':
+          description: List of security incidents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  incidents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SecurityIncident'
+                  pagination:
+                    $ref: '#/components/schemas/PaginationInfo'
+
+    post:
+      summary: Create security incident
+      description: Create new security incident with automated task generation
+      operationId: createSecurityIncident
+      tags:
+        - Security
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSecurityIncidentRequest'
+      responses:
+        '201':
+          description: Security incident created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityIncident'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+
+  /security/incidents/{incident_id}:
+    get:
+      summary: Get security incident details
+      operationId: getSecurityIncident
+      tags:
+        - Security
+      parameters:
+        - name: incident_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Security incident details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityIncident'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /security/malware/analyze:
+    post:
+      summary: Analyze malware sample
+      description: Submit malware sample for analysis using YARA-X and CyberChef
+      operationId: analyzeMalware
+      tags:
+        - Security
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                yara_rules:
+                  type: array
+                  items:
+                    type: string
+                cyberchef_recipe:
+                  type: string
+      responses:
+        '200':
+          description: Malware analysis results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MalwareAnalysis'
+
+  /security/network/events:
+    get:
+      summary: Get network monitoring events
+      description: Retrieve network events from RITA analysis
+      operationId: getNetworkEvents
+      tags:
+        - Security
+      parameters:
+        - name: start_time
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end_time
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: source_ip
+          in: query
+          schema:
+            type: string
+            format: ipv4
+      responses:
+        '200':
+          description: Network events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NetworkEvent'
+
+  # Productivity Domain (8 tools) - Performance Tier: <2s
+  /productivity/tasks:
+    get:
+      summary: List tasks with AI assistance
+      description: Get tasks with AI-generated breakdowns and executive function support
+      operationId: listTasks
+      tags:
+        - Productivity
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [todo, in_progress, done, blocked]
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+        - name: domain
+          in: query
+          description: Filter by cross-domain relationships
+          schema:
+            type: string
+            enum: [security, productivity, mtg, infrastructure]
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+                  ai_suggestions:
+                    $ref: '#/components/schemas/AISuggestions'
+
+    post:
+      summary: Create task with AI breakdown
+      description: Create new task with automatic AI-assisted breakdown for ADHD support
+      operationId: createTask
+      tags:
+        - Productivity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: Task created with AI breakdown
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /productivity/tasks/{task_id}/ai-breakdown:
+    post:
+      summary: Generate AI task breakdown
+      description: Request AI assistance to break down complex task for executive function support
+      operationId: generateTaskBreakdown
+      tags:
+        - Productivity
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: AI-generated task breakdown
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AITaskBreakdown'
+
+  /productivity/automation/workflows:
+    get:
+      summary: List n8n automation workflows
+      operationId: listAutomationWorkflows
+      tags:
+        - Productivity
+      responses:
+        '200':
+          description: List of automation workflows
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AutomationWorkflow'
+
+  /productivity/utilities/{tool_name}:
+    post:
+      summary: Execute IT-Tools utility
+      description: Execute utility from IT-Tools integration
+      operationId: executeUtility
+      tags:
+        - Productivity
+      parameters:
+        - name: tool_name
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "hash-generator"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                input_data:
+                  type: object
+                utility_settings:
+                  type: object
+      responses:
+        '200':
+          description: Utility execution result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UtilityResult'
+
+  # MTG Domain (4 tools) - Performance Tier: <3s
+  /mtg/decks:
+    get:
+      summary: List MTG decks
+      operationId: listMTGDecks
+      tags:
+        - MTG
+      responses:
+        '200':
+          description: List of MTG decks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MTGDeck'
+
+    post:
+      summary: Create MTG deck
+      operationId: createMTGDeck
+      tags:
+        - MTG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMTGDeckRequest'
+      responses:
+        '201':
+          description: MTG deck created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTGDeck'
+
+  /mtg/decks/{deck_id}/analyze:
+    post:
+      summary: Analyze deck with Commander Spellbook
+      description: Analyze deck for combos and optimization using Commander Spellbook integration
+      operationId: analyzeMTGDeck
+      tags:
+        - MTG
+      parameters:
+        - name: deck_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Deck analysis results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTGDeckAnalysis'
+
+  /mtg/cards/search:
+    get:
+      summary: Search MTG cards
+      description: Search cards with scripting toolkit integration
+      operationId: searchMTGCards
+      tags:
+        - MTG
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+        - name: mana_cost
+          in: query
+          schema:
+            type: string
+        - name: type_line
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Card search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MTGCard'
+
+  /mtg/collection:
+    get:
+      summary: Get user's card collection
+      operationId: getMTGCollection
+      tags:
+        - MTG
+      responses:
+        '200':
+          description: User's MTG collection
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MTGCardCollection'
+
+  # Infrastructure Domain (12 tools) - Performance Tier: <5s
+  /infrastructure/services:
+    get:
+      summary: List infrastructure services
+      description: Get container and service status with Kong API gateway integration
+      operationId: listInfrastructureServices
+      tags:
+        - Infrastructure
+      responses:
+        '200':
+          description: List of infrastructure services
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InfrastructureService'
+
+    post:
+      summary: Deploy infrastructure service
+      operationId: deployInfrastructureService
+      tags:
+        - Infrastructure
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeployServiceRequest'
+      responses:
+        '201':
+          description: Service deployment initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfrastructureService'
+
+  /infrastructure/monitoring/events:
+    get:
+      summary: Get system monitoring events
+      description: Retrieve events from HELK and Security Onion integration
+      operationId: getMonitoringEvents
+      tags:
+        - Infrastructure
+      parameters:
+        - name: start_time
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: service_name
+          in: query
+          schema:
+            type: string
+        - name: alert_level
+          in: query
+          schema:
+            type: string
+            enum: [info, warning, error, critical]
+      responses:
+        '200':
+          description: System monitoring events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SystemEvent'
+
+  /infrastructure/files/analyze:
+    post:
+      summary: Analyze file with forensic tools
+      description: Analyze file using software forensic kit integration
+      operationId: analyzeFile
+      tags:
+        - Infrastructure
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                analysis_type:
+                  type: string
+                  enum: [metadata, hash, signature, content]
+      responses:
+        '200':
+          description: File analysis results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileAnalysis'
+
+  # AI Integration - Real-time executive function support
+  /ai/chat:
+    post:
+      summary: AI chat for executive function support
+      description: Get AI assistance for task breakdown, reminders, and executive function support
+      operationId: chatWithAI
+      tags:
+        - AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Help me break down this complex security analysis task"
+                context:
+                  type: object
+                  properties:
+                    current_domain:
+                      type: string
+                      enum: [security, productivity, mtg, infrastructure]
+                    active_tools:
+                      type: array
+                      items:
+                        type: string
+                    user_preferences:
+                      $ref: '#/components/schemas/ExecutiveFunctionPreferences'
+      responses:
+        '200':
+          description: AI response with executive function support
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIResponse'
+
+  /ai/suggestions:
+    get:
+      summary: Get AI suggestions for current context
+      description: Proactive AI suggestions based on user patterns and current activity
+      operationId: getAISuggestions
+      tags:
+        - AI
+      responses:
+        '200':
+          description: Context-aware AI suggestions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AISuggestions'
+
+  # WebSocket endpoint for real-time synchronization
+  /ws/sync:
+    get:
+      summary: WebSocket connection for real-time sync
+      description: Establish WebSocket connection for real-time synchronization across all 37 tools
+      tags:
+        - WebSocket
+      responses:
+        '101':
+          description: WebSocket connection established
+
+components:
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        full_name:
+          type: string
+        adhd_preferences:
+          $ref: '#/components/schemas/ExecutiveFunctionPreferences'
+        autism_preferences:
+          $ref: '#/components/schemas/ExecutiveFunctionPreferences'
+        created_at:
+          type: string
+          format: date-time
+
+    ExecutiveFunctionPreferences:
+      type: object
+      properties:
+        reminder_frequency:
+          type: integer
+          description: Minutes between reminders
+        task_breakdown_style:
+          type: string
+          enum: [detailed, summary, visual]
+        focus_duration:
+          type: integer
+          description: Preferred focus session length in minutes
+        break_reminders:
+          type: boolean
+        hyperfocus_alerts:
+          type: boolean
+        sensory_preferences:
+          type: object
+
+    SecurityIncident:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        status:
+          type: string
+          enum: [open, investigating, resolved, closed]
+        misp_event_id:
+          type: integer
+        indicators:
+          type: object
+        attributes:
+          type: object
+        related_tasks:
+          type: array
+          items:
+            type: string
+            format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateSecurityIncidentRequest:
+      type: object
+      required:
+        - title
+        - severity
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        indicators:
+          type: object
+        generate_tasks:
+          type: boolean
+          default: true
+
+    MalwareAnalysis:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        file_hash:
+          type: string
+        file_name:
+          type: string
+        yara_matches:
+          type: object
+        analysis_results:
+          type: object
+        processing_recipes:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+
+    NetworkEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        source_ip:
+          type: string
+          format: ipv4
+        dest_ip:
+          type: string
+          format: ipv4
+        protocol:
+          type: string
+        beacon_score:
+          type: number
+        dns_tunneling_score:
+          type: number
+        long_connections:
+          type: object
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [todo, in_progress, done, blocked]
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        ai_breakdown:
+          $ref: '#/components/schemas/AITaskBreakdown'
+        executive_function_hints:
+          type: object
+        security_incident_id:
+          type: string
+          format: uuid
+        due_date:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateTaskRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        due_date:
+          type: string
+          format: date-time
+        generate_ai_breakdown:
+          type: boolean
+          default: true
+        cross_domain_context:
+          type: object
+
+    AITaskBreakdown:
+      type: object
+      properties:
+        steps:
+          type: array
+          items:
+            type: object
+            properties:
+              step_number:
+                type: integer
+              description:
+                type: string
+              estimated_duration:
+                type: integer
+              executive_function_tips:
+                type: array
+                items:
+                  type: string
+        complexity_assessment:
+          type: string
+          enum: [simple, moderate, complex]
+        recommended_breaks:
+          type: array
+          items:
+            type: integer
+
+    AutomationWorkflow:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        n8n_workflow_id:
+          type: string
+        workflow_definition:
+          type: object
+        is_active:
+          type: boolean
+        adhd_triggers:
+          type: object
+        cross_domain_integrations:
+          type: object
+
+    UtilityResult:
+      type: object
+      properties:
+        tool_name:
+          type: string
+        result:
+          type: object
+        execution_time:
+          type: number
+        session_id:
+          type: string
+          format: uuid
+
+    MTGDeck:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        format:
+          type: string
+        commander_card_name:
+          type: string
+        combo_data:
+          type: object
+        mana_curve:
+          type: object
+        card_analysis:
+          type: object
+        analysis_tasks:
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    CreateMTGDeckRequest:
+      type: object
+      required:
+        - name
+        - format
+      properties:
+        name:
+          type: string
+        format:
+          type: string
+        commander_card_name:
+          type: string
+
+    MTGDeckAnalysis:
+      type: object
+      properties:
+        combo_analysis:
+          type: object
+        mana_curve_assessment:
+          type: object
+        win_conditions:
+          type: array
+          items:
+            type: string
+        optimization_suggestions:
+          type: array
+          items:
+            type: string
+
+    MTGCard:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        scryfall_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        mana_cost:
+          type: string
+        type_line:
+          type: string
+        oracle_text:
+          type: string
+        custom_scripts:
+          type: object
+
+    MTGCardCollection:
+      type: object
+      properties:
+        card:
+          $ref: '#/components/schemas/MTGCard'
+        quantity:
+          type: integer
+        condition:
+          type: string
+        acquisition_date:
+          type: string
+          format: date
+
+    InfrastructureService:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        service_type:
+          type: string
+        container_config:
+          type: object
+        deployment_status:
+          type: string
+        api_routes:
+          type: object
+        monitoring_config:
+          type: object
+        health_checks:
+          type: object
+
+    DeployServiceRequest:
+      type: object
+      required:
+        - name
+        - service_type
+      properties:
+        name:
+          type: string
+        service_type:
+          type: string
+        container_config:
+          type: object
+        monitoring_config:
+          type: object
+
+    SystemEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        source_service:
+          type: string
+        event_type:
+          type: string
+        log_data:
+          type: object
+        alert_level:
+          type: string
+        security_incident_id:
+          type: string
+          format: uuid
+
+    FileAnalysis:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        file_path:
+          type: string
+        file_hash:
+          type: string
+        analysis_results:
+          type: object
+        metadata:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+
+    AIResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        suggestions:
+          type: array
+          items:
+            type: string
+        executive_function_tips:
+          type: array
+          items:
+            type: string
+        cross_domain_actions:
+          type: array
+          items:
+            type: object
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    AISuggestions:
+      type: object
+      properties:
+        proactive_reminders:
+          type: array
+          items:
+            type: string
+        task_suggestions:
+          type: array
+          items:
+            type: string
+        cross_domain_opportunities:
+          type: array
+          items:
+            type: object
+        focus_recommendations:
+          type: object
+
+    PaginationInfo:
+      type: object
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        total_pages:
+          type: integer
+        total_items:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+
+  responses:
+    BadRequestError:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnauthorizedError:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+tags:
+  - name: Authentication
+    description: User authentication and session management
+  - name: Security
+    description: Security domain tools (13 tools) - <1s performance tier
+  - name: Productivity
+    description: Productivity domain tools (8 tools) - <2s performance tier
+  - name: MTG
+    description: MTG domain tools (4 tools) - <3s performance tier
+  - name: Infrastructure
+    description: Infrastructure domain tools (12 tools) - <5s performance tier
+  - name: AI
+    description: AI integration for executive function support
+  - name: WebSocket
+    description: Real-time synchronization endpoints
