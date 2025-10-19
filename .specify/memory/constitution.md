@@ -1,11 +1,11 @@
 <!--
 Sync Impact Report:
-- Version change: none → 1.0.0
-- Modified principles: none (initial creation)
-- Added sections: Core Principles (5), Technology Standards, Development Quality Gates, Governance
-- Removed sections: none
-- Templates requiring updates: ✅ All templates reviewed and aligned
-- Follow-up TODOs: none
+- Version change: 1.1.0 → 1.2.0 (Multi-Framework Integration Strategy)
+- Modified principles: Technology Standards (Vue.js mandate → multi-framework strategy), Platform Architecture Standards (business logic preservation clarification)
+- Added sections: Frontend Framework Integration Strategy, Framework-Specific Migration Criteria
+- Removed sections: Vue.js constitutional mandate (replaced with evidence-based approach)
+- Templates requiring updates: ✅ All templates updated with multi-framework approach
+- Follow-up TODOs: Update copilot-instructions.md with multi-framework strategy, update jane-ui project configuration
 -->
 
 # Jane Monorepo Constitution
@@ -50,10 +50,19 @@ All services MUST meet domain-specific performance benchmarks:
 - **Database Operations**: <100ms for read operations, <500ms for complex queries
 - **Memory Efficiency**: Services MUST operate within allocated container limits
 
-**Rationale**: The platform serves real-time security analysis, interactive MTG tools, and productivity applications where performance directly impacts user effectiveness.
+**Domain-Specific Performance Tiers (CONSTITUTIONAL)**:
+
+- **Security Tools**: <1s response (threat analysis criticality)
+- **Productivity Tools**: <2s response (task management workflows)
+- **MTG Tools**: <3s response (game analysis complexity)
+- **Infrastructure Tools**: <5s response (system operations tolerance)
+- **Cross-Tool Synchronization**: 250ms latency (real-time data flow)
+
+**Rationale**: The platform serves real-time security analysis, interactive MTG tools, and productivity applications where performance directly impacts user effectiveness. Domain-specific tiers ensure critical security operations maintain sub-second response while allowing complexity-appropriate timing for other domains.
 
 ### V. Modular Architecture Integrity
 The monorepo structure MUST maintain clear boundaries and dependencies:
+
 - **Service Independence**: Each app MUST be deployable independently with minimal coupling
 - **Library Reusability**: Shared libraries MUST be domain-agnostic and well-documented
 - **Feature Organization**: Domain features (`features/`) MUST not create circular dependencies
@@ -64,11 +73,61 @@ The monorepo structure MUST maintain clear boundaries and dependencies:
 
 ## Technology Standards
 
-**Approved Stack**: Node.js 20, Python 3.12, TypeScript 5.9.3, Next.js 15.5.4, React 19.2.0, FastAPI 0.119.0, NX 21.6.4
-**Database**: PostgreSQL for transactional data, appropriate vector databases for LLM embeddings
-**Security**: HTTPS required, authentication via JWT, input validation on all endpoints
+**Approved Core Stack**: Node.js 20, Python 3.12, TypeScript 5.9.3, FastAPI 0.119.0, NX 21.6.4, vLLM 0.11.0, Chroma DB
+**Database**: PostgreSQL (primary - 18/37 projects), SQLite (local-first - 5/37 projects), Redis 7+ (caching), Vector DB (AI embeddings)
+**Security**: HTTPS required, JWT authentication, OAuth2 for external access, input validation on all endpoints, 250ms WebSocket latency
 **Containerization**: Docker required for all services, Kubernetes manifests for production
 **Monitoring**: Structured logging (JSON), metrics collection, distributed tracing for multi-service operations
+
+### Frontend Framework Integration Strategy (CONSTITUTIONAL)
+
+**Multi-Framework Approach**: Evidence-based framework selection preserving existing business logic across all 37 tools:
+
+**Framework Distribution by Business Logic Analysis**:
+
+- **React-Based Projects (8 tools)**: Actual Budget (React 19.2.0), Commander Spellbook (Next.js 15.5.2/React 19.1.0), Inspector (React + Radix UI), Nemesis (React 18+), Dispatch, Firecrawl, Goose, Hexstrike AI
+- **Vue.js-Based Projects (3 tools)**: n8n (Vue.js 3.x), IT-Tools (Vue 3), Mealie (Nuxt.js/Vue.js)
+- **No Framework Projects (26 tools)**: CyberChef (vanilla JS), Ghostwriter (Django templates), HELK (Kibana), Maltrail (jQuery), and 22 backend-only services
+
+**Framework Preservation Criteria (NON-NEGOTIABLE)**:
+
+- **React Preservation**: All React-based tools maintain existing frameworks to ensure 100% business logic preservation (SC-011 compliance)
+- **Vue.js Standardization**: New frontend development uses Vue.js 3 + TypeScript for consistency
+- **Legacy Support**: Vanilla JS/server-side rendering preserved for tools without modern framework requirements
+- **Integration Layer**: Framework-agnostic shared components via Web Components for cross-tool consistency
+
+**Technology Migration Strategy**:
+
+- **Category A (React Tools)**: Preserve existing React implementations, enhance with shared component integration
+- **Category B (Vue.js Tools)**: Maintain Vue.js implementations as reference standard for new development
+- **Category C (Legacy Tools)**: Modernize selectively based on business value, default to Vue.js for substantial rewrites
+- **New Development**: Vue.js 3 + TypeScript for all new frontend applications
+
+## Platform Architecture Standards (CONSTITUTIONAL)
+
+**Mental Prosthetic Platform Scope**: Exactly 37 executive function tools across 4 domains (NON-NEGOTIABLE)
+
+- **Security Domain**: 13 tools (MISP, HELK, SecurityOnion, Maltrail, YARA-X, CyberChef, Nemesis, etc.)
+- **Productivity Domain**: 8 tools (n8n, Mealie, Dispatch, Actual Budget, Firecrawl, Goose, IT-Tools, Inspector)
+- **MTG Domain**: 4 tools (Commander Spellbook, MTG Commander Map, MTG Scripting Toolkit, card analysis)
+- **Infrastructure Domain**: 12 tools (Kong, Ghostwriter, KasmVNC, MCP servers, workflow automation, etc.)
+
+**Executive Function Accommodations (CONSTITUTIONAL)**: ADHD/Autism-specific requirements are NON-NEGOTIABLE
+
+- **Response Times**: UI interactions <200ms (focus maintenance), API responses <500ms standard
+- **Navigation Consistency**: Identical patterns across all 37 tools, no external redirects
+- **Context Switching Reduction**: 37→1 interface consolidation (95% reduction target)
+- **Accessibility**: WCAG 2.1 AA compliance, keyboard navigation, focus indicators
+
+**Business Logic Preservation (CONSTITUTIONAL)**: 100% functionality preservation across all 37 tools is NON-NEGOTIABLE
+
+- **Framework Integrity**: Existing React-based tools (8 tools) maintain their current technology stacks to prevent business logic disruption
+- **Migration Categories**:
+  - **Category A (Complex Algorithms)**: Preserve as microservices or embedded libraries with existing frontend frameworks
+  - **Category B (Domain Logic)**: Modularize within monolith maintaining workflow integrity and frontend technology choices
+  - **Category C (Utilities)**: Integrate as shared libraries with API compatibility, migrate to Vue.js only when rewriting substantially
+- **Migration Strategy**: Big-bang integration (all 37 tools simultaneously) with framework preservation approach
+- **Quality Assurance**: Automated testing ensures identical functionality before and after integration regardless of frontend framework
 
 ## Development Quality Gates
 
@@ -87,4 +146,4 @@ This constitution supersedes all other development practices and standards. All 
 **Exception Handling**: Technical debt requiring principle violations MUST be documented with remediation timeline
 **Enforcement**: CI/CD pipelines MUST enforce quality gates; non-compliance blocks deployment
 
-**Version**: 1.0.0 | **Ratified**: 2025-10-18 | **Last Amended**: 2025-10-18
+**Version**: 1.2.0 | **Ratified**: 2025-10-18 | **Last Amended**: 2025-10-19
