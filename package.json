@@ -14,7 +14,7 @@
   "devDependencies": {
     "@nx/eslint": "21.6.4",
     "@nx/js": "21.6.4",
-    "@nx/next": "21.6.4",
+    "@nx/next": "21.6.5",
     "@nx/react": "21.6.4",
     "@nx/workspace": "21.6.4",
     "@types/node": "24.7.2",
