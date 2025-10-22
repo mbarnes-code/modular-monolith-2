@@ -88,13 +88,13 @@ The monorepo structure MUST maintain clear boundaries and dependencies:
 
 **Business Logic Preservation (CONSTITUTIONAL)**: 100% functionality preservation across all 37 tools is NON-NEGOTIABLE
 
-- **Framework Integrity**: Existing React-based tools (8 tools) maintain their current technology stacks to prevent business logic disruption
+- **Technology Agnostic Approach**: Framework choice driven by business logic preservation needs, not predetermined technology preferences
 - **Migration Categories**:
-  - **Category A (Complex Algorithms)**: Preserve as microservices or embedded libraries with existing frontend frameworks
-  - **Category B (Domain Logic)**: Modularize within monolith maintaining workflow integrity and frontend technology choices
-  - **Category C (Utilities)**: Integrate as shared libraries with API compatibility, migrate to Vue.js only when rewriting substantially
-- **Migration Strategy**: Big-bang integration (all 37 tools simultaneously) with framework preservation approach
-- **Quality Assurance**: Automated testing ensures identical functionality before and after integration regardless of frontend framework
+  - **Category A (Complex Algorithms)**: Preserve as microservices or embedded libraries maintaining existing technology stacks when essential for business logic integrity
+  - **Category B (Domain Logic)**: Modularize within monolith maintaining workflow integrity, technology stack chosen based on preservation requirements
+  - **Category C (Utilities)**: Integrate as shared libraries with API compatibility, technology choice based on development efficiency and maintainability
+- **Migration Strategy**: Big-bang integration (all 37 tools simultaneously) with technology-agnostic preservation approach
+- **Quality Assurance**: Automated testing ensures identical functionality before and after integration regardless of technology stack chosen
 
 ## Development Quality Gates
 

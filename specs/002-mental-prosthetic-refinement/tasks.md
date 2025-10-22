@@ -3,14 +3,16 @@
 **Input**: Design documents from `/specs/002-mental-prosthetic-refinement/`
 **Prerequisites**: plan.md (✓), spec.md (✓), research.md (✓), data-model.md (✓), contracts/ (✓)
 
-**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story based on the clarified single modular monolith architecture with React frontend.
+**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story. Architecture implements a modular monolith codebase with layer-based service boundaries (UI, API, Data, AI) across 4 domains (Security, Productivity, MTG, Infrastructure), provisioned for flexible deployment including optional 3-device distribution (NUC frontend, dedicated AI server, security laptop) while maintaining comprehensive business logic preservation.
 
 ## Format: `[ID] [P?] [Story] Description`
+
 - **[P]**: Can run in parallel (different files, no dependencies)
 - **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
 - Include exact file paths in descriptions
 
 ## Path Conventions (Modular Monolith Architecture)
+
 - **Backend**: `apps/jane-orchestrator/src/`
 - **Frontend**: `apps/jane-ui/src/`
 - **Shared Libraries**: `libs/`
@@ -49,6 +51,12 @@
 - [ ] T018 [P] Configure WebSocket infrastructure for real-time sync in apps/jane-orchestrator/src/api/websocket/
 - [ ] T019 Create service adapter framework for 37-tool integration in libs/service-adapters/base/
 - [ ] T020 Setup domain-specific performance monitoring (<200ms UI, domain tiers) in apps/jane-orchestrator/src/monitoring/
+- [ ] T020a [P] Implement tool-specific rollback infrastructure in apps/jane-orchestrator/src/services/rollback/tool_rollback_service.py
+- [ ] T020b [P] Create database transaction rollback per tool domain in apps/jane-orchestrator/src/data/transaction_manager.py
+- [ ] T020c [P] Implement service restart capabilities for individual tools in apps/jane-orchestrator/src/services/rollback/service_restart_manager.py
+- [ ] T020d [P] Create configuration state restoration from last known good state in apps/jane-orchestrator/src/config/state_backup_service.py
+- [ ] T020e [P] Implement data consistency validation after rollback in apps/jane-orchestrator/src/services/rollback/consistency_validator.py
+- [ ] T020f [P] Create system-wide fallback rollback capabilities in apps/jane-orchestrator/src/services/rollback/system_rollback_service.py
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -79,6 +87,10 @@
 - [ ] T035 [US1] Integrate WebSocket for real-time updates in apps/jane-ui/src/services/websocket.ts
 - [ ] T036 [US1] Add accessibility compliance (WCAG 2.1 AA) to all dashboard components
 - [ ] T037 [US1] Add performance monitoring for <200ms response time validation
+- [ ] T037a [P] [US1] Implement unified user preferences system across all 37 tools in apps/jane-orchestrator/src/services/user_preferences_service.py
+- [ ] T037b [P] [US1] Create user preferences API endpoints for ADHD/autism customizations in apps/jane-orchestrator/src/api/preferences/
+- [ ] T037c [P] [US1] Create user preferences UI components for executive function settings in apps/jane-ui/src/components/UserProfile/PreferencesPanel.tsx
+- [ ] T037d [P] [US1] Implement cross-tool preference synchronization in apps/jane-orchestrator/src/services/preference_sync_service.py
 
 **Checkpoint**: At this point, User Story 1 should provide access to all 37 tools through unified interface
 
@@ -188,71 +200,184 @@
 
 ---
 
-## Phase 8: Service Adapter Integration (37 Tools)
+## Phase 8: Security Domain Migration (Complex Business Logic)
 
-**Goal**: Complete integration of all 37 tools from features/ directory into service adapters
+**Goal**: Migrate 13 security tools preserving complex algorithms and data schemas per business logic analysis with layer-based service boundaries
 
-**Independent Test**: All 37 tools accessible through unified interface with original functionality preserved
+### Category A: Complex Algorithms (Preserve as Microservices)
 
-### Security Domain (13 tools)
-- [ ] T090 [P] [TOOLS] Create Maltrail adapter in libs/service-adapters/security/maltrail_adapter.py
-- [ ] T091 [P] [TOOLS] Create CyberChef adapter in libs/service-adapters/security/cyberchef_adapter.py
-- [ ] T092 [P] [TOOLS] Create Nemesis adapter in libs/service-adapters/security/nemesis_adapter.py
-- [ ] T093 [P] [TOOLS] Create Ghostwriter adapter in libs/service-adapters/security/ghostwriter_adapter.py
-- [ ] T094 [P] [TOOLS] Create Brute Ratel C4 adapter in libs/service-adapters/security/brute_ratel_adapter.py
-- [ ] T095 [P] [TOOLS] Create ApiScout adapter in libs/service-adapters/security/apiscout_adapter.py
-- [ ] T096 [P] [TOOLS] Create RITA adapter in libs/service-adapters/security/rita_adapter.py
-- [ ] T097 [P] [TOOLS] Create OneX adapter in libs/service-adapters/security/onex_adapter.py
-- [ ] T098 [P] [TOOLS] Create BlackArch adapter in libs/service-adapters/security/blackarch_adapter.py
+- [ ] T090 Analyze MISP threat intelligence correlation algorithms (8,733 lines in Event.php) and create microservice preservation plan
+- [ ] T091 Extract Nemesis file analysis pipeline from features/Nemesis/ maintaining multi-stage processing workflow  
+- [ ] T092 Preserve CyberChef operations engine (300+ operations) as embedded library with REST API wrapper
+- [ ] T093 [P] Create MISP database migration from CakePHP/MySQL to unified PostgreSQL schema preserving threat intelligence data
+- [ ] T094 [P] Migrate MISP REST API endpoints from CakePHP to FastAPI maintaining backward compatibility
 
-### Productivity Domain (8 tools)
-- [ ] T099 [P] [TOOLS] Create Actual Budget adapter in libs/service-adapters/productivity/actual_adapter.py
-- [ ] T100 [P] [TOOLS] Create Mealie adapter in libs/service-adapters/productivity/mealie_adapter.py
-- [ ] T101 [P] [TOOLS] Create Dispatch adapter in libs/service-adapters/productivity/dispatch_adapter.py
-- [ ] T102 [P] [TOOLS] Create IT-Tools adapter in libs/service-adapters/productivity/it_tools_adapter.py
-- [ ] T103 [P] [TOOLS] Create Firecrawl adapter in libs/service-adapters/productivity/firecrawl_adapter.py
-- [ ] T104 [P] [TOOLS] Create Goose adapter in libs/service-adapters/productivity/goose_adapter.py
-- [ ] T105 [P] [TOOLS] Create Inspector adapter in libs/service-adapters/productivity/inspector_adapter.py
+### Category B: Domain Logic (Modularize within Monolith)
 
-### MTG Domain (4 tools)
-- [ ] T106 [P] [TOOLS] Create Commander Spellbook adapter in libs/service-adapters/mtg/spellbook_adapter.py
-- [ ] T107 [P] [TOOLS] Create MTG Commander Map adapter in libs/service-adapters/mtg/commander_map_adapter.py
-- [ ] T108 [P] [TOOLS] Create MTG Scripting Toolkit adapter in libs/service-adapters/mtg/scripting_toolkit_adapter.py
-- [ ] T109 [P] [TOOLS] Create MTG card analysis adapter in libs/service-adapters/mtg/card_analysis_adapter.py
+- [ ] T095 [P] Migrate HELK threat hunting logic from features/HELK/ to apps/jane-orchestrator/src/domains/security/helk/
+- [ ] T096 [P] Migrate SecurityOnion configuration management from features/securityonion/ preserving Salt states and pillars
+- [ ] T097 [P] Migrate Maltrail detection rules from features/maltrail/ to unified security domain with rule engine
+- [ ] T098 [P] Migrate YARA-X pattern matching from features/yara-x/ to FastAPI endpoint preserving Rust core
+- [ ] T099 [P] Convert APIScout, Hexstrike-AI, Rita, OneX utilities to FastAPI modules in security domain
 
-### Infrastructure Domain (12 tools)
-- [ ] T110 [P] [TOOLS] Create Kong adapter in libs/service-adapters/infrastructure/kong_adapter.py
-- [ ] T111 [P] [TOOLS] Create KasmVNC adapter in libs/service-adapters/infrastructure/kasmvnc_adapter.py
-- [ ] T112 [P] [TOOLS] Create n8n adapter in libs/service-adapters/infrastructure/n8n_adapter.py
-- [ ] T113 [P] [TOOLS] Create LScript adapter in libs/service-adapters/infrastructure/lscript_adapter.py
-- [ ] T114 [P] [TOOLS] Create Chroma MCP adapter in libs/service-adapters/infrastructure/chroma_mcp_adapter.py
-- [ ] T115 [P] [TOOLS] Create FileScopeMCP adapter in libs/service-adapters/infrastructure/filescope_mcp_adapter.py
-- [ ] T116 [P] [TOOLS] Create n8n MCP adapter in libs/service-adapters/infrastructure/n8n_mcp_adapter.py
-- [ ] T117 [P] [TOOLS] Create MalwareBazaar MCP adapter in libs/service-adapters/infrastructure/malwarebazaar_mcp_adapter.py
-- [ ] T118 [P] [TOOLS] Create VirusTotal MCP adapter in libs/service-adapters/infrastructure/virustotal_mcp_adapter.py
+### Category C: Utility Functions (Shared Libraries)
 
-### Integration Validation
-- [ ] T119 [TOOLS] Validate all 37 tool adapters maintain original functionality
-- [ ] T120 [TOOLS] Verify features/ directory migration completion (should be empty)
-- [ ] T121 [TOOLS] Run comprehensive integration tests across all domains
-- [ ] T122 [TOOLS] Validate domain-specific performance requirements achieved
-
-**Checkpoint**: All 37 tools fully integrated with functionality preserved
+- [ ] T100 [P] Extract Meterpreter payloads to shared security utilities library  
+- [ ] T101 [P] Migrate Software Forensic Kit tools to shared analysis library in libs/shared/security/
+- [ ] T102 [P] Convert BlackArch script collection to callable Python modules
+- [ ] T103 Convert legacy security tool UIs to React components preserving functionality
+- [ ] T104 Create unified security dashboard integrating all migrated tools with FastAPI backend
 
 ---
 
-## Phase 9: Polish & Cross-Cutting Concerns
+## Phase 9: Productivity Domain Migration (FastAPI-Ready Projects)
 
-**Purpose**: Improvements that affect multiple user stories and final system optimization
+**Goal**: Migrate 8 productivity tools leveraging existing FastAPI/TypeScript patterns from analysis with comprehensive framework preservation
 
-- [ ] T123 [P] Documentation updates for 37-tool integration in docs/
-- [ ] T124 [P] Code cleanup and refactoring across service adapters
-- [ ] T125 Performance optimization across all user stories and domains
-- [ ] T126 [P] Security hardening for production deployment
-- [ ] T127 [P] Accessibility audit and improvements (WCAG 2.1 AA compliance)
-- [ ] T128 [P] Load testing with Artillery.js for domain-specific performance tiers
-- [ ] T129 Final validation of constitutional requirements (<200ms UI, 95% context reduction)
-- [ ] T130 Run quickstart.md validation and development environment verification
+### Category A: Complex Workflow Engines (Microservice Preservation)
+
+- [ ] T105 Analyze n8n workflow engine (packages/core/src/WorkflowExecute.ts - 10,000+ lines) for microservice extraction
+- [ ] T106 Preserve n8n 400+ integrations (packages/nodes-base/) as separate service maintaining TypeScript execution engine
+- [ ] T107 Create database migration strategy for n8n TypeORM to unified PostgreSQL schema preserving workflow definitions
+
+### Category B: FastAPI-Ready Applications (Direct Migration)
+
+- [ ] T108 [P] Migrate Mealie FastAPI backend from features/mealie/ maintaining recipe parsing and meal planning algorithms
+- [ ] T109 [P] Migrate Dispatch FastAPI incident management from features/dispatch/ preserving workflow orchestration
+- [ ] T110 [P] Convert Mealie Nuxt.js frontend to React/Next.js components compatible with unified dashboard
+- [ ] T111 [P] Integrate Dispatch PostgreSQL schema with unified database maintaining incident data integrity
+
+### Category C: TypeScript Applications (Framework Migration)
+
+- [ ] T112 [P] Migrate Actual Budget CRDT synchronization engine from features/actual/packages/crdt/ preserving conflict resolution
+- [ ] T113 [P] Convert Actual Budget SQLite schema to PostgreSQL while maintaining sync capabilities  
+- [ ] T114 [P] Migrate Firecrawl Express.js backend to FastAPI preserving web scraping and BullMQ integration
+- [ ] T115 [P] Migrate Goose AI agent system preserving Rust core with Python wrapper integration
+
+### Category D: Utility Collections (Library Integration)
+
+- [ ] T116 [P] Convert IT-Tools 80+ developer utilities from Vue.js SPA to integrated React library modules
+- [ ] T117 [P] Migrate Inspector MCP protocol debugging to unified development tools section
+- [ ] T118 Create unified productivity dashboard with FastAPI backend and React/Next.js frontend
+- [ ] T119 Integrate all productivity tools with shared authentication and session management
+
+---
+
+## Phase 10: MTG Domain Migration (Gaming/Algorithm-Heavy Projects)
+
+**Goal**: Migrate 4 MTG tools preserving complex combo algorithms and card databases with framework-specific preservation
+
+### Category A: Complex Algorithms (Critical Business Logic)
+
+- [ ] T120 Analyze Commander Spellbook variant generation algorithm (1400+ lines) for combo-to-variant generation preservation
+- [ ] T121 Migrate Commander Spellbook Django backend preserving combo graph algorithms and variant computation
+- [ ] T122 Create database migration from Commander Spellbook PostgreSQL to unified schema preserving card relationships
+- [ ] T123 [P] Preserve MTG Commander Map visualization algorithms maintaining card interaction network analysis
+
+### Category B: Domain Logic (Modular Integration)
+
+- [ ] T124 [P] Migrate MTG Scripting Toolkit card analysis from features/mtg-scripting-toolkit/ to unified MTG domain
+- [ ] T125 [P] Convert Commander Spellbook React frontend to unified React/Next.js components for dashboard integration
+- [ ] T126 [P] Integrate MTG Commander Map visualization with unified UI component library
+- [ ] T127 [P] Create unified MTG API endpoints in FastAPI preserving all card search and combo functionality
+
+### Category C: Utility Integration  
+
+- [ ] T128 [P] Consolidate MTG card databases (Scryfall integration) into shared card data service
+- [ ] T129 [P] Create unified MTG dashboard with combo search, deck building, and card analysis tools
+- [ ] T130 Integrate MTG tools with AI assistant for deck building and combo suggestions
+
+---
+
+## Phase 11: Infrastructure Domain Migration
+
+**Goal**: Migrate all 12 infrastructure/integration tools from features/ directory preserving business logic with layer-based service boundaries
+
+### Infrastructure Tools Business Logic Migration
+
+- [ ] T131 [P] Migrate Kong business logic from features/kong/ to apps/jane-orchestrator/src/domains/infrastructure/kong/
+- [ ] T132 [P] Migrate KasmVNC business logic from features/KasmVNC/ to apps/jane-orchestrator/src/domains/infrastructure/kasmvnc/
+- [ ] T133 [P] Migrate Ghostwriter business logic from features/Ghostwriter/ to apps/jane-orchestrator/src/domains/infrastructure/ghostwriter/
+- [ ] T134 [P] Migrate FileScopeMCP business logic from features/FileScopeMCP/ to apps/jane-orchestrator/src/domains/infrastructure/filescope/
+- [ ] T135 [P] Migrate Chroma MCP business logic from features/chroma-mcp/ to apps/jane-orchestrator/src/domains/infrastructure/chroma-mcp/
+- [ ] T136 [P] Migrate Firecrawl MCP business logic from features/firecrawl-mcp-server/ to apps/jane-orchestrator/src/domains/infrastructure/firecrawl-mcp/
+- [ ] T137 [P] Migrate MalwareBazaar MCP business logic from features/MalwareBazaar_MCP/ to apps/jane-orchestrator/src/domains/infrastructure/malwarebazaar-mcp/
+- [ ] T138 [P] Migrate VirusTotal MCP business logic from features/mcp-virustotal/ to apps/jane-orchestrator/src/domains/infrastructure/virustotal-mcp/
+- [ ] T139 [P] Migrate n8n MCP business logic from features/n8n-mcp-server/ to apps/jane-orchestrator/src/domains/infrastructure/n8n-mcp/
+- [ ] T140 [P] Migrate SecurityOnion n8n workflows from features/securityonion-n8n-workflows/ to apps/jane-orchestrator/src/domains/infrastructure/securityonion-workflows/
+- [ ] T141 [P] Migrate Brute-Ratel-C4 business logic from features/Brute-Ratel-C4-Community-Kit/ to apps/jane-orchestrator/src/domains/infrastructure/brute-ratel/
+- [ ] T142 [P] Migrate LScript business logic from features/lscript/ to apps/jane-orchestrator/src/domains/infrastructure/lscript/
+
+---
+
+## Phase 12: LLM Server Enhancement
+
+**Goal**: Enhance existing LLM servers for integrated tool support with layer-based AI service boundaries
+
+### LLM Integration Enhancement
+
+- [ ] T143 [P] Enhance cyber-llm-server with security tool integration in apps/cyber-llm-server/src/integrations/
+- [ ] T144 [P] Enhance mtg-llm-server with MTG tool integration in apps/mtg-llm-server/src/integrations/
+- [ ] T145 [P] Enhance code-llm-server with development tool integration in apps/code-llm-server/src/integrations/
+- [ ] T146 Create unified LLM router in apps/jane-orchestrator/src/services/llm_router.py
+- [ ] T147 Implement AI context sharing across all tools in apps/jane-orchestrator/src/services/ai_context_sharing.py
+
+---
+
+## Phase 13: Features Directory Migration Completion
+
+**Goal**: Complete migration of all business logic from features/ directory, ensuring empty directory per spec requirements with comprehensive validation
+
+### Migration Validation and Cleanup
+
+- [ ] T148 Validate all business logic preservation with measurable criteria:
+  - [ ] T148a Create automated functionality comparison tests for all 37 tools in apps/jane-orchestrator/tests/preservation/
+  - [ ] T148b Implement API endpoint parity validation (input/output schema matching) in apps/jane-orchestrator/tests/preservation/api-parity.py
+  - [ ] T148c Create UI workflow automation tests comparing original vs integrated tools in apps/jane-ui/tests/preservation/
+  - [ ] T148d Validate algorithm preservation through identical test suite execution in apps/jane-orchestrator/tests/preservation/algorithm-validation.py
+  - [ ] T148e Measure performance benchmarks (original vs integrated) for all tools in tests/performance/preservation-benchmarks.py
+  - [ ] T148f Create preservation compliance report generator in apps/jane-orchestrator/src/services/preservation_validator.py
+- [ ] T149 Create migration status tracking in apps/jane-orchestrator/src/services/migration_tracker.py
+- [ ] T150 Implement automated validation that features/ directory is completely empty
+- [ ] T151 [P] Create integration status dashboard in apps/jane-ui/src/components/Migration/IntegrationStatus.tsx
+- [ ] T152 [P] Document all migrated tools and their new locations in docs/migration-log.md
+- [ ] T153 Remove all remaining code from features/ directory after successful migration validation
+- [ ] T154 Update project documentation to reflect completed integration with features/ directory empty
+
+**Checkpoint**: All 37 tools fully migrated with 100% business logic preservation validated
+
+---
+
+## Phase 14: Polish & Cross-Cutting Concerns
+
+**Purpose**: Final improvements affecting multiple user stories and production readiness with comprehensive system optimization
+
+- [ ] T155 [P] Performance optimization across all service adapters and domain boundaries in libs/service-adapters/
+- [ ] T156 [P] Security hardening for all API endpoints and WebSocket connections in apps/jane-orchestrator/src/security/
+- [ ] T157 [P] Accessibility improvements (WCAG 2.1 AA compliance) across UI components in libs/ui/
+- [ ] T158 [P] Error handling enhancement across all domains in apps/jane-orchestrator/src/utils/error_handling.py
+- [ ] T159 [P] Logging and monitoring setup for production deployment in apps/jane-orchestrator/src/monitoring/
+- [ ] T160 [P] Documentation updates and API documentation for all 37 integrated tools in docs/
+- [ ] T161 [P] Docker composition optimization with layer-based service boundaries in infrastructure/docker/
+- [ ] T162 [P] Database performance tuning and index optimization in apps/jane-orchestrator/src/database/
+- [ ] T163 [P] WebSocket connection scaling and load balancing in apps/jane-orchestrator/src/websocket/
+- [ ] T164 [P] Implement automated backup to Synology NAS in apps/jane-orchestrator/src/backup/
+  - [ ] T164a Create PostgreSQL backup automation with daily schedule in apps/jane-orchestrator/src/backup/postgres_backup.py
+  - [ ] T164b Implement SQLite database backup for local-first tools in apps/jane-orchestrator/src/backup/sqlite_backup.py
+  - [ ] T164c Create Synology NAS integration with secure file transfer in apps/jane-orchestrator/src/backup/synology_integration.py
+  - [ ] T164d Implement backup verification and restoration testing in apps/jane-orchestrator/src/backup/backup_validator.py
+  - [ ] T164e Add backup monitoring and failure alerting in apps/jane-orchestrator/src/backup/backup_monitor.py
+- [ ] T165 [P] Add vulnerability scanning and security monitoring in apps/jane-orchestrator/src/security/
+- [ ] T166 [P] Create user documentation for all 37 integrated tools in docs/user-guide/
+- [ ] T167 [P] Implement load testing with Artillery.js for domain-specific performance tiers in tests/performance/
+- [ ] T168 [P] Setup CI/CD pipeline with constitution compliance checks in .github/workflows/
+- [ ] T169a [P] Implement Security Domain performance validation (<1s response time) across all 13 security tools in tests/performance/security-domain-validation.py
+- [ ] T169b [P] Implement Productivity Domain performance validation (<2s response time) across all 8 productivity tools in tests/performance/productivity-domain-validation.py
+- [ ] T169c [P] Implement MTG Domain performance validation (<3s response time) across all 4 MTG tools in tests/performance/mtg-domain-validation.py
+- [ ] T169d [P] Implement Infrastructure Domain performance validation (<5s response time) across all 12 infrastructure tools in tests/performance/infrastructure-domain-validation.py
+- [ ] T169e [P] Create automated domain performance monitoring dashboard in apps/jane-ui/src/components/Performance/DomainMetrics.tsx
+- [ ] T169 Final validation of constitutional requirements (<200ms UI, 95% context reduction, 100% functionality preservation)
+- [ ] T170 Run complete quickstart.md validation and deployment verification
 
 ---
 
@@ -265,8 +390,13 @@
 - **User Stories (Phases 3-7)**: All depend on Foundational phase completion
   - User stories can proceed in parallel (if staffed) after foundational phase
   - Or sequentially in priority order (P1 → P2 → P3 → P4)
-- **Service Adapter Integration (Phase 8)**: Can start after foundational infrastructure
-- **Polish (Phase 9)**: Depends on all desired user stories and tool integration being complete
+- **Security Domain Migration (Phase 8)**: Depends on User Stories 1-3 completion (core platform stability)
+- **Productivity Domain Migration (Phase 9)**: Depends on User Story 3 (Cross-Tool Data Integration) completion
+- **MTG Domain Migration (Phase 10)**: Depends on User Stories 1-3 completion (core platform stability)  
+- **Infrastructure Domain Migration (Phase 11)**: Depends on User Story 3 (Cross-Tool Data Integration) completion
+- **LLM Enhancement (Phase 12)**: Depends on User Story 2 (AI-Assisted Task Management) completion
+- **Migration Completion (Phase 13)**: Depends on all domain migrations (Phases 8-11) completion
+- **Polish (Phase 14)**: Depends on all core functionality and migration being complete
 
 ### User Story Dependencies
 
@@ -316,31 +446,50 @@ Task: T032 "Create tool grid component"
 
 ### MVP First (User Stories 1 & 2 Only - Both P1)
 
-1. Complete Phase 1: Setup
-2. Complete Phase 2: Foundational (CRITICAL - blocks all stories)
-3. Complete Phase 3: User Story 1 (Unified Dashboard)
-4. Complete Phase 4: User Story 2 (AI-Enhanced Security)
+1. Complete Phase 1: Setup (T001-T008) - 8 tasks
+2. Complete Phase 2: Foundational (T009-T020) - **CRITICAL BLOCKING PHASE** - 12 tasks
+3. Complete Phase 3: User Story 1 (T021-T037) - 17 tasks
+4. Complete Phase 4: User Story 2 (T038-T053) - 16 tasks
 5. **STOP and VALIDATE**: Test both P1 stories independently
 6. Deploy/demo core executive function platform with AI security
 
-### Incremental Delivery
+### Comprehensive Delivery (Full Business Logic Migration)
 
-1. Setup + Foundational → Foundation ready
-2. Add User Story 1 → Test unified dashboard → Deploy/Demo (Basic MVP)
-3. Add User Story 2 → Test AI security → Deploy/Demo (Enhanced MVP with security AI)
-4. Add User Story 6 → Test AI task management → Deploy/Demo
-5. Add User Story 7 → Test cross-tool integration → Deploy/Demo  
-6. Add User Story 8 → Test remote access → Deploy/Demo
-7. Complete service adapter integration → All 37 tools available
+1. **Foundation**: Setup + Foundational (T001-T020) → Core platform ready
+2. **MVP**: Add User Stories 1 & 2 (T021-T053) → Test independently → Deploy unified dashboard with AI
+3. **Core Platform**: Add User Stories 6 & 7 (T054-T077) → Test AI assistance and data integration → Deploy enhanced version
+4. **Remote Access**: Add User Story 8 (T078-T089) → Test secure remote capabilities → Deploy mobile-ready platform
+5. **Security Migration**: Phase 8 (T090-T104) → Comprehensive security tool preservation → Validate business logic
+6. **Productivity Migration**: Phase 9 (T105-T119) → FastAPI-ready applications with framework preservation → Validate workflows
+7. **MTG Migration**: Phase 10 (T120-T130) → Complex algorithms and Django preservation → Validate combo generation
+8. **Infrastructure Migration**: Phase 11 (T131-T142) → MCP servers and utility integration → Validate tool ecosystem
+9. **AI Enhancement**: Phase 12 (T143-T147) → LLM server integration → Validate cross-domain AI support
+10. **Migration Completion**: Phase 13 (T148-T154) → Validate 100% business logic preservation → Empty features/ directory
+11. **Production Polish**: Phase 14 (T155-T170) → Production readiness and optimization → Full deployment
 
 ### Parallel Team Strategy
 
 With multiple developers after Foundational completion:
 
+#### Phase 3-7: User Story Development (Parallel)
+
 - **Developer A**: User Story 1 (Unified Dashboard) - Foundation for others
-- **Developer B**: User Story 2 (AI Security) - Independent P1 priority
-- **Developer C**: Service Adapter Integration - Can proceed in parallel
+- **Developer B**: User Story 2 (AI Security) - Independent P1 priority  
+- **Developer C**: User Story 6 (AI Task Management) - After US1 integration points
 - **Developer D**: User Story 8 (Remote Access) - Independent infrastructure work
+
+#### Phase 8-11: Domain Migration (Parallel by Domain)
+
+- **Security Team**: Phase 8 (Security Domain) - Complex algorithms and microservice preservation
+- **Productivity Team**: Phase 9 (Productivity Domain) - FastAPI-ready applications and framework migration
+- **MTG Team**: Phase 10 (MTG Domain) - Django backend and React frontend preservation  
+- **Infrastructure Team**: Phase 11 (Infrastructure Domain) - MCP servers and utility integration
+
+#### Phase 12-14: Integration and Polish (Sequential)
+
+- **AI Team**: Phase 12 (LLM Enhancement) - Requires all domains for context
+- **QA Team**: Phase 13 (Migration Validation) - Comprehensive business logic verification
+- **DevOps Team**: Phase 14 (Production Polish) - System optimization and deployment readiness
 
 ---
 
@@ -348,10 +497,12 @@ With multiple developers after Foundational completion:
 
 - [P] tasks = different files, no dependencies within the same phase
 - [Story] label maps task to specific user story for traceability  
-- [TOOLS] label indicates service adapter integration tasks
 - Each user story should be independently completable and testable
-- 37-tool integration is distributed across multiple phases to enable parallel development
+- Comprehensive business logic migration preserves complex algorithms through microservices when needed
+- Framework-specific preservation maintains Django backends, React frontends, and TypeScript execution engines
+- Database migration strategies ensure zero data loss from original schemas (MySQL, PostgreSQL, SQLite)
+- Layer-based service boundaries enable optional device distribution while maintaining monolith benefits
 - Domain-specific performance requirements must be validated throughout development
 - Constitutional requirements (<200ms UI, 95% context reduction, 100% functionality preservation) validated continuously
 - Stop at any checkpoint to validate story independence before proceeding
-- Modular monolith architecture enables easier testing and deployment compared to microservices approach
+- React/Next.js frontend provides consistent executive function accommodations across all 37 tools

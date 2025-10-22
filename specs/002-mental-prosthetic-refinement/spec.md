@@ -56,13 +56,15 @@ A user needs to start a complex workflow on one device (e.g., planning MTG deck 
 
 **Why this priority**: Enables the unique multi-device value proposition that distinguishes this platform from single-machine solutions.
 
-**Independent Test**: Can be tested by initiating a workflow on NUC frontend, transitioning to security laptop, and completing the workflow with full context and data continuity.
+**Independent Test**: Can be tested by initiating a workflow on NUC frontend, transitioning to security laptop, and completing the workflow with full context and data continuity within measurable performance thresholds.
 
 **Acceptance Scenarios**:
 
-1. **Given** user starts MTG deck analysis on frontend, **When** they move to security laptop for automation scripting, **Then** all deck data and analysis context is immediately available
-2. **Given** workflow spans productivity tools (Actual Budget) and security tools (penetration testing), **When** user switches devices, **Then** state synchronization completes within 5 seconds
-3. **Given** AI assistance is required across devices, **When** user requests LLM help, **Then** AI server provides context-aware assistance regardless of which device initiated the request
+1. **Given** user starts MTG deck analysis (Commander Spellbook combo search) on NUC frontend, **When** they transition to security laptop for penetration testing automation, **Then** all deck data (card lists, combo chains, win conditions) and analysis context is available within 3 seconds with zero data loss
+2. **Given** workflow spans productivity tools (Actual Budget expense tracking) and security tools (MISP threat intelligence), **When** user switches devices mid-workflow, **Then** state synchronization completes within 5 seconds and maintains transaction integrity across both tool contexts
+3. **Given** AI assistance is required across devices for workflow optimization, **When** user requests LLM help from any device, **Then** AI server provides context-aware assistance within 2 seconds with full workflow history regardless of originating device
+4. **Given** user has unsaved work on multiple devices, **When** network connectivity is temporarily lost, **Then** each device maintains local state and auto-syncs when connectivity resumes with conflict resolution for concurrent changes
+5. **Given** complex cross-device workflow involves 5+ tools, **When** user monitors execution progress, **Then** unified status dashboard shows real-time device allocation, tool states, and estimated completion times across all participating devices
 
 ---
 
@@ -72,13 +74,15 @@ Security professionals need to perform critical operations when network connecti
 
 **Why this priority**: Security operations often require airgapped environments, making offline capability essential for professional use cases.
 
-**Independent Test**: Can be tested by disconnecting security laptop from network and verifying all 13 security tools remain fully functional with local data processing.
+**Independent Test**: Can be tested by disconnecting security laptop from network and verifying all 13 security tools remain fully functional with local data processing, maintaining <1s response time requirement.
 
 **Acceptance Scenarios**:
 
-1. **Given** security laptop is disconnected from network, **When** analyst performs malware analysis with YARA-X and CyberChef, **Then** all analysis capabilities function normally with local processing
-2. **Given** offline operation is required, **When** analyst generates security reports using Ghostwriter, **Then** reports include all available data and maintain professional quality
-3. **Given** network reconnection occurs, **When** laptop rejoins the local network, **Then** all offline work syncs automatically with other devices without data loss
+1. **Given** security laptop is airgapped from network, **When** analyst performs malware analysis with YARA-X pattern matching and CyberChef data transformation, **Then** all analysis capabilities function with local processing maintaining <1s response time and full feature parity with networked operation
+2. **Given** offline operation is required for sensitive security analysis, **When** analyst generates comprehensive security reports using Ghostwriter integrating MISP threat data and HELK log analysis, **Then** reports include all locally cached data, maintain professional formatting, and preserve audit trail integrity
+3. **Given** 8+ hours of offline security operations have been performed, **When** laptop rejoins the local network, **Then** all offline work (scan results, analysis reports, configuration changes) syncs automatically with NUC frontend and AI server within 60 seconds without data conflicts
+4. **Given** critical security incident occurs during offline operation, **When** analyst uses MISP, SecurityOnion, and Maltrail for threat hunting, **Then** incident investigation workflows execute completely offline with local threat intelligence databases and pattern matching
+5. **Given** security laptop storage reaches 90% capacity during offline operation, **When** system manages local data retention, **Then** automated cleanup preserves critical security data while maintaining 24+ hour operational capability with graceful degradation warnings
 
 ---
 
@@ -92,12 +96,12 @@ Power users need to create complex automated workflows that span multiple tools 
 
 **Acceptance Scenarios**:
 
-1. **Given** I have executive function challenges and 37 separate tools, **When** I open the application, **Then** I see a single dashboard with access to all 37 executive function tools organized by domain (Security: 13 tools, Productivity: 8 tools, MTG: 4 tools, Infrastructure: 12 tools)
-2. **Given** I am using the dashboard, **When** I navigate between different tools from any domain, **Then** I remain within the same application interface without external redirects or separate logins
-3. **Given** I am prone to losing focus, **When** I use any tool feature, **Then** the interface maintains consistent navigation and visual design patterns across all 37 integrated tools
-4. **Given** user designs complex multi-tool workflow using n8n, **When** workflow executes, **Then** AI server optimizes execution order and resource usage across devices
-5. **Given** workflow requires security analysis and productivity tracking, **When** execution spans devices, **Then** data flows seamlessly between security laptop and NUC frontend
-6. **Given** workflow encounters errors or edge cases, **When** AI assistance is invoked, **Then** system provides intelligent troubleshooting and alternative execution paths
+1. **Given** user designs complex multi-tool workflow using n8n connecting security scanning → budget tracking → task management, **When** workflow is executed, **Then** AI server optimizes execution order and resource allocation across all 3 devices within 10 seconds
+2. **Given** workflow requires security analysis on laptop and productivity tracking on frontend, **When** execution spans devices, **Then** data flows seamlessly between security laptop and NUC frontend with <5s synchronization time
+3. **Given** workflow encounters errors or unexpected data formats, **When** AI assistance is invoked, **Then** system provides intelligent troubleshooting suggestions and 3+ alternative execution paths within 15 seconds
+4. **Given** user wants to automate "weekly security review → expense categorization → deck optimization", **When** they describe the workflow in natural language, **Then** AI generates executable n8n workflow with all necessary integrations and validates connections
+5. **Given** automated workflow is running across devices, **When** user monitors execution status, **Then** real-time progress updates are visible with device-specific performance metrics and estimated completion times
+6. **Given** workflow completes successfully, **When** results are generated, **Then** AI provides optimization recommendations for future executions and identifies potential automation expansions
 
 
 ---
