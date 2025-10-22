@@ -1,32 +1,45 @@
 # Consolidated Business Logic Analysis - All Projects
 
-This report consolidates the business logic sections from all 23 projects analyzed in the modular analysis repository. Each project's business logic is presented to understand the core domain knowledge and critical algorithms that must be preserved during platform integration.
+This report consolidates the business logic sections from all 37 projects analyzed in the modular analysis repository. Each project's business logic is presented to understand the core domain knowledge and critical algorithms that must be preserved during platform integration.
 
 ## Table of Contents
 
 1. [Actual Budget - Personal Finance Management](#actual-budget)
-2. [Commander Spellbook - MTG Combo Database](#commander-spellbook)
-3. [CyberChef - Data Analysis Toolkit](#cyberchef)
-4. [Dispatch - Incident Management](#dispatch)
-5. [FileScopeMCP - File Analysis Tool](#filescopemcp)
-6. [Firecrawl - Web Scraping Service](#firecrawl)
-7. [Ghostwriter - Penetration Testing Platform](#ghostwriter)
-8. [Goose - AI Development Agent](#goose)
-9. [HELK - Threat Hunting Platform](#helk)
-10. [HexStrike AI - Security Analysis](#hexstrike-ai)
-11. [Inspector - MCP Protocol Debugger](#inspector)
-12. [IT-Tools - Developer Utilities](#it-tools)
-13. [KasmVNC - Remote Desktop](#kasmvnc)
-14. [Maltrail - Malicious Traffic Detection](#maltrail)
-15. [Mealie - Recipe Management](#mealie)
-16. [MISP - Threat Intelligence Platform](#misp)
-17. [MTG Commander Map - Strategy Visualization](#mtg-commander-map)
-18. [MTG Scripting Toolkit - Card Analysis](#mtg-scripting-toolkit)
-19. [n8n - Workflow Automation](#n8n)
-20. [Nemesis - Post-Exploitation Framework](#nemesis)
-21. [OneX - Security Toolkit](#onex)
-22. [Software Forensic Kit - Code Analysis](#software-forensic-kit)
-23. [YARA-X - Pattern Matching Engine](#yara-x)
+2. [ApiScout - Windows API Analysis](#apiscout)
+3. [BlackArch - Security Distribution](#blackarch)
+4. [Brute Ratel C4 Community Kit - Red Team Framework](#brute-ratel-c4)
+5. [Chroma MCP - Vector Database Server](#chroma-mcp)
+6. [Commander Spellbook - MTG Combo Database](#commander-spellbook)
+7. [CyberChef - Data Analysis Toolkit](#cyberchef)
+8. [Dispatch - Incident Management](#dispatch)
+9. [FileScopeMCP - File Analysis Tool](#filescopemcp)
+10. [Firecrawl - Web Scraping Service](#firecrawl)
+11. [Ghostwriter - Penetration Testing Platform](#ghostwriter)
+12. [Goose - AI Development Agent](#goose)
+13. [HELK - Threat Hunting Platform](#helk)
+14. [HexStrike AI - Security Analysis](#hexstrike-ai)
+15. [Inspector - MCP Protocol Debugger](#inspector)
+16. [IT-Tools - Developer Utilities](#it-tools)
+17. [KasmVNC - Remote Desktop](#kasmvnc)
+18. [Kong - API Gateway](#kong)
+19. [LScript - Kali Linux Automation](#lscript)
+20. [MalwareBazaar MCP - Malware Intelligence](#malwarebazaar-mcp)
+21. [Maltrail - Malicious Traffic Detection](#maltrail)
+22. [MCP VirusTotal - Threat Analysis](#mcp-virustotal)
+23. [Mealie - Recipe Management](#mealie)
+24. [Meterpreter - Post-Exploitation Framework](#meterpreter)
+25. [MISP - Threat Intelligence Platform](#misp)
+26. [MTG Commander Map - Strategy Visualization](#mtg-commander-map)
+27. [MTG Scripting Toolkit - Card Analysis](#mtg-scripting-toolkit)
+28. [n8n - Workflow Automation](#n8n)
+29. [n8n MCP Server - Workflow Integration](#n8n-mcp-server)
+30. [Nemesis - Post-Exploitation Framework](#nemesis)
+31. [OneX - Security Toolkit](#onex)
+32. [RITA - Network Traffic Analysis](#rita)
+33. [SecurityOnion - Network Security Monitoring](#securityonion)
+34. [SecurityOnion n8n Workflows - Security Automation](#securityonion-n8n-workflows)
+35. [Software Forensic Kit - Code Analysis](#software-forensic-kit)
+36. [YARA-X - Pattern Matching Engine](#yara-x)
 
 ---
 
@@ -245,6 +258,238 @@ Transitions:
     to: PAST_MONTH
     trigger: Date reaches next month
     side_effects: Lock budget amounts, finalize calculations
+```
+
+---
+
+## ApiScout - Windows API Analysis {#apiscout}
+
+### Critical Algorithms
+
+**API Address Resolution Algorithm:**
+```yaml
+Algorithm Name: Address-to-API Resolution
+Location: apiscout/ApiScout.py:_resolveApiByAddress()
+Lines of Code: ~15
+Complexity: Simple (O(1) lookup)
+Priority: MUST PRESERVE
+
+Purpose:
+  Converts raw memory addresses found in dumps into human-readable API names
+  by looking up against preloaded Windows API databases
+
+Inputs:
+  - api_map_name: string (database identifier like "winxp_prof_sp3")
+  - address: integer (memory address from binary analysis)
+
+Outputs:
+  - dll_name: string (e.g., "kernel32")
+  - api_name: string (e.g., "CreateFileA") 
+  - bitness: integer (32 or 64)
+
+Algorithm Logic:
+  1. Check if api_map_name exists in loaded databases
+  2. Perform O(1) dictionary lookup: self.api_maps[api_map_name].get(address)
+  3. Return tuple (dll, api, bitness) or (None, None, None) if not found
+
+Edge Cases Handled:
+  - case: Address not in database
+    handling: Returns (None, None, None)
+  - case: Database not loaded
+    handling: Returns (None, None, None)
+
+Performance Characteristics:
+  - Time Complexity: O(1)
+  - Space Complexity: O(1)
+  - Typical Runtime: <1ms per lookup
+  - Max Input Size Tested: Databases with 50,000+ APIs
+
+Why This Matters:
+  Core functionality that enables meaningful output - without this, tool only shows
+  raw addresses which are useless for malware analysis
+```
+
+**ApiVector Compression Algorithm:**
+```yaml
+Algorithm Name: API Vector Compression
+Location: apiscout/ApiVector.py:compress()
+Lines of Code: ~20
+Complexity: Medium
+Priority: MUST PRESERVE
+
+Purpose:
+  Compresses 1024-bit API usage vectors into space-efficient string representation
+  using run-length encoding and base64-like encoding for storage and comparison
+
+Inputs:
+  - api_vector: list of 1024 integers (0 or 1, indicating API presence)
+
+Outputs:
+  - compressed_string: string (e.g., "A5B2C10D1" representing compressed pattern)
+
+Algorithm Logic:
+  1. Convert binary vector to string: "".join(["%d" % bit for bit in api_vector])
+  2. Add padding to make length divisible by 6: + "00" * (len(api_vector) % 3)
+  3. Split into 6-bit chunks and map to custom base64 charset
+  4. Apply run-length encoding to compress repeated characters
+
+Edge Cases Handled:
+  - case: Vector length not divisible by 6
+    handling: Adds padding zeros
+  - case: Single character runs (length 1-2)
+    handling: Keeps original characters without compression
+
+Performance Characteristics:
+  - Time Complexity: O(n) where n=1024
+  - Space Complexity: O(n)
+  - Typical Runtime: ~1ms per vector
+  - Compression Ratio: ~90% size reduction for typical sparse vectors
+
+Why This Matters:
+  Enables efficient storage and comparison of malware families. Critical for
+  building fingerprint databases and performing similarity analysis at scale.
+```
+
+---
+
+## BlackArch - Security Distribution {#blackarch}
+
+### Critical Algorithms
+
+**Package Build Algorithm:**
+```yaml
+Algorithm Name: BlackArch Package Builder (babuild)
+Location: scripts/babuild
+Lines of Code: ~206
+Complexity: Medium
+Priority: MUST PRESERVE
+
+Purpose:
+  Builds BlackArch packages in clean chroot environments to ensure consistency,
+  reproducibility, and isolation from host system contamination
+
+Inputs:
+  - package_name: string (directory name in packages/)
+  - architecture: array of strings (x86_64, aarch64, any)
+  - output_directory: string (where to place built packages)
+  - packager: string (maintainer identification)
+
+Outputs:
+  - built_packages: array of .pkg.tar.zst files
+  - build_logs: text files with compilation output
+  - signature_files: GPG signatures for package integrity
+
+Algorithm Logic:
+  1. Parse command line arguments and validate parameters
+  2. Copy PKGBUILD and related files to temporary directory
+  3. Check package architecture compatibility
+  4. Execute architecture-specific build using appropriate chroot
+  5. Sign packages with GPG keys
+  6. Move completed packages to output directory
+
+Edge Cases Handled:
+  - case: Missing dependencies during build
+    handling: Fails with clear error message
+  - case: Architecture incompatibility
+    handling: Skips incompatible architectures
+  - case: Build failures
+    handling: Preserves logs for debugging
+
+Performance Characteristics:
+  - Time Complexity: O(n*m) where n=source files, m=target architectures
+  - Typical Runtime: 2-30 minutes per package
+  - Max Package Size Tested: Multi-GB source packages
+
+Why This Matters:
+  Core infrastructure that maintains package quality and security for 2600+ tools.
+  Essential for reproducible builds and supply chain security.
+```
+
+---
+
+## Brute Ratel C4 Community Kit - Red Team Framework {#brute-ratel-c4}
+
+### Critical Algorithms
+
+**Domain Controller Discovery Algorithm:**
+```yaml
+Algorithm Name: Domain Controller Discovery
+Location: Community Kit modules
+Lines of Code: ~50-100 (estimated)
+Complexity: Medium
+Priority: MUST PRESERVE
+
+Purpose:
+  Automatically discovers and enumerates Active Directory domain controllers
+  in target networks for red team assessments and penetration testing
+
+Inputs:
+  - target_domain: string (domain name or IP range)
+  - credentials: optional authentication credentials
+  - discovery_method: enum (DNS, LDAP, NetBios, etc.)
+
+Outputs:
+  - dc_list: array of domain controller information
+  - domain_info: collected domain metadata
+  - enumeration_results: detailed AD structure data
+
+Algorithm Logic:
+  1. Attempt multiple discovery methods in priority order
+  2. Query DNS for domain controller records
+  3. Perform LDAP enumeration if credentials available
+  4. Collect and correlate results from multiple sources
+  5. Validate discovered controllers through connectivity tests
+
+Edge Cases Handled:
+  - case: Network segmentation blocking discovery
+    handling: Attempts alternative discovery methods
+  - case: Insufficient privileges for enumeration
+    handling: Falls back to anonymous queries where possible
+
+Why This Matters:
+  Critical for Active Directory assessment workflows. Enables automated
+  reconnaissance that would otherwise require manual enumeration.
+```
+
+---
+
+## Chroma MCP - Vector Database Server {#chroma-mcp}
+
+### Critical Algorithms
+
+**Vector Similarity Search:**
+```yaml
+Algorithm Name: Approximate Nearest Neighbor Search
+Location: MCP server implementation
+Lines of Code: ~100-200 (estimated)
+Complexity: Complex
+Priority: MUST PRESERVE
+
+Purpose:
+  Performs high-dimensional vector similarity searches using approximate
+  algorithms to find semantically similar documents or embeddings
+
+Inputs:
+  - query_vector: high-dimensional embedding vector
+  - collection_name: target collection identifier
+  - similarity_threshold: minimum similarity score
+  - max_results: maximum number of results to return
+
+Outputs:
+  - similar_documents: ranked list of matching documents
+  - similarity_scores: numerical similarity ratings
+  - metadata: associated document metadata
+
+Algorithm Logic:
+  1. Normalize query vector for consistent similarity calculations
+  2. Apply approximate nearest neighbor algorithm (likely HNSW or similar)
+  3. Filter results by similarity threshold
+  4. Rank and limit results according to parameters
+  5. Retrieve associated metadata for matching documents
+
+Why This Matters:
+  Core functionality enabling semantic search and document retrieval.
+  Critical for AI applications requiring contextual information lookup.
 ```
 
 ---
@@ -1929,6 +2174,181 @@ Why This Matters:
 
 ---
 
+## Kong - API Gateway {#kong}
+
+### Critical Algorithms
+
+**Router Request Matching Algorithm:**
+```yaml
+Algorithm Name: Router Request Matching
+Location: kong/router.lua, kong/router/
+Lines of Code: ~1000+ lines across multiple files
+Complexity: Very Complex
+Priority: MUST PRESERVE
+
+Purpose:
+  Matches incoming HTTP requests to configured routes based on multiple criteria
+  including host, path, method, headers, and custom rules with priority ordering
+
+Inputs:
+  - request: HTTP request object with headers, path, method, query parameters
+  - routes: Array of configured route definitions with matching criteria
+  - services: Associated upstream service configurations
+
+Outputs:
+  - matched_route: Selected route configuration
+  - upstream_url: Target service URL for proxying
+  - route_params: Extracted path parameters and variables
+
+Algorithm Logic:
+  1. Pre-process request to normalize headers and extract matching criteria
+  2. Apply route matching in priority order (most specific first)
+  3. Check each route's matching conditions:
+     - Host patterns (exact match, wildcard, regex)
+     - Path patterns (prefix, exact, regex)
+     - HTTP methods
+     - Header conditions
+     - Custom matching plugins
+  4. Select first matching route with highest priority
+  5. Extract path parameters and apply transformations
+
+Performance Characteristics:
+  - Time Complexity: O(n) where n=number of routes (worst case)
+  - Typical Runtime: <1ms for <1000 routes, degrades with complex regex
+  - Optimization: Uses tries and caching for common patterns
+
+Why This Matters:
+  Core routing functionality that determines which backend service handles each request.
+  Critical for API gateway performance and correctness.
+```
+
+**Plugin Execution Engine:**
+```yaml
+Algorithm Name: Plugins Iterator and Execution Engine
+Location: kong/init.lua, kong/runloop/
+Lines of Code: ~500+ lines
+Complexity: Complex
+Priority: MUST PRESERVE
+
+Purpose:
+  Executes configured plugins in correct order for each request phase,
+  handling plugin errors, transformations, and short-circuiting
+
+Inputs:
+  - plugins: Ordered list of enabled plugins for matched route/service
+  - request_context: Current request state and metadata
+  - execution_phase: Phase identifier (access, header_filter, body_filter, etc.)
+
+Outputs:
+  - modified_request: Request after plugin transformations
+  - response_modifications: Headers, body, status code changes
+  - execution_result: Success/failure status with error details
+
+Algorithm Logic:
+  1. Determine applicable plugins for current route/service/consumer
+  2. Sort plugins by execution priority
+  3. For each execution phase:
+     - Iterate through plugins in priority order
+     - Execute plugin handler for current phase
+     - Handle plugin errors and continue/abort decisions
+     - Apply plugin modifications to request/response
+     - Check for short-circuit conditions (auth failures, rate limits)
+
+Why This Matters:
+  Enables Kong's extensibility through plugins. Critical for security,
+  monitoring, transformation, and business logic implementation.
+```
+
+---
+
+## LScript - Kali Linux Automation {#lscript}
+
+### Critical Algorithms
+
+**Tool Installation and Dependency Management:**
+```yaml
+Algorithm Name: Automated Tool Installation with Dependency Resolution
+Location: lscript main script
+Lines of Code: ~10,000+ lines (monolithic script)
+Complexity: Complex
+Priority: MUST PRESERVE
+
+Purpose:
+  Automates installation and configuration of 53+ penetration testing tools
+  with dependency resolution, conflict handling, and system integration
+
+Inputs:
+  - tool_selection: User-selected tools for installation
+  - system_state: Current Kali Linux configuration
+  - installation_preferences: Configuration options and paths
+
+Outputs:
+  - installed_tools: Successfully configured tools
+  - configuration_files: Generated config files
+  - system_modifications: Changes made to system state
+
+Algorithm Logic:
+  1. Analyze selected tools and build dependency graph
+  2. Check for tool conflicts and compatibility issues
+  3. Download required packages and source code
+  4. Install dependencies in correct order
+  5. Configure each tool with appropriate settings
+  6. Update system paths and environment variables
+  7. Verify installations through test commands
+
+Performance Characteristics:
+  - Time Complexity: O(n*m) where n=tools, m=dependencies per tool
+  - Typical Runtime: 30-120 minutes for full installation
+  - Network Dependent: Requires stable internet connection
+
+Why This Matters:
+  Automates complex manual setup that would take days to complete.
+  Critical for rapid deployment of penetration testing environments.
+```
+
+---
+
+## MalwareBazaar MCP - Malware Intelligence {#malwarebazaar-mcp}
+
+### Critical Algorithms
+
+**Malware Sample Query and Analysis:**
+```yaml
+Algorithm Name: MalwareBazaar API Integration and Sample Retrieval
+Location: MCP server implementation
+Lines of Code: ~200-300 (estimated)
+Complexity: Medium
+Priority: MUST PRESERVE
+
+Purpose:
+  Provides programmatic access to MalwareBazaar database for malware sample
+  lookup, download, and metadata retrieval through MCP protocol
+
+Inputs:
+  - query_parameters: Hash values, file types, tags, date ranges
+  - api_credentials: Authentication for MalwareBazaar API
+  - result_limits: Maximum samples to retrieve
+
+Outputs:
+  - sample_metadata: Detailed information about malware samples
+  - download_urls: Secure URLs for sample retrieval
+  - analysis_data: Available static analysis results
+
+Algorithm Logic:
+  1. Validate and sanitize input parameters
+  2. Construct appropriate MalwareBazaar API requests
+  3. Execute API calls with proper error handling
+  4. Parse and normalize response data
+  5. Apply additional filtering and enrichment
+  6. Format results according to MCP protocol standards
+
+Why This Matters:
+  Enables automated malware research workflows and threat intelligence
+  gathering. Critical for security analysis and incident response.
+```
+
+---
+
 ## Maltrail - Network Traffic Analysis {#maltrail}
 
 ### Critical Algorithms
@@ -2188,6 +2608,252 @@ Performance Characteristics:
 Why This Matters:
   Critical for red team operational security. Burned domains can compromise
   entire operations and must be detected quickly to maintain effectiveness.
+```
+
+---
+
+## MCP VirusTotal - Threat Analysis {#mcp-virustotal}
+
+### Critical Algorithms
+
+**Multi-Source Threat Intelligence Aggregation:**
+```yaml
+Algorithm Name: VirusTotal API Integration and Result Aggregation
+Location: MCP server implementation
+Lines of Code: ~150-200 (estimated)
+Complexity: Medium
+Priority: MUST PRESERVE
+
+Purpose:
+  Provides programmatic access to VirusTotal's multi-engine malware scanning
+  and threat intelligence platform through MCP protocol integration
+
+Inputs:
+  - file_hashes: MD5, SHA1, SHA256 hashes for file lookup
+  - api_key: VirusTotal API authentication credentials
+  - scan_options: Analysis depth and engine preferences
+
+Outputs:
+  - detection_results: Per-engine malware detection results
+  - threat_classification: Aggregated threat assessment
+  - metadata: File properties and behavioral analysis
+
+Algorithm Logic:
+  1. Validate input parameters and authenticate with VirusTotal API
+  2. Submit file hashes or URLs for analysis
+  3. Retrieve and parse multi-engine scan results
+  4. Aggregate detection results across security engines
+  5. Apply threat scoring and classification logic
+  6. Format results according to MCP protocol standards
+
+Why This Matters:
+  Enables automated threat analysis workflows and provides multi-engine
+  malware detection capabilities for security operations.
+```
+
+---
+
+## Meterpreter - Post-Exploitation Framework {#meterpreter}
+
+### Critical Algorithms
+
+**Payload Generation and Encoding:**
+```yaml
+Algorithm Name: Multi-Architecture Payload Generation
+Location: Metasploit framework modules
+Lines of Code: ~1000+ lines across modules
+Complexity: Very Complex
+Priority: MUST PRESERVE
+
+Purpose:
+  Generates position-independent shellcode for multiple architectures
+  with evasion techniques and custom encoding schemes
+
+Inputs:
+  - target_architecture: x86, x64, ARM, MIPS, etc.
+  - payload_options: Connection parameters, features, constraints
+  - evasion_techniques: Encoding, encryption, obfuscation methods
+
+Outputs:
+  - compiled_payload: Ready-to-deploy shellcode
+  - loader_stub: Payload deployment mechanism
+  - connection_handler: Listener configuration
+
+Algorithm Logic:
+  1. Select appropriate architecture-specific shellcode template
+  2. Apply payload customizations (IP addresses, ports, features)
+  3. Generate position-independent code with relocation handling
+  4. Apply encoding and encryption layers for evasion
+  5. Create deployment wrapper and connection handler
+  6. Validate payload compatibility and functionality
+
+Why This Matters:
+  Core capability enabling remote access and post-exploitation activities.
+  Critical for penetration testing and red team operations.
+```
+
+---
+
+## n8n MCP Server - Workflow Integration {#n8n-mcp-server}
+
+### Critical Algorithms
+
+**Workflow Automation Bridge:**
+```yaml
+Algorithm Name: MCP-to-n8n Workflow Translation
+Location: MCP server implementation
+Lines of Code: ~300-400 (estimated)
+Complexity: Medium
+Priority: MUST PRESERVE
+
+Purpose:
+  Bridges Model Context Protocol with n8n workflow automation platform,
+  enabling AI agents to trigger and control automated workflows
+
+Inputs:
+  - workflow_definitions: n8n workflow configurations
+  - trigger_parameters: Workflow execution parameters
+  - mcp_requests: Standardized MCP protocol messages
+
+Outputs:
+  - workflow_executions: Triggered n8n workflow instances
+  - execution_results: Workflow output and status information
+  - mcp_responses: Formatted responses for MCP clients
+
+Algorithm Logic:
+  1. Parse MCP requests and extract workflow trigger criteria
+  2. Map MCP parameters to n8n workflow input variables
+  3. Execute workflows through n8n API integration
+  4. Monitor workflow execution status and collect results
+  5. Transform n8n output to MCP-compatible format
+  6. Return standardized responses to MCP clients
+
+Why This Matters:
+  Enables AI agents to leverage existing workflow automation infrastructure,
+  bridging AI capabilities with operational processes.
+```
+
+---
+
+## RITA - Network Traffic Analysis {#rita}
+
+### Critical Algorithms
+
+**Behavioral Traffic Analysis:**
+```yaml
+Algorithm Name: Statistical Network Behavior Analysis
+Location: RITA analysis modules
+Lines of Code: ~500-800 (estimated across modules)
+Complexity: Complex
+Priority: MUST PRESERVE
+
+Purpose:
+  Analyzes network traffic patterns to detect anomalous behavior
+  indicative of malware communication and lateral movement
+
+Inputs:
+  - network_logs: Zeek/Bro network connection logs
+  - analysis_timeframe: Time period for behavioral analysis
+  - baseline_data: Historical normal behavior patterns
+
+Outputs:
+  - behavioral_scores: Anomaly scores for network entities
+  - threat_indicators: Identified suspicious communication patterns
+  - analysis_reports: Detailed findings and recommendations
+
+Algorithm Logic:
+  1. Parse and normalize network connection logs
+  2. Extract communication patterns and metadata
+  3. Apply statistical analysis to identify outliers
+  4. Compare current behavior against historical baselines
+  5. Score entities based on deviation from normal patterns
+  6. Generate threat intelligence and alerting data
+
+Why This Matters:
+  Enables detection of advanced persistent threats and insider threats
+  that evade signature-based detection systems.
+```
+
+---
+
+## SecurityOnion - Network Security Monitoring {#securityonion}
+
+### Critical Algorithms
+
+**Multi-Tool Security Event Correlation:**
+```yaml
+Algorithm Name: Unified Security Event Processing and Correlation
+Location: SecurityOnion integration layer
+Lines of Code: ~1000+ lines (distributed across components)
+Complexity: Very Complex
+Priority: MUST PRESERVE
+
+Purpose:
+  Correlates security events from multiple detection engines (Suricata, Zeek,
+  Wazuh, etc.) to provide unified network security monitoring
+
+Inputs:
+  - network_traffic: Raw network packets and flow data
+  - security_rules: Detection signatures and behavioral rules
+  - threat_intelligence: IOC feeds and reputation data
+
+Outputs:
+  - correlated_alerts: Unified security event notifications
+  - threat_context: Enriched event data with attribution
+  - investigation_data: Supporting evidence and analysis
+
+Algorithm Logic:
+  1. Collect events from multiple security tools simultaneously
+  2. Normalize event formats to common schema
+  3. Apply temporal and contextual correlation logic
+  4. Enrich events with threat intelligence data
+  5. Apply machine learning for false positive reduction
+  6. Generate prioritized alerts with investigation context
+
+Why This Matters:
+  Provides comprehensive network security visibility and reduces
+  alert fatigue through intelligent event correlation.
+```
+
+---
+
+## SecurityOnion n8n Workflows - Security Automation {#securityonion-n8n-workflows}
+
+### Critical Algorithms
+
+**Automated Security Response Orchestration:**
+```yaml
+Algorithm Name: Security Incident Response Workflow Automation
+Location: n8n workflow configurations
+Lines of Code: ~200-500 per workflow
+Complexity: Medium
+Priority: MUST PRESERVE
+
+Purpose:
+  Automates security incident response procedures using n8n workflows
+  integrated with SecurityOnion detection capabilities
+
+Inputs:
+  - security_alerts: SecurityOnion alert notifications
+  - response_procedures: Predefined incident response workflows
+  - integration_apis: SOAR platform and tool APIs
+
+Outputs:
+  - automated_responses: Executed response actions
+  - incident_tickets: Created investigation cases
+  - notification_reports: Stakeholder communications
+
+Algorithm Logic:
+  1. Receive security alerts from SecurityOnion platform
+  2. Apply alert triage and classification logic
+  3. Execute appropriate response workflow based on alert type
+  4. Integrate with external security tools and platforms
+  5. Document actions taken and results achieved
+  6. Notify relevant stakeholders with status updates
+
+Why This Matters:
+  Enables rapid, consistent security incident response at scale,
+  reducing response time and human error in critical situations.
 ```
 
 ---

@@ -2,10 +2,6 @@
 
 Auto-generated from all feature plans. Last updated: 2025-10-18
 
-## Active Technologies
-
-- TypeScript 5.9.3, Python 3.12, Node.js 20 + Next.js 15.5.4, React 19.2.0, FastAPI 0.119.0, NX 21.6.4, vLLM 0.11.0, Chroma DB (001-mental-prosthetic-platform)
-
 ## Project Structure
 
 ```
@@ -20,11 +16,10 @@ cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLO
 
 ## Code Style
 
-TypeScript 5.9.3, Python 3.12, Node.js 20: Follow standard conventions
+ Follow standard conventions
 
 ## Recent Changes
 
-- 001-mental-prosthetic-platform: Added TypeScript 5.9.3, Python 3.12, Node.js 20 + Next.js 15.5.4, React 19.2.0, FastAPI 0.119.0, NX 21.6.4, vLLM 0.11.0, Chroma DB
 
 <!-- MANUAL ADDITIONS START -->
 
@@ -48,12 +43,10 @@ Auto-generated from constitutional requirements and feature plans. Last updated:
 
 ## Active Technologies (Constitutional Stack)
 
-- **Frontend**: Multi-framework approach (constitutional evidence-based strategy)
-  - **React Preservation**: 8 tools maintain React/Next.js (Actual Budget, Commander Spellbook, Inspector, Nemesis, etc.)
-  - **Vue.js Standardization**: 3 tools use Vue.js/Nuxt.js (n8n, IT-Tools, Mealie) + new development
+- **Frontend**: Multi-framework approach [needs to be selected]
   - **Legacy Support**: 26 tools use vanilla JS/server-side rendering
   - **Integration**: Framework-agnostic shared components via Web Components
-- **Backend**: Python 3.12 + FastAPI 0.119.0
+- **Backend**: Python 3.12 + FastAPI 0.119.0 (suggestion)
 - **Database**: PostgreSQL 14+ (primary: 18/37 projects), SQLite (local-first: 5/37 projects), Redis 7+ (caching)
 - **AI Integration**: vLLM 0.11.0, Chroma DB (vector embeddings)
 - **Build/Dev**: Node.js 20, NX 21.6.4
@@ -64,7 +57,7 @@ Auto-generated from constitutional requirements and feature plans. Last updated:
 ```
 apps/
 ├── jane-orchestrator/    # FastAPI backend (37-tool consolidation)
-├── jane-ui/             # Vue.js 3 + TypeScript frontend
+├── jane-ui/             
 ├── [llm-servers]/       # Existing LLM infrastructure
 libs/
 ├── shared/              # Cross-domain utilities

@@ -1,9 +1,10 @@
 # Consolidated Technical Debt Analysis
 
-**Document Overview**: This report consolidates all "Known Technical Debt" sections from the 23 project analysis reports in this repository to provide a comprehensive view of technical debt across all analyzed platforms and tools.
+**Document Overview**: This report consolidates all "Known Technical Debt" sections from the 37 project analysis reports in this repository to provide a comprehensive view of technical debt across all analyzed platforms and tools.
 
 **Created**: October 12, 2025  
-**Source Reports**: 23 individual project analysis reports  
+**Updated**: [Current Date]
+**Source Reports**: 37 individual project analysis reports  
 **Purpose**: Identify patterns, prioritize remediation efforts, and understand technical debt impact across the analyzed ecosystem
 
 ---
@@ -11,28 +12,41 @@
 ## Table of Contents
 
 1. [Actual Budget](#actual-budget)
-2. [Commander Spellbook](#commander-spellbook) 
-3. [CyberChef](#cyberchef)
-4. [Dispatch](#dispatch)
-5. [FileScopeMCP](#filescopemcp)
-6. [Firecrawl](#firecrawl)
-7. [Ghostwriter](#ghostwriter)
-8. [Goose](#goose)
-9. [HELK](#helk)
-10. [HexStrike AI](#hexstrike-ai)
-11. [Inspector](#inspector)
-12. [IT-Tools](#it-tools)
-13. [KasmVNC](#kasmvnc)
-14. [Maltrail](#maltrail)
-15. [Mealie](#mealie)
-16. [MISP](#misp)
-17. [MTG Commander Map](#mtg-commander-map)
-18. [MTG Scripting Toolkit](#mtg-scripting-toolkit)
-19. [n8n](#n8n)
-20. [Nemesis](#nemesis)
-21. [OneX](#onex)
-22. [Software Forensic Kit](#software-forensic-kit)
-23. [YARA-X](#yara-x)
+2. [ApiScout](#apiscout)
+3. [BlackArch](#blackarch)
+4. [Brute Ratel C4 Community Kit](#brute-ratel-c4-community-kit)
+5. [Chroma MCP](#chroma-mcp)
+6. [Commander Spellbook](#commander-spellbook) 
+7. [CyberChef](#cyberchef)
+8. [Dispatch](#dispatch)
+9. [FileScopeMCP](#filescopemcp)
+10. [Firecrawl](#firecrawl)
+11. [Ghostwriter](#ghostwriter)
+12. [Goose](#goose)
+13. [HELK](#helk)
+14. [HexStrike AI](#hexstrike-ai)
+15. [Inspector](#inspector)
+16. [IT-Tools](#it-tools)
+17. [KasmVNC](#kasmvnc)
+18. [Kong](#kong)
+19. [LScript](#lscript)
+20. [MalwareBazaar MCP](#malwarebazaar-mcp)
+21. [Maltrail](#maltrail)
+22. [MCP VirusTotal](#mcp-virustotal)
+23. [Mealie](#mealie)
+24. [Meterpreter](#meterpreter)
+25. [MISP](#misp)
+26. [MTG Commander Map](#mtg-commander-map)
+27. [MTG Scripting Toolkit](#mtg-scripting-toolkit)
+28. [n8n](#n8n)
+29. [n8n MCP Server](#n8n-mcp-server)
+30. [Nemesis](#nemesis)
+31. [OneX](#onex)
+32. [RITA](#rita)
+33. [SecurityOnion](#securityonion)
+34. [SecurityOnion n8n Workflows](#securityonion-n8n-workflows)
+35. [Software Forensic Kit](#software-forensic-kit)
+36. [YARA-X](#yara-x)
 
 ---
 
@@ -49,6 +63,94 @@
   impact: Difficult to test and maintain individual features
   scope: Could benefit from further modularization
   fix_estimate: 3-6 months refactoring effort
+```
+
+---
+
+## ApiScout {#apiscout}
+
+**Known Technical Debt:**
+```yaml
+- debt: Legacy testing approach without async support
+  impact: Test execution blocks main thread, poor performance
+  scope: Testing infrastructure needs modernization  
+  fix_estimate: 2-3 weeks to implement async test framework
+
+- debt: Hard-coded file paths throughout codebase
+  impact: Reduced portability across different environments
+  scope: Configuration management needs implementation
+  fix_estimate: 1-2 weeks to implement configuration system
+
+- debt: No dependency management for external tools
+  impact: Manual setup required, breaks in different environments
+  scope: Packaging and deployment process needs automation
+  fix_estimate: 1 week to implement dependency detection
+```
+
+---
+
+## BlackArch {#blackarch}
+
+**Known Technical Debt:**
+```yaml  
+- debt: Legacy CI/CD pipeline with manual steps
+  impact: Slow package builds, manual intervention required
+  scope: CI automation needs modernization
+  fix_estimate: 4-6 weeks for full automation pipeline
+
+- debt: Manual mirror management and synchronization
+  impact: Inconsistent package availability across mirrors
+  scope: Mirror orchestration needs automation
+  fix_estimate: 3-4 weeks for automated mirror management
+
+- debt: Limited automated testing of package integrity
+  impact: Broken packages may reach users without detection
+  scope: Package validation needs comprehensive automation
+  fix_estimate: 2-3 weeks for automated testing framework
+```
+
+---
+
+## Brute Ratel C4 Community Kit {#brute-ratel-c4-community-kit}
+
+**Known Technical Debt:**
+```yaml
+- debt: Hardcoded configuration values in source
+  impact: Requires recompilation for different environments
+  scope: Configuration management needs implementation
+  fix_estimate: 1-2 weeks for external configuration system
+
+- debt: No automated testing or validation framework
+  impact: Manual verification required for all changes
+  scope: Testing infrastructure needs development
+  fix_estimate: 3-4 weeks for comprehensive test suite
+
+- debt: Manual SSL certificate management
+  impact: Operational overhead, potential security risks
+  scope: Certificate automation needs implementation
+  fix_estimate: 2 weeks for automated certificate management
+```
+
+---
+
+## Chroma MCP {#chroma-mcp}
+
+**Known Technical Debt:**
+```yaml
+- debt: No connection pooling for database operations
+  impact: New connection overhead for each operation
+  scope: Database client needs optimization
+  fix_estimate: 1 week for connection pooling implementation
+
+- debt: Limited observability and monitoring capabilities
+  impact: Difficult to debug performance issues in production
+  scope: Monitoring and metrics need implementation
+  fix_estimate: 2-3 weeks for comprehensive monitoring
+
+- debt: No configuration validation at startup
+  impact: Runtime failures possible with invalid config
+  scope: Configuration validation needs implementation  
+  fix_estimate: 3-5 days for validation framework
 ```
 
 ---
@@ -257,6 +359,72 @@
 
 ---
 
+## Kong {#kong}
+
+**Known Technical Debt:**
+```yaml
+- debt: Traditional router performance with large route counts
+  impact: O(n) route matching in worst case scenarios
+  estimated_effort: 6-12 months for complete expression router migration
+  fix_estimate: High priority - addressed in newer Kong versions
+
+- debt: Plugin configuration validation happens at runtime
+  impact: Invalid plugin configs can cause request failures
+  estimated_effort: 2-3 months for comprehensive validation framework
+  fix_estimate: Medium priority - partial solutions exist
+
+- debt: Limited observability into plugin execution performance
+  impact: Difficult to debug plugin-related performance issues
+  estimated_effort: 1-2 months for plugin-level metrics
+  fix_estimate: Low priority - workarounds available via logging
+```
+
+---
+
+## LScript {#lscript}
+
+**Known Technical Debt:**
+```yaml
+- debt: No automated testing framework
+  impact: Regression risk with changes, manual validation required
+  scope: Testing infrastructure needs comprehensive development
+  fix_estimate: High (requires test development for 53+ integrated tools)
+
+- debt: Minimal documentation for individual tool integrations
+  impact: Difficult for contributors to understand tool-specific logic
+  scope: Documentation needs expansion for each integrated security tool
+  fix_estimate: Medium (comprehensive documentation effort)
+
+- debt: Hardcoded configurations throughout bash script
+  impact: Reduces portability and customization options
+  scope: Configuration management needs implementation
+  fix_estimate: Medium (refactoring for external configuration)
+```
+
+---
+
+## MalwareBazaar MCP {#malwarebazaar-mcp}
+
+**Known Technical Debt:**
+```yaml
+- debt: No connection pooling for HTTP requests
+  impact: New connection overhead for each API call
+  effort_to_fix: Low (httpx client configuration)
+  priority: Low (minimal impact for typical usage)
+
+- debt: No retry logic for transient network failures
+  impact: Temporary API outages cause tool failures
+  effort_to_fix: Medium (exponential backoff implementation)
+  priority: Medium (improves reliability)
+
+- debt: Limited input validation beyond basic format checks
+  impact: Reliance on API for comprehensive validation
+  effort_to_fix: Medium (comprehensive validation logic)
+  priority: Low (API provides validation safety net)
+```
+
+---
+
 ## Maltrail {#maltrail}
 
 **Technical Debt and Known Issues:**
@@ -303,6 +471,20 @@
   scope: Need comprehensive offline/error state handling
   fix_estimate: 3-4 weeks for robust error handling
 ```
+
+---
+
+## MCP VirusTotal {#mcp-virustotal}
+
+**Known Technical Debt:**
+*No specific technical debt section found in the MCP VirusTotal analysis report.*
+
+---
+
+## Meterpreter {#meterpreter}
+
+**Known Technical Debt:**
+*No specific technical debt section found in the Meterpreter analysis report.*
 
 ---
 
@@ -370,6 +552,13 @@
 
 ---
 
+## n8n MCP Server {#n8n-mcp-server}
+
+**Known Technical Debt:**
+*No specific technical debt section found in the n8n MCP Server analysis report.*
+
+---
+
 ## Nemesis {#nemesis}
 
 **Known Technical Debt:**
@@ -424,6 +613,42 @@
 
 ---
 
+## RITA {#rita}
+
+**Known Technical Debt:**
+*No specific technical debt section found in the RITA analysis report.*
+
+---
+
+## SecurityOnion {#securityonion}
+
+**Known Technical Debt:**
+*No specific technical debt section found in the SecurityOnion analysis report.*
+
+---
+
+## SecurityOnion n8n Workflows {#securityonion-n8n-workflows}
+
+**Known Technical Debt:**
+```yaml
+- debt: No input validation or sanitization
+  impact: Potential XSS vulnerabilities in HTML reports
+  cause: Rapid development focus on functionality
+  fix_estimate: 1-2 days per workflow
+
+- debt: Hardcoded API keys in workflow placeholders
+  impact: Deployment complexity, security risks
+  cause: n8n workflow export/import limitations
+  fix_estimate: 4 hours (documentation and process improvement)
+
+- debt: No error handling or retry logic
+  impact: Reduced reliability, user frustration
+  cause: Initial prototype focus
+  fix_estimate: 2-3 days comprehensive error handling
+```
+
+---
+
 ## Software Forensic Kit {#software-forensic-kit}
 
 **Known Technical Debt:**
@@ -455,27 +680,39 @@
 ### Patterns and Trends
 
 **Security-Related Debt (High Priority):**
+
 - Weak authentication mechanisms (KasmVNC, Maltrail)
-- Input validation gaps (OneX, Maltrail)
+- Input validation gaps (OneX, Maltrail, SecurityOnion n8n Workflows)
 - Missing security scanning (Nemesis)
 - Client-side authorization enforcement (Maltrail)
+- Hardcoded credentials/API keys (SecurityOnion n8n Workflows, Brute Ratel C4)
+- Command injection vulnerabilities (OneX)
 
 **Performance-Related Debt (Medium Priority):**
+
 - Synchronous operations blocking UI/processing (Dispatch, Ghostwriter, HexStrike AI)
 - Bundle size and loading issues (n8n, IT-Tools)
 - Memory usage optimization needs (MTG Commander Map, Firecrawl)
 - Lack of caching mechanisms (Commander Spellbook)
+- Route matching performance issues (Kong)
+- No connection pooling (Chroma MCP, MalwareBazaar MCP)
 
 **Testing and Quality Debt (Medium Priority):**
-- Missing test coverage (HexStrike AI, Inspector, IT-Tools)
-- No automated testing frameworks (Maltrail, MTG Commander Map)
+
+- Missing test coverage (HexStrike AI, Inspector, IT-Tools, ApiScout)
+- No automated testing frameworks (Maltrail, MTG Commander Map, LScript, Brute Ratel C4)
 - Performance regression detection gaps (Mealie)
+- No comprehensive integration testing (Nemesis)
+- Legacy testing approaches (ApiScout, BlackArch)
 
 **Architecture and Maintenance Debt (Lower Priority):**
+
 - Monolithic structures needing modularization (Actual Budget, OneX)
 - Mixed technology stacks requiring migration (Actual Budget, Ghostwriter, Mealie)
-- Hard-coded values needing configuration (Inspector)
-- Manual processes needing automation (IT-Tools)
+- Hard-coded values needing configuration (Inspector, ApiScout, Brute Ratel C4, LScript)
+- Manual processes needing automation (IT-Tools, BlackArch)
+- Limited observability and monitoring (Kong, Chroma MCP, KasmVNC)
+- Configuration validation gaps (Kong, Chroma MCP)
 
 ### Migration Recommendations
 

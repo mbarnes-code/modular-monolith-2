@@ -1,9 +1,8 @@
 <!--
 Sync Impact Report:
 - Version change: 1.1.0 → 1.2.0 (Multi-Framework Integration Strategy)
-- Modified principles: Technology Standards (Vue.js mandate → multi-framework strategy), Platform Architecture Standards (business logic preservation clarification)
+- Modified principles: Platform Architecture Standards (business logic preservation clarification)
 - Added sections: Frontend Framework Integration Strategy, Framework-Specific Migration Criteria
-- Removed sections: Vue.js constitutional mandate (replaced with evidence-based approach)
 - Templates requiring updates: ✅ All templates updated with multi-framework approach
 - Follow-up TODOs: Update copilot-instructions.md with multi-framework strategy, update jane-ui project configuration
 -->
@@ -70,38 +69,6 @@ The monorepo structure MUST maintain clear boundaries and dependencies:
 - **Configuration Management**: Environment-specific configs MUST be externalized and validated
 
 **Rationale**: Modular architecture enables independent development teams, selective deployments, and prevents monolithic coupling while maintaining shared infrastructure benefits.
-
-## Technology Standards
-
-**Approved Core Stack**: Node.js 20, Python 3.12, TypeScript 5.9.3, FastAPI 0.119.0, NX 21.6.4, vLLM 0.11.0, Chroma DB
-**Database**: PostgreSQL (primary - 18/37 projects), SQLite (local-first - 5/37 projects), Redis 7+ (caching), Vector DB (AI embeddings)
-**Security**: HTTPS required, JWT authentication, OAuth2 for external access, input validation on all endpoints, 250ms WebSocket latency
-**Containerization**: Docker required for all services, Kubernetes manifests for production
-**Monitoring**: Structured logging (JSON), metrics collection, distributed tracing for multi-service operations
-
-### Frontend Framework Integration Strategy (CONSTITUTIONAL)
-
-**Multi-Framework Approach**: Evidence-based framework selection preserving existing business logic across all 37 tools:
-
-**Framework Distribution by Business Logic Analysis**:
-
-- **React-Based Projects (8 tools)**: Actual Budget (React 19.2.0), Commander Spellbook (Next.js 15.5.2/React 19.1.0), Inspector (React + Radix UI), Nemesis (React 18+), Dispatch, Firecrawl, Goose, Hexstrike AI
-- **Vue.js-Based Projects (3 tools)**: n8n (Vue.js 3.x), IT-Tools (Vue 3), Mealie (Nuxt.js/Vue.js)
-- **No Framework Projects (26 tools)**: CyberChef (vanilla JS), Ghostwriter (Django templates), HELK (Kibana), Maltrail (jQuery), and 22 backend-only services
-
-**Framework Preservation Criteria (NON-NEGOTIABLE)**:
-
-- **React Preservation**: All React-based tools maintain existing frameworks to ensure 100% business logic preservation (SC-011 compliance)
-- **Vue.js Standardization**: New frontend development uses Vue.js 3 + TypeScript for consistency
-- **Legacy Support**: Vanilla JS/server-side rendering preserved for tools without modern framework requirements
-- **Integration Layer**: Framework-agnostic shared components via Web Components for cross-tool consistency
-
-**Technology Migration Strategy**:
-
-- **Category A (React Tools)**: Preserve existing React implementations, enhance with shared component integration
-- **Category B (Vue.js Tools)**: Maintain Vue.js implementations as reference standard for new development
-- **Category C (Legacy Tools)**: Modernize selectively based on business value, default to Vue.js for substantial rewrites
-- **New Development**: Vue.js 3 + TypeScript for all new frontend applications
 
 ## Platform Architecture Standards (CONSTITUTIONAL)
 

@@ -120,16 +120,16 @@ jane-monorepo/
 
 - **Node.js**: 20
 - **Python**: 3.12
-- **TypeScript**: 5.9.3 (exact version)
-- **Next.js**: 15.5.4 (exact version)
-- **React**: 19.2.0 (exact version)
-- **FastAPI**: 0.119.0 (exact version)
-- **Django**: 5.2.7 (exact version)
-- **SQLAlchemy**: 2.0.44 (exact version)
-- **Pydantic**: 2.12.0 (exact version)
-- **Uvicorn**: 0.37.0 (exact version)
-- **vLLM**: 0.11.0 (exact version)
-- **NX**: 21.6.4 (exact version)
+- **TypeScript**: 5.9.3
+- **Next.js**: 15.5.4
+- **React**: 19.2.0
+- **FastAPI**: 0.119.0 
+- **Django**: 5.2.7 
+- **SQLAlchemy**: 2.0.44 
+- **Pydantic**: 2.12.0 
+- **Uvicorn**: 0.37.0 
+- **vLLM**: 0.11.0 
+- **NX**: 21.6.4 
 - **Rust**: 1.70+ (for specific integrations)
 - **Java**: 17 LTS (for specific integrations)
 

@@ -5,25 +5,99 @@
 **Status**: Draft - Requirements Refinement  
 **Input**: User description: "lets refine the requirements with the clarity of 37 projects and remove ambiguities"
 
+**[MERGED FROM 003]**: Additional context: "3-device modular monolith deployment integrating 37 executive function tools across NUC frontend, dedicated AI server, and security laptop with ISO boot"
+
 **Previous Version**: `001-mental-prosthetic-platform` created 2025-10-18  
 **Original Input**: "we are attempting to build a modular monolithic application for myself. i am diagnosed with ADHD inattentive type and Autism. as such i lose focus on a lot of things in life. in order to overcome this executive function issue, i have strived to make an application that can serve as a mental prosthetic. this application is split into two parts: the frontend server and the backend AI server. over the past 7 months i have been developing and rebuilding and building to try to build this  prosthetic. i have found over 20 projects that serve me in some fashion with my executive function issues. rather than deploy them as individual docker containers, i ran analysis on the projects and found they use similar tech stacks and so i am trying to merge, integrate, etc them into one application and attach a local llm  from my second server to assist me. should the local server succeed, i will build a mobile app that will connect back to my home server securely and connect the local server to a website i own. i want to stress that i do not want wrappers or any shortcuts in integrating these projects. i want to maintain all business logic into one frontend platform."
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Unified Dashboard Access (Priority: P1)
+### User Story 1 - Unified Executive Function Dashboard (Priority: P1) [MERGED FROM 003: renamed from "Unified Dashboard Access"]
 
 As a user with ADHD and executive function challenges, I want to access all my 37 executive function tools through a single unified interface so that I don't get overwhelmed by managing multiple separate applications and can maintain focus on my tasks.
 
-**Why this priority**: This is foundational - without a unified interface, the core value proposition (reducing cognitive load) cannot be achieved. This addresses the primary problem of scattered tools causing additional executive function burden across 37 different applications.
+**[MERGED FROM 003]**: A user with ADHD needs to access all 37 executive function tools through a single interface that maintains focus and reduces context switching by 95% as constitutionally required.
 
-**Independent Test**: Can be fully tested by accessing the unified dashboard and verifying all 37 integrated executive function tools are available in one interface, delivering immediate value by reducing context switching from 37 separate interfaces to 1.
+**Why this priority**: This is foundational - without a unified interface, the core value proposition (reducing cognitive load) cannot be achieved. This addresses the primary problem of scattered tools causing additional executive function burden across 37 different applications. ````
+
+## Appendix: Future Multi-Device Architecture (003 Research)
+
+*Note: The following content represents research and planning for future multi-device deployment options. The current implementation focuses on a single modular monolith deployment with optional device distribution scaling.*
+
+**Independent Test**: Can be fully tested by accessing the unified dashboard and verifying all 37 integrated executive function tools are available in one interface, delivering immediate value by reducing context switching from 37 separate interfaces to 1. **[MERGED FROM 003]**: Can be fully tested by accessing the NUC frontend interface and verifying all 4 domains (Security: 13 tools, Productivity: 8 tools, MTG: 4 tools, Infrastructure: 12 tools) are accessible within 200ms response time without external navigation.
+
+**Acceptance Scenarios**:
+
+1. **Given** user accesses NUC frontend on local network, **When** they navigate between any two of the 37 tools, **Then** transition completes within 200ms with consistent UI patterns
+2. **Given** user has multiple tools open simultaneously, **When** they switch focus between tools, **Then** each tool preserves its state and context without reload
+3. **Given** user needs cross-domain workflow (e.g., security analysis → productivity task management), **When** they initiate data transfer between tools, **Then** data flows seamlessly without manual copy/paste operations
+
+---
+
+### User Story 2 - AI-Enhanced Security Operations (Priority: P1) [MERGED FROM 003: New user story]
+
+A cybersecurity analyst needs to perform threat hunting across multiple security tools (MISP, HELK, SecurityOnion, YARA-X, etc.) with AI assistance for correlation and analysis while using the dedicated security laptop.
+
+**Why this priority**: Security domain represents the highest complexity with 13 critical tools requiring real-time threat analysis capabilities.
+
+**Independent Test**: Can be tested by booting security laptop from ISO, connecting to AI server, and performing complete threat hunting workflow from initial detection through incident response.
+
+**Acceptance Scenarios**:
+
+1. **Given** security laptop boots from custom ISO, **When** analyst launches MISP for threat intelligence, **Then** system connects to AI server and provides enhanced correlation within 1s response time
+2. **Given** multiple security tools are running (HELK + SecurityOnion + Maltrail), **When** threat indicators are detected, **Then** AI server automatically correlates across all tools and presents unified analysis
+3. **Given** analyst discovers potential threat, **When** they initiate incident workflow, **Then** system automatically populates incident management tools with relevant context from all security platforms
+
+---
+
+### User Story 3 - Seamless Multi-Device Workflow Orchestration (Priority: P2) [MERGED FROM 003: New user story]
+
+A user needs to start a complex workflow on one device (e.g., planning MTG deck strategy on frontend) and continue it on another device (e.g., implementing automation scripts on security laptop) with full context preservation.
+
+**Why this priority**: Enables the unique multi-device value proposition that distinguishes this platform from single-machine solutions.
+
+**Independent Test**: Can be tested by initiating a workflow on NUC frontend, transitioning to security laptop, and completing the workflow with full context and data continuity.
+
+**Acceptance Scenarios**:
+
+1. **Given** user starts MTG deck analysis on frontend, **When** they move to security laptop for automation scripting, **Then** all deck data and analysis context is immediately available
+2. **Given** workflow spans productivity tools (Actual Budget) and security tools (penetration testing), **When** user switches devices, **Then** state synchronization completes within 5 seconds
+3. **Given** AI assistance is required across devices, **When** user requests LLM help, **Then** AI server provides context-aware assistance regardless of which device initiated the request
+
+---
+
+### User Story 4 - Offline-Capable Security Operations (Priority: P2) [MERGED FROM 003: New user story]
+
+Security professionals need to perform critical operations when network connectivity is limited or when airgapped security is required, with full tool functionality preserved on the security laptop.
+
+**Why this priority**: Security operations often require airgapped environments, making offline capability essential for professional use cases.
+
+**Independent Test**: Can be tested by disconnecting security laptop from network and verifying all 13 security tools remain fully functional with local data processing.
+
+**Acceptance Scenarios**:
+
+1. **Given** security laptop is disconnected from network, **When** analyst performs malware analysis with YARA-X and CyberChef, **Then** all analysis capabilities function normally with local processing
+2. **Given** offline operation is required, **When** analyst generates security reports using Ghostwriter, **Then** reports include all available data and maintain professional quality
+3. **Given** network reconnection occurs, **When** laptop rejoins the local network, **Then** all offline work syncs automatically with other devices without data loss
+
+---
+
+### User Story 5 - Intelligent Workflow Automation (Priority: P3) [MERGED FROM 003: New user story]
+
+Power users need to create complex automated workflows that span multiple tools and devices, with AI assistance for workflow design and execution optimization.
+
+**Why this priority**: Represents the advanced use case that maximizes platform value for sophisticated users while demonstrating full integration capabilities.
+
+**Independent Test**: Can be tested by creating a complex workflow (e.g., automated threat hunting → incident response → budget impact analysis) and verifying it executes across all three devices with AI optimization.
 
 **Acceptance Scenarios**:
 
 1. **Given** I have executive function challenges and 37 separate tools, **When** I open the application, **Then** I see a single dashboard with access to all 37 executive function tools organized by domain (Security: 13 tools, Productivity: 8 tools, MTG: 4 tools, Infrastructure: 12 tools)
 2. **Given** I am using the dashboard, **When** I navigate between different tools from any domain, **Then** I remain within the same application interface without external redirects or separate logins
 3. **Given** I am prone to losing focus, **When** I use any tool feature, **Then** the interface maintains consistent navigation and visual design patterns across all 37 integrated tools
-
+4. **Given** user designs complex multi-tool workflow using n8n, **When** workflow executes, **Then** AI server optimizes execution order and resource usage across devices
+5. **Given** workflow requires security analysis and productivity tracking, **When** execution spans devices, **Then** data flows seamlessly between security laptop and NUC frontend
+6. **Given** workflow encounters errors or edge cases, **When** AI assistance is invoked, **Then** system provides intelligent troubleshooting and alternative execution paths
 
 
 ---
@@ -89,13 +163,24 @@ As a user who needs executive function support throughout my day, I want secure 
 - What occurs when network connectivity is lost during remote access sessions while using cross-domain functionality?
 - How does the platform behave when one of the 37 integrated tools has an error or becomes unavailable while maintaining functionality for the other 36 tools?
 - What happens when the user is in a hyperfocus state and forgets to take breaks or check other important tasks across domains?
-- How does the system handle performance when all 37 tools are actively used simultaneously?
+- How does system handle device disconnection during multi-device workflows?
+- What occurs when security laptop ISO encounters hardware compatibility issues?
+- How does platform manage resource contention when all 37 tools are active simultaneously?
+- What happens during network partitioning between the three devices?
 
 
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
+
+**Deployment Architecture Requirements (CLARIFIED)**:
+
+- **FR-001a**: System MUST be deployed as a single modular monolith with containerized services that can optionally be distributed across multiple devices as scaling requires
+- **FR-001b**: System MUST provide unified interface for all 37 executive function tools with <200ms UI response time regardless of underlying deployment topology  
+- **FR-001c**: AI server integration MUST provide LLM enhancement for applicable business logic algorithms while maintaining original functionality as fallback, deployable either as part of monolith or separate service
+- **FR-001d**: Security tools MUST support both integrated deployment (within monolith) and optional airgapped deployment for specialized security operations
+- **FR-001e**: System MUST enable future expansion to multi-device architecture without requiring complete re-architecture of core business logic
 
 - **FR-001**: System MUST integrate exactly 37 executive function projects from the features/ directory into a unified modular monolithic application using big-bang migration strategy (all 37 tools delivered simultaneously in one release, though development may proceed in phases), preserving all original business logic, with integration completion defined as features/ directory being completely empty
 - **FR-002**: System MUST provide a single unified interface that eliminates the need to manage 37 separate docker containers or applications, reducing interface complexity from 37 to 1
@@ -112,6 +197,34 @@ As a user who needs executive function support throughout my day, I want secure 
 - **FR-013**: System MUST provide partial functionality with clear status indicators during component failures and implement automated recovery workflows with tool-specific rollback capabilities (rolling back individual tools first) and system-wide fallback (rolling back entire system if needed) to restore full functionality within 15 minutes of issue resolution. Tool-specific rollback MUST include: database transaction rollback per tool domain, service restart capabilities for individual tools, configuration state restoration from last known good state, data consistency validation after rollback, and user notification of affected functionality during rollback operations.
 - **FR-014**: System MUST categorize the 37 projects into complexity tiers and organize using layer-based service boundaries with clear technical layer separation (UI Layer for all user interfaces, API Layer for business logic, Data Layer for persistence, AI Layer for LLM integration) based on business logic analysis documentation. Tool complexity categories are defined as: **Category A (Complex Algorithms)**: Tools with >5,000 lines of core business logic, custom algorithms, or specialized data processing (e.g., MISP threat correlation, n8n workflow engine, Commander Spellbook combo generation) - preserve as microservices or embedded libraries; **Category B (Domain Logic)**: Tools with 1,000-5,000 lines of domain-specific workflows and business rules (e.g., Mealie recipe management, Dispatch incident management, SecurityOnion configuration) - modularize within monolith maintaining workflow integrity; **Category C (Utilities)**: Tools with <1,000 lines of primarily utility functions or simple interfaces (e.g., IT-Tools utilities, simple MCP servers, basic security scripts) - integrate as shared libraries with API compatibility.
 - **FR-015**: System MUST implement comprehensive multi-layer testing strategy following constitution requirements: Unit tests (80%+ coverage for all business logic), Integration tests (required for service-to-service communication, API contracts, database interactions), End-to-end tests (critical user journeys automated using Playwright), Contract tests (APIs with OpenAPI specifications and validation), Performance tests (load testing for all public endpoints >1000 req/s baseline, domain-specific performance tiers)
+
+**[MERGED FROM 003]**: Constitutional Platform Requirements [needs clarification: overlap with existing FR requirements]:
+
+- **FR-016**: System MUST consolidate all 37 tools into unified interface reducing context switching by 95% (constitutional requirement) [FROM 003]
+- **FR-017**: System MUST preserve 100% of existing business logic functionality across all tools during integration [FROM 003]
+- **FR-018**: System MUST support ADHD/Autism executive function accommodations with consistent navigation patterns and <200ms response times [FROM 003]
+- **FR-019**: System MUST maintain WCAG 2.1 AA compliance across all interfaces with enhanced focus indicators [FROM 003]
+
+**[MERGED FROM 003]**: Domain-Specific Requirements:
+
+- **FR-020**: Security Domain (13 tools) MUST achieve <1s response time for threat analysis with AI correlation across MISP, HELK, SecurityOnion, YARA-X, Maltrail, CyberChef, Nemesis, Ghostwriter, Brute Ratel C4, ApiScout, RITA, OneX, and BlackArch [FROM 003]
+- **FR-021**: Productivity Domain (8 tools) MUST achieve <2s response time for task management across Actual Budget, Mealie, Dispatch, n8n, IT-Tools, Firecrawl, Goose, and Inspector [FROM 003]
+- **FR-022**: MTG Domain (4 tools) MUST achieve <3s response time for game analysis across Commander Spellbook, MTG Commander Map, MTG Scripting Toolkit, and card analysis tools [FROM 003]
+- **FR-023**: Infrastructure Domain (12 tools) MUST achieve <5s response time for system operations across Kong, KasmVNC, LScript, and various MCP servers [FROM 003]
+
+**[MERGED FROM 003]**: Data Flow and Integration Requirements:
+
+- **FR-024**: System MUST enable real-time data synchronization between devices with eventual consistency model [FROM 003]
+- **FR-025**: System MUST support cross-tool data workflows without manual export/import operations [FROM 003]
+- **FR-026**: System MUST maintain audit logs for all cross-device operations and security-sensitive actions [FROM 003]
+- **FR-027**: System MUST provide rollback capability for failed multi-device operations [FROM 003]
+
+**[MERGED FROM 003]**: AI Integration Requirements:
+
+- **FR-028**: AI server MUST enhance business logic algorithms while preserving deterministic behavior for financial and security-critical operations [FROM 003]
+- **FR-029**: System MUST provide context-aware AI assistance that understands user's current tool and workflow state [FROM 003]
+- **FR-030**: AI processing MUST NOT block critical real-time operations (security monitoring, UI interactions) [FROM 003]
+- **FR-031**: System MUST support gradual LLM rollout with fallback to original algorithms for reliability [FROM 003]
 
 ### Non-Functional Requirements
 
@@ -154,19 +267,25 @@ As a user who needs executive function support throughout my day, I want secure 
 
 ### Key Entities *(include if feature involves data)*
 
-- **User Profile**: Personal preferences, ADHD/autism-specific settings, executive function patterns, historical usage data across all 37 tools, and AI learning context
-- **Integrated Tool**: Individual executive function applications with their business logic, data schemas, user interfaces, and integration status (37 total tools across 4 domains)
-- **AI Context**: User interaction history across all tools, task patterns, reminder schedules, and personalization data for LLM assistance with cross-tool awareness
-- **Task**: User activities across all 37 tools with status, dependencies, AI-generated breakdowns, and cross-domain relationships
-- **Unified Session**: Single authentication session spanning all 37 integrated tools and AI interactions with session persistence
-- **Sync State**: Real-time synchronization status between frontend platform, backend AI server, and all integrated tool states
-- **Domain Classification**: Organizational structure for 37 tools: Security (13 tools), Productivity (8 tools), MTG (4 tools), Infrastructure (12 tools)
+**Core Platform Entities (UNIFIED DEFINITIONS)**:
+
+- **User Profile**: Comprehensive user representation including personal preferences, ADHD/autism-specific settings, executive function patterns, historical usage data across all 37 tools, AI learning context, and multi-device preferences
+- **Integrated Tool**: Individual executive function applications with their business logic, data schemas, user interfaces, integration status, deployment configuration (monolith vs distributed), and device affinity (37 total tools across 4 domains)
+- **Platform Session**: Unified authentication and state management spanning all 37 integrated tools, AI interactions, cross-device synchronization, session persistence, and device context awareness (combines "Unified Session" and "User Session" concepts)
+- **AI Enhancement Context**: Comprehensive AI assistance data including LLM conversation history, user interaction patterns across all tools, task breakdowns, reminder schedules, personalization data, cross-tool learning, and enhancement preferences per user/workflow (unified "AI Context" definition)
+- **Task & Workflow**: User activities and automation sequences across all 37 tools with status tracking, dependencies, AI-generated breakdowns, cross-domain relationships, multi-device execution state, error handling, and progress monitoring
+- **Sync State**: Real-time synchronization status between all platform components including frontend interface, AI services, integrated tools, cross-device state, and conflict resolution data
+- **Domain Classification**: Organizational structure for 37 tools with performance tiers: Security (13 tools, <1s), Productivity (8 tools, <2s), MTG (4 tools, <3s), Infrastructure (12 tools, <5s)
+- **Deployment Topology**: System configuration representing current deployment state (single monolith vs distributed), device capabilities, resource allocation, scaling options, and migration paths
+- **Security Profile**: Security posture management including airgapped operation modes, threat intelligence sharing, device isolation policies, and security-specific tool configurations
 
 
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
+
+#### Phase 1: Modular Monolith Success Criteria (Current Implementation)
 
 - **SC-001**: User can access all 37 executive function tools through a single interface without external application switching, reducing interface count from 37 to 1
 - **SC-002**: Integration preserves 100% of original tool functionality without feature loss or degradation across all 37 applications
@@ -179,6 +298,25 @@ As a user who needs executive function support throughout my day, I want secure 
 - **SC-009**: User reports improved task completion rates and reduced executive function overwhelm compared to previous 37-container setup, measured via usage analytics
 - **SC-010**: Integration process successfully moves all code from features/ directory into modular monolith structure with features/ directory verified empty and all 37 tools fully operational
 - **SC-011**: Business logic preservation strategy achieves measurable success: 100% of original algorithms preserved (verified through automated testing), 0% functionality degradation (measured via feature parity testing), All 37 tools pass integration validation checkpoints, Complex algorithms (Category A) maintain identical input/output behavior, Domain logic (Category B) preserves workflow integrity, Utility functions (Category C) maintain API compatibility
+- **SC-013**: UI interactions respond within 200ms for executive function support compliance (React frontend performance target)
+- **SC-015**: AI-enhanced operations show 2-10x improvement in accuracy/speed while maintaining original functionality as fallback
+- **SC-017**: Security operations achieve 60-95% reduction in false positives through AI correlation
+- **SC-018**: Workflow automation reduces manual task overhead by 70% across productivity domain
+- **SC-019**: MTG strategy analysis provides competitive insights within 3-second response times
+- **SC-021**: Platform handles simultaneous operation of all 37 tools without performance degradation
+
+#### Phase 2: Multi-Device Architecture Success Criteria (Future Scaling)
+
+*Note: These criteria apply when expanding to multi-device deployment (see Appendix for detailed architecture)*
+
+- **SC-014**: Cross-device operations complete within 250ms for real-time workflow continuity
+- **SC-020**: Security laptop operates fully offline with 13 security tools for airgapped environments  
+- **SC-022**: Device failure scenarios maintain 80% of functionality through automatic redistribution
+- **SC-023**: Network partitioning scenarios preserve local functionality with automatic recovery upon reconnection
+- **SC-024**: ISO creation process produces bootable security platform in under 30 minutes
+- **SC-025**: Complete platform deployment (all three devices) completes within 2 hours from hardware setup
+- **SC-026**: System updates deploy across all devices with <5 minutes downtime
+- **SC-027**: Resource utilization remains below 80% on each device during normal operation to maintain responsiveness
 
 **Resolved Conflicts from 001 Spec**:
 
@@ -207,16 +345,33 @@ As a user who needs executive function support throughout my day, I want secure 
 - Q: What specific strategy should be used for preserving 100% of functionality from 37 tools during integration? → A: Comprehensive preservation: Code analysis, behavior mapping, automated testing, validation checkpoints for each of 37 tools
 - Q: What are the measurable success criteria for the comprehensive preservation strategy in FR-005? → A: Measurable preservation criteria: 100% algorithm preservation (verified through input/output testing), 0% functionality degradation (measured via automated feature parity tests), All API endpoints maintain identical response schemas, Complex algorithms pass identical test suites, User workflows remain unchanged, Performance benchmarks match or exceed original tool performance
 
+### Session 2025-10-22 [MERGED FROM 003]
+
+- Q: Should the platform be deployed as a single modular monolith (002 approach) or as a 3-device distributed system (003 approach)? → A: Single modular monolith with optional device distribution (start unified, expand to multiple devices later)
+- Q: How should the Vue.js vs React framework choice be resolved between 002 assumptions and updated plan requirements? → A: React latest + Next.js latest + TypeScript (constitutional stack)
+- Q: How should duplicate entity definitions (User Session vs Unified Session, duplicate AI Context) be resolved? → A: Create new unified entity definitions that combine features from both versions
+- Q: How should the detailed 3-device architecture content from 003 be handled given the single modular monolith approach? → A: Move 3-device details to appendix section (preserve for future reference but de-emphasize)
+- Q: How should overlapping success criteria between 002 and 003 be resolved (e.g., SC-002 vs SC-016, SC-004 vs SC-012)? → A: Keep all criteria but clearly label which apply to current vs future phases
+
 ## Assumptions
 
 - All 37 projects in features/ directory are currently functional and their analysis documentation in docs/modular-analysis-repo-main/ is accurate and complete
 - Local Synology NAS is available and accessible for automated backup integration
 - User has ADHD inattentive type and Autism diagnoses requiring executive function support
 - Local LLM server infrastructure is already established and operational
-- Vue.js 3 + TypeScript frontend framework choice is based on compatibility analysis showing n8n, IT-Tools, and Mealie already use Vue.js
 - FastAPI backend framework choice is based on analysis showing 6 projects already use FastAPI (Mealie, Dispatch, Nemesis, HexStrike AI, and others)
 - PostgreSQL database choice supports 18 of the 37 projects with SQLite maintained for 5 local-first applications
+- React latest + Next.js latest + TypeScript framework choice aligns with constitutional stack requirements and provides optimal performance for <200ms UI response times
 - Technology consolidation decisions preserve complex algorithms while enabling framework standardization
+
+**[MERGED FROM 003]**: Additional assumptions for 3-device architecture:
+
+- **[needs clarification]**: Three distinct physical devices are available: NUC for frontend, dedicated server for AI processing, security laptop for airgapped operations [FROM 003]
+- **[needs clarification]**: Custom ISO creation is feasible and bootable on target security laptop hardware [FROM 003] 
+- **[needs clarification]**: Local network infrastructure supports gigabit ethernet and mDNS service discovery [FROM 003]
+- **[needs clarification]**: GPU-accelerated AI server is available with CUDA support for vLLM inference [FROM 003]
+- **[needs clarification]**: Security operations require airgapped capability justifying dedicated laptop deployment [FROM 003]
+- **[needs clarification]**: Cross-device state synchronization latency <250ms is achievable on local network [FROM 003]
 
 
 
@@ -258,7 +413,9 @@ As a user who needs executive function support throughout my day, I want secure 
 
 **Merged Content from 001-mental-prosthetic-platform**: This specification originally included all content from the original 001 specification created on 2025-10-18. All conflicting statements between 001 and 002 specifications have been successfully resolved through the clarification process completed on 2025-10-19.
 
-**Key Conflicts Resolved**:
+**[NEW] Merged Content from 003-modular-monolith-deployment**: On 2025-10-22, additional content was merged from the 003 specification, introducing 3-device architecture concepts and detailed technical implementation details. Multiple conflicts and clarifications have been identified.
+
+**Key Conflicts Resolved from 001→002**:
 
 1. **Project Count**: ✓ Resolved - Using exactly 37 projects with domain breakdown: Security (13), Productivity (8), MTG (4), Infrastructure (12)
 2. **Performance Requirements**: ✓ Resolved - Using domain-based tiers: Security <1s, Productivity <2s, MTG <3s, Infrastructure <5s
@@ -271,4 +428,294 @@ As a user who needs executive function support throughout my day, I want secure 
 9. **Testing Strategy**: ✓ Resolved - Using multi-layer testing (Unit 80%+, Integration, E2E, Contract, Performance)
 10. **Business Logic Preservation**: ✓ Resolved - Using comprehensive preservation with code analysis and validation checkpoints
 
-**Resolution Status**: ✅ ALL CLARIFICATIONS COMPLETED - Specification ready for implementation planning.
+**NEW Conflicts Identified from 003→002 Merge [needs clarification]**:
+
+1. **Deployment Architecture**: 002 assumes single modular monolith vs 003 introduces 3-device distributed system (NUC + AI Server + Security Laptop)
+2. **Frontend Framework**: 002 assumes Vue.js based on analysis vs 003 framework choice conflicts with updated plan using React
+3. **User Story Numbering**: Added 4 new user stories from 003, requiring renumbering of original 002 stories
+4. **Entity Definitions**: Duplicate entities with different definitions (User Session vs Unified Session, AI Context redefined)
+5. **Success Criteria**: Multiple overlapping success criteria between 002 and 003 specifications
+6. **Implementation Phases**: 003 introduces 16-week 4-phase implementation plan vs 002's requirements-focused approach
+7. **Security Laptop**: 003 introduces ISO-bootable security laptop deployment not present in 002
+8. **Cross-Device Synchronization**: 003 assumes multi-device state sync vs 002's single-system approach
+
+**Resolution Status**:
+
+- ✅ 001→002 Conflicts: ALL RESOLVED
+- ✅ 003→002 Conflicts: ALL RESOLVED through clarification session 2025-10-22
+- **Next Steps**: Clarify deployment strategy (single monolith vs 3-device), framework choice, and entity definitions
+
+## Appendix: Future Multi-Device Architecture (003 Research)
+
+*Note: The following content represents research and planning for future multi-device deployment options. The current implementation focuses on a single modular monolith deployment with optional device distribution scaling.*
+
+### 3-Device Architecture Overview (Future Scaling Option)
+
+#### Device 1: NUC Frontend (Primary User Interface) [FROM 003]
+```yaml
+Role: Unified interface for all 37 executive function tools
+Deployment Method: Containerized services (Docker + Docker Compose)
+Technology Stack:
+  - Frontend Framework: Vue.js 3 + TypeScript (constitutional standard) [needs clarification: 003 uses Vue.js vs updated plan using React]
+  - API Gateway: FastAPI backend orchestration 
+  - State Management: Redis for session/cross-tool state
+  - Database: PostgreSQL for persistent data
+  - Container Runtime: Docker with multi-service composition
+
+Constitutional Requirements:
+  - UI Response Time: <200ms for ADHD/executive function support
+  - Interface Consolidation: 37→1 tool access pattern
+  - Framework Strategy: Vue.js standardization + React preservation where required
+
+Tool Distribution (Primary Access Point):
+  - Security Domain: Interface to 13 security tools (execution on security laptop)
+  - Productivity Domain: Full execution of 8 productivity tools locally
+  - MTG Domain: Full execution of 4 MTG analysis tools
+  - Infrastructure Domain: Orchestration hub for 12 infrastructure tools
+```
+
+#### Device 2: Dedicated AI Server (LLM Enhancement Engine) [FROM 003]
+```yaml
+Role: AI enhancement for all business logic algorithms + MCP infrastructure
+Deployment Method: Containerized LLM services + GPU acceleration
+Technology Stack:
+  - LLM Framework: vLLM latest for model serving [needs clarification: 003 had specific version]
+  - Vector Database: Chroma DB for semantic search
+  - API Framework: FastAPI for LLM endpoint serving
+  - Model Management: Custom model versioning system
+  - Hardware: GPU-optimized (CUDA support required)
+
+Performance Requirements:
+  - Security Domain: <1s AI-enhanced threat correlation
+  - Productivity Domain: <2s intelligent automation suggestions  
+  - MTG Domain: <3s strategic analysis enhancement
+  - Infrastructure Domain: <5s system optimization recommendations
+
+MCP Infrastructure (6+ servers):
+  - Chroma MCP: Vector database operations
+  - FileScopeMCP: File analysis enhancement
+  - n8n MCP Server: Workflow intelligence
+  - MalwareBazaar MCP: Threat intelligence
+  - MCP VirusTotal: Security analysis
+  - Additional domain-specific MCP servers
+```
+
+#### Device 3: Security Laptop (Airgapped Security Operations) [FROM 003]
+```yaml
+Role: Dedicated security operations platform with offline capability
+Deployment Method: Custom ISO bootable image
+Technology Stack:
+  - Base OS: Custom Linux distribution (BlackArch-based)
+  - Containerization: Podman (for airgapped container support)
+  - Local Database: SQLite + PostgreSQL (offline mode)
+  - Security Tools: All 13 security domain tools pre-installed
+
+Security Tool Suite (ISO-Embedded):
+  1. MISP: Threat intelligence platform
+  2. HELK: Threat hunting and analytics
+  3. SecurityOnion: Network security monitoring  
+  4. YARA-X: Pattern matching engine
+  5. Maltrail: Malicious traffic detection
+  6. CyberChef: Data analysis toolkit
+  7. Nemesis: Post-exploitation framework
+  8. Ghostwriter: Penetration testing platform
+  9. Brute Ratel C4: Red team framework
+  10. ApiScout: Windows API analysis
+  11. RITA: Network traffic analysis
+  12. OneX: Security toolkit collection
+  13. BlackArch: Security distribution base
+
+Offline Capabilities:
+  - Full security analysis without network connectivity
+  - Local threat intelligence databases
+  - Airgapped report generation
+  - Automatic sync when network available
+```
+
+### Technology Stack Consolidation Strategy [FROM 003]
+
+#### Programming Language Distribution [FROM 003]
+```yaml
+Backend Services (NUC + AI Server):
+  - Python: 25 projects → FastAPI microservices architecture
+  - TypeScript/JavaScript: 18 projects → Vue.js frontend + Node.js services [needs clarification: framework choice]
+  - Database: PostgreSQL (18 projects) → Consolidated instance
+
+Security Platform (ISO):
+  - Python: Security tool suite (MISP, HELK, Maltrail, etc.)
+  - C/C++: Performance-critical tools (YARA-X, low-level analysis)
+  - Shell/Bash: Automation and glue scripts
+  - Go/Rust: Modern security tools (where applicable)
+
+Containerization Strategy:
+  - Docker: 25 projects → Standardized container deployment
+  - Kubernetes: Complex deployments → Docker Compose for simplicity
+  - Podman: Security laptop → Airgapped container support
+```
+
+#### Database Architecture Mapping [FROM 003]
+```yaml
+Distributed Database Strategy:
+  Primary (NUC): PostgreSQL cluster
+    - User sessions and preferences
+    - Cross-tool workflow state
+    - Productivity domain data (Actual Budget, Mealie, etc.)
+    - MTG domain data (Commander Spellbook, deck analysis)
+
+  AI Enhancement (AI Server): 
+    - Vector Database (Chroma): Semantic embeddings
+    - Redis: LLM response caching
+    - PostgreSQL: AI conversation history
+
+  Security Operations (Laptop):
+    - SQLite: Offline operations, portable databases
+    - PostgreSQL: When connected, full threat intelligence
+    - Local Files: Threat indicators, analysis results
+```
+
+### Inter-Device Communication Protocol [FROM 003]
+
+#### Network Architecture [FROM 003]
+```yaml
+Local Network Requirements:
+  - Private Subnet: 192.168.1.0/24 or similar
+  - mDNS Discovery: Automatic device discovery
+  - Secure Communication: TLS latest for all inter-device traffic [needs clarification: version updated from TLS 1.3]
+  - Bandwidth: Gigabit ethernet recommended for large data transfers
+
+Service Discovery:
+  - NUC Frontend: nuc-frontend.local:3000 (Vue.js interface) [needs clarification: framework choice]
+  - AI Server: ai-server.local:8000 (FastAPI LLM endpoints)
+  - Security Laptop: security-ops.local:8080 (when connected)
+
+Cross-Device Data Flow:
+  1. User initiates action on NUC frontend
+  2. NUC determines required services (local, AI, security)
+  3. API calls route to appropriate devices
+  4. Results aggregate back to unified interface
+  5. State synchronization across all connected devices
+```
+
+## Implementation Phases [FROM 003]
+
+### Phase 1: NUC Frontend Foundation (Weeks 1-4) [FROM 003]
+```yaml
+Deliverables:
+  - Docker Compose setup for core services
+  - Vue.js 3 unified interface with constitutional compliance [needs clarification: framework choice]
+  - FastAPI backend orchestration layer
+  - PostgreSQL database with cross-tool schema
+  - Basic tool integration for Productivity domain (8 tools)
+
+Success Criteria:
+  - All productivity tools accessible through single interface
+  - <200ms UI response time achieved
+  - Cross-tool data flow functional (e.g., Actual Budget ↔ Mealie)
+```
+
+### Phase 2: AI Server Integration (Weeks 5-8) [FROM 003] 
+```yaml
+Deliverables:
+  - vLLM server deployment with GPU optimization
+  - Chroma vector database for semantic search
+  - MCP server infrastructure (6+ servers)
+  - AI enhancement for high-impact algorithms
+  - Cross-device communication protocol
+
+Success Criteria:
+  - AI-enhanced business logic operational for 50% of applicable algorithms
+  - <2s response time for AI-assisted operations
+  - MCP servers providing contextual LLM integration
+```
+
+### Phase 3: Security Laptop ISO Creation (Weeks 9-12) [FROM 003]
+```yaml
+Deliverables:
+  - Custom Linux ISO with all 13 security tools
+  - Offline operation capability with local databases
+  - Secure communication with other devices when connected
+  - Automated sync protocols for multi-device workflows
+
+Success Criteria:
+  - ISO boots successfully on target hardware
+  - All security tools functional in airgapped mode
+  - <1s threat correlation when AI server available
+  - Seamless transition between offline/online modes
+```
+
+### Phase 4: Cross-Device Workflow Integration (Weeks 13-16) [FROM 003]
+```yaml
+Deliverables:
+  - Multi-device workflow orchestration
+  - State synchronization across all devices
+  - Error handling and failover mechanisms
+  - Performance optimization and load balancing
+
+Success Criteria:
+  - Complex workflows execute across all 3 devices
+  - <250ms cross-device operation latency
+  - 95% context switching reduction achieved
+  - All constitutional requirements validated
+```
+
+## Business Logic Preservation Strategy [FROM 003]
+
+### Critical Algorithm Mapping Across Devices [FROM 003]
+
+#### Security Domain Algorithms (Security Laptop Primary) [FROM 003]
+```yaml
+Device Affinity: Security Laptop (with AI Server enhancement)
+
+MISP Threat Intelligence:
+  - Algorithm: Event Lifecycle Management + Correlation Engine
+  - Preservation: 100% existing correlation logic maintained
+  - AI Enhancement: Semantic attribute validation + cross-source correlation
+  - Deployment: Native Python on security laptop + AI server API calls
+
+HELK Analytics Engine:
+  - Algorithm: Advanced Persistent Threat Detection via ELK Stack  
+  - Preservation: All Elasticsearch queries and Jupyter notebooks preserved
+  - AI Enhancement: Automated query generation + anomaly detection
+  - Deployment: Containerized ELK stack on security laptop
+
+YARA-X Pattern Engine:
+  - Algorithm: Atom Extraction + WASM Compilation
+  - Preservation: 100% existing pattern matching performance
+  - AI Enhancement: Intelligent pattern generation + false positive reduction
+  - Deployment: Native Rust binary on security laptop
+
+SecurityOnion Platform:
+  - Algorithm: Multi-tool Alert Correlation
+  - Preservation: All existing detection rules and correlation logic
+  - AI Enhancement: Cross-tool threat analysis + automated response
+  - Deployment: Full SecurityOnion suite on security laptop
+```
+
+#### Productivity Domain Algorithms (NUC Primary) [FROM 003]
+```yaml
+Device Affinity: NUC Frontend (with AI Server enhancement)
+
+Actual Budget Engine:
+  - Algorithm: Spreadsheet Calculation Engine + CRDT Synchronization
+  - Preservation: 100% financial calculation accuracy maintained
+  - AI Enhancement: Transaction categorization + spending insights
+  - Deployment: Node.js containers on NUC
+
+Commander Spellbook:
+  - Algorithm: Combo to Variant Generation (1400-line complexity)
+  - Preservation: All MTG rule compliance and combo discovery logic
+  - AI Enhancement: Strategic analysis + meta optimization
+  - Deployment: Django backend containerized on NUC
+
+n8n Workflow Engine:
+  - Algorithm: WorkflowExecute Core Engine (2620 lines)
+  - Preservation: All node execution and dependency management
+  - AI Enhancement: Workflow generation + optimization suggestions
+  - Deployment: Node.js containers on NUC + AI workflow analysis
+
+CyberChef Operations:
+  - Algorithm: Recipe Processing Engine + Auto-Magic Detection
+  - Preservation: All 300+ operations with exact output matching
+  - AI Enhancement: Recipe suggestion + format detection
+  - Deployment: Browser-based on NUC + AI server API integration
+```
