@@ -1,0 +1,20 @@
+# Security Service Dependencies  
+fastapi==0.119.0
+uvicorn[standard]==0.37.0
+pydantic==2.12.0
+sqlalchemy==2.0.44
+asyncpg==0.29.0
+redis==5.0.1
+python-multipart==0.0.6
+httpx==0.25.0
+
+# Security-specific dependencies
+cryptography==41.0.7
+pycryptodome==3.19.0
+requests==2.31.0
+pyyaml==6.0.1
+
+# TODO: Add actual dependencies from these tools when migrating:
+# - MISP, HELK, SecurityOnion, Maltrail, YARA-X, CyberChef
+# - Nemesis, Brute-Ratel-C4, APIScout, BlackArch
+# - Lscript, Meterpreter, OnexToolkit

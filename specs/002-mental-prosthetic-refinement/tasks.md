@@ -175,6 +175,83 @@
 
 ---
 
+## Phase 6.1: n8n Adaptive Workflow System (Core MVP Enhancement)
+
+**Goal**: Implement n8n adaptive workflow creation with AI behavior analysis and auto-workflow generation (core MVP functionality per user requirements)
+
+**Independent Test**: System detects repeated user patterns and automatically generates n8n workflows with 95% accuracy, reducing manual workflow creation by 70%
+
+### Implementation for n8n Adaptive Workflows (FR-001d Enhancement)
+
+- [ ] T077a [P] Create pattern detection engine for user behavior analysis in apps/jane-orchestrator/src/services/n8n/pattern_detector.py
+- [ ] T077b [P] Create workflow template generator based on detected patterns in apps/jane-orchestrator/src/services/n8n/workflow_generator.py  
+- [ ] T077c [P] Implement AI behavior analysis for cross-tool interaction patterns in apps/jane-orchestrator/src/ai/behavior_analyzer.py
+- [ ] T077d [P] Create n8n workflow API integration for automatic workflow creation in apps/jane-orchestrator/src/services/n8n/n8n_api_client.py
+- [ ] T077e [P] Implement pattern matching algorithms (3+ similar workflows within 30 days threshold) in apps/jane-orchestrator/src/services/n8n/pattern_matcher.py
+- [ ] T077f [P] Create workflow validation system for generated workflows in apps/jane-orchestrator/src/services/n8n/workflow_validator.py
+- [ ] T077g [P] Implement cross-tool interaction sequence detection in apps/jane-orchestrator/src/services/n8n/interaction_analyzer.py
+- [ ] T077h [P] Create data transformation pattern recognition in apps/jane-orchestrator/src/services/n8n/data_transform_detector.py
+- [ ] T077i [P] Implement conditional logic flow detection in apps/jane-orchestrator/src/services/n8n/logic_flow_analyzer.py  
+- [ ] T077j [P] Create scheduling pattern recognition for automated workflows in apps/jane-orchestrator/src/services/n8n/schedule_detector.py
+- [ ] T077k [P] Implement workflow optimization recommendations engine in apps/jane-orchestrator/src/services/n8n/workflow_optimizer.py
+- [ ] T077l [P] Create user feedback integration for workflow accuracy improvement in apps/jane-orchestrator/src/services/n8n/feedback_processor.py
+- [ ] T077m [P] Add adaptive workflow UI components for pattern visualization in apps/jane-ui/src/components/N8N/PatternVisualization.tsx
+- [ ] T077n [P] Create workflow suggestion interface with user approval workflow in apps/jane-ui/src/components/N8N/WorkflowSuggestions.tsx
+
+**Checkpoint**: n8n adaptive workflow system successfully reduces manual workflow creation by 70% through intelligent pattern detection
+
+**Independent Test**: System automatically detects repeated user patterns (minimum 3 similar requests within 7 days) and generates optimized n8n workflows that reduce manual effort by 60%+ for common tasks
+
+### Implementation for n8n Adaptive Workflows
+
+- [ ] T077a [P] Create WorkflowPattern model for pattern detection in apps/jane-orchestrator/src/data/models/workflow_pattern.py
+- [ ] T077b [P] Create UserRequest model for tracking LLM interactions in apps/jane-orchestrator/src/data/models/user_request.py
+- [ ] T077c [P] Create AdaptiveWorkflow model for generated workflows in apps/jane-orchestrator/src/data/models/adaptive_workflow.py
+- [ ] T077d Implement PatternDetectionService for analyzing user request patterns in apps/jane-orchestrator/src/services/pattern_detection_service.py
+- [ ] T077e Implement WorkflowGenerationService for auto-creating n8n workflows in apps/jane-orchestrator/src/services/workflow_generation_service.py
+- [ ] T077f Implement WorkflowValidationService for testing generated workflows with historical data in apps/jane-orchestrator/src/services/workflow_validation_service.py
+- [ ] T077g Create adaptive workflow API endpoints in apps/jane-orchestrator/src/api/adaptive_workflows/
+- [ ] T077h [P] Create pattern detection dashboard components in apps/jane-ui/src/components/AdaptiveWorkflows/PatternDashboard.tsx
+- [ ] T077i [P] Create workflow generation interface in apps/jane-ui/src/components/AdaptiveWorkflows/WorkflowBuilder.tsx
+- [ ] T077j [P] Create workflow testing and validation interface in apps/jane-ui/src/components/AdaptiveWorkflows/WorkflowTester.tsx
+- [ ] T077k Implement adaptive workflows page in apps/jane-ui/src/pages/adaptive-workflows.tsx
+- [ ] T077l Add real-time pattern detection monitoring with 3-request/7-day threshold validation
+- [ ] T077m Add workflow performance optimization based on execution metrics
+- [ ] T077n Integrate with existing n8n workflow execution engine (preserving T108 migration)
+
+**Checkpoint**: System automatically creates and optimizes workflows based on user behavior patterns
+
+---
+
+## Phase 6.2: Domain Performance Validation System (Constitutional Compliance)
+
+**Goal**: Implement automated domain-specific performance validation across all 4 domains per constitutional requirements
+
+**Independent Test**: Automated performance validation confirms Security <1s, Productivity <2s, MTG <3s, Infrastructure <5s response times with detailed reporting
+
+### Implementation for Domain Performance Validation
+
+- [ ] T078a [P] Create PerformanceMetrics model for domain-specific tracking in apps/jane-orchestrator/src/data/models/performance_metrics.py
+- [ ] T078b [P] Create PerformanceThreshold model for constitutional requirements in apps/jane-orchestrator/src/data/models/performance_threshold.py
+- [ ] T078c [P] Create DomainValidation model for validation results in apps/jane-orchestrator/src/data/models/domain_validation.py
+- [ ] T078d Implement SecurityDomainValidator for <1s response validation in apps/jane-orchestrator/src/services/performance/security_validator.py
+- [ ] T078e Implement ProductivityDomainValidator for <2s response validation in apps/jane-orchestrator/src/services/performance/productivity_validator.py
+- [ ] T078f Implement MTGDomainValidator for <3s response validation in apps/jane-orchestrator/src/services/performance/mtg_validator.py
+- [ ] T078g Implement InfrastructureDomainValidator for <5s response validation in apps/jane-orchestrator/src/services/performance/infrastructure_validator.py
+- [ ] T078h Implement PerformanceValidationService for orchestrating all domain validators in apps/jane-orchestrator/src/services/performance/validation_service.py
+- [ ] T078i Create performance validation API endpoints in apps/jane-orchestrator/src/api/performance/
+- [ ] T078j [P] Create performance dashboard components in apps/jane-ui/src/components/Performance/DomainDashboard.tsx
+- [ ] T078k [P] Create domain-specific performance charts in apps/jane-ui/src/components/Performance/DomainCharts.tsx
+- [ ] T078l [P] Create performance alerts and notifications in apps/jane-ui/src/components/Performance/AlertSystem.tsx
+- [ ] T078m Implement performance validation page in apps/jane-ui/src/pages/performance-validation.tsx
+- [ ] T078n Add automated performance testing scripts per constitutional requirements in tests/performance/
+- [ ] T078o Add continuous performance monitoring with constitutional threshold alerting
+- [ ] T078p Integrate with CI/CD pipeline for automated performance regression detection
+
+**Checkpoint**: All domains validate performance requirements automatically with constitutional compliance
+
+---
+
 ## Phase 7: User Story 8 - Secure Remote Access (Priority: P4)
 
 **Goal**: Secure mobile/remote access to all 37 executive function tools with PWA functionality
@@ -2535,8 +2612,83 @@
 - [ ] T169c [P] Implement MTG Domain performance validation using benchmarks from existing MTG tool deployments
 - [ ] T169d [P] Implement Infrastructure Domain performance validation using benchmarks from existing infrastructure tool deployments
 - [ ] T169e [P] Create automated domain performance monitoring dashboard using monitoring patterns from analyzed tools
+
+**Domain Performance Validation Tasks (Missing Coverage)**:
+- [ ] T078a [P] Create Security Domain performance validation framework testing <1s response requirement
+- [ ] T078b [P] Create Productivity Domain performance validation framework testing <2s response requirement  
+- [ ] T078c [P] Create MTG Domain performance validation framework testing <3s response requirement
+- [ ] T078d [P] Create Infrastructure Domain performance validation framework testing <5s response requirement
+- [ ] T078e [P] Implement UI response time validation for <200ms constitutional requirement
+- [ ] T078f [P] Create WebSocket latency validation for <250ms constitutional requirement
+- [ ] T078g [P] Implement API performance regression testing with domain-specific thresholds
+- [ ] T078h [P] Create comprehensive performance benchmarking dashboard
+- [ ] T078i [P] Add automated performance alerts for constitutional compliance violations
+- [ ] T078j [P] Implement load testing for domain-specific concurrent user requirements
+- [ ] T078k [P] Create performance monitoring integration with existing tool patterns
+- [ ] T078l [P] Add performance validation to CI/CD pipeline with constitutional gates
+- [ ] T078m [P] Implement performance rollback triggers when thresholds exceeded
+- [ ] T078n [P] Create domain performance optimization recommendations engine
+- [ ] T078o [P] Add executive function responsiveness validation (ADHD/autism support)
+- [ ] T078p [P] Create cross-domain performance impact analysis tools
+
 - [ ] T169 Final validation of constitutional requirements using validation frameworks from source analysis
 - [ ] T170 Run complete quickstart.md validation and deployment verification using deployment patterns from all 37 tools
+
+---
+
+## Phase 15: Asset Relocation - 37 Tools Migration (Critical Coverage Gap)
+
+**Purpose**: Comprehensive migration of all 37 tools from features/ directory to modular monolith structure using 6-step Asset Relocation Process per FR-020
+
+**Security Domain (13 tools)**:
+- [ ] T171 [P] MISP Asset Relocation: Extract threat intelligence business logic per misp-analysis.md
+- [ ] T172 [P] HELK Asset Relocation: Extract log analysis algorithms per helk-analysis.md
+- [ ] T173 [P] SecurityOnion Asset Relocation: Extract network monitoring logic per securityonion-analysis.md
+- [ ] T174 [P] Maltrail Asset Relocation: Extract traffic analysis patterns per maltrail-analysis.md
+- [ ] T175 [P] YARA-X Asset Relocation: Extract pattern matching engine per yara-x-analysis.md
+- [ ] T176 [P] CyberChef Asset Relocation: Extract data transformation recipes per cyberchef-analysis.md
+- [ ] T177 [P] Nemesis Asset Relocation: Extract offensive security workflows per nemesis-analysis.md
+- [ ] T178 [P] APTScout Asset Relocation: Extract API analysis tools per apiscout-analysis.md
+- [ ] T179 [P] BlackArch Asset Relocation: Extract penetration testing utilities per blackarch-analysis.md
+- [ ] T180 [P] Rita Asset Relocation: Extract network traffic analysis per rita-analysis.md
+- [ ] T181 [P] MCP-VirusTotal Asset Relocation: Extract threat intelligence integration per mcp-virustotal-analysis.md
+- [ ] T182 [P] MalwareBazaar Asset Relocation: Extract malware analysis integration per malwarebazaar-analysis.md
+- [ ] T183 [P] HexStrike Asset Relocation: Extract AI security analysis per hexstrike-analysis.md
+
+**Productivity Domain (8 tools)**:
+- [ ] T184 [P] n8n Asset Relocation: Extract workflow orchestration engine per n8n-analysis.md
+- [ ] T185 [P] Mealie Asset Relocation: Extract recipe management workflows per mealie-analysis.md
+- [ ] T186 [P] Dispatch Asset Relocation: Extract incident management logic per dispatch-analysis.md
+- [ ] T187 [P] Actual Budget Asset Relocation: Extract financial tracking algorithms per actual-analysis.md
+- [ ] T188 [P] Firecrawl Asset Relocation: Extract web scraping engine per firecrawl-analysis.md
+- [ ] T189 [P] Goose Asset Relocation: Extract AI development agent per goose-analysis.md
+- [ ] T190 [P] IT-Tools Asset Relocation: Extract utility functions per it-tools-analysis.md
+- [ ] T191 [P] Inspector Asset Relocation: Extract debugging workflows per inspector-analysis.md
+
+**MTG Domain (4 tools)**:
+- [ ] T192 [P] Commander Spellbook Asset Relocation: Extract combo generation algorithms per commander-spellbook-analysis.md
+- [ ] T193 [P] MTG Commander Map Asset Relocation: Extract strategy analysis per mtg-commander-map-analysis.md
+- [ ] T194 [P] MTG Scripting Toolkit Asset Relocation: Extract deck optimization logic per mtg-scripting-toolkit-analysis.md
+- [ ] T195 [P] Card Analysis Asset Relocation: Extract card evaluation algorithms per card-analysis.md
+
+**Infrastructure Domain (12 tools)**:
+- [ ] T196 [P] Kong Asset Relocation: Extract API gateway configuration per kong-analysis.md
+- [ ] T197 [P] Ghostwriter Asset Relocation: Extract documentation generation per ghostwriter-analysis.md
+- [ ] T198 [P] KasmVNC Asset Relocation: Extract remote desktop workflows per kasmvnc-analysis.md
+- [ ] T199 [P] n8n-MCP Asset Relocation: Extract MCP server integration per n8n-mcp-analysis.md
+- [ ] T200 [P] Firecrawl-MCP Asset Relocation: Extract web scraping MCP per firecrawl-mcp-analysis.md
+- [ ] T201 [P] Chroma-MCP Asset Relocation: Extract vector database MCP per chroma-mcp-analysis.md
+- [ ] T202 [P] FileScopeMCP Asset Relocation: Extract file analysis MCP per filescope-mcp-analysis.md
+- [ ] T203 [P] LScript Asset Relocation: Extract automation scripts per lscript-analysis.md
+- [ ] T204 [P] OneX Asset Relocation: Extract security toolkit per onex-analysis.md
+- [ ] T205 [P] Meterpreter Asset Relocation: Extract penetration testing framework per meterpreter-analysis.md
+- [ ] T206 [P] Software Forensic Kit Asset Relocation: Extract code analysis tools per forensic-kit-analysis.md
+- [ ] T207 [P] Brute-Ratel Asset Relocation: Extract C4 framework integration per brute-ratel-analysis.md
+
+**Final Migration Validation**:
+- [ ] T208 Verify features/ directory is completely empty after all asset relocations
+- [ ] T209 Run comprehensive validation of all 37 tools functionality preservation
+- [ ] T210 Execute big-bang migration completion verification per FR-001 requirements
 
 **Checkpoint**: Production-ready mental prosthetic platform with comprehensive validation and monitoring
 

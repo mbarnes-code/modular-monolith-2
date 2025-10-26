@@ -178,15 +178,34 @@ As a user who needs executive function support throughout my day, I want secure 
 
 ### Functional Requirements
 
-**Deployment Architecture Requirements (CLARIFIED)**:
+**Deployment Architecture Requirements (FINAL DECISION - HYBRID DOMAIN-BASED)**:
 
-- **FR-001a**: System MUST be deployed as a single modular monolith with containerized services that can optionally be distributed across multiple devices as scaling requires
-- **FR-001b**: System MUST provide unified interface for all 37 executive function tools with <200ms UI response time regardless of underlying deployment topology  
-- **FR-001c**: AI server integration MUST provide LLM enhancement for applicable business logic algorithms while maintaining original functionality as fallback, deployable either as part of monolith or separate service
-- **FR-001d**: Security tools MUST support both integrated deployment (within monolith) and optional airgapped deployment for specialized security operations
-- **FR-001e**: System MUST enable future expansion to multi-device architecture without requiring complete re-architecture of core business logic
+Based on user clarifications (AI-first workflows with parallel execution, n8n-centric orchestration, 60/40 AI performance priority), the system will use **Hybrid Domain-Based Architecture**:
 
-- **FR-001**: System MUST integrate exactly 37 executive function projects from the features/ directory into a unified modular monolithic application using big-bang migration strategy (all 37 tools delivered simultaneously in one release, though development may proceed in phases), preserving all original business logic, with integration completion defined as features/ directory being completely empty
+**Architecture Implementation Details**:
+
+**API Boundaries and Data Flow**:
+- **Layer-Based Service Boundaries**: Clear separation between UI Layer (React/Next.js unified interface), API Layer (FastAPI domain routers), Data Layer (PostgreSQL + Redis), AI Layer (vLLM + MCP protocol)
+- **Domain Service APIs**: Each domain (Security, Productivity, MTG, Infrastructure) exposes RESTful APIs at `/api/v1/{domain}/` with OpenAPI specifications
+- **Cross-Domain Communication**: Internal service-to-service calls via async HTTP with circuit breakers, external AI communication via WebSocket
+- **Data Flow Patterns**: Request → API Gateway → Domain Router → Business Logic → Data Layer → Response, with AI requests flowing through n8n Workflow Service for orchestration
+
+**Service Communication Patterns**:
+- **Synchronous**: REST APIs for CRUD operations and immediate responses (<1s requirement)
+- **Asynchronous**: WebSocket for real-time AI interactions and cross-tool notifications
+- **Event-Driven**: Domain events for cross-service coordination via internal pub/sub
+- **Batch Processing**: Scheduled workflows for data synchronization and maintenance tasks
+
+**Deployment Flexibility**:
+- **Single Monolith Mode**: All domains deployed as single FastAPI application with domain routing
+- **Distributed Mode**: Each domain as separate service with API Gateway coordination
+- **Hybrid Mode**: Complex algorithms (Category A) as microservices, domains as monolith modules
+
+- **FR-001**: System MUST integrate exactly 37 executive function projects from the features/ directory into a unified modular monolithic application using hybrid domain-based architecture with 4 domain services (Security: 13 tools, Productivity: 8 tools, MTG: 4 tools, Infrastructure: 12 tools) that can be deployed as single monolith or distributed across devices. System MUST use big-bang migration strategy (all 37 tools delivered simultaneously in one release, though development may proceed in phases), preserving all original business logic with integration completion defined as features/ directory being completely empty. Architecture MUST use technology-agnostic approach with framework choices driven by business logic preservation requirements per constitutional Technology Evaluation Framework.
+- **FR-001b**: System MUST provide unified interface for all 37 executive function tools with AI-first design prioritizing LLM response speed (<500ms simple workflows, <2s complex workflows) over UI response time (<200ms for executive function accommodations per constitutional User Experience Consistency standards)
+- **FR-001c**: AI server MUST communicate directly with n8n Workflow Service for orchestration, with n8n handling cross-domain coordination and parallel tool execution across all 4 domain services, preserving 100% functionality across all 37 tools per constitutional Modular Architecture Integrity principles
+- **FR-001d**: n8n Workflow Service MUST implement adaptive workflow creation with AI behavior analysis and automatic workflow generation. System MUST detect when users request repeated patterns (3+ similar manual workflows within 30 days) and automatically generate reusable n8n workflows with 95% accuracy, reducing manual workflow creation time by 70%. Pattern detection MUST include: cross-tool interaction sequences, data transformation patterns, conditional logic flows, and scheduling patterns.
+- **FR-001e**: Domain services MUST support parallel execution patterns with LLM triggering multiple tools simultaneously across domains for AI workflow performance (targeting 2-10x improvement in execution speed over sequential processing), while maintaining constitutional Code Quality Standards and business logic preservation across all integrations
 - **FR-002**: System MUST provide a single unified interface that eliminates the need to manage 37 separate docker containers or applications, reducing interface complexity from 37 to 1
 - **FR-003**: System MUST connect to and communicate with a local LLM server to provide AI-assisted executive function support with context awareness across all 37 integrated tools
 - **FR-004**: System MUST maintain secure WebSocket communication between the unified frontend platform and backend AI server with 250ms latency
@@ -199,7 +218,9 @@ As a user who needs executive function support throughout my day, I want secure 
 - **FR-011**: System MUST support secure HTTPS API integration with external website using OAuth2 authentication for future expansion
 - **FR-012**: System MUST handle offline scenarios gracefully by providing cached functionality for at least 24 hours when AI server is unavailable, with clear offline status indicators
 - **FR-013**: System MUST provide partial functionality with clear status indicators during component failures and implement automated recovery workflows with tool-specific rollback capabilities (rolling back individual tools first) and system-wide fallback (rolling back entire system if needed) to restore full functionality within 15 minutes of issue resolution. Tool-specific rollback MUST include: database transaction rollback per tool domain, service restart capabilities for individual tools, configuration state restoration from last known good state, data consistency validation after rollback, and user notification of affected functionality during rollback operations.
-- **FR-014**: System MUST categorize the 37 projects into complexity tiers and organize using layer-based service boundaries with clear technical layer separation (UI Layer for all user interfaces, API Layer for business logic, Data Layer for persistence, AI Layer for LLM integration) based on consolidated-business-logic-analysis.md documentation. Tool complexity categories are defined as: **Category A (Complex Algorithms)**: Tools with >5,000 lines of core business logic, custom algorithms, or specialized data processing as identified in individual tool analysis reports (e.g., MISP threat correlation per misp-analysis.md, n8n workflow engine per n8n-analysis.md, Commander Spellbook combo generation per commander-spellbook-analysis.md) - preserve as microservices or embedded libraries; **Category B (Domain Logic)**: Tools with 1,000-5,000 lines of domain-specific workflows and business rules per analysis reports (e.g., Mealie recipe management per mealie-analysis.md, Dispatch incident management per dispatch-analysis.md, SecurityOnion configuration per securityonion-analysis.md) - modularize within monolith maintaining workflow integrity; **Category C (Utilities)**: Tools with <1,000 lines of primarily utility functions or simple interfaces per analysis reports (e.g., IT-Tools utilities per it-tools-analysis.md, MCP servers per individual MCP analysis reports, security scripts per respective analysis reports) - integrate as shared libraries with API compatibility.
+- **FR-014**: n8n Workflow Service MUST implement adaptive workflow creation system with pattern detection that monitors user requests to LLM, identifies repeated patterns not covered by existing workflows, and automatically generates new n8n workflows when request frequency threshold is reached (minimum 3 similar requests within 7 days). Generated workflows MUST be tested with historical data before deployment and optimized based on performance metrics.
+- **FR-015**: System MUST support parallel AI workflow execution with LLM triggering multiple tools simultaneously across domain services, with n8n Workflow Service coordinating cross-domain operations and aggregating results for verbal AI responses prioritized over visual UI updates.
+- **FR-014**: System MUST categorize the 37 projects into complexity tiers and organize using layer-based service boundaries with clear technical layer separation (UI Layer for all user interfaces, API Layer for business logic, Data Layer for persistence, AI Layer for LLM integration) based on consolidated-business-logic-analysis.md documentation. Tool complexity categories are defined as: **Category A (Complex Algorithms)**: Tools with >5,000 lines of core business logic, custom algorithms, or specialized data processing as identified in individual tool analysis reports (e.g., MISP threat correlation per misp-analysis.md, n8n workflow engine per n8n-analysis.md, Commander Spellbook combo generation per commander-spellbook-analysis.md) - preserve as microservices or embedded libraries when business logic preservation requires it, with technology choice based on constitutional requirements; **Category B (Domain Logic)**: Tools with 1,000-5,000 lines of domain-specific workflows and business rules per analysis reports (e.g., Mealie recipe management per mealie-analysis.md, Dispatch incident management per dispatch-analysis.md, SecurityOnion configuration per securityonion-analysis.md) - modularize within monolith maintaining workflow integrity, using framework preservation approach where necessary; **Category C (Utilities)**: Tools with <1,000 lines of primarily utility functions or simple interfaces per analysis reports (e.g., IT-Tools utilities per it-tools-analysis.md, MCP servers per individual MCP analysis reports, security scripts per respective analysis reports) - integrate as shared libraries with API compatibility, technology choice driven by preservation requirements.
 - **FR-015**: System MUST implement comprehensive multi-layer testing strategy following constitution requirements: Unit tests (80%+ coverage for all business logic), Integration tests (required for service-to-service communication, API contracts, database interactions), End-to-end tests (critical user journeys automated using Playwright), Contract tests (APIs with OpenAPI specifications and validation), Performance tests (load testing for all public endpoints >1000 req/s baseline, domain-specific performance tiers)
 
 **Asset Relocation Requirements (Based on Completed Analysis)**:
@@ -241,14 +262,14 @@ As a user who needs executive function support throughout my day, I want secure 
 
 ### Non-Functional Requirements
 
-**Performance Requirements (Constitution Mandated)**:
-- **NFR-001**: Jane Orchestrator MUST handle 1000+ concurrent requests with <500ms p95 response time
-- **NFR-002**: LLM Servers MUST provide <2s inference time for standard queries with memory usage <8GB per server  
-- **NFR-003**: Jane UI MUST achieve <2s initial page load, <100ms component interactions, bundle size <1MB
-- **NFR-004**: Database operations MUST complete <100ms for read operations, <500ms for complex queries
-- **NFR-005**: All services MUST operate within allocated container memory limits
-- **NFR-006**: Domain-specific response times MUST be met: Security tools <1s, Productivity tools <2s, MTG tools <3s, Infrastructure tools <5s
-- **NFR-007**: WebSocket communication MUST maintain 250ms latency for real-time synchronization across all 37 tools
+**Performance Requirements (AI-First Optimization - 60/40 Split)**:
+- **NFR-001**: AI Workflow Execution MUST achieve <500ms response for simple workflows, <2s for complex workflows with priority over visual UI updates (60% performance budget allocated to AI speed)
+- **NFR-002**: LLM Servers MUST provide <2s inference time for standard queries with memory usage <8GB per server, with direct communication paths to n8n Workflow Service <50ms
+- **NFR-003**: n8n Workflow Service MUST coordinate parallel domain execution with <100ms per domain service communication and support real-time pattern detection for adaptive workflow creation
+- **NFR-004**: Domain Services MUST support parallel execution patterns: Security <1s (parallel threat analysis), Productivity <2s (parallel task management), MTG <3s (parallel combo analysis), Infrastructure <5s (parallel system operations)
+- **NFR-005**: Jane UI MUST achieve <200ms response time for all user interactions (constitutional requirement for ADHD/autism executive function accommodations) with visual updates <1s when complex data rendering needed
+- **NFR-006**: Database operations MUST complete <100ms for read operations, <500ms for complex queries without blocking AI workflow execution
+- **NFR-007**: WebSocket communication MUST maintain 250ms latency for real-time synchronization with async UI updates that don't block verbal AI responses
 
 **Security Requirements (Constitution Mandated)**:
 - **NFR-008**: All connections MUST use HTTPS with proper TLS encryption
@@ -262,7 +283,7 @@ As a user who needs executive function support throughout my day, I want secure 
 - **NFR-014**: Database schema MUST support horizontal scaling for PostgreSQL primary storage
 - **NFR-015**: Microservice components (Category A tools) MUST be independently scalable
 - **NFR-016**: Redis caching layer MUST support distributed caching for performance optimization
-- **NFR-017**: Vector database MUST handle AI embeddings with sub-second query response times
+- **NFR-017**: Vector database MUST handle AI embeddings with <500ms query response times for simple queries, <2s for complex similarity searches
 
 **Reliability Requirements**:
 - **NFR-018**: System MUST maintain 99.9% uptime during user's active hours (8 hours/day)
@@ -272,11 +293,10 @@ As a user who needs executive function support throughout my day, I want secure 
 - **NFR-022**: Daily automated backups MUST be completed to local Synology NAS with verification
 
 **Usability Requirements (Executive Function Accommodations)**:
-- **NFR-023**: UI interactions MUST be <200ms response time to maintain focus for ADHD users
-- **NFR-024**: Navigation patterns MUST remain consistent across all 37 integrated tools
-- **NFR-025**: WCAG 2.1 AA compliance MUST be maintained with keyboard navigation support
-- **NFR-026**: Mobile responsiveness MUST support all UI components on mobile viewports
-- **NFR-027**: Executive function accommodations MUST include focus indicators and reduced animations
+- **NFR-023**: Navigation patterns MUST remain consistent across all 37 integrated tools (95% context switching reduction per constitutional requirement)
+- **NFR-024**: WCAG 2.1 AA compliance MUST be maintained with enhanced focus indicators and keyboard navigation support
+- **NFR-025**: Mobile responsiveness MUST support all UI components on mobile viewports
+- **NFR-026**: Executive function accommodations MUST include enhanced focus indicators, reduced animations, and consistent visual patterns aligned with <200ms UI interaction requirement (NFR-005)
 
 ### Key Entities *(include if feature involves data)*
 
@@ -351,7 +371,6 @@ As a user who needs executive function support throughout my day, I want secure 
 - Q: Data Consistency Model → A: Eventual consistency with conflict resolution: Accept temporary inconsistencies, resolve conflicts using defined rules
 - Q: Rollback Strategy Implementation → A: Tool-specific rollback with system-wide fallback: Roll back individual tools first, then entire system if needed
 - Q: Performance Requirements Definition → A: Domain-based performance: Different requirements per domain (Security, Productivity, MTG, Infrastructure)
-- Q: What testing strategy should be implemented to meet constitution requirements for 80%+ coverage and comprehensive testing? → A: Multi-layer testing: Unit tests (80%+ coverage), Integration tests (cross-domain), E2E tests (critical user journeys), Contract tests (API validation), Performance tests (domain-specific tiers)
 - Q: What is the definitive project count to resolve conflicts between 001's "20+ projects" and 002's "37 projects"? → A: Exactly 37 projects with domain breakdown: Security (13), Productivity (8), MTG (4), Infrastructure (12)
 - Q: What performance requirements should be used to resolve conflicts between 001's "3 seconds" and 002's domain-based tiers? → A: Domain-based tiers: Security <1s, Productivity <2s, MTG <3s, Infrastructure <5s
 - Q: What is the specific data synchronization latency requirement to resolve conflicts between 001's "1 second", "sub-1-second", and "500ms"? → A: 250ms latency requirement (most strict)
@@ -361,7 +380,7 @@ As a user who needs executive function support throughout my day, I want secure 
 ### Session 2025-10-22 [MERGED FROM 003]
 
 - Q: Should the platform be deployed as a single modular monolith (002 approach) or as a 3-device distributed system (003 approach)? → A: Single modular monolith with optional device distribution (start unified, expand to multiple devices later)
-- Q: How should the Vue.js vs React framework choice be resolved between 002 assumptions and updated plan requirements? → A: React latest + Next.js latest + TypeScript (constitutional stack)
+- Q: How should the Vue.js vs React framework choice be resolved between 002 assumptions and updated plan requirements? → A: React/Next.js primary + framework-agnostic approach (technology choice driven by business logic preservation per constitution, data shows React 8 projects vs Vue.js 4 projects)
 - Q: How should duplicate entity definitions (User Session vs Unified Session, duplicate AI Context) be resolved? → A: Create new unified entity definitions that combine features from both versions
 - Q: How should the detailed 3-device architecture content from 003 be handled given the single modular monolith approach? → A: Move 3-device details to appendix section (preserve for future reference but de-emphasize)
 - Q: How should overlapping success criteria between 002 and 003 be resolved (e.g., SC-002 vs SC-016, SC-004 vs SC-012)? → A: Keep all criteria but clearly label which apply to current vs future phases
@@ -398,7 +417,7 @@ As a user who needs executive function support throughout my day, I want secure 
 - [x] All functional requirements have clear acceptance criteria aligned with 37-tool integration
 - [x] Success criteria are measurable and include specific 37-to-1 interface reduction metrics
 - [x] User scenarios demonstrate cross-tool workflows enabled by integration
-- [x] Technology choices (Vue.js + FastAPI + PostgreSQL) are justified by compatibility analysis
+- [x] Technology choices (React/Next.js + FastAPI + PostgreSQL) are justified by compatibility analysis and constitutional business logic preservation requirements
 - [x] AI integration requirements specify real-time executive function support
 - [x] Remote access requirements support mobile PWA functionality
 - [x] Data preservation requirements ensure no functionality loss across 37 tools
@@ -406,7 +425,6 @@ As a user who needs executive function support throughout my day, I want secure 
 ### Constitution Compliance Requirements
 
 - [x] **RESOLVED**: Testing requirements aligned with constitution - FR-015 now specifies layered testing strategy (Unit 80%+, Integration, E2E with Playwright, Contract with OpenAPI, Performance >1000 req/s)
-- [x] **RESOLVED**: Automated testing strategy defined for all 37 integrated tools across multiple layers
 - [x] **RESOLVED**: TypeScript strict mode compliance specified in plan.md and constitution requirements
 - [x] **RESOLVED**: Comprehensive quality gates defined through NFR section covering performance, security, scalability
 - [x] **RESOLVED**: Code quality standards specified matching constitution (Python type hints, TypeScript strict mode, code reviews, documentation)
@@ -433,7 +451,7 @@ As a user who needs executive function support throughout my day, I want secure 
 1. **Project Count**: ✓ Resolved - Using exactly 37 projects with domain breakdown: Security (13), Productivity (8), MTG (4), Infrastructure (12)
 2. **Performance Requirements**: ✓ Resolved - Using domain-based tiers: Security <1s, Productivity <2s, MTG <3s, Infrastructure <5s
 3. **Integration Strategy**: ✓ Resolved - Using big-bang migration with layer-based service boundaries (UI, API, Data, AI)
-4. **Technology Specifications**: ✓ Resolved - Using Vue.js 3 + TypeScript frontend, FastAPI backend, PostgreSQL database
+4. **Technology Specifications**: ✓ Resolved - Using React/Next.js + TypeScript frontend (primary) with framework-agnostic preservation approach, FastAPI backend, PostgreSQL database
 5. **Documentation References**: ✓ Resolved - Using docs/modular-analysis-repo-main/ for integration guidance
 6. **Latency Requirements**: ✓ Resolved - Using 250ms latency requirement for real-time synchronization
 7. **Context Switching Reduction**: ✓ Resolved - Using 95% reduction target with 37-to-1 interface consolidation
@@ -469,7 +487,7 @@ As a user who needs executive function support throughout my day, I want secure 
 Role: Unified interface for all 37 executive function tools
 Deployment Method: Containerized services (Docker + Docker Compose)
 Technology Stack:
-  - Frontend Framework: Vue.js 3 + TypeScript (constitutional standard) [needs clarification: 003 uses Vue.js vs updated plan using React]
+  - Frontend Framework: React/Next.js + TypeScript (primary interface) with framework-agnostic preservation for existing business logic
   - API Gateway: FastAPI backend orchestration 
   - State Management: Redis for session/cross-tool state
   - Database: PostgreSQL for persistent data
@@ -478,7 +496,7 @@ Technology Stack:
 Constitutional Requirements:
   - UI Response Time: <200ms for ADHD/executive function support
   - Interface Consolidation: 37→1 tool access pattern
-  - Framework Strategy: Vue.js standardization + React preservation where required
+  - Framework Strategy: React/Next.js primary interface + Web Components for legacy framework preservation where business logic requires it
 
 Tool Distribution (Primary Access Point):
   - Security Domain: Interface to 13 security tools (execution on security laptop)

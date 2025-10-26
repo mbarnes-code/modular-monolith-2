@@ -9,7 +9,7 @@
 
 Consolidate 37 executive function tools from the features/ directory into a unified modular monolithic application to serve as a mental prosthetic for ADHD/autism support. The platform integrates Security (13 tools), Productivity (8 tools), MTG (4 tools), and Infrastructure (12 tools) using a layer-based architecture (UI, API, Data, AI) with big-bang migration strategy. Core technologies: React/Next.js, FastAPI backend, PostgreSQL primary database, with local LLM server integration for AI-assisted executive function support.
 
-**[MERGED FROM 003]**: Alternative approach implements a comprehensive 3-device Mental Prosthetic Platform that consolidates 37 executive function tools across NUC frontend (React/Next.js/FastAPI), dedicated AI server (vLLM + MCP infrastructure), and security laptop (custom ISO with offline capability). The platform achieves constitutional 37→1 interface consolidation with <200ms response times while preserving 100% business logic functionality and supporting ADHD/Autism executive function accommodations through multi-device modular monolith using containerized standardization.
+**DEPLOYMENT ARCHITECTURE CLARIFICATION**: This implementation follows a modular monolith architecture with flexible deployment options. The primary deployment is a single modular monolith that can optionally be distributed across multiple devices (3-device configuration described in appendix sections). All 37 tools are integrated into unified codebase in apps/jane-orchestrator/ and apps/jane-ui/ with domain-based service boundaries, supporting both single-server deployment and optional multi-device distribution based on user hardware preferences and constitutional performance requirements.
 
 ## Technical Context
 
@@ -36,7 +36,7 @@ Consolidate 37 executive function tools from the features/ directory into a unif
 - **Vector**: Chroma DB latest (AI embeddings), Elasticsearch latest (4 projects, search/analytics)
 - **Exotic**: ClickHouse latest (2 projects), MongoDB latest (2 projects), Cassandra latest (Kong option)
 
-**Testing**: pytest (Python backend), Vitest (Vue.js frontend), Playwright (E2E), NEEDS CLARIFICATION: specific testing strategy for 37-tool integration  
+**Testing**: pytest (Python backend), Vitest (React/Next.js frontend), Playwright (E2E) with multi-layer testing strategy for 37-tool integration
 
 **[MERGED FROM 003]**: Multi-device testing strategy:
 - **Python**: pytest (12 projects), coverage.py, mypy type checking
@@ -82,11 +82,9 @@ Consolidate 37 executive function tools from the features/ directory into a unif
 
 **Code Quality Standards**:
 
-- [x] TypeScript strict mode enabled, type safety maintained  React preservation with Vue.js frontend
+- [x] TypeScript strict mode enabled, type safety maintained with React/Next.js primary frontend and framework-agnostic preservation approach
 - [x] Python code includes comprehensive type hints for all FastAPI services and business logic preservation
 - [x] Documentation plan for MCP servers, cross-device protocols, tool integration APIs, and public APIs included (OpenAPI specifications for 37-tool integration)  
-
-**[MERGED FROM 003]**: Enhanced code quality standards from 3-device architecture approach
 
 **Testing Strategy**:
 
@@ -94,23 +92,17 @@ Consolidate 37 executive function tools from the features/ directory into a unif
 - [x] Integration tests planned for service interactions - RESOLVED: Cross-domain workflow testing with domain boundary validation, cross-device workflows, AI enhancement validation  
 - [x] Performance testing approach defined for affected endpoints - RESOLVED: Artillery.js load testing with domain-specific performance tiers and constitutional response time validation
 
-**[MERGED FROM 003]**: Enhanced testing strategy for 3-device architecture includes cross-device workflows and AI enhancement validation
-
 **User Experience**:
 
 - [x] UI components use shared design system (`libs/ui/`) - executive function accommodations built-in
 - [x] Response time requirements <200ms UI, <500ms API documented - Domain-based performance tiers defined
 - [x] Error handling and accessibility considerations included - Executive function accommodations specified
 
-**[MERGED FROM 003]**: Enhanced user experience requirements include cross-device response times and enhanced accessibility compliance
-
 **Performance Requirements**:
 
 - [x] Service-specific performance benchmarks identified - Domain-based tiers: Security <1s, Productivity <2s, MTG <3s, Infrastructure <5s 
 - [x] Memory and resource constraints documented - Single-user deployment with 24-hour offline capability 
 - [x] Load testing approach defined where applicable - RESOLVED: Comprehensive performance testing with domain-specific scenarios
-
-**[MERGED FROM 003]**: Enhanced performance requirements include multi-device resource constraints and simultaneous tool operation testing
 
 **Modular Architecture**:
 
@@ -244,7 +236,7 @@ infrastructure/
 └── deployment/            # Multi-device deployment automation
 ```
 
-**Structure Decision**: Web application structure selected due to frontend (Vue.js) + backend (FastAPI) architecture [needs clarification: 003 uses React as primary frontend framework due to largest existing codebase and constitutional stack]. The modular monolith approach consolidates 37 tools from features/ directory into domain-organized modules within jane-orchestrator while maintaining layer-based service boundaries [needs clarification: 003 uses multi-device pattern with specialized deployment requirements: NUC (React-based web interface), AI server (GPU-accelerated containers), security laptop (bootable ISO)].
+**Structure Decision**: Web application structure selected due to frontend (React/Next.js primary) + backend (FastAPI) architecture with framework-agnostic preservation approach for business logic integrity per constitutional requirements. The modular monolith approach consolidates 37 tools from features/ directory into domain-organized modules within jane-orchestrator while maintaining layer-based service boundaries [needs clarification: 003 uses multi-device pattern with specialized deployment requirements: NUC (React-based web interface), AI server (GPU-accelerated containers), security laptop (bootable ISO)].
 
 ## Complexity Tracking
 
@@ -279,7 +271,6 @@ infrastructure/
 All constitution requirements have been satisfied:
 
 - **Code Quality**: TypeScript strict mode and Python type hints confirmed
-- **Testing Strategy**: 80%+ coverage plan with multi-layer testing approach
 - **User Experience**: Domain-based performance tiers and executive function accommodations
 - **Performance**: Domain-specific benchmarks and load testing strategy
 - **Modular Architecture**: Layer-based service boundaries with clear separation
@@ -287,7 +278,7 @@ All constitution requirements have been satisfied:
 ### Technology Stack Confirmation
 
 - **Backend**: Python 3.12 + FastAPI 0.119.0
-- **Frontend**: Vue.js 3 + TypeScript 5.9.3 + Node.js 20
+- **Frontend**: React/Next.js + TypeScript 5.9.3 + Node.js 20 (primary) with framework-agnostic preservation approach
 - **Database**: PostgreSQL 14+ (primary), SQLite (local-first), Redis 7+ (caching)
 - **AI Integration**: vLLM 0.11.0 + Chroma DB for executive function support
 - **Architecture**: Modular monolith with layer-based service boundaries

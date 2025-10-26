@@ -64,5 +64,17 @@
         "cacheableOperations": ["build", "lint", "test", "affected:build", "affected:test", "affected:lint"]
       }
     }
+  },
+  "projects": {
+    "jane-ui": "apps/jane-ui",
+    "jane-orchestrator": "apps/jane-orchestrator",
+    "cyber-llm-server": "apps/cyber-llm-server",
+    "mtg-llm-server": "apps/mtg-llm-server",
+    "infrastructure-llm-server": "apps/infrastructure-llm-server",
+    "n8n-workflow-service": "apps/n8n-workflow-service",
+    "security-service": "apps/security-service",
+    "productivity-service": "apps/productivity-service",
+    "mtg-service": "apps/mtg-service",
+    "infrastructure-service": "apps/infrastructure-service"
   }
 }

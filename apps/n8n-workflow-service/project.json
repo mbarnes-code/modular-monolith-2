@@ -1,0 +1,37 @@
+{
+  "name": "n8n-workflow-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/n8n-workflow-service/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "uvicorn src.main:app --reload --host 0.0.0.0 --port 8010",
+        "cwd": "apps/n8n-workflow-service"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Building n8n workflow service...'",
+        "cwd": "apps/n8n-workflow-service"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands", 
+      "options": {
+        "command": "python -m pytest tests/ -v",
+        "cwd": "apps/n8n-workflow-service"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ruff check src/",
+        "cwd": "apps/n8n-workflow-service"
+      }
+    }
+  },
+  "tags": ["type:service", "domain:orchestration", "scope:backend"]
+}

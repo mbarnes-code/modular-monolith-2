@@ -1,61 +1,197 @@
-version: '3.8'
+version: "3.8"
+
+# Hybrid Domain-Based Architecture Configuration
+# 5 Domain Services + 3 AI Servers + 1 Frontend + Infrastructure
 
 services:
-  orchestrator:
+  # Central Orchestration Service
+  n8n-workflow-service:
     build:
-      context: ../..
-      dockerfile: infrastructure/docker/Dockerfile.orchestrator
+      context: ../../
+      dockerfile: ./apps/n8n-workflow-service/Dockerfile
     ports:
-      - "8000:8000"
+      - "8010:8000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/workflow_db
+    volumes:
+      - ../../apps/n8n-workflow-service:/app
+    depends_on:
+      - postgres
+      - redis
     networks:
       - jane-network
 
-  llm-server-1:
+  # Domain Services (4)
+  security-service:
     build:
-      context: ../..
-      dockerfile: infrastructure/docker/Dockerfile.llm-server
-      args:
-        SERVER_NAME: llm-server-1
-        SERVER_PORT: 8001
+      context: ../../
+      dockerfile: ./apps/security-service/Dockerfile
     ports:
-      - "8001:8001"
+      - "8011:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/security_db
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
     networks:
       - jane-network
 
-  llm-server-2:
+  productivity-service:
     build:
-      context: ../..
-      dockerfile: infrastructure/docker/Dockerfile.llm-server
-      args:
-        SERVER_NAME: llm-server-2
-        SERVER_PORT: 8002
+      context: ../../
+      dockerfile: ./apps/productivity-service/Dockerfile
     ports:
-      - "8002:8002"
+      - "8012:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/productivity_db
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
     networks:
       - jane-network
 
-  llm-server-3:
+  mtg-service:
     build:
-      context: ../..
-      dockerfile: infrastructure/docker/Dockerfile.llm-server
-      args:
-        SERVER_NAME: llm-server-3
-        SERVER_PORT: 8003
+      context: ../../
+      dockerfile: ./apps/mtg-service/Dockerfile
     ports:
-      - "8003:8003"
+      - "8013:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/mtg_db
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
     networks:
       - jane-network
 
-  ui:
+  infrastructure-service:
     build:
-      context: ../..
-      dockerfile: infrastructure/docker/Dockerfile.ui
+      context: ../../
+      dockerfile: ./apps/infrastructure-service/Dockerfile
+    ports:
+      - "8014:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/infrastructure_db
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - jane-network
+
+  # Frontend (Unified Interface)
+  jane-ui:
+    build:
+      context: ../../
+      dockerfile: ./apps/jane-ui/Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_N8N_SERVICE_URL=http://n8n-workflow-service:8000
+      - NEXT_PUBLIC_SECURITY_SERVICE_URL=http://security-service:8000
+      - NEXT_PUBLIC_PRODUCTIVITY_SERVICE_URL=http://productivity-service:8000
+      - NEXT_PUBLIC_MTG_SERVICE_URL=http://mtg-service:8000
+      - NEXT_PUBLIC_INFRASTRUCTURE_SERVICE_URL=http://infrastructure-service:8000
     depends_on:
-      - orchestrator
+      - n8n-workflow-service
+      - security-service
+      - productivity-service
+      - mtg-service
+      - infrastructure-service
     networks:
       - jane-network
+
+  # AI Servers (Domain-Specific)
+  cyber-llm-server:
+    build:
+      context: ../../
+      dockerfile: ./apps/cyber-llm-server/Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      - SECURITY_SERVICE_URL=http://security-service:8000
+      - N8N_SERVICE_URL=http://n8n-workflow-service:8000
+    depends_on:
+      - security-service
+      - n8n-workflow-service
+    networks:
+      - jane-network
+
+  mtg-llm-server:
+    build:
+      context: ../../
+      dockerfile: ./apps/mtg-llm-server/Dockerfile
+    ports:
+      - "8002:8000"
+    environment:
+      - MTG_SERVICE_URL=http://mtg-service:8000
+      - N8N_SERVICE_URL=http://n8n-workflow-service:8000
+    depends_on:
+      - mtg-service
+      - n8n-workflow-service
+    networks:
+      - jane-network
+
+  infrastructure-llm-server:
+    build:
+      context: ../../
+      dockerfile: ./apps/infrastructure-llm-server/Dockerfile
+    ports:
+      - "8003:8000"
+    environment:
+      - INFRASTRUCTURE_SERVICE_URL=http://infrastructure-service:8000
+      - N8N_SERVICE_URL=http://n8n-workflow-service:8000
+    depends_on:
+      - infrastructure-service
+      - n8n-workflow-service
+    networks:
+      - jane-network
+
+  # Legacy (Remove after migration)
+  jane-orchestrator:
+    build:
+      context: ../../
+      dockerfile: ./apps/jane-orchestrator/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/jane_db
+    depends_on:
+      - postgres
+    networks:
+      - jane-network
+    profiles:
+      - legacy
+
+  # Infrastructure Services
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: jane_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - jane-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - jane-network
+
+volumes:
+  postgres_data:
+  redis_data:
 
 networks:
   jane-network:
