@@ -202,7 +202,7 @@ Based on user clarifications (AI-first workflows with parallel execution, n8n-ce
 - **Hybrid Mode**: Complex algorithms (Category A) as microservices, domains as monolith modules
 
 - **FR-001**: System MUST integrate exactly 37 executive function projects from the features/ directory into a unified modular monolithic application using hybrid domain-based architecture with 4 domain services (Security: 13 tools, Productivity: 8 tools, MTG: 4 tools, Infrastructure: 12 tools) that can be deployed as single monolith or distributed across devices. System MUST use big-bang migration strategy (all 37 tools delivered simultaneously in one release, though development may proceed in phases), preserving all original business logic with integration completion defined as features/ directory being completely empty. Architecture MUST use technology-agnostic approach with framework choices driven by business logic preservation requirements per constitutional Technology Evaluation Framework.
-- **FR-001b**: System MUST provide unified interface for all 37 executive function tools with AI-first design prioritizing LLM response speed (<500ms simple workflows, <2s complex workflows) over UI response time (<200ms for executive function accommodations per constitutional User Experience Consistency standards)
+- **FR-001b**: System MUST provide unified interface for all 37 executive function tools with AI-first design prioritizing LLM response speed (<400ms simple workflows, <1.5s complex workflows) over UI response time (<75ms for executive function accommodations per enhanced constitutional User Experience Consistency standards)
 - **FR-001c**: AI server MUST communicate directly with n8n Workflow Service for orchestration, with n8n handling cross-domain coordination and parallel tool execution across all 4 domain services, preserving 100% functionality across all 37 tools per constitutional Modular Architecture Integrity principles
 - **FR-001d**: n8n Workflow Service MUST implement adaptive workflow creation with AI behavior analysis and automatic workflow generation. System MUST detect when users request repeated patterns (3+ similar manual workflows within 30 days) and automatically generate reusable n8n workflows with 95% accuracy, reducing manual workflow creation time by 70%. Pattern detection MUST include: cross-tool interaction sequences, data transformation patterns, conditional logic flows, and scheduling patterns.
 - **FR-001e**: Domain services MUST support parallel execution patterns with LLM triggering multiple tools simultaneously across domains for AI workflow performance (targeting 2-10x improvement in execution speed over sequential processing), while maintaining constitutional Code Quality Standards and business logic preservation across all integrations
@@ -244,13 +244,13 @@ Based on user clarifications (AI-first workflows with parallel execution, n8n-ce
 ### Non-Functional Requirements
 
 **Performance Requirements (AI-First Optimization - 60/40 Split)**:
-- **NFR-001**: AI Workflow Execution MUST achieve <500ms response for simple workflows, <2s for complex workflows with priority over visual UI updates (60% performance budget allocated to AI speed)
+- **NFR-001**: AI Workflow Execution MUST achieve <400ms response for simple workflows, <1.5s for complex workflows with priority over visual UI updates (60% performance budget allocated to AI speed)
 - **NFR-002**: LLM Servers MUST provide <2s inference time for standard queries with memory usage <8GB per server, with direct communication paths to n8n Workflow Service <50ms
 - **NFR-003**: n8n Workflow Service MUST coordinate parallel domain execution with <100ms per domain service communication and support real-time pattern detection for adaptive workflow creation
-- **NFR-004**: Domain Services MUST support parallel execution patterns: Security <1s (parallel threat analysis), Productivity <2s (parallel task management), MTG <3s (parallel combo analysis), Infrastructure <5s (parallel system operations). When performance thresholds are exceeded, system MUST implement graceful degradation: Security domain reverts to sequential processing, Productivity tools display loading indicators, MTG analysis provides preliminary results, Infrastructure operations queue for retry with exponential backoff
-- **NFR-005**: Jane UI MUST achieve <200ms response time for all user interactions (constitutional requirement for ADHD/autism executive function accommodations) with visual updates <1s when complex data rendering needed
-- **NFR-006**: Database operations MUST complete <100ms for read operations, <500ms for complex queries without blocking AI workflow execution
-- **NFR-007**: WebSocket communication MUST maintain 250ms latency for real-time synchronization with async UI updates that don't block verbal AI responses
+- **NFR-004**: Domain Services MUST support parallel execution patterns: Security <750ms (parallel threat analysis), Productivity <1.5s (parallel task management), MTG <2.5s (parallel combo analysis), Infrastructure <3s (parallel system operations). When performance thresholds are exceeded, system MUST implement graceful degradation: Security domain reverts to sequential processing, Productivity tools display loading indicators, MTG analysis provides preliminary results, Infrastructure operations queue for retry with exponential backoff
+- **NFR-005**: Jane UI MUST achieve <75ms response time for all user interactions (enhanced based on test analysis for ADHD/autism executive function accommodations) with visual updates <1s when complex data rendering needed
+- **NFR-006**: Database operations MUST complete <15ms for read operations, <150ms for complex queries without blocking AI workflow execution
+- **NFR-007**: WebSocket communication MUST maintain <200ms latency for real-time synchronization with async UI updates that don't block verbal AI responses
 
 **Security Requirements (Constitution Mandated)**:
 - **NFR-008**: All connections MUST use HTTPS with proper TLS encryption
@@ -264,7 +264,7 @@ Based on user clarifications (AI-first workflows with parallel execution, n8n-ce
 - **NFR-014**: Database schema MUST support horizontal scaling for PostgreSQL primary storage
 - **NFR-015**: Microservice components (Category A tools) MUST be independently scalable
 - **NFR-016**: Redis caching layer MUST support distributed caching for performance optimization
-- **NFR-017**: Vector database MUST handle AI embeddings with <500ms query response times for simple queries, <2s for complex similarity searches
+- **NFR-017**: Vector database MUST handle AI embeddings with <400ms query response times for simple queries, <1.5s for complex similarity searches
 
 **Reliability Requirements**:
 - **NFR-018**: System MUST maintain 99.9% uptime during user's active hours (8 hours/day)
@@ -391,7 +391,7 @@ The Mental Prosthetic Platform supports flexible deployment architectures:
 
 - Modular codebase supports both deployment patterns without code changes
 - Service boundaries enable distribution when needed
-- Local network infrastructure with <250ms cross-service latency
+- Local network infrastructure with <200ms cross-service latency
 - Unified authentication and state management across deployment options
 
 
@@ -470,7 +470,7 @@ The Mental Prosthetic Platform implements a modular monolith architecture suppor
 2. **Distributed Deployment** (Optional scaling)
    - Service boundaries enable multi-device distribution
    - Frontend, AI processing, and security operations can be separated
-   - Cross-service communication with <250ms latency requirements
+   - Cross-service communication with <200ms latency requirements
    - State synchronization maintained across distributed components
 
 ### Technology Integration Approach

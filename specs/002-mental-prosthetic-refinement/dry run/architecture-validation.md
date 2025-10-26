@@ -117,7 +117,7 @@ Domain-Specific Response Times:
   Infrastructure <5s: System monitoring, container management
   Challenge: ✅ Sufficient headroom for complex operations
 
-WebSocket Latency <250ms (Real-time sync):
+WebSocket Latency <200ms (Real-time sync):
   Current Design: Single WebSocket server handling 37 tool updates
   Challenge: ❌ Message fan-out to 37 contexts may exceed 250ms
   Validation Needed: Message routing performance under load

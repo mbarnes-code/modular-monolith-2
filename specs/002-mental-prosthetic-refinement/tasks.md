@@ -2636,7 +2636,7 @@
 - [ ] T2415 [P] Create MTG Domain performance validation framework testing <3s response requirement
 - [ ] T2416 [P] Create Infrastructure Domain performance validation framework testing <5s response requirement
 - [ ] T2417 [P] Implement UI response time validation for <200ms constitutional requirement
-- [ ] T2418 [P] Create WebSocket latency validation for <250ms constitutional requirement
+- [ ] T2418 [P] Create WebSocket latency validation for <200ms constitutional requirement
 - [ ] T2419 [P] Implement API performance regression testing with domain-specific thresholds
 - [ ] T2420 [P] Create comprehensive performance benchmarking dashboard
 - [ ] T2421 [P] Add automated performance alerts for constitutional compliance violations

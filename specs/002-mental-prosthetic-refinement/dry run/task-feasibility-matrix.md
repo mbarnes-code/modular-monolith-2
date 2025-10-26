@@ -227,7 +227,7 @@ Each Domain Migration Blocks Others:
 Response Time Requirements:
 ├── UI <200ms: T037a (monitoring) insufficient for 37 tools
 ├── Security <1s: T044 (AI service) may exceed with complex analysis
-├── WebSocket <250ms: T018 may struggle with 37 concurrent connections
+├── WebSocket <200ms: T018 may struggle with 37 concurrent connections
 └── Cross-domain sync: T069 (event bus) may introduce latency
 
 Resource Utilization:

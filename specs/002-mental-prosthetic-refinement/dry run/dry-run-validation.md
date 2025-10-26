@@ -55,7 +55,7 @@ Interface Consolidation (37→1):
 Performance Requirements:
   ✓ Domain-specific tiers defined (Security <1s, Productivity <2s, etc.)
   ✓ UI response <200ms (constitutional)
-  ✓ WebSocket latency <250ms
+  ✓ WebSocket latency <200ms
   ? Risk: Performance validation tasks present but may be insufficient
 
 Business Logic Preservation (FR-005):
@@ -188,7 +188,7 @@ Impact: HIGH (Could block entire migration)
 #### 2. Performance Requirements Under Load
 ```yaml
 Challenge: 37 simultaneous tools may exceed performance budgets
-Evidence: UI <200ms, domain-specific latencies, WebSocket <250ms
+Evidence: UI <200ms, domain-specific latencies, WebSocket <200ms
 Mitigation: Performance monitoring tasks (T020, T037a, T053)
 Likelihood: HIGH
 Impact: HIGH (Constitutional requirement violation)

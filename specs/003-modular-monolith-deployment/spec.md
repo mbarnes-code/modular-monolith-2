@@ -102,7 +102,7 @@ Power users need to create complex automated workflows that span multiple tools 
 #### Device Architecture Requirements
 
 - **FR-001**: System MUST provision three distinct device types: NUC frontend (containerized services), dedicated AI server (LLM processing), and security laptop (ISO-bootable platform)
-- **FR-002**: System MUST enable seamless communication between all three devices on local network with <250ms latency for cross-device operations
+- **FR-002**: System MUST enable seamless communication between all three devices on local network with <200ms latency for cross-device operations
 - **FR-003**: NUC frontend MUST serve as primary interface for all 37 executive function tools with <200ms UI response time
 - **FR-004**: AI server MUST provide LLM enhancement for all applicable business logic algorithms while maintaining original functionality as fallback
 - **FR-005**: Security laptop MUST boot from custom ISO containing all 13 security domain tools with full offline capability
@@ -382,7 +382,7 @@ Deliverables:
 
 Success Criteria:
   - Complex workflows execute across all 3 devices
-  - <250ms cross-device operation latency
+  - <200ms cross-device operation latency
   - 95% context switching reduction achieved
   - All constitutional requirements validated
 

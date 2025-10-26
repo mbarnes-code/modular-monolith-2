@@ -35,7 +35,7 @@ Auto-generated from specifications and constitutional requirements. Last updated
 
 **Executive Function Accommodations**: User experience requirements for focus maintenance
 
-- UI interactions <200ms (ADHD-friendly responsiveness)
+- UI interactions <75ms (enhanced ADHD-friendly responsiveness based on test analysis)
 - Unified navigation patterns (context switching reduction)
 - Consistent interface design across all integrated tools
 - WCAG 2.1 AA compliance with enhanced focus indicators

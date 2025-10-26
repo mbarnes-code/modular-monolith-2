@@ -54,7 +54,7 @@ Infrastructure Domain: <5s response time
 
 #### Real-Time Communication
 ```yaml
-WebSocket Latency: <250ms (Constitutional)
+WebSocket Latency: <200ms (Constitutional)
   Rationale: Real-time data synchronization across all 37 tools
   Measurement: Round-trip message propagation time
   Scope: Cross-tool state updates, AI assistance, user notifications
@@ -132,7 +132,7 @@ T069: EventBusService for real-time data propagation
     Domain Processing: <75ms (per domain × 4 domains = 300ms potential)
     Conflict Resolution: <50ms
     Response Propagation: <50ms
-    Total: <250ms (requires optimization)
+    Total: <200ms (requires optimization)
 ```
 
 #### Phase 8: Tool Migration Performance Preservation
@@ -191,7 +191,7 @@ Implementation:
 #### Scenario 3: Cross-Tool Synchronization Performance
 ```yaml
 Test: Real-Time Sync Across All 37 Tools
-  Objective: Validate <250ms WebSocket latency under full load
+  Objective: Validate <200ms WebSocket latency under full load
   Load Pattern:
     - Data changes propagated across all 37 tools
     - Multiple users with overlapping tool usage
@@ -277,7 +277,7 @@ MTG <3s: Low risk, sufficient headroom
 Infrastructure <5s: Low risk, generous time allowance
 ```
 
-### HIGH RISK: WebSocket <250ms
+### HIGH RISK: WebSocket <200ms
 ```yaml
 Challenge: Real-time sync across 37 tools
 Risk Factors:
@@ -300,7 +300,7 @@ Mitigation Strategies REQUIRED:
 Constitutional Requirements Status:
   UI <200ms: ⚠️ CHALLENGING - Requires aggressive optimization
   Domain Tiers: ✅ ACHIEVABLE - With proper architecture
-  WebSocket <250ms: ⚠️ CHALLENGING - Requires careful design
+  WebSocket <200ms: ⚠️ CHALLENGING - Requires careful design
   
 Success Probability: 70% with recommended mitigations
 Risk Level: MEDIUM-HIGH without performance-first approach
