@@ -20,7 +20,7 @@ Consolidate 37 executive function tools from the features/ directory into a unif
 - **Secondary**: Go latest (4 projects), Rust latest (3 projects), C/C++ (3 projects)
 - **Exotic**: Lua (Kong), PHP (legacy tools), Java LTS (Ghidra integration)
 
-**Primary Dependencies**: FastAPI latest], React/Next.js latest, PostgreSQL latest, Redis latest, vLLM latest, Chroma DB  
+**Primary Dependencies**: FastAPI latest, React/Next.js latest, PostgreSQL latest, Redis latest, vLLM latest, Chroma DB  
 
 **[MERGED FROM 003]**: 3-device dependency distribution:
 - **Frontend**: React/Next.js latest (8 projects, constitutional preservation), Vanilla JS (15 projects, web component integration), Vue.js latest (4 projects, containerized), TypeScript latest (15 projects)

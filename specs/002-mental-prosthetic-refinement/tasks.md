@@ -11,22 +11,32 @@
 - **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
 - Include exact file paths in descriptions
 
-## Path Conventions (Modular Monolith Architecture)
+## Path Conventions (Hybrid Domain-Based Architecture)
 
-- **Backend**: `apps/jane-orchestrator/src/`
-- **Frontend**: `apps/jane-ui/src/`
+- **Frontend**: `apps/jane-ui/src/` (unified interface - constitutional requirement) 
+- **Domain Services**: 
+  - Security: `apps/security-service/src/`
+  - Productivity: `apps/productivity-service/src/`
+  - MTG: `apps/mtg-service/src/`  
+  - Infrastructure: `apps/infrastructure-service/src/`
+- **Orchestration**: `apps/n8n-workflow-service/src/`
+- **AI Enhancement**: 
+  - Security AI: `apps/cyber-llm-server/src/`
+  - MTG AI: `apps/mtg-llm-server/src/`
+  - Infrastructure AI: `apps/infrastructure-llm-server/src/`
 - **Shared Libraries**: `libs/`
 - **Service Adapters**: `libs/service-adapters/`
+- **Tests**: `tests/` (root-level test discovery and validation)
 
 ## Phase 1: Setup (Shared Infrastructure)
 
 **Purpose**: Project initialization and modular monolith structure for 37-tool consolidation
 
-- [ ] T001 Create modular monolith project structure per implementation plan with apps/jane-orchestrator/ and apps/jane-ui/
-- [ ] T002 Initialize FastAPI project with Python dependencies in apps/jane-orchestrator/pyproject.toml
+- [ ] T001 Create hybrid domain-based architecture structure per implementation plan with 4 domain services + n8n orchestration + jane-ui frontend
+- [ ] T002 Initialize FastAPI projects with Python dependencies in all domain service pyproject.toml files
 - [ ] T003 [P] Initialize React/Next.js project with TypeScript in apps/jane-ui/package.json
 - [ ] T004 [P] Configure ESLint, Prettier, and TypeScript strict mode in apps/jane-ui/
-- [ ] T005 [P] Configure Python linting (black, mypy, ruff) in apps/jane-orchestrator/
+- [ ] T005 [P] Configure Python linting (black, mypy, ruff) in all domain services
 - [ ] T006 Setup NX monorepo configuration for cross-app dependencies in nx.json
 - [ ] T007 [P] Create shared library structure in libs/shared/ for cross-domain utilities
 - [ ] T008 [P] Create UI design system structure in libs/ui/ for executive function accommodations
@@ -39,24 +49,31 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T009 Setup PostgreSQL database schema and migrations framework in apps/jane-orchestrator/src/data/migrations/
-- [ ] T010 [P] Configure Redis for caching and session management in apps/jane-orchestrator/src/data/redis/
-- [ ] T011 [P] Implement JWT-based authentication framework in apps/jane-orchestrator/src/api/auth/
-- [ ] T012 [P] Setup FastAPI routing structure with domain organization in apps/jane-orchestrator/src/api/
-- [ ] T013 Create base entity models for 4 domains in apps/jane-orchestrator/src/data/models/
-- [ ] T014 [P] Configure error handling and logging infrastructure in apps/jane-orchestrator/src/utils/
-- [ ] T015 [P] Setup environment configuration management in apps/jane-orchestrator/src/config/
+- [ ] T009 Setup PostgreSQL database schema and migrations framework in apps/n8n-workflow-service/src/data/migrations/ (orchestration layer)
+- [ ] T010 [P] Configure Redis for caching and session management in apps/n8n-workflow-service/src/data/redis/ (shared cache)
+- [ ] T011 [P] Implement JWT-based authentication framework in apps/n8n-workflow-service/src/api/auth/ (unified auth)
+- [ ] T012 [P] Setup FastAPI routing structure with domain service communication in apps/n8n-workflow-service/src/api/
+- [ ] T013 Create base entity models for 4 domains distributed across respective domain services
+- [ ] T014 [P] Configure error handling and logging infrastructure in libs/shared/utils/ (cross-domain utilities)  
+- [ ] T015 [P] Setup environment configuration management in libs/shared/config/ (shared configuration)
 - [ ] T016 Create React component library with ADHD/autism accommodations in libs/ui/components/
 - [ ] T017 [P] Setup API client and state management (React Context + Zustand) in apps/jane-ui/src/services/
-- [ ] T018 [P] Configure WebSocket infrastructure for real-time sync in apps/jane-orchestrator/src/api/websocket/
+- [ ] T018 [P] Configure WebSocket infrastructure for real-time sync in apps/n8n-workflow-service/src/api/websocket/ (orchestration layer)
 - [ ] T019 Create service adapter framework for 37-tool integration in libs/service-adapters/base/
-- [ ] T020 Setup domain-specific performance monitoring (<200ms UI, domain tiers) in apps/jane-orchestrator/src/monitoring/
-- [ ] T020a [P] Implement tool-specific rollback infrastructure in apps/jane-orchestrator/src/services/rollback/tool_rollback_service.py
-- [ ] T020b [P] Create database transaction rollback per tool domain in apps/jane-orchestrator/src/data/transaction_manager.py
-- [ ] T020c [P] Implement service restart capabilities for individual tools in apps/jane-orchestrator/src/services/rollback/service_restart_manager.py
-- [ ] T020d [P] Create configuration state restoration from last known good state in apps/jane-orchestrator/src/config/state_backup_service.py
-- [ ] T020e [P] Implement data consistency validation after rollback in apps/jane-orchestrator/src/services/rollback/consistency_validator.py
-- [ ] T020f [P] Create system-wide fallback rollback capabilities in apps/jane-orchestrator/src/services/rollback/system_rollback_service.py
+- [ ] T020 Setup domain-specific performance monitoring (<200ms UI, domain tiers) in apps/n8n-workflow-service/src/monitoring/
+- [ ] T021 [P] Implement tool-specific rollback infrastructure per domain service in libs/shared/rollback/tool_rollback_service.py
+- [ ] T022 [P] Create database transaction rollback per domain in respective domain services data/transaction_manager.py
+- [ ] T023 [P] Implement service restart capabilities for individual domain services in libs/shared/rollback/service_restart_manager.py
+- [ ] T024 [P] Create configuration state restoration from last known good state in libs/shared/config/state_backup_service.py
+- [ ] T025 [P] Implement data consistency validation after rollback in libs/shared/rollback/consistency_validator.py
+- [ ] T026 [P] Create system-wide fallback rollback capabilities in apps/n8n-workflow-service/src/services/rollback/system_rollback_service.py
+- [ ] T027 [P] Create root-level tests/ directory structure with domain organization (security, productivity, mtg, infrastructure, integration)
+- [ ] T028 [P] Migrate all existing test suites from features/ to tests/ maintaining tool association and domain classification
+- [ ] T029 [P] Analyze migrated tests to document current tool capabilities, performance baselines, and functional boundaries
+- [ ] T030 [P] Create test execution framework for running original tool tests against integrated implementations
+- [ ] T031 [P] Establish constitutional compliance validation through automated testing (UI <200ms, domain performance tiers)
+- [ ] T032 [P] Create business logic analysis automation to compare original vs integrated tool behavior
+- [ ] T033 [P] Setup load testing framework for realistic 37-tool simultaneous usage patterns with domain-specific scenarios
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -70,27 +87,27 @@
 
 ### Implementation for User Story 1
 
-- [ ] T021 [P] [US1] Create User Profile model with ADHD/autism settings in apps/jane-orchestrator/src/data/models/user_profile.py
-- [ ] T022 [P] [US1] Create Platform Session model for unified authentication in apps/jane-orchestrator/src/data/models/platform_session.py
-- [ ] T023 [P] [US1] Create Domain Classification model for 4 domains in apps/jane-orchestrator/src/data/models/domain.py
-- [ ] T024 [P] [US1] Create Integrated Tool model for 37 tools inventory in apps/jane-orchestrator/src/data/models/integrated_tool.py
-- [ ] T025 [US1] Implement UserProfileService with executive function patterns in apps/jane-orchestrator/src/services/user_service.py
-- [ ] T026 [US1] Implement DomainService for 4-domain organization in apps/jane-orchestrator/src/services/domain_service.py
-- [ ] T027 [US1] Implement ToolRegistryService for 37-tool management in apps/jane-orchestrator/src/services/tool_registry_service.py
-- [ ] T028 [US1] Create dashboard API endpoints in apps/jane-orchestrator/src/api/dashboard/
-- [ ] T029 [US1] Create authentication API endpoints with JWT in apps/jane-orchestrator/src/api/auth/endpoints.py
-- [ ] T030 [P] [US1] Create executive function dashboard UI components in apps/jane-ui/src/components/Dashboard/
-- [ ] T031 [P] [US1] Create domain navigation component with consistent patterns in apps/jane-ui/src/components/Navigation/DomainNav.tsx
-- [ ] T032 [P] [US1] Create tool grid component for 37-tool display in apps/jane-ui/src/components/Tools/ToolGrid.tsx
-- [ ] T033 [US1] Implement dashboard page with state management in apps/jane-ui/src/pages/dashboard.tsx
-- [ ] T034 [US1] Add session persistence and state management in apps/jane-ui/src/services/session.ts
-- [ ] T035 [US1] Integrate WebSocket for real-time updates in apps/jane-ui/src/services/websocket.ts
-- [ ] T036 [US1] Add accessibility compliance (WCAG 2.1 AA) to all dashboard components
-- [ ] T037 [US1] Add performance monitoring for <200ms response time validation
-- [ ] T037a [P] [US1] Implement unified user preferences system across all 37 tools in apps/jane-orchestrator/src/services/user_preferences_service.py
-- [ ] T037b [P] [US1] Create user preferences API endpoints for ADHD/autism customizations in apps/jane-orchestrator/src/api/preferences/
-- [ ] T037c [P] [US1] Create user preferences UI components for executive function settings in apps/jane-ui/src/components/UserProfile/PreferencesPanel.tsx
-- [ ] T037d [P] [US1] Implement cross-tool preference synchronization in apps/jane-orchestrator/src/services/preference_sync_service.py
+- [ ] T034 [P] [US1] Create User Profile model with ADHD/autism settings in apps/jane-orchestrator/src/data/models/user_profile.py
+- [ ] T035 [P] [US1] Create Platform Session model for unified authentication in apps/jane-orchestrator/src/data/models/platform_session.py
+- [ ] T036 [P] [US1] Create Domain Classification model for 4 domains in apps/jane-orchestrator/src/data/models/domain.py
+- [ ] T037 [P] [US1] Create Integrated Tool model for 37 tools inventory in apps/jane-orchestrator/src/data/models/integrated_tool.py
+- [ ] T038 [US1] Implement UserProfileService with executive function patterns in apps/jane-orchestrator/src/services/user_service.py
+- [ ] T039 [US1] Implement DomainService for 4-domain organization in apps/jane-orchestrator/src/services/domain_service.py
+- [ ] T040 [US1] Implement ToolRegistryService for 37-tool management in apps/jane-orchestrator/src/services/tool_registry_service.py
+- [ ] T041 [US1] Create dashboard API endpoints in apps/jane-orchestrator/src/api/dashboard/
+- [ ] T042 [US1] Create authentication API endpoints with JWT in apps/jane-orchestrator/src/api/auth/endpoints.py
+- [ ] T043 [P] [US1] Create executive function dashboard UI components in apps/jane-ui/src/components/Dashboard/
+- [ ] T044 [P] [US1] Create domain navigation component with consistent patterns in apps/jane-ui/src/components/Navigation/DomainNav.tsx
+- [ ] T045 [P] [US1] Create tool grid component for 37-tool display in apps/jane-ui/src/components/Tools/ToolGrid.tsx
+- [ ] T046 [US1] Implement dashboard page with state management in apps/jane-ui/src/pages/dashboard.tsx
+- [ ] T047 [US1] Add session persistence and state management in apps/jane-ui/src/services/session.ts
+- [ ] T048 [US1] Integrate WebSocket for real-time updates in apps/jane-ui/src/services/websocket.ts
+- [ ] T049 [US1] Add accessibility compliance (WCAG 2.1 AA) to all dashboard components
+- [ ] T050 [US1] Add performance monitoring for <200ms response time validation
+- [ ] T051 [P] [US1] Implement unified user preferences system across all 37 tools in apps/jane-orchestrator/src/services/user_preferences_service.py
+- [ ] T052 [P] [US1] Create user preferences API endpoints for ADHD/autism customizations in apps/jane-orchestrator/src/api/preferences/
+- [ ] T053 [P] [US1] Create user preferences UI components for executive function settings in apps/jane-ui/src/components/UserProfile/PreferencesPanel.tsx
+- [ ] T054 [P] [US1] Implement cross-tool preference synchronization in apps/jane-orchestrator/src/services/preference_sync_service.py
 
 **Checkpoint**: At this point, User Story 1 should provide access to all 37 tools through unified interface
 
@@ -104,22 +121,22 @@
 
 ### Implementation for User Story 2
 
-- [ ] T038 [P] [US2] Create AI Enhancement Context model for LLM interactions in apps/jane-orchestrator/src/data/models/ai_context.py
-- [ ] T039 [P] [US2] Create Security Profile model for airgapped operations in apps/jane-orchestrator/src/data/models/security_profile.py
-- [ ] T040 [P] [US2] Create service adapters for MISP integration in libs/service-adapters/security/misp_adapter.py
-- [ ] T041 [P] [US2] Create service adapters for HELK integration in libs/service-adapters/security/helk_adapter.py
-- [ ] T042 [P] [US2] Create service adapters for SecurityOnion integration in libs/service-adapters/security/securityonion_adapter.py
-- [ ] T043 [P] [US2] Create service adapters for YARA-X integration in libs/service-adapters/security/yarax_adapter.py
-- [ ] T044 [US2] Implement AIEnhancementService for security domain in apps/jane-orchestrator/src/services/ai/security_ai_service.py
-- [ ] T045 [US2] Implement SecurityToolsService with 13-tool orchestration in apps/jane-orchestrator/src/services/security_service.py
-- [ ] T046 [US2] Create security domain API endpoints with <1s performance in apps/jane-orchestrator/src/api/security/
-- [ ] T047 [US2] Setup MCP server infrastructure for security enhancement in apps/jane-orchestrator/src/ai/mcp/
-- [ ] T048 [P] [US2] Create security dashboard UI components in apps/jane-ui/src/components/Security/
-- [ ] T049 [P] [US2] Create threat correlation interface in apps/jane-ui/src/components/Security/ThreatCorrelation.tsx
-- [ ] T050 [P] [US2] Create security tool launcher components in apps/jane-ui/src/components/Security/ToolLauncher.tsx
-- [ ] T051 [US2] Implement security workflow pages in apps/jane-ui/src/pages/security/
-- [ ] T052 [US2] Add AI assistance integration to security components
-- [ ] T053 [US2] Add security-specific performance monitoring for <1s requirement
+- [ ] T055 [P] [US2] Create AI Enhancement Context model for LLM interactions in apps/jane-orchestrator/src/data/models/ai_context.py
+- [ ] T056 [P] [US2] Create Security Profile model for airgapped operations in apps/jane-orchestrator/src/data/models/security_profile.py
+- [ ] T057 [P] [US2] Create service adapters for MISP integration in libs/service-adapters/security/misp_adapter.py
+- [ ] T058 [P] [US2] Create service adapters for HELK integration in libs/service-adapters/security/helk_adapter.py
+- [ ] T059 [P] [US2] Create service adapters for SecurityOnion integration in libs/service-adapters/security/securityonion_adapter.py
+- [ ] T060 [P] [US2] Create service adapters for YARA-X integration in libs/service-adapters/security/yarax_adapter.py
+- [ ] T061 [US2] Implement AIEnhancementService for security domain in apps/jane-orchestrator/src/services/ai/security_ai_service.py
+- [ ] T062 [US2] Implement SecurityToolsService with 13-tool orchestration in apps/jane-orchestrator/src/services/security_service.py
+- [ ] T063 [US2] Create security domain API endpoints with <1s performance in apps/jane-orchestrator/src/api/security/
+- [ ] T064 [US2] Setup MCP server infrastructure for security enhancement in apps/jane-orchestrator/src/ai/mcp/
+- [ ] T065 [P] [US2] Create security dashboard UI components in apps/jane-ui/src/components/Security/
+- [ ] T066 [P] [US2] Create threat correlation interface in apps/jane-ui/src/components/Security/ThreatCorrelation.tsx
+- [ ] T067 [P] [US2] Create security tool launcher components in apps/jane-ui/src/components/Security/ToolLauncher.tsx
+- [ ] T068 [US2] Implement security workflow pages in apps/jane-ui/src/pages/security/
+- [ ] T069 [US2] Add AI assistance integration to security components
+- [ ] T070 [US2] Add security-specific performance monitoring for <1s requirement
 
 **Checkpoint**: Security operations with AI enhancement functional across 13 tools
 
@@ -133,18 +150,18 @@
 
 ### Implementation for User Story 6
 
-- [ ] T054 [P] [US6] Create Task & Workflow model for cross-domain activities in apps/jane-orchestrator/src/data/models/task.py
-- [ ] T055 [P] [US6] Extend AI Enhancement Context for task management in apps/jane-orchestrator/src/data/models/ai_context.py
-- [ ] T056 [US6] Implement TaskManagementService with AI integration in apps/jane-orchestrator/src/services/task_service.py
-- [ ] T057 [US6] Implement AI Assistant Service for executive function support in apps/jane-orchestrator/src/services/ai/assistant_service.py
-- [ ] T058 [US6] Create task management API endpoints in apps/jane-orchestrator/src/api/tasks/
-- [ ] T059 [US6] Setup LLM integration with vLLM server in apps/jane-orchestrator/src/ai/llm/
-- [ ] T060 [P] [US6] Create AI assistant UI components in apps/jane-ui/src/components/AI/
-- [ ] T061 [P] [US6] Create task breakdown interface in apps/jane-ui/src/components/Tasks/TaskBreakdown.tsx
-- [ ] T062 [P] [US6] Create reminder system components in apps/jane-ui/src/components/Tasks/Reminders.tsx
-- [ ] T063 [US6] Implement AI chat interface with context awareness in apps/jane-ui/src/pages/ai-assistant.tsx
-- [ ] T064 [US6] Add cross-tool context integration for AI suggestions
-- [ ] T065 [US6] Add proactive reminder system with pattern recognition
+- [ ] T071 [P] [US6] Create Task & Workflow model for cross-domain activities in apps/jane-orchestrator/src/data/models/task.py
+- [ ] T072 [P] [US6] Extend AI Enhancement Context for task management in apps/jane-orchestrator/src/data/models/ai_context.py
+- [ ] T073 [US6] Implement TaskManagementService with AI integration in apps/jane-orchestrator/src/services/task_service.py
+- [ ] T074 [US6] Implement AI Assistant Service for executive function support in apps/jane-orchestrator/src/services/ai/assistant_service.py
+- [ ] T075 [US6] Create task management API endpoints in apps/jane-orchestrator/src/api/tasks/
+- [ ] T076 [US6] Setup LLM integration with vLLM server in apps/jane-orchestrator/src/ai/llm/
+- [ ] T077 [P] [US6] Create AI assistant UI components in apps/jane-ui/src/components/AI/
+- [ ] T078 [P] [US6] Create task breakdown interface in apps/jane-ui/src/components/Tasks/TaskBreakdown.tsx
+- [ ] T079 [P] [US6] Create reminder system components in apps/jane-ui/src/components/Tasks/Reminders.tsx
+- [ ] T080 [US6] Implement AI chat interface with context awareness in apps/jane-ui/src/pages/ai-assistant.tsx
+- [ ] T081 [US6] Add cross-tool context integration for AI suggestions
+- [ ] T082 [US6] Add proactive reminder system with pattern recognition
 
 **Checkpoint**: AI-assisted task management functional across all integrated tools
 
@@ -158,18 +175,18 @@
 
 ### Implementation for User Story 7
 
-- [ ] T066 [P] [US7] Create Sync State model for cross-tool synchronization in apps/jane-orchestrator/src/data/models/sync_state.py
-- [ ] T067 [P] [US7] Create data mapping schemas for 37-tool integration in apps/jane-orchestrator/src/data/schemas/
-- [ ] T068 [US7] Implement DataIntegrationService for cross-domain workflows in apps/jane-orchestrator/src/services/data_integration_service.py
-- [ ] T069 [US7] Implement EventBusService for real-time data propagation in apps/jane-orchestrator/src/services/event_bus_service.py
-- [ ] T070 [US7] Create data synchronization API endpoints in apps/jane-orchestrator/src/api/sync/
-- [ ] T071 [US7] Setup conflict resolution for concurrent data modifications in apps/jane-orchestrator/src/services/conflict_resolution.py
-- [ ] T072 [P] [US7] Create unified insights dashboard components in apps/jane-ui/src/components/Insights/
-- [ ] T073 [P] [US7] Create cross-domain data visualization in apps/jane-ui/src/components/Data/CrossDomainView.tsx
-- [ ] T074 [P] [US7] Create data flow monitoring interface in apps/jane-ui/src/components/Sync/DataFlow.tsx
-- [ ] T075 [US7] Implement unified insights page in apps/jane-ui/src/pages/insights.tsx
-- [ ] T076 [US7] Add real-time data synchronization indicators
-- [ ] T077 [US7] Add data consistency validation across all 37 tools
+- [ ] T083 [P] [US7] Create Sync State model for cross-tool synchronization in apps/jane-orchestrator/src/data/models/sync_state.py
+- [ ] T084 [P] [US7] Create data mapping schemas for 37-tool integration in apps/jane-orchestrator/src/data/schemas/
+- [ ] T085 [US7] Implement DataIntegrationService for cross-domain workflows in apps/jane-orchestrator/src/services/data_integration_service.py
+- [ ] T086 [US7] Implement EventBusService for real-time data propagation in apps/jane-orchestrator/src/services/event_bus_service.py
+- [ ] T087 [US7] Create data synchronization API endpoints in apps/jane-orchestrator/src/api/sync/
+- [ ] T088 [US7] Setup conflict resolution for concurrent data modifications in apps/jane-orchestrator/src/services/conflict_resolution.py
+- [ ] T089 [P] [US7] Create unified insights dashboard components in apps/jane-ui/src/components/Insights/
+- [ ] T090 [P] [US7] Create cross-domain data visualization in apps/jane-ui/src/components/Data/CrossDomainView.tsx
+- [ ] T091 [P] [US7] Create data flow monitoring interface in apps/jane-ui/src/components/Sync/DataFlow.tsx
+- [ ] T092 [US7] Implement unified insights page in apps/jane-ui/src/pages/insights.tsx
+- [ ] T093 [US7] Add real-time data synchronization indicators
+- [ ] T094 [US7] Add data consistency validation across all 37 tools
 
 **Checkpoint**: Data flows seamlessly between all integrated applications
 
@@ -183,20 +200,20 @@
 
 ### Implementation for n8n Adaptive Workflows (FR-001d Enhancement)
 
-- [ ] T077a [P] Create pattern detection engine for user behavior analysis in apps/jane-orchestrator/src/services/n8n/pattern_detector.py
-- [ ] T077b [P] Create workflow template generator based on detected patterns in apps/jane-orchestrator/src/services/n8n/workflow_generator.py  
-- [ ] T077c [P] Implement AI behavior analysis for cross-tool interaction patterns in apps/jane-orchestrator/src/ai/behavior_analyzer.py
-- [ ] T077d [P] Create n8n workflow API integration for automatic workflow creation in apps/jane-orchestrator/src/services/n8n/n8n_api_client.py
-- [ ] T077e [P] Implement pattern matching algorithms (3+ similar workflows within 30 days threshold) in apps/jane-orchestrator/src/services/n8n/pattern_matcher.py
-- [ ] T077f [P] Create workflow validation system for generated workflows in apps/jane-orchestrator/src/services/n8n/workflow_validator.py
-- [ ] T077g [P] Implement cross-tool interaction sequence detection in apps/jane-orchestrator/src/services/n8n/interaction_analyzer.py
-- [ ] T077h [P] Create data transformation pattern recognition in apps/jane-orchestrator/src/services/n8n/data_transform_detector.py
-- [ ] T077i [P] Implement conditional logic flow detection in apps/jane-orchestrator/src/services/n8n/logic_flow_analyzer.py  
-- [ ] T077j [P] Create scheduling pattern recognition for automated workflows in apps/jane-orchestrator/src/services/n8n/schedule_detector.py
-- [ ] T077k [P] Implement workflow optimization recommendations engine in apps/jane-orchestrator/src/services/n8n/workflow_optimizer.py
-- [ ] T077l [P] Create user feedback integration for workflow accuracy improvement in apps/jane-orchestrator/src/services/n8n/feedback_processor.py
-- [ ] T077m [P] Add adaptive workflow UI components for pattern visualization in apps/jane-ui/src/components/N8N/PatternVisualization.tsx
-- [ ] T077n [P] Create workflow suggestion interface with user approval workflow in apps/jane-ui/src/components/N8N/WorkflowSuggestions.tsx
+- [ ] T095 [P] Create pattern detection engine for user behavior analysis in apps/jane-orchestrator/src/services/n8n/pattern_detector.py
+- [ ] T096 [P] Create workflow template generator based on detected patterns in apps/jane-orchestrator/src/services/n8n/workflow_generator.py  
+- [ ] T097 [P] Implement AI behavior analysis for cross-tool interaction patterns in apps/jane-orchestrator/src/ai/behavior_analyzer.py
+- [ ] T098 [P] Create n8n workflow API integration for automatic workflow creation in apps/jane-orchestrator/src/services/n8n/n8n_api_client.py
+- [ ] T099 [P] Implement pattern matching algorithms (3+ similar workflows within 30 days threshold) in apps/jane-orchestrator/src/services/n8n/pattern_matcher.py
+- [ ] T100 [P] Create workflow validation system for generated workflows in apps/jane-orchestrator/src/services/n8n/workflow_validator.py
+- [ ] T101 [P] Implement cross-tool interaction sequence detection in apps/jane-orchestrator/src/services/n8n/interaction_analyzer.py
+- [ ] T102 [P] Create data transformation pattern recognition in apps/jane-orchestrator/src/services/n8n/data_transform_detector.py
+- [ ] T103 [P] Implement conditional logic flow detection in apps/jane-orchestrator/src/services/n8n/logic_flow_analyzer.py  
+- [ ] T104 [P] Create scheduling pattern recognition for automated workflows in apps/jane-orchestrator/src/services/n8n/schedule_detector.py
+- [ ] T105 [P] Implement workflow optimization recommendations engine in apps/jane-orchestrator/src/services/n8n/workflow_optimizer.py
+- [ ] T106 [P] Create user feedback integration for workflow accuracy improvement in apps/jane-orchestrator/src/services/n8n/feedback_processor.py
+- [ ] T107 [P] Add adaptive workflow UI components for pattern visualization in apps/jane-ui/src/components/N8N/PatternVisualization.tsx
+- [ ] T108 [P] Create workflow suggestion interface with user approval workflow in apps/jane-ui/src/components/N8N/WorkflowSuggestions.tsx
 
 **Checkpoint**: n8n adaptive workflow system successfully reduces manual workflow creation by 70% through intelligent pattern detection
 
@@ -204,20 +221,20 @@
 
 ### Implementation for n8n Adaptive Workflows
 
-- [ ] T077a [P] Create WorkflowPattern model for pattern detection in apps/jane-orchestrator/src/data/models/workflow_pattern.py
-- [ ] T077b [P] Create UserRequest model for tracking LLM interactions in apps/jane-orchestrator/src/data/models/user_request.py
-- [ ] T077c [P] Create AdaptiveWorkflow model for generated workflows in apps/jane-orchestrator/src/data/models/adaptive_workflow.py
-- [ ] T077d Implement PatternDetectionService for analyzing user request patterns in apps/jane-orchestrator/src/services/pattern_detection_service.py
-- [ ] T077e Implement WorkflowGenerationService for auto-creating n8n workflows in apps/jane-orchestrator/src/services/workflow_generation_service.py
-- [ ] T077f Implement WorkflowValidationService for testing generated workflows with historical data in apps/jane-orchestrator/src/services/workflow_validation_service.py
-- [ ] T077g Create adaptive workflow API endpoints in apps/jane-orchestrator/src/api/adaptive_workflows/
-- [ ] T077h [P] Create pattern detection dashboard components in apps/jane-ui/src/components/AdaptiveWorkflows/PatternDashboard.tsx
-- [ ] T077i [P] Create workflow generation interface in apps/jane-ui/src/components/AdaptiveWorkflows/WorkflowBuilder.tsx
-- [ ] T077j [P] Create workflow testing and validation interface in apps/jane-ui/src/components/AdaptiveWorkflows/WorkflowTester.tsx
-- [ ] T077k Implement adaptive workflows page in apps/jane-ui/src/pages/adaptive-workflows.tsx
-- [ ] T077l Add real-time pattern detection monitoring with 3-request/7-day threshold validation
-- [ ] T077m Add workflow performance optimization based on execution metrics
-- [ ] T077n Integrate with existing n8n workflow execution engine (preserving T108 migration)
+- [ ] T109 [P] Create WorkflowPattern model for pattern detection in apps/jane-orchestrator/src/data/models/workflow_pattern.py
+- [ ] T110 [P] Create UserRequest model for tracking LLM interactions in apps/jane-orchestrator/src/data/models/user_request.py
+- [ ] T111 [P] Create AdaptiveWorkflow model for generated workflows in apps/jane-orchestrator/src/data/models/adaptive_workflow.py
+- [ ] T112 Implement PatternDetectionService for analyzing user request patterns in apps/jane-orchestrator/src/services/pattern_detection_service.py
+- [ ] T113 Implement WorkflowGenerationService for auto-creating n8n workflows in apps/jane-orchestrator/src/services/workflow_generation_service.py
+- [ ] T114 Implement WorkflowValidationService for testing generated workflows with historical data in apps/jane-orchestrator/src/services/workflow_validation_service.py
+- [ ] T115 Create adaptive workflow API endpoints in apps/jane-orchestrator/src/api/adaptive_workflows/
+- [ ] T116 [P] Create pattern detection dashboard components in apps/jane-ui/src/components/AdaptiveWorkflows/PatternDashboard.tsx
+- [ ] T117 [P] Create workflow generation interface in apps/jane-ui/src/components/AdaptiveWorkflows/WorkflowBuilder.tsx
+- [ ] T118 [P] Create workflow testing and validation interface in apps/jane-ui/src/components/AdaptiveWorkflows/WorkflowTester.tsx
+- [ ] T119 Implement adaptive workflows page in apps/jane-ui/src/pages/adaptive-workflows.tsx
+- [ ] T120 Add real-time pattern detection monitoring with 3-request/7-day threshold validation
+- [ ] T121 Add workflow performance optimization based on execution metrics
+- [ ] T122 Integrate with existing n8n workflow execution engine (preserving T108 migration)
 
 **Checkpoint**: System automatically creates and optimizes workflows based on user behavior patterns
 
@@ -231,22 +248,22 @@
 
 ### Implementation for Domain Performance Validation
 
-- [ ] T078a [P] Create PerformanceMetrics model for domain-specific tracking in apps/jane-orchestrator/src/data/models/performance_metrics.py
-- [ ] T078b [P] Create PerformanceThreshold model for constitutional requirements in apps/jane-orchestrator/src/data/models/performance_threshold.py
-- [ ] T078c [P] Create DomainValidation model for validation results in apps/jane-orchestrator/src/data/models/domain_validation.py
-- [ ] T078d Implement SecurityDomainValidator for <1s response validation in apps/jane-orchestrator/src/services/performance/security_validator.py
-- [ ] T078e Implement ProductivityDomainValidator for <2s response validation in apps/jane-orchestrator/src/services/performance/productivity_validator.py
-- [ ] T078f Implement MTGDomainValidator for <3s response validation in apps/jane-orchestrator/src/services/performance/mtg_validator.py
-- [ ] T078g Implement InfrastructureDomainValidator for <5s response validation in apps/jane-orchestrator/src/services/performance/infrastructure_validator.py
-- [ ] T078h Implement PerformanceValidationService for orchestrating all domain validators in apps/jane-orchestrator/src/services/performance/validation_service.py
-- [ ] T078i Create performance validation API endpoints in apps/jane-orchestrator/src/api/performance/
-- [ ] T078j [P] Create performance dashboard components in apps/jane-ui/src/components/Performance/DomainDashboard.tsx
-- [ ] T078k [P] Create domain-specific performance charts in apps/jane-ui/src/components/Performance/DomainCharts.tsx
-- [ ] T078l [P] Create performance alerts and notifications in apps/jane-ui/src/components/Performance/AlertSystem.tsx
-- [ ] T078m Implement performance validation page in apps/jane-ui/src/pages/performance-validation.tsx
-- [ ] T078n Add automated performance testing scripts per constitutional requirements in tests/performance/
-- [ ] T078o Add continuous performance monitoring with constitutional threshold alerting
-- [ ] T078p Integrate with CI/CD pipeline for automated performance regression detection
+- [ ] T123 [P] Create PerformanceMetrics model for domain-specific tracking in apps/jane-orchestrator/src/data/models/performance_metrics.py
+- [ ] T124 [P] Create PerformanceThreshold model for constitutional requirements in apps/jane-orchestrator/src/data/models/performance_threshold.py
+- [ ] T125 [P] Create DomainValidation model for validation results in apps/jane-orchestrator/src/data/models/domain_validation.py
+- [ ] T126 Implement SecurityDomainValidator for <1s response validation in apps/jane-orchestrator/src/services/performance/security_validator.py
+- [ ] T127 Implement ProductivityDomainValidator for <2s response validation in apps/jane-orchestrator/src/services/performance/productivity_validator.py
+- [ ] T128 Implement MTGDomainValidator for <3s response validation in apps/jane-orchestrator/src/services/performance/mtg_validator.py
+- [ ] T129 Implement InfrastructureDomainValidator for <5s response validation in apps/jane-orchestrator/src/services/performance/infrastructure_validator.py
+- [ ] T130 Implement PerformanceValidationService for orchestrating all domain validators in apps/jane-orchestrator/src/services/performance/validation_service.py
+- [ ] T131 Create performance validation API endpoints in apps/jane-orchestrator/src/api/performance/
+- [ ] T132 [P] Create performance dashboard components in apps/jane-ui/src/components/Performance/DomainDashboard.tsx
+- [ ] T133 [P] Create domain-specific performance charts in apps/jane-ui/src/components/Performance/DomainCharts.tsx
+- [ ] T134 [P] Create performance alerts and notifications in apps/jane-ui/src/components/Performance/AlertSystem.tsx
+- [ ] T135 Implement performance validation page in apps/jane-ui/src/pages/performance-validation.tsx
+- [ ] T136 Add automated performance testing scripts per constitutional requirements in tests/performance/
+- [ ] T137 Add continuous performance monitoring with constitutional threshold alerting
+- [ ] T138 Integrate with CI/CD pipeline for automated performance regression detection
 
 **Checkpoint**: All domains validate performance requirements automatically with constitutional compliance
 
@@ -260,18 +277,18 @@
 
 ### Implementation for User Story 8
 
-- [ ] T078 [P] [US8] Configure HTTPS and TLS certificates in apps/jane-orchestrator/src/config/security.py
-- [ ] T079 [P] [US8] Implement OAuth2 authentication for external access in apps/jane-orchestrator/src/api/oauth/
-- [ ] T080 [US8] Create RemoteAccessService for secure connectivity in apps/jane-orchestrator/src/services/remote_access_service.py
-- [ ] T081 [US8] Setup VPN/tunnel management for secure connections in apps/jane-orchestrator/src/services/vpn_service.py
-- [ ] T082 [US8] Create secure remote API endpoints in apps/jane-orchestrator/src/api/remote/
-- [ ] T083 [P] [US8] Configure PWA manifest and service worker in apps/jane-ui/public/
-- [ ] T084 [P] [US8] Create mobile-responsive components in apps/jane-ui/src/components/Mobile/
-- [ ] T085 [P] [US8] Optimize UI components for mobile viewports in libs/ui/components/
-- [ ] T086 [US8] Implement offline data caching for 24-hour capability in apps/jane-ui/src/services/cache.ts
-- [ ] T087 [US8] Add mobile navigation and touch-friendly interactions
-- [ ] T088 [US8] Add secure session management for remote connections
-- [ ] T089 [US8] Add data synchronization for offline/online transitions
+- [ ] T139 [P] [US8] Configure HTTPS and TLS certificates in apps/jane-orchestrator/src/config/security.py
+- [ ] T140 [P] [US8] Implement OAuth2 authentication for external access in apps/jane-orchestrator/src/api/oauth/
+- [ ] T141 [US8] Create RemoteAccessService for secure connectivity in apps/jane-orchestrator/src/services/remote_access_service.py
+- [ ] T142 [US8] Setup VPN/tunnel management for secure connections in apps/jane-orchestrator/src/services/vpn_service.py
+- [ ] T143 [US8] Create secure remote API endpoints in apps/jane-orchestrator/src/api/remote/
+- [ ] T144 [P] [US8] Configure PWA manifest and service worker in apps/jane-ui/public/
+- [ ] T145 [P] [US8] Create mobile-responsive components in apps/jane-ui/src/components/Mobile/
+- [ ] T146 [P] [US8] Optimize UI components for mobile viewports in libs/ui/components/
+- [ ] T147 [US8] Implement offline data caching for 24-hour capability in apps/jane-ui/src/services/cache.ts
+- [ ] T148 [US8] Add mobile navigation and touch-friendly interactions
+- [ ] T149 [US8] Add secure session management for remote connections
+- [ ] T150 [US8] Add data synchronization for offline/online transitions
 
 **Checkpoint**: Secure remote access functional with PWA capability
 
@@ -282,2265 +299,2265 @@
 **Goal**: Migrate 13 security tools preserving complex algorithms and data schemas per business logic analysis with layer-based service boundaries
 
 ### MISP Asset Relocation
-- [ ] T090-1 Review `docs/modular-analysis-repo-main/reports/misp-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical threat intelligence correlation algorithms (8,733 lines in Event.php) that MUST be preserved without modification
-- [ ] T090-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T090-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T090-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T090-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T090-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T090-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T090-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T090-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T090-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T090-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T090-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T090-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T090-2 Extract data models from `features/MISP/` per Section 2 (Data Architecture) of analysis, migrating CakePHP/MySQL schemas to unified PostgreSQL while preserving threat intelligence relationships and performance patterns
-- [ ] T090-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T090-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T090-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T090-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T090-2e Update data model imports and references throughout codebase
-- [ ] T090-3 Migrate API architecture from `features/MISP/` per Section 3 (API Architecture) converting CakePHP endpoints to FastAPI while preserving authentication patterns and request/response schemas
-- [ ] T090-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T090-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T090-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T090-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T090-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T090-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T090-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T090-4 Migrate frontend components from `features/MISP/` per Section 6 (Frontend Architecture) to React/Next.js unified interface, preserving component architecture and critical user interactions
-- [ ] T090-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T090-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T090-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T090-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T090-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T090-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T090-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T090-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T090-5 Create service adapter in `libs/service-adapters/security/misp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving all dependencies and external integrations while maintaining 100% API compatibility
-- [ ] T090-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T090-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T090-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T090-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T090-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T090-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T090-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T090-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T090-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T090-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T090-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate threat intelligence functionality preservation and remove from `features/MISP/` only after 100% validation success
-- [ ] T090-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T090-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T090-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T090-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T090-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T090-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T090-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T090-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T090-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T090-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T090-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T090-6l Remove `features/MISP/` directory only after all validation passes
+- [ ] T1511 Review `docs/modular-analysis-repo-main/reports/misp-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical threat intelligence correlation algorithms (8,733 lines in Event.php) that MUST be preserved without modification
+- [ ] T1521a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T1531b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T1541c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T1551d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T1561e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T1571f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T1581g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T1591h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T1601i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T1611j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T1621k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T1631l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T1642 Extract data models from `features/MISP/` per Section 2 (Data Architecture) of analysis, migrating CakePHP/MySQL schemas to unified PostgreSQL while preserving threat intelligence relationships and performance patterns
+- [ ] T1652a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T1662b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T1672c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T1682d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T1692e Update data model imports and references throughout codebase
+- [ ] T1703 Migrate API architecture from `features/MISP/` per Section 3 (API Architecture) converting CakePHP endpoints to FastAPI while preserving authentication patterns and request/response schemas
+- [ ] T1713a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T1723b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T1733c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T1743d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T1753e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T1763f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T1773g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T1784 Migrate frontend components from `features/MISP/` per Section 6 (Frontend Architecture) to React/Next.js unified interface, preserving component architecture and critical user interactions
+- [ ] T1794a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T1804b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T1814c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T1824d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T1834e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T1844f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T1854g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T1864h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T1875 Create service adapter in `libs/service-adapters/security/misp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving all dependencies and external integrations while maintaining 100% API compatibility
+- [ ] T1885a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T1895b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T1905c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T1915d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T1925e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T1935f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T1945g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T1955h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T1965i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T1975j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T1986 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate threat intelligence functionality preservation and remove from `features/MISP/` only after 100% validation success. **Regression Testing**: Execute comprehensive test suite located at `tests/security/MISP/` directory containing 7 test files covering threat intelligence correlation algorithms, event processing, and API endpoints using `pytest tests/security/MISP/ -v --cov` command.
+- [ ] T1996a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T2006b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T2016c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T2026d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T2036e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T2046f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T2056g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T2066h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T2076i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T2086j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T2096k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain. **Final Regression Test**: Execute full test suite with `pytest tests/security/MISP/ -v --tb=short` and verify all 7 test files pass before proceeding.
+- [ ] T2106l Remove `features/MISP/` directory only after all validation passes
 
 ### HELK Asset Relocation
-- [ ] T091-1 Review `docs/modular-analysis-repo-main/reports/HELK-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical threat hunting workflows and ELK stack integration algorithms that MUST be preserved without modification
-- [ ] T091-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T091-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T091-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T091-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T091-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T091-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T091-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T091-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T091-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T091-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T091-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T091-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T091-2 Extract data models from `features/HELK/` per Section 2 (Data Architecture) migrating Elasticsearch schemas and log processing patterns to unified system while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T091-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T091-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T091-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T091-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T091-2e Update data model imports and references throughout codebase
-- [ ] T091-3 Migrate API architecture from `features/HELK/` per Section 3 (API Architecture) converting threat hunting endpoints to FastAPI while preserving analytics capabilities and authentication patterns identified in Section 3.1-3.3
-- [ ] T091-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T091-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T091-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T091-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T091-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T091-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T091-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T091-4 Migrate frontend components from `features/HELK/` per Section 6 (Frontend Architecture) to React/Next.js preserving Jupyter notebook integration and visualization, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T091-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T091-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T091-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T091-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T091-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T091-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T091-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T091-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T091-5 Create service adapter in `libs/service-adapters/security/helk_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving ELK stack dependencies and Docker orchestration requirements while maintaining 100% API compatibility for downstream consumers
-- [ ] T091-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T091-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T091-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T091-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T091-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T091-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T091-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T091-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T091-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T091-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T091-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate threat hunting workflows and analytics performance through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/HELK/` only after 100% validation success
-- [ ] T091-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T091-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T091-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T091-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T091-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T091-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T091-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T091-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T091-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T091-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T091-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T091-6l Remove `features/HELK/` directory only after all validation passes
+- [ ] T2111 Review `docs/modular-analysis-repo-main/reports/HELK-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical threat hunting workflows and ELK stack integration algorithms that MUST be preserved without modification
+- [ ] T2121a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T2131b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T2141c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T2151d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T2161e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T2171f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T2181g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T2191h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T2201i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T2211j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T2221k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T2231l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T2242 Extract data models from `features/HELK/` per Section 2 (Data Architecture) migrating Elasticsearch schemas and log processing patterns to unified system while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T2252a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T2262b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T2272c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T2282d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T2292e Update data model imports and references throughout codebase
+- [ ] T2303 Migrate API architecture from `features/HELK/` per Section 3 (API Architecture) converting threat hunting endpoints to FastAPI while preserving analytics capabilities and authentication patterns identified in Section 3.1-3.3
+- [ ] T2313a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T2323b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T2333c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T2343d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T2353e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T2363f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T2373g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T2384 Migrate frontend components from `features/HELK/` per Section 6 (Frontend Architecture) to React/Next.js preserving Jupyter notebook integration and visualization, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T2394a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T2404b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T2414c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T2424d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T2434e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T2444f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T2454g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T2464h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T2475 Create service adapter in `libs/service-adapters/security/helk_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving ELK stack dependencies and Docker orchestration requirements while maintaining 100% API compatibility for downstream consumers
+- [ ] T2485a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T2495b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T2505c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T2515d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T2525e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T2535f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T2545g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T2555h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T2565i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T2575j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T2586 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate threat hunting workflows and analytics performance through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/HELK/` only after 100% validation success
+- [ ] T2596a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T2606b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T2616c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T2626d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T2636e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T2646f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T2656g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T2666h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T2676i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T2686j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T2696k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T2706l Remove `features/HELK/` directory only after all validation passes
 
 ### SecurityOnion Asset Relocation
-- [ ] T092-1 Review `docs/modular-analysis-repo-main/reports/securityonion-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical network security monitoring and Salt configuration management that MUST be preserved without modification
-- [ ] T092-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T092-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T092-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T092-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T092-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T092-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T092-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T092-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T092-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T092-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T092-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T092-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T092-2 Extract data models from `features/securityonion/` per Section 2 (Data Architecture) migrating network monitoring schemas and Salt pillar configurations to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T092-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T092-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T092-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T092-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T092-2e Update data model imports and references throughout codebase
-- [ ] T092-3 Migrate API architecture from `features/securityonion/` per Section 3 (API Architecture) converting security monitoring endpoints to FastAPI while preserving alert correlation and authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T092-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T092-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T092-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T092-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T092-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T092-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T092-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T092-4 Migrate frontend components from `features/securityonion/` per Section 6 (Frontend Architecture) to React/Next.js preserving security dashboards and alert management, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T092-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T092-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T092-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T092-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T092-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T092-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T092-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T092-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T092-5 Create service adapter in `libs/service-adapters/security/securityonion_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Salt states, network monitoring tools, and container orchestration while maintaining 100% API compatibility for downstream consumers
-- [ ] T092-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T092-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T092-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T092-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T092-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T092-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T092-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T092-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T092-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T092-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T092-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate network security monitoring and configuration management through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/securityonion/` only after 100% validation success
-- [ ] T092-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T092-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T092-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T092-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T092-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T092-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T092-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T092-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T092-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T092-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T092-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T092-6l Remove `features/securityonion/` directory only after all validation passes
+- [ ] T2711 Review `docs/modular-analysis-repo-main/reports/securityonion-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical network security monitoring and Salt configuration management that MUST be preserved without modification
+- [ ] T2721a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T2731b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T2741c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T2751d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T2761e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T2771f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T2781g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T2791h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T2801i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T2811j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T2821k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T2831l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T2842 Extract data models from `features/securityonion/` per Section 2 (Data Architecture) migrating network monitoring schemas and Salt pillar configurations to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T2852a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T2862b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T2872c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T2882d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T2892e Update data model imports and references throughout codebase
+- [ ] T2903 Migrate API architecture from `features/securityonion/` per Section 3 (API Architecture) converting security monitoring endpoints to FastAPI while preserving alert correlation and authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T2913a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T2923b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T2933c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T2943d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T2953e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T2963f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T2973g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T2984 Migrate frontend components from `features/securityonion/` per Section 6 (Frontend Architecture) to React/Next.js preserving security dashboards and alert management, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T2994a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T3004b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T3014c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T3024d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T3034e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T3044f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T3054g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T3064h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T3075 Create service adapter in `libs/service-adapters/security/securityonion_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Salt states, network monitoring tools, and container orchestration while maintaining 100% API compatibility for downstream consumers
+- [ ] T3085a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T3095b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T3105c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T3115d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T3125e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T3135f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T3145g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T3155h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T3165i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T3175j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T3186 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate network security monitoring and configuration management through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/securityonion/` only after 100% validation success
+- [ ] T3196a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T3206b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T3216c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T3226d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T3236e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T3246f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T3256g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T3266h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T3276i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T3286j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T3296k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T3306l Remove `features/securityonion/` directory only after all validation passes
 
 ### YARA-X Asset Relocation Asset Relocation
-- [ ] T093-1 Review `docs/modular-analysis-repo-main/reports/yara-x-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical pattern matching algorithms and WASM compilation logic that MUST be preserved without modification
-- [ ] T093-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T093-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T093-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T093-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T093-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T093-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T093-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T093-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T093-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T093-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T093-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T093-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T093-2 Extract data models from `features/yara-x/` per Section 2 (Data Architecture) of analysis, migrating pattern databases and rule schemas while preserving Rust performance to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T093-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T093-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T093-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T093-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T093-2e Update data model imports and references throughout codebase
-- [ ] T093-3 Migrate API architecture from `features/yara-x/` per Section 3 (API Architecture) of analysis, converting Rust-based pattern matching endpoints to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T093-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T093-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T093-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T093-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T093-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T093-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T093-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T093-4 Migrate frontend components from `features/yara-x/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving rule editing and pattern visualization, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T093-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T093-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T093-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T093-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T093-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T093-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T093-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T093-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T093-5 Create service adapter in `libs/service-adapters/security/yarax_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Rust core with Python wrapper integration while maintaining performance while maintaining 100% API compatibility for downstream consumers
-- [ ] T093-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T093-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T093-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T093-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T093-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T093-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T093-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T093-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T093-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T093-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T093-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate pattern matching accuracy and performance benchmarks through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/yara-x/` only after 100% validation success
-- [ ] T093-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T093-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T093-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T093-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T093-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T093-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T093-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T093-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T093-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T093-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T093-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T093-6l Remove `features/yara-x/` directory only after all validation passes
+- [ ] T3311 Review `docs/modular-analysis-repo-main/reports/yara-x-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical pattern matching algorithms and WASM compilation logic that MUST be preserved without modification
+- [ ] T3321a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T3331b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T3341c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T3351d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T3361e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T3371f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T3381g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T3391h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T3401i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T3411j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T3421k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T3431l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T3442 Extract data models from `features/yara-x/` per Section 2 (Data Architecture) of analysis, migrating pattern databases and rule schemas while preserving Rust performance to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T3452a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T3462b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T3472c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T3482d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T3492e Update data model imports and references throughout codebase
+- [ ] T3503 Migrate API architecture from `features/yara-x/` per Section 3 (API Architecture) of analysis, converting Rust-based pattern matching endpoints to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T3513a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T3523b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T3533c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T3543d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T3553e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T3563f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T3573g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T3584 Migrate frontend components from `features/yara-x/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving rule editing and pattern visualization, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T3594a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T3604b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T3614c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T3624d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T3634e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T3644f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T3654g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T3664h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T3675 Create service adapter in `libs/service-adapters/security/yarax_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Rust core with Python wrapper integration while maintaining performance while maintaining 100% API compatibility for downstream consumers
+- [ ] T3685a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T3695b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T3705c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T3715d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T3725e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T3735f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T3745g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T3755h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T3765i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T3775j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T3786 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate pattern matching accuracy and performance benchmarks through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/yara-x/` only after 100% validation success
+- [ ] T3796a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T3806b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T3816c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T3826d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T3836e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T3846f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T3856g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T3866h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T3876i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T3886j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T3896k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T3906l Remove `features/yara-x/` directory only after all validation passes
 ### Maltrail Asset Relocation Asset Relocation
-- [ ] T094-1 Review `docs/modular-analysis-repo-main/reports/maltrail-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical malicious traffic detection algorithms and rule processing that MUST be preserved without modification
-- [ ] T094-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T094-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T094-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T094-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T094-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T094-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T094-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T094-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T094-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T094-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T094-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T094-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T094-2 Extract data models from `features/maltrail/` per Section 2 (Data Architecture) of analysis, migrating traffic analysis schemas and detection rule databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T094-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T094-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T094-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T094-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T094-2e Update data model imports and references throughout codebase
-- [ ] T094-3 Migrate API architecture from `features/maltrail/` per Section 3 (API Architecture) of analysis, converting traffic analysis endpoints while preserving real-time detection to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T094-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T094-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T094-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T094-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T094-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T094-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T094-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T094-4 Migrate frontend components from `features/maltrail/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving traffic visualization and alert dashboards, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T094-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T094-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T094-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T094-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T094-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T094-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T094-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T094-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T094-5 Create service adapter in `libs/service-adapters/security/maltrail_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving network monitoring dependencies and rule engine integration while maintaining 100% API compatibility for downstream consumers
-- [ ] T094-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T094-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T094-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T094-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T094-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T094-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T094-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T094-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T094-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T094-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T094-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate traffic detection accuracy and real-time processing through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/maltrail/` only after 100% validation success
-- [ ] T094-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T094-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T094-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T094-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T094-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T094-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T094-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T094-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T094-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T094-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T094-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T094-6l Remove `features/maltrail/` directory only after all validation passes
+- [ ] T3911 Review `docs/modular-analysis-repo-main/reports/maltrail-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical malicious traffic detection algorithms and rule processing that MUST be preserved without modification
+- [ ] T3921a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T3931b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T3941c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T3951d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T3961e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T3971f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T3981g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T3991h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T4001i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T4011j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T4021k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T4031l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T4042 Extract data models from `features/maltrail/` per Section 2 (Data Architecture) of analysis, migrating traffic analysis schemas and detection rule databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T4052a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T4062b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T4072c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T4082d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T4092e Update data model imports and references throughout codebase
+- [ ] T4103 Migrate API architecture from `features/maltrail/` per Section 3 (API Architecture) of analysis, converting traffic analysis endpoints while preserving real-time detection to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T4113a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T4123b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T4133c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T4143d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T4153e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T4163f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T4173g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T4184 Migrate frontend components from `features/maltrail/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving traffic visualization and alert dashboards, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T4194a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T4204b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T4214c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T4224d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T4234e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T4244f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T4254g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T4264h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T4275 Create service adapter in `libs/service-adapters/security/maltrail_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving network monitoring dependencies and rule engine integration while maintaining 100% API compatibility for downstream consumers
+- [ ] T4285a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T4295b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T4305c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T4315d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T4325e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T4335f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T4345g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T4355h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T4365i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T4375j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T4386 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate traffic detection accuracy and real-time processing through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/maltrail/` only after 100% validation success
+- [ ] T4396a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T4406b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T4416c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T4426d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T4436e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T4446f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T4456g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T4466h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T4476i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T4486j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T4496k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T4506l Remove `features/maltrail/` directory only after all validation passes
 ### CyberChef Asset Relocation Asset Relocation
-- [ ] T095-1 Review `docs/modular-analysis-repo-main/reports/CyberChef-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical recipe processing engine and 300+ operation algorithms that MUST be preserved without modification
-- [ ] T095-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T095-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T095-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T095-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T095-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T095-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T095-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T095-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T095-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T095-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T095-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T095-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T095-2 Extract data models from `features/CyberChef/` per Section 2 (Data Architecture) of analysis, migrating recipe definitions and operation parameter schemas to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T095-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T095-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T095-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T095-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T095-2e Update data model imports and references throughout codebase
-- [ ] T095-3 Migrate API architecture from `features/CyberChef/` per Section 3 (API Architecture) of analysis, converting recipe execution while preserving operation chaining to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T095-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T095-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T095-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T095-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T095-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T095-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T095-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T095-4 Migrate frontend components from `features/CyberChef/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving drag-drop recipe builder and auto-magic detection, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T095-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T095-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T095-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T095-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T095-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T095-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T095-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T095-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T095-5 Create service adapter in `libs/service-adapters/security/cyberchef_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving operation library and recipe execution engine as embedded library with REST wrapper while maintaining 100% API compatibility for downstream consumers
-- [ ] T095-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T095-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T095-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T095-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T095-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T095-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T095-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T095-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T095-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T095-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T095-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate all 300+ operations maintain identical input/output behavior through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/CyberChef/` only after 100% validation success
-- [ ] T095-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T095-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T095-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T095-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T095-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T095-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T095-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T095-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T095-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T095-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T095-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T095-6l Remove `features/CyberChef/` directory only after all validation passes
+- [ ] T4511 Review `docs/modular-analysis-repo-main/reports/CyberChef-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical recipe processing engine and 300+ operation algorithms that MUST be preserved without modification
+- [ ] T4521a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T4531b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T4541c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T4551d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T4561e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T4571f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T4581g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T4591h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T4601i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T4611j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T4621k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T4631l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T4642 Extract data models from `features/CyberChef/` per Section 2 (Data Architecture) of analysis, migrating recipe definitions and operation parameter schemas to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T4652a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T4662b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T4672c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T4682d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T4692e Update data model imports and references throughout codebase
+- [ ] T4703 Migrate API architecture from `features/CyberChef/` per Section 3 (API Architecture) of analysis, converting recipe execution while preserving operation chaining to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T4713a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T4723b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T4733c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T4743d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T4753e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T4763f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T4773g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T4784 Migrate frontend components from `features/CyberChef/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving drag-drop recipe builder and auto-magic detection, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T4794a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T4804b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T4814c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T4824d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T4834e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T4844f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T4854g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T4864h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T4875 Create service adapter in `libs/service-adapters/security/cyberchef_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving operation library and recipe execution engine as embedded library with REST wrapper while maintaining 100% API compatibility for downstream consumers
+- [ ] T4885a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T4895b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T4905c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T4915d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T4925e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T4935f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T4945g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T4955h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T4965i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T4975j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T4986 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate all 300+ operations maintain identical input/output behavior through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/CyberChef/` only after 100% validation success
+- [ ] T4996a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T5006b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T5016c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T5026d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T5036e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T5046f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T5056g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T5066h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T5076i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T5086j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T5096k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T5106l Remove `features/CyberChef/` directory only after all validation passes
 ### Nemesis Asset Relocation Asset Relocation
-- [ ] T096-1 Review `docs/modular-analysis-repo-main/reports/nemesis-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical file analysis pipeline and multi-stage processing workflow that MUST be preserved without modification
-- [ ] T096-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T096-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T096-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T096-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T096-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T096-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T096-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T096-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T096-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T096-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T096-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T096-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T096-2 Extract data models from `features/Nemesis/` per Section 2 (Data Architecture) of analysis, migrating file analysis schemas and processing queue management to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T096-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T096-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T096-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T096-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T096-2e Update data model imports and references throughout codebase
-- [ ] T096-3 Migrate API architecture from `features/Nemesis/` per Section 3 (API Architecture) of analysis, converting file analysis endpoints while preserving processing pipeline integrity to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T096-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T096-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T096-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T096-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T096-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T096-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T096-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T096-4 Migrate frontend components from `features/Nemesis/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving file upload and analysis result visualization, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T096-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T096-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T096-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T096-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T096-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T096-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T096-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T096-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T096-5 Create service adapter in `libs/service-adapters/security/nemesis_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving file processing dependencies and analysis tool integration while maintaining 100% API compatibility for downstream consumers
-- [ ] T096-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T096-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T096-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T096-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T096-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T096-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T096-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T096-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T096-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T096-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T096-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate file analysis accuracy and processing pipeline integrity through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/Nemesis/` only after 100% validation success
-- [ ] T096-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T096-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T096-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T096-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T096-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T096-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T096-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T096-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T096-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T096-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T096-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T096-6l Remove `features/Nemesis/` directory only after all validation passes
+- [ ] T5111 Review `docs/modular-analysis-repo-main/reports/nemesis-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical file analysis pipeline and multi-stage processing workflow that MUST be preserved without modification
+- [ ] T5121a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T5131b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T5141c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T5151d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T5161e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T5171f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T5181g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T5191h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T5201i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T5211j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T5221k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T5231l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T5242 Extract data models from `features/Nemesis/` per Section 2 (Data Architecture) of analysis, migrating file analysis schemas and processing queue management to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T5252a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T5262b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T5272c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T5282d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T5292e Update data model imports and references throughout codebase
+- [ ] T5303 Migrate API architecture from `features/Nemesis/` per Section 3 (API Architecture) of analysis, converting file analysis endpoints while preserving processing pipeline integrity to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T5313a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T5323b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T5333c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T5343d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T5353e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T5363f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T5373g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T5384 Migrate frontend components from `features/Nemesis/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving file upload and analysis result visualization, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T5394a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T5404b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T5414c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T5424d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T5434e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T5444f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T5454g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T5464h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T5475 Create service adapter in `libs/service-adapters/security/nemesis_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving file processing dependencies and analysis tool integration while maintaining 100% API compatibility for downstream consumers
+- [ ] T5485a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T5495b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T5505c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T5515d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T5525e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T5535f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T5545g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T5555h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T5565i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T5575j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T5586 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate file analysis accuracy and processing pipeline integrity through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/Nemesis/` only after 100% validation success
+- [ ] T5596a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T5606b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T5616c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T5626d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T5636e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T5646f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T5656g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T5666h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T5676i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T5686j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T5696k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T5706l Remove `features/Nemesis/` directory only after all validation passes
 ### Ghostwriter Asset Relocation Asset Relocation
-- [ ] T097-1 Review `docs/modular-analysis-repo-main/reports/Ghostwriter-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical penetration testing workflows and report generation algorithms that MUST be preserved without modification
-- [ ] T097-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T097-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T097-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T097-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T097-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T097-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T097-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T097-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T097-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T097-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T097-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T097-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T097-2 Extract data models from `features/Ghostwriter/` per Section 2 (Data Architecture) of analysis, migrating Django ORM models and penetration testing schemas to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T097-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T097-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T097-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T097-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T097-2e Update data model imports and references throughout codebase
-- [ ] T097-3 Migrate API architecture from `features/Ghostwriter/` per Section 3 (API Architecture) of analysis, converting Django REST endpoints while preserving workflow orchestration to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T097-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T097-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T097-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T097-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T097-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T097-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T097-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T097-4 Migrate frontend components from `features/Ghostwriter/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving project management and report builder interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T097-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T097-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T097-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T097-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T097-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T097-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T097-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T097-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T097-5 Create service adapter in `libs/service-adapters/security/ghostwriter_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Django dependencies and report generation toolchain while maintaining 100% API compatibility for downstream consumers
-- [ ] T097-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T097-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T097-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T097-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T097-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T097-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T097-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T097-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T097-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T097-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T097-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate penetration testing workflows and report generation accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/Ghostwriter/` only after 100% validation success
-- [ ] T097-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T097-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T097-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T097-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T097-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T097-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T097-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T097-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T097-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T097-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T097-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T097-6l Remove `features/Ghostwriter/` directory only after all validation passes
+- [ ] T5711 Review `docs/modular-analysis-repo-main/reports/Ghostwriter-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical penetration testing workflows and report generation algorithms that MUST be preserved without modification
+- [ ] T5721a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T5731b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T5741c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T5751d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T5761e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T5771f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T5781g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T5791h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T5801i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T5811j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T5821k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T5831l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T5842 Extract data models from `features/Ghostwriter/` per Section 2 (Data Architecture) of analysis, migrating Django ORM models and penetration testing schemas to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T5852a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T5862b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T5872c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T5882d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T5892e Update data model imports and references throughout codebase
+- [ ] T5903 Migrate API architecture from `features/Ghostwriter/` per Section 3 (API Architecture) of analysis, converting Django REST endpoints while preserving workflow orchestration to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T5913a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T5923b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T5933c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T5943d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T5953e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T5963f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T5973g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T5984 Migrate frontend components from `features/Ghostwriter/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving project management and report builder interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T5994a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T6004b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T6014c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T6024d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T6034e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T6044f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T6054g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T6064h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T6075 Create service adapter in `libs/service-adapters/security/ghostwriter_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Django dependencies and report generation toolchain while maintaining 100% API compatibility for downstream consumers
+- [ ] T6085a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T6095b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T6105c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T6115d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T6125e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T6135f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T6145g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T6155h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T6165i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T6175j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T6186 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate penetration testing workflows and report generation accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/Ghostwriter/` only after 100% validation success
+- [ ] T6196a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T6206b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T6216c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T6226d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T6236e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T6246f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T6256g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T6266h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T6276i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T6286j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T6296k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T6306l Remove `features/Ghostwriter/` directory only after all validation passes
 ### Brute Ratel C4 Asset Relocation Asset Relocation
-- [ ] T098-1 Review `docs/modular-analysis-repo-main/reports/brute_ratel_c4_community_kit-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical red team framework components that MUST be preserved without modification
-- [ ] T098-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T098-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T098-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T098-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T098-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T098-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T098-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T098-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T098-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T098-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T098-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T098-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T098-2 Extract data models from `features/Brute-Ratel-C4-Community-Kit/` per Section 2 (Data Architecture) of analysis, migrating red team operation schemas and payload configurations to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T098-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T098-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T098-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T098-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T098-2e Update data model imports and references throughout codebase
-- [ ] T098-3 Migrate API architecture from `features/Brute-Ratel-C4-Community-Kit/` per Section 3 (API Architecture) of analysis, converting red team endpoints while preserving operational security to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T098-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T098-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T098-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T098-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T098-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T098-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T098-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T098-4 Migrate frontend components from `features/Brute-Ratel-C4-Community-Kit/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving operational dashboards, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T098-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T098-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T098-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T098-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T098-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T098-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T098-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T098-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T098-5 Create service adapter in `libs/service-adapters/security/brute_ratel_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving red team toolchain dependencies and secure communications while maintaining 100% API compatibility for downstream consumers
-- [ ] T098-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T098-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T098-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T098-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T098-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T098-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T098-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T098-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T098-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T098-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T098-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate red team operations and security compliance through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/Brute-Ratel-C4-Community-Kit/` only after 100% validation success
-- [ ] T098-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T098-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T098-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T098-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T098-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T098-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T098-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T098-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T098-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T098-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T098-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T098-6l Remove `features/Brute-Ratel-C4-Community-Kit/` directory only after all validation passes
+- [ ] T6311 Review `docs/modular-analysis-repo-main/reports/brute_ratel_c4_community_kit-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical red team framework components that MUST be preserved without modification
+- [ ] T6321a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T6331b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T6341c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T6351d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T6361e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T6371f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T6381g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T6391h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T6401i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T6411j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T6421k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T6431l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T6442 Extract data models from `features/Brute-Ratel-C4-Community-Kit/` per Section 2 (Data Architecture) of analysis, migrating red team operation schemas and payload configurations to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T6452a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T6462b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T6472c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T6482d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T6492e Update data model imports and references throughout codebase
+- [ ] T6503 Migrate API architecture from `features/Brute-Ratel-C4-Community-Kit/` per Section 3 (API Architecture) of analysis, converting red team endpoints while preserving operational security to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T6513a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T6523b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T6533c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T6543d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T6553e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T6563f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T6573g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T6584 Migrate frontend components from `features/Brute-Ratel-C4-Community-Kit/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving operational dashboards, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T6594a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T6604b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T6614c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T6624d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T6634e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T6644f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T6654g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T6664h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T6675 Create service adapter in `libs/service-adapters/security/brute_ratel_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving red team toolchain dependencies and secure communications while maintaining 100% API compatibility for downstream consumers
+- [ ] T6685a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T6695b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T6705c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T6715d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T6725e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T6735f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T6745g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T6755h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T6765i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T6775j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T6786 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate red team operations and security compliance through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/Brute-Ratel-C4-Community-Kit/` only after 100% validation success
+- [ ] T6796a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T6806b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T6816c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T6826d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T6836e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T6846f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T6856g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T6866h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T6876i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T6886j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T6896k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T6906l Remove `features/Brute-Ratel-C4-Community-Kit/` directory only after all validation passes
 ### APIScout Asset Relocation Asset Relocation
-- [ ] T099-1 Review `docs/modular-analysis-repo-main/reports/apiscout-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical Windows API analysis algorithms that MUST be preserved without modification
-- [ ] T099-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T099-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T099-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T099-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T099-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T099-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T099-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T099-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T099-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T099-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T099-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T099-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T099-2 Extract data models from `features/apiscout/` per Section 2 (Data Architecture) of analysis, migrating API analysis schemas and Windows API databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T099-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T099-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T099-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T099-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T099-2e Update data model imports and references throughout codebase
-- [ ] T099-3 Migrate API architecture from `features/apiscout/` per Section 3 (API Architecture) of analysis, converting API analysis endpoints while preserving Windows compatibility analysis to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T099-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T099-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T099-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T099-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T099-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T099-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T099-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T099-4 Migrate frontend components from `features/apiscout/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving API analysis visualization, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T099-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T099-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T099-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T099-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T099-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T099-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T099-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T099-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T099-5 Create service adapter in `libs/service-adapters/security/apiscout_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Windows API analysis dependencies and toolchain integration while maintaining 100% API compatibility for downstream consumers
-- [ ] T099-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T099-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T099-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T099-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T099-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T099-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T099-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T099-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T099-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T099-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T099-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate Windows API analysis accuracy and compatibility detection through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/apiscout/` only after 100% validation success
-- [ ] T099-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T099-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T099-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T099-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T099-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T099-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T099-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T099-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T099-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T099-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T099-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T099-6l Remove `features/apiscout/` directory only after all validation passes
+- [ ] T6911 Review `docs/modular-analysis-repo-main/reports/apiscout-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical Windows API analysis algorithms that MUST be preserved without modification
+- [ ] T6921a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T6931b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T6941c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T6951d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T6961e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T6971f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T6981g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T6991h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T7001i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T7011j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T7021k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T7031l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T7042 Extract data models from `features/apiscout/` per Section 2 (Data Architecture) of analysis, migrating API analysis schemas and Windows API databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T7052a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T7062b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T7072c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T7082d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T7092e Update data model imports and references throughout codebase
+- [ ] T7103 Migrate API architecture from `features/apiscout/` per Section 3 (API Architecture) of analysis, converting API analysis endpoints while preserving Windows compatibility analysis to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T7113a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T7123b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T7133c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T7143d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T7153e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T7163f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T7173g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T7184 Migrate frontend components from `features/apiscout/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving API analysis visualization, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T7194a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T7204b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T7214c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T7224d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T7234e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T7244f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T7254g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T7264h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T7275 Create service adapter in `libs/service-adapters/security/apiscout_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Windows API analysis dependencies and toolchain integration while maintaining 100% API compatibility for downstream consumers
+- [ ] T7285a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T7295b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T7305c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T7315d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T7325e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T7335f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T7345g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T7355h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T7365i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T7375j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T7386 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate Windows API analysis accuracy and compatibility detection through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/apiscout/` only after 100% validation success
+- [ ] T7396a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T7406b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T7416c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T7426d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T7436e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T7446f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T7456g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T7466h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T7476i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T7486j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T7496k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T7506l Remove `features/apiscout/` directory only after all validation passes
 ### RITA Asset Relocation Asset Relocation
-- [ ] T100-1 Review `docs/modular-analysis-repo-main/reports/rita-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical network traffic analysis algorithms and Go-based processing that MUST be preserved without modification
-- [ ] T100-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T100-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T100-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T100-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T100-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T100-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T100-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T100-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T100-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T100-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T100-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T100-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T100-2 Extract data models from `features/rita/` per Section 2 (Data Architecture) of analysis, migrating network analysis schemas and traffic pattern databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T100-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T100-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T100-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T100-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T100-2e Update data model imports and references throughout codebase
-- [ ] T100-3 Migrate API architecture from `features/rita/` per Section 3 (API Architecture) of analysis, converting Go-based network analysis endpoints while preserving analysis algorithms to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T100-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T100-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T100-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T100-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T100-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T100-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T100-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T100-4 Migrate frontend components from `features/rita/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving network traffic visualization and analysis dashboards, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T100-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T100-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T100-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T100-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T100-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T100-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T100-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T100-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T100-5 Create service adapter in `libs/service-adapters/security/rita_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Go core with Python wrapper integration while maintaining network analysis performance while maintaining 100% API compatibility for downstream consumers
-- [ ] T100-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T100-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T100-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T100-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T100-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T100-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T100-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T100-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T100-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T100-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T100-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate network traffic analysis accuracy and performance benchmarks through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/rita/` only after 100% validation success
-- [ ] T100-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T100-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T100-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T100-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T100-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T100-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T100-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T100-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T100-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T100-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T100-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T100-6l Remove `features/rita/` directory only after all validation passes
+- [ ] T7511 Review `docs/modular-analysis-repo-main/reports/rita-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical network traffic analysis algorithms and Go-based processing that MUST be preserved without modification
+- [ ] T7521a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T7531b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T7541c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T7551d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T7561e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T7571f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T7581g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T7591h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T7601i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T7611j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T7621k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T7631l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T7642 Extract data models from `features/rita/` per Section 2 (Data Architecture) of analysis, migrating network analysis schemas and traffic pattern databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T7652a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T7662b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T7672c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T7682d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T7692e Update data model imports and references throughout codebase
+- [ ] T7703 Migrate API architecture from `features/rita/` per Section 3 (API Architecture) of analysis, converting Go-based network analysis endpoints while preserving analysis algorithms to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T7713a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T7723b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T7733c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T7743d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T7753e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T7763f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T7773g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T7784 Migrate frontend components from `features/rita/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving network traffic visualization and analysis dashboards, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T7794a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T7804b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T7814c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T7824d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T7834e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T7844f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T7854g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T7864h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T7875 Create service adapter in `libs/service-adapters/security/rita_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Go core with Python wrapper integration while maintaining network analysis performance while maintaining 100% API compatibility for downstream consumers
+- [ ] T7885a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T7895b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T7905c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T7915d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T7925e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T7935f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T7945g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T7955h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T7965i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T7975j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T7986 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate network traffic analysis accuracy and performance benchmarks through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/rita/` only after 100% validation success
+- [ ] T7996a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T8006b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T8016c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T8026d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T8036e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T8046f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T8056g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T8066h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T8076i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T8086j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T8096k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T8106l Remove `features/rita/` directory only after all validation passes
 ### OneX Asset Relocation Asset Relocation
-- [ ] T101-1 Review `docs/modular-analysis-repo-main/reports/onex-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical security toolkit components and automation workflows that MUST be preserved without modification
-- [ ] T101-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T101-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T101-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T101-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T101-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T101-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T101-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T101-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T101-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T101-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T101-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T101-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T101-2 Extract data models from `features/onex/` per Section 2 (Data Architecture) of analysis, migrating security tool schemas and automation configurations to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T101-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T101-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T101-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T101-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T101-2e Update data model imports and references throughout codebase
-- [ ] T101-3 Migrate API architecture from `features/onex/` per Section 3 (API Architecture) of analysis, converting security toolkit endpoints while preserving automation capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T101-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T101-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T101-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T101-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T101-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T101-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T101-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T101-4 Migrate frontend components from `features/onex/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving security tool interfaces and workflow management, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T101-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T101-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T101-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T101-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T101-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T101-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T101-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T101-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T101-5 Create service adapter in `libs/service-adapters/security/onex_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving security toolkit dependencies and automation framework integration while maintaining 100% API compatibility for downstream consumers
-- [ ] T101-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T101-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T101-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T101-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T101-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T101-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T101-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T101-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T101-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T101-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T101-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate security toolkit functionality and automation workflows through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/onex/` only after 100% validation success
-- [ ] T101-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T101-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T101-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T101-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T101-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T101-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T101-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T101-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T101-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T101-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T101-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T101-6l Remove `features/onex/` directory only after all validation passes
+- [ ] T8111 Review `docs/modular-analysis-repo-main/reports/onex-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical security toolkit components and automation workflows that MUST be preserved without modification
+- [ ] T8121a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T8131b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T8141c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T8151d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T8161e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T8171f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T8181g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T8191h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T8201i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T8211j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T8221k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T8231l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T8242 Extract data models from `features/onex/` per Section 2 (Data Architecture) of analysis, migrating security tool schemas and automation configurations to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T8252a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T8262b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T8272c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T8282d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T8292e Update data model imports and references throughout codebase
+- [ ] T8303 Migrate API architecture from `features/onex/` per Section 3 (API Architecture) of analysis, converting security toolkit endpoints while preserving automation capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T8313a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T8323b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T8333c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T8343d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T8353e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T8363f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T8373g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T8384 Migrate frontend components from `features/onex/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving security tool interfaces and workflow management, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T8394a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T8404b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T8414c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T8424d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T8434e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T8444f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T8454g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T8464h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T8475 Create service adapter in `libs/service-adapters/security/onex_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving security toolkit dependencies and automation framework integration while maintaining 100% API compatibility for downstream consumers
+- [ ] T8485a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T8495b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T8505c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T8515d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T8525e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T8535f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T8545g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T8555h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T8565i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T8575j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T8586 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate security toolkit functionality and automation workflows through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/onex/` only after 100% validation success
+- [ ] T8596a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T8606b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T8616c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T8626d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T8636e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T8646f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T8656g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T8666h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T8676i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T8686j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T8696k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T8706l Remove `features/onex/` directory only after all validation passes
 ### BlackArch Asset Relocation Asset Relocation
-- [ ] T102-1 Review `docs/modular-analysis-repo-main/reports/blackarch-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical security distribution scripts and tool collection management that MUST be preserved without modification
-- [ ] T102-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T102-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T102-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T102-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T102-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T102-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T102-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T102-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T102-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T102-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T102-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T102-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T102-2 Extract data models from `features/blackarch/` per Section 2 (Data Architecture) of analysis, migrating package management schemas and tool categorization databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T102-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T102-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T102-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T102-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T102-2e Update data model imports and references throughout codebase
-- [ ] T102-3 Migrate API architecture from `features/blackarch/` per Section 3 (API Architecture) of analysis, converting script collection to FastAPI modules while preserving tool execution capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T102-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T102-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T102-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T102-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T102-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T102-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T102-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T102-4 Migrate frontend components from `features/blackarch/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving tool browser and execution interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T102-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T102-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T102-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T102-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T102-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T102-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T102-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T102-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T102-5 Create service adapter in `libs/service-adapters/security/blackarch_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving shell script collection to callable Python modules conversion while maintaining 100% API compatibility for downstream consumers
-- [ ] T102-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T102-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T102-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T102-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T102-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T102-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T102-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T102-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T102-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T102-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T102-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate security tool execution and script conversion accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/blackarch/` only after 100% validation success
-- [ ] T102-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T102-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T102-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T102-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T102-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T102-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T102-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T102-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T102-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T102-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T102-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T102-6l Remove `features/blackarch/` directory only after all validation passes
+- [ ] T8711 Review `docs/modular-analysis-repo-main/reports/blackarch-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical security distribution scripts and tool collection management that MUST be preserved without modification
+- [ ] T8721a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T8731b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T8741c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T8751d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T8761e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T8771f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T8781g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T8791h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T8801i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T8811j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T8821k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T8831l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T8842 Extract data models from `features/blackarch/` per Section 2 (Data Architecture) of analysis, migrating package management schemas and tool categorization databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T8852a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T8862b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T8872c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T8882d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T8892e Update data model imports and references throughout codebase
+- [ ] T8903 Migrate API architecture from `features/blackarch/` per Section 3 (API Architecture) of analysis, converting script collection to FastAPI modules while preserving tool execution capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T8913a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T8923b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T8933c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T8943d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T8953e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T8963f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T8973g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T8984 Migrate frontend components from `features/blackarch/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving tool browser and execution interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T8994a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T9004b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T9014c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T9024d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T9034e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T9044f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T9054g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T9064h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T9075 Create service adapter in `libs/service-adapters/security/blackarch_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving shell script collection to callable Python modules conversion while maintaining 100% API compatibility for downstream consumers
+- [ ] T9085a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T9095b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T9105c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T9115d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T9125e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T9135f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T9145g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T9155h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T9165i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T9175j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T9186 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate security tool execution and script conversion accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/blackarch/` only after 100% validation success
+- [ ] T9196a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T9206b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T9216c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T9226d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T9236e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T9246f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T9256g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T9266h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T9276i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T9286j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T9296k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T9306l Remove `features/blackarch/` directory only after all validation passes
 ### Actual Budget Asset Relocation Asset Relocation
-- [ ] T105-1 Review `docs/modular-analysis-repo-main/reports/actual-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical spreadsheet calculation engine and CRDT synchronization algorithms (1000+ lines) that MUST be preserved without modification
-- [ ] T105-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T105-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T105-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T105-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T105-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T105-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T105-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T105-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T105-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T105-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T105-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T105-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T105-2 Extract data models from `features/actual/` per Section 2 (Data Architecture) of analysis, migrating budget schemas and financial data models while preserving transaction integrity to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T105-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T105-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T105-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T105-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T105-2e Update data model imports and references throughout codebase
-- [ ] T105-3 Migrate API architecture from `features/actual/` per Section 3 (API Architecture) of analysis, converting budgeting endpoints while preserving real-time sync capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T105-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T105-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T105-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T105-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T105-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T105-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T105-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T105-4 Migrate frontend components from `features/actual/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving budget interface and financial visualizations, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T105-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T105-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T105-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T105-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T105-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T105-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T105-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T105-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T105-5 Create service adapter in `libs/service-adapters/productivity/actual_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Node.js dependencies and CRDT synchronization libraries while maintaining 100% API compatibility for downstream consumers
-- [ ] T105-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T105-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T105-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T105-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T105-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T105-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T105-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T105-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T105-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T105-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T105-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate budget calculations and synchronization accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/actual/` only after 100% validation success
-- [ ] T105-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T105-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T105-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T105-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T105-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T105-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T105-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T105-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T105-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T105-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T105-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T105-6l Remove `features/actual/` directory only after all validation passes
+- [ ] T9311 Review `docs/modular-analysis-repo-main/reports/actual-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical spreadsheet calculation engine and CRDT synchronization algorithms (1000+ lines) that MUST be preserved without modification
+- [ ] T9321a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T9331b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T9341c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T9351d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T9361e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T9371f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T9381g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T9391h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T9401i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T9411j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T9421k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T9431l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T9442 Extract data models from `features/actual/` per Section 2 (Data Architecture) of analysis, migrating budget schemas and financial data models while preserving transaction integrity to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T9452a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T9462b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T9472c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T9482d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T9492e Update data model imports and references throughout codebase
+- [ ] T9503 Migrate API architecture from `features/actual/` per Section 3 (API Architecture) of analysis, converting budgeting endpoints while preserving real-time sync capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T9513a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T9523b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T9533c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T9543d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T9553e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T9563f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T9573g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T9584 Migrate frontend components from `features/actual/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving budget interface and financial visualizations, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T9594a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T9604b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T9614c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T9624d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T9634e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T9644f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T9654g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T9664h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T9675 Create service adapter in `libs/service-adapters/productivity/actual_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Node.js dependencies and CRDT synchronization libraries while maintaining 100% API compatibility for downstream consumers
+- [ ] T9685a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T9695b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T9705c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T9715d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T9725e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T9735f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T9745g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T9755h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T9765i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T9775j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T9786 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate budget calculations and synchronization accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/actual/` only after 100% validation success. **Regression Testing**: Execute comprehensive test suite located at `tests/productivity/actual/` directory containing 25 test files covering budgeting algorithms, synchronization logic, and financial calculations using `pytest tests/productivity/actual/ -v --cov` command.
+- [ ] T9796a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T9806b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T9816c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T9826d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T9836e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T9846f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T9856g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T9866h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T9876i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T9886j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T9896k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain. **Final Regression Test**: Execute full test suite with `pytest tests/productivity/actual/ -v --tb=short` and verify all 25 test files pass before proceeding.
+- [ ] T9906l Remove `features/actual/` directory only after all validation passes
 ### Mealie Asset Relocation Asset Relocation
-- [ ] T106-1 Review `docs/modular-analysis-repo-main/reports/mealie-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical recipe management and meal planning algorithms that MUST be preserved without modification
-- [ ] T106-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T106-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T106-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T106-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T106-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T106-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T106-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T106-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T106-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T106-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T106-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T106-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T106-2 Extract data models from `features/mealie/` per Section 2 (Data Architecture) of analysis, migrating recipe schemas and meal planning databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T106-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T106-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T106-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T106-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T106-2e Update data model imports and references throughout codebase
-- [ ] T106-3 Migrate API architecture from `features/mealie/` per Section 3 (API Architecture) of analysis, converting recipe management endpoints while preserving meal planning workflows to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T106-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T106-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T106-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T106-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T106-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T106-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T106-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T106-4 Migrate frontend components from `features/mealie/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving recipe browser and meal planning interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T106-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T106-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T106-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T106-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T106-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T106-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T106-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T106-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T106-5 Create service adapter in `libs/service-adapters/productivity/mealie_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python FastAPI dependencies and recipe parsing libraries while maintaining 100% API compatibility for downstream consumers
-- [ ] T106-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T106-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T106-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T106-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T106-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T106-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T106-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T106-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T106-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T106-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T106-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate recipe management and meal planning functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/mealie/` only after 100% validation success
-- [ ] T106-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T106-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T106-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T106-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T106-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T106-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T106-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T106-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T106-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T106-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T106-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T106-6l Remove `features/mealie/` directory only after all validation passes
+- [ ] T9911 Review `docs/modular-analysis-repo-main/reports/mealie-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical recipe management and meal planning algorithms that MUST be preserved without modification
+- [ ] T9921a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T9931b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T9941c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T9951d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T9961e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T9971f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T9981g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T9991h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T10001i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T10011j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T10021k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T10031l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T10042 Extract data models from `features/mealie/` per Section 2 (Data Architecture) of analysis, migrating recipe schemas and meal planning databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T10052a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T10062b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T10072c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T10082d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T10092e Update data model imports and references throughout codebase
+- [ ] T10103 Migrate API architecture from `features/mealie/` per Section 3 (API Architecture) of analysis, converting recipe management endpoints while preserving meal planning workflows to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T10113a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T10123b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T10133c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T10143d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T10153e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T10163f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T10173g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T10184 Migrate frontend components from `features/mealie/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving recipe browser and meal planning interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T10194a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T10204b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T10214c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T10224d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T10234e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T10244f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T10254g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T10264h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T10275 Create service adapter in `libs/service-adapters/productivity/mealie_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python FastAPI dependencies and recipe parsing libraries while maintaining 100% API compatibility for downstream consumers
+- [ ] T10285a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T10295b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T10305c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T10315d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T10325e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T10335f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T10345g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T10355h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T10365i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T10375j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T10386 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate recipe management and meal planning functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/mealie/` only after 100% validation success. **Regression Testing**: Execute comprehensive test suite located at `tests/productivity/mealie/` directory containing 104 test files covering recipe parsing, meal planning algorithms, and database operations using `pytest tests/productivity/mealie/ -v --cov` command.
+- [ ] T10396a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T10406b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T10416c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T10426d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T10436e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T10446f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T10456g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T10466h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T10476i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T10486j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T10496k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain. **Final Regression Test**: Execute full test suite with `pytest tests/productivity/mealie/ -v --tb=short` and verify all 104 test files pass before proceeding.
+- [ ] T10506l Remove `features/mealie/` directory only after all validation passes
 ### Dispatch Asset Relocation Asset Relocation
-- [ ] T107-1 Review `docs/modular-analysis-repo-main/reports/dispatch-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical incident management workflows and notification systems that MUST be preserved without modification
-- [ ] T107-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T107-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T107-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T107-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T107-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T107-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T107-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T107-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T107-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T107-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T107-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T107-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T107-2 Extract data models from `features/dispatch/` per Section 2 (Data Architecture) of analysis, migrating incident schemas and workflow orchestration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T107-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T107-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T107-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T107-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T107-2e Update data model imports and references throughout codebase
-- [ ] T107-3 Migrate API architecture from `features/dispatch/` per Section 3 (API Architecture) of analysis, converting incident management endpoints while preserving workflow automation to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T107-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T107-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T107-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T107-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T107-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T107-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T107-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T107-4 Migrate frontend components from `features/dispatch/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving incident dashboards and workflow management interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T107-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T107-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T107-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T107-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T107-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T107-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T107-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T107-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T107-5 Create service adapter in `libs/service-adapters/productivity/dispatch_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and notification system integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T107-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T107-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T107-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T107-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T107-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T107-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T107-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T107-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T107-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T107-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T107-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate incident management workflows and notification accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/dispatch/` only after 100% validation success
-- [ ] T107-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T107-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T107-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T107-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T107-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T107-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T107-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T107-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T107-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T107-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T107-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T107-6l Remove `features/dispatch/` directory only after all validation passes
+- [ ] T10511 Review `docs/modular-analysis-repo-main/reports/dispatch-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical incident management workflows and notification systems that MUST be preserved without modification
+- [ ] T10521a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T10531b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T10541c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T10551d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T10561e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T10571f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T10581g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T10591h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T10601i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T10611j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T10621k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T10631l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T10642 Extract data models from `features/dispatch/` per Section 2 (Data Architecture) of analysis, migrating incident schemas and workflow orchestration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T10652a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T10662b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T10672c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T10682d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T10692e Update data model imports and references throughout codebase
+- [ ] T10703 Migrate API architecture from `features/dispatch/` per Section 3 (API Architecture) of analysis, converting incident management endpoints while preserving workflow automation to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T10713a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T10723b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T10733c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T10743d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T10753e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T10763f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T10773g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T10784 Migrate frontend components from `features/dispatch/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving incident dashboards and workflow management interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T10794a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T10804b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T10814c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T10824d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T10834e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T10844f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T10854g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T10864h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T10875 Create service adapter in `libs/service-adapters/productivity/dispatch_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and notification system integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T10885a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T10895b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T10905c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T10915d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T10925e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T10935f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T10945g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T10955h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T10965i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T10975j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T10986 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate incident management workflows and notification accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/dispatch/` only after 100% validation success. **Regression Testing**: Execute comprehensive test suite located at `tests/productivity/dispatch/` directory containing 73 test files covering incident workflows, notification systems, and API endpoints using `pytest tests/productivity/dispatch/ -v --cov` command.
+- [ ] T10996a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T11006b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T11016c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T11026d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T11036e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T11046f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T11056g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T11066h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T11076i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T11086j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T11096k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain. **Final Regression Test**: Execute full test suite with `pytest tests/productivity/dispatch/ -v --tb=short` and verify all 73 test files pass before proceeding.
+- [ ] T11106l Remove `features/dispatch/` directory only after all validation passes
 ### n8n Asset Relocation Asset Relocation
-- [ ] T108-1 Review `docs/modular-analysis-repo-main/reports/n8n-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical workflow execution engine (2620 lines) and 400+ node integrations that MUST be preserved without modification
-- [ ] T108-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T108-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T108-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T108-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T108-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T108-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T108-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T108-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T108-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T108-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T108-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T108-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T108-2 Extract data models from `features/n8n/` per Section 2 (Data Architecture) of analysis, migrating workflow schemas and execution history while preserving node dependency graphs to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T108-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T108-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T108-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T108-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T108-2e Update data model imports and references throughout codebase
-- [ ] T108-3 Migrate API architecture from `features/n8n/` per Section 3 (API Architecture) of analysis, converting workflow execution endpoints while preserving 400+ service integrations to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T108-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T108-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T108-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T108-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T108-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T108-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T108-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T108-4 Migrate frontend components from `features/n8n/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving workflow editor and node management interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T108-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T108-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T108-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T108-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T108-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T108-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T108-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T108-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T108-5 Create service adapter in `libs/service-adapters/productivity/n8n_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving TypeScript monorepo dependencies and 400+ service integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T108-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T108-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T108-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T108-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T108-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T108-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T108-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T108-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T108-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T108-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T108-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate workflow execution accuracy and service integration functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/n8n/` only after 100% validation success
-- [ ] T108-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T108-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T108-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T108-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T108-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T108-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T108-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T108-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T108-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T108-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T108-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T108-6l Remove `features/n8n/` directory only after all validation passes
+- [ ] T11111 Review `docs/modular-analysis-repo-main/reports/n8n-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical workflow execution engine (2620 lines) and 400+ node integrations that MUST be preserved without modification
+- [ ] T11121a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T11131b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T11141c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T11151d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T11161e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T11171f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T11181g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T11191h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T11201i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T11211j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T11221k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T11231l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T11242 Extract data models from `features/n8n/` per Section 2 (Data Architecture) of analysis, migrating workflow schemas and execution history while preserving node dependency graphs to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T11252a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T11262b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T11272c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T11282d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T11292e Update data model imports and references throughout codebase
+- [ ] T11303 Migrate API architecture from `features/n8n/` per Section 3 (API Architecture) of analysis, converting workflow execution endpoints while preserving 400+ service integrations to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T11313a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T11323b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T11333c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T11343d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T11353e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T11363f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T11373g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T11384 Migrate frontend components from `features/n8n/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving workflow editor and node management interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T11394a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T11404b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T11414c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T11424d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T11434e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T11444f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T11454g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T11464h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T11475 Create service adapter in `libs/service-adapters/productivity/n8n_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving TypeScript monorepo dependencies and 400+ service integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T11485a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T11495b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T11505c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T11515d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T11525e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T11535f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T11545g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T11555h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T11565i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T11575j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T11586 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate workflow execution accuracy and service integration functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/n8n/` only after 100% validation success. **Regression Testing**: Execute comprehensive test suite located at `tests/infrastructure/n8n/` directory containing 2,886 test files covering workflow execution engine, 400+ node integrations, and API endpoints using `npm test` and `jest tests/infrastructure/n8n/ --verbose` commands.
+- [ ] T11596a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T11606b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T11616c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T11626d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T11636e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T11646f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T11656g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T11666h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T11676i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T11686j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T11696k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain. **Final Regression Test**: Execute full test suite with `jest tests/infrastructure/n8n/ --verbose --coverage` and verify all 2,886 test files pass before proceeding.
+- [ ] T11706l Remove `features/n8n/` directory only after all validation passes
 ### IT-Tools Asset Relocation Asset Relocation
-- [ ] T109-1 Review `docs/modular-analysis-repo-main/reports/it-tools-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical developer utility collection and tool orchestration that MUST be preserved without modification
-- [ ] T109-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T109-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T109-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T109-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T109-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T109-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T109-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T109-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T109-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T109-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T109-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T109-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T109-2 Extract data models from `features/it-tools/` per Section 2 (Data Architecture) of analysis, migrating utility schemas and tool configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T109-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T109-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T109-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T109-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T109-2e Update data model imports and references throughout codebase
-- [ ] T109-3 Migrate API architecture from `features/it-tools/` per Section 3 (API Architecture) of analysis, converting developer utility endpoints while preserving tool execution capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T109-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T109-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T109-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T109-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T109-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T109-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T109-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T109-4 Migrate frontend components from `features/it-tools/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving utility browser and tool execution interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T109-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T109-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T109-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T109-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T109-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T109-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T109-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T109-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T109-5 Create service adapter in `libs/service-adapters/productivity/it_tools_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Vue.js dependencies and utility tool integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T109-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T109-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T109-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T109-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T109-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T109-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T109-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T109-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T109-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T109-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T109-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate developer utility functionality and tool execution accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/it-tools/` only after 100% validation success
-- [ ] T109-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T109-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T109-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T109-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T109-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T109-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T109-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T109-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T109-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T109-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T109-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T109-6l Remove `features/it-tools/` directory only after all validation passes
+- [ ] T11711 Review `docs/modular-analysis-repo-main/reports/it-tools-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical developer utility collection and tool orchestration that MUST be preserved without modification
+- [ ] T11721a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T11731b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T11741c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T11751d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T11761e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T11771f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T11781g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T11791h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T11801i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T11811j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T11821k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T11831l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T11842 Extract data models from `features/it-tools/` per Section 2 (Data Architecture) of analysis, migrating utility schemas and tool configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T11852a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T11862b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T11872c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T11882d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T11892e Update data model imports and references throughout codebase
+- [ ] T11903 Migrate API architecture from `features/it-tools/` per Section 3 (API Architecture) of analysis, converting developer utility endpoints while preserving tool execution capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T11913a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T11923b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T11933c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T11943d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T11953e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T11963f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T11973g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T11984 Migrate frontend components from `features/it-tools/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving utility browser and tool execution interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T11994a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T12004b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T12014c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T12024d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T12034e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T12044f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T12054g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T12064h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T12075 Create service adapter in `libs/service-adapters/productivity/it_tools_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Vue.js dependencies and utility tool integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T12085a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T12095b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T12105c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T12115d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T12125e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T12135f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T12145g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T12155h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T12165i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T12175j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T12186 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate developer utility functionality and tool execution accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/it-tools/` only after 100% validation success. **Regression Testing**: Execute comprehensive test suite located at `tests/productivity/it-tools/` directory containing Vue.js component tests and utility validation using `npm test` and `vitest tests/productivity/it-tools/ --reporter=verbose` commands.
+- [ ] T12196a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T12206b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T12216c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T12226d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T12236e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T12246f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T12256g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T12266h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T12276i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T12286j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T12296k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain. **Final Regression Test**: Execute full test suite with `vitest tests/productivity/it-tools/ --coverage --reporter=verbose` and verify all tests pass before proceeding.
+- [ ] T12306l Remove `features/it-tools/` directory only after all validation passes
 ### Firecrawl Asset Relocation Asset Relocation
-- [ ] T110-1 Review `docs/modular-analysis-repo-main/reports/firecrawl-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical web scraping engine and data extraction algorithms that MUST be preserved without modification
-- [ ] T110-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T110-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T110-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T110-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T110-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T110-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T110-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T110-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T110-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T110-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T110-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T110-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T110-2 Extract data models from `features/firecrawl/` per Section 2 (Data Architecture) of analysis, migrating scraping schemas and extracted data models to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T110-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T110-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T110-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T110-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T110-2e Update data model imports and references throughout codebase
-- [ ] T110-3 Migrate API architecture from `features/firecrawl/` per Section 3 (API Architecture) of analysis, converting web scraping endpoints while preserving extraction capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T110-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T110-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T110-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T110-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T110-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T110-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T110-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T110-4 Migrate frontend components from `features/firecrawl/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving scraping configuration and data visualization interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T110-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T110-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T110-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T110-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T110-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T110-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T110-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T110-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T110-5 Create service adapter in `libs/service-adapters/productivity/firecrawl_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Node.js dependencies and web scraping libraries while maintaining 100% API compatibility for downstream consumers
-- [ ] T110-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T110-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T110-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T110-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T110-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T110-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T110-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T110-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T110-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T110-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T110-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate web scraping accuracy and data extraction functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/firecrawl/` only after 100% validation success
-- [ ] T110-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T110-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T110-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T110-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T110-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T110-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T110-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T110-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T110-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T110-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T110-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T110-6l Remove `features/firecrawl/` directory only after all validation passes
+- [ ] T12311 Review `docs/modular-analysis-repo-main/reports/firecrawl-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical web scraping engine and data extraction algorithms that MUST be preserved without modification
+- [ ] T12321a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T12331b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T12341c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T12351d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T12361e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T12371f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T12381g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T12391h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T12401i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T12411j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T12421k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T12431l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T12442 Extract data models from `features/firecrawl/` per Section 2 (Data Architecture) of analysis, migrating scraping schemas and extracted data models to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T12452a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T12462b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T12472c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T12482d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T12492e Update data model imports and references throughout codebase
+- [ ] T12503 Migrate API architecture from `features/firecrawl/` per Section 3 (API Architecture) of analysis, converting web scraping endpoints while preserving extraction capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T12513a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T12523b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T12533c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T12543d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T12553e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T12563f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T12573g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T12584 Migrate frontend components from `features/firecrawl/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving scraping configuration and data visualization interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T12594a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T12604b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T12614c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T12624d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T12634e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T12644f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T12654g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T12664h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T12675 Create service adapter in `libs/service-adapters/productivity/firecrawl_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Node.js dependencies and web scraping libraries while maintaining 100% API compatibility for downstream consumers
+- [ ] T12685a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T12695b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T12705c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T12715d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T12725e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T12735f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T12745g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T12755h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T12765i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T12775j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T12786 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate web scraping accuracy and data extraction functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/firecrawl/` only after 100% validation success
+- [ ] T12796a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T12806b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T12816c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T12826d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T12836e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T12846f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T12856g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T12866h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T12876i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T12886j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T12896k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T12906l Remove `features/firecrawl/` directory only after all validation passes
 ### Goose Asset Relocation Asset Relocation
-- [ ] T111-1 Review `docs/modular-analysis-repo-main/reports/goose-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical AI coding assistant and workflow automation that MUST be preserved without modification
-- [ ] T111-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T111-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T111-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T111-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T111-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T111-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T111-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T111-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T111-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T111-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T111-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T111-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T111-2 Extract data models from `features/goose/` per Section 2 (Data Architecture) of analysis, migrating coding session schemas and AI interaction histories to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T111-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T111-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T111-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T111-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T111-2e Update data model imports and references throughout codebase
-- [ ] T111-3 Migrate API architecture from `features/goose/` per Section 3 (API Architecture) of analysis, converting AI assistant endpoints while preserving coding workflow capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T111-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T111-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T111-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T111-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T111-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T111-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T111-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T111-4 Migrate frontend components from `features/goose/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving coding interface and AI interaction components, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T111-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T111-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T111-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T111-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T111-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T111-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T111-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T111-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T111-5 Create service adapter in `libs/service-adapters/productivity/goose_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and AI model integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T111-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T111-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T111-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T111-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T111-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T111-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T111-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T111-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T111-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T111-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T111-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate AI coding assistance and workflow automation accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/goose/` only after 100% validation success
-- [ ] T111-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T111-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T111-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T111-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T111-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T111-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T111-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T111-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T111-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T111-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T111-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T111-6l Remove `features/goose/` directory only after all validation passes
+- [ ] T12911 Review `docs/modular-analysis-repo-main/reports/goose-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical AI coding assistant and workflow automation that MUST be preserved without modification
+- [ ] T12921a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T12931b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T12941c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T12951d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T12961e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T12971f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T12981g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T12991h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T13001i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T13011j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T13021k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T13031l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T13042 Extract data models from `features/goose/` per Section 2 (Data Architecture) of analysis, migrating coding session schemas and AI interaction histories to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T13052a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T13062b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T13072c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T13082d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T13092e Update data model imports and references throughout codebase
+- [ ] T13103 Migrate API architecture from `features/goose/` per Section 3 (API Architecture) of analysis, converting AI assistant endpoints while preserving coding workflow capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T13113a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T13123b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T13133c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T13143d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T13153e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T13163f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T13173g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T13184 Migrate frontend components from `features/goose/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving coding interface and AI interaction components, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T13194a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T13204b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T13214c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T13224d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T13234e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T13244f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T13254g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T13264h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T13275 Create service adapter in `libs/service-adapters/productivity/goose_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and AI model integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T13285a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T13295b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T13305c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T13315d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T13325e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T13335f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T13345g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T13355h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T13365i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T13375j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T13386 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate AI coding assistance and workflow automation accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/goose/` only after 100% validation success
+- [ ] T13396a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T13406b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T13416c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T13426d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T13436e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T13446f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T13456g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T13466h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T13476i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T13486j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T13496k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T13506l Remove `features/goose/` directory only after all validation passes
 ### Inspector Asset Relocation Asset Relocation
-- [ ] T112-1 Review `docs/modular-analysis-repo-main/reports/inspector-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical monitoring and observability workflows that MUST be preserved without modification
-- [ ] T112-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T112-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T112-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T112-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T112-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T112-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T112-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T112-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T112-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T112-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T112-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T112-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T112-2 Extract data models from `features/inspector/` per Section 2 (Data Architecture) of analysis, migrating monitoring schemas and metrics databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T112-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T112-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T112-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T112-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T112-2e Update data model imports and references throughout codebase
-- [ ] T112-3 Migrate API architecture from `features/inspector/` per Section 3 (API Architecture) of analysis, converting monitoring endpoints while preserving observability capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T112-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T112-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T112-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T112-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T112-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T112-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T112-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T112-4 Migrate frontend components from `features/inspector/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving monitoring dashboards and alerting interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T112-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T112-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T112-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T112-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T112-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T112-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T112-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T112-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T112-5 Create service adapter in `libs/service-adapters/productivity/inspector_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving monitoring tool dependencies and metrics collection systems while maintaining 100% API compatibility for downstream consumers
-- [ ] T112-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T112-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T112-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T112-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T112-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T112-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T112-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T112-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T112-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T112-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T112-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate monitoring accuracy and observability functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/inspector/` only after 100% validation success
-- [ ] T112-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T112-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T112-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T112-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T112-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T112-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T112-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T112-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T112-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T112-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T112-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T112-6l Remove `features/inspector/` directory only after all validation passes
+- [ ] T13511 Review `docs/modular-analysis-repo-main/reports/inspector-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical monitoring and observability workflows that MUST be preserved without modification
+- [ ] T13521a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T13531b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T13541c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T13551d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T13561e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T13571f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T13581g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T13591h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T13601i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T13611j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T13621k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T13631l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T13642 Extract data models from `features/inspector/` per Section 2 (Data Architecture) of analysis, migrating monitoring schemas and metrics databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T13652a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T13662b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T13672c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T13682d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T13692e Update data model imports and references throughout codebase
+- [ ] T13703 Migrate API architecture from `features/inspector/` per Section 3 (API Architecture) of analysis, converting monitoring endpoints while preserving observability capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T13713a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T13723b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T13733c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T13743d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T13753e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T13763f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T13773g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T13784 Migrate frontend components from `features/inspector/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving monitoring dashboards and alerting interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T13794a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T13804b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T13814c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T13824d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T13834e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T13844f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T13854g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T13864h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T13875 Create service adapter in `libs/service-adapters/productivity/inspector_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving monitoring tool dependencies and metrics collection systems while maintaining 100% API compatibility for downstream consumers
+- [ ] T13885a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T13895b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T13905c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T13915d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T13925e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T13935f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T13945g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T13955h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T13965i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T13975j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T13986 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate monitoring accuracy and observability functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/inspector/` only after 100% validation success
+- [ ] T13996a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T14006b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T14016c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T14026d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T14036e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T14046f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T14056g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T14066h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T14076i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T14086j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T14096k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T14106l Remove `features/inspector/` directory only after all validation passes
 ### Commander Spellbook Asset Relocation Asset Relocation
-- [ ] T113-1 Review `docs/modular-analysis-repo-main/reports/commander-spellbook-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical Magic: The Gathering combo algorithms and card interaction engine that MUST be preserved without modification
-- [ ] T113-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T113-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T113-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T113-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T113-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T113-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T113-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T113-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T113-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T113-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T113-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T113-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T113-2 Extract data models from `features/commander-spellbook-backend/` per Section 2 (Data Architecture) of analysis, migrating MTG card schemas and combo databases while preserving interaction rules to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T113-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T113-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T113-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T113-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T113-2e Update data model imports and references throughout codebase
-- [ ] T113-3 Migrate API architecture from `features/commander-spellbook-backend/` per Section 3 (API Architecture) of analysis, converting combo search endpoints while preserving card interaction logic to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T113-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T113-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T113-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T113-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T113-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T113-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T113-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T113-4 Migrate frontend components from `features/commander-spellbook-backend/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving combo browser and deck building interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T113-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T113-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T113-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T113-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T113-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T113-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T113-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T113-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T113-5 Create service adapter in `libs/service-adapters/mtg/commander_spellbook_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Django dependencies and MTG rules engine integration while maintaining 100% API compatibility for downstream consumers
-- [ ] T113-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T113-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T113-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T113-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T113-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T113-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T113-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T113-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T113-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T113-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T113-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate combo detection accuracy and card interaction validation through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/commander-spellbook-backend/` only after 100% validation success
-- [ ] T113-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T113-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T113-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T113-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T113-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T113-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T113-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T113-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T113-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T113-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T113-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T113-6l Remove `features/commander-spellbook-backend/` directory only after all validation passes
+- [ ] T14111 Review `docs/modular-analysis-repo-main/reports/commander-spellbook-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical Magic: The Gathering combo algorithms and card interaction engine that MUST be preserved without modification
+- [ ] T14121a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T14131b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T14141c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T14151d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T14161e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T14171f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T14181g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T14191h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T14201i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T14211j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T14221k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T14231l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T14242 Extract data models from `features/commander-spellbook-backend/` per Section 2 (Data Architecture) of analysis, migrating MTG card schemas and combo databases while preserving interaction rules to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T14252a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T14262b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T14272c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T14282d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T14292e Update data model imports and references throughout codebase
+- [ ] T14303 Migrate API architecture from `features/commander-spellbook-backend/` per Section 3 (API Architecture) of analysis, converting combo search endpoints while preserving card interaction logic to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T14313a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T14323b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T14333c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T14343d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T14353e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T14363f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T14373g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T14384 Migrate frontend components from `features/commander-spellbook-backend/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving combo browser and deck building interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T14394a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T14404b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T14414c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T14424d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T14434e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T14444f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T14454g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T14464h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T14475 Create service adapter in `libs/service-adapters/mtg/commander_spellbook_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Django dependencies and MTG rules engine integration while maintaining 100% API compatibility for downstream consumers
+- [ ] T14485a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T14495b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T14505c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T14515d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T14525e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T14535f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T14545g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T14555h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T14565i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T14575j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T14586 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate combo detection accuracy and card interaction validation through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/commander-spellbook-backend/` only after 100% validation success. **Regression Testing**: Execute comprehensive test suite located at `tests/mtg/commander-spellbook-backend/` directory containing 35 test files covering combo algorithms, card interaction logic, and API endpoints using `pytest tests/mtg/commander-spellbook-backend/ -v --cov` command.
+- [ ] T14596a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T14606b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T14616c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T14626d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T14636e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T14646f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T14656g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T14666h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T14676i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T14686j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T14696k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain. **Final Regression Test**: Execute full test suite with `pytest tests/mtg/commander-spellbook-backend/ -v --tb=short` and verify all 35 test files pass before proceeding.
+- [ ] T14706l Remove `features/commander-spellbook-backend/` directory only after all validation passes
 ### MTG Commander Map Asset Relocation Asset Relocation
-- [ ] T114-1 Review `docs/modular-analysis-repo-main/reports/mtg-commander-map-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical commander deck analysis and meta tracking algorithms that MUST be preserved without modification
-- [ ] T114-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T114-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T114-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T114-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T114-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T114-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T114-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T114-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T114-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T114-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T114-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T114-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T114-2 Extract data models from `features/mtg-commander-map/` per Section 2 (Data Architecture) of analysis, migrating commander schemas and deck analysis databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T114-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T114-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T114-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T114-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T114-2e Update data model imports and references throughout codebase
-- [ ] T114-3 Migrate API architecture from `features/mtg-commander-map/` per Section 3 (API Architecture) of analysis, converting deck analysis endpoints while preserving meta tracking capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T114-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T114-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T114-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T114-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T114-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T114-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T114-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T114-4 Migrate frontend components from `features/mtg-commander-map/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving commander visualization and deck analysis interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T114-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T114-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T114-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T114-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T114-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T114-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T114-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T114-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T114-5 Create service adapter in `libs/service-adapters/mtg/mtg_commander_map_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving JavaScript dependencies and MTG data source integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T114-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T114-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T114-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T114-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T114-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T114-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T114-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T114-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T114-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T114-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T114-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate deck analysis accuracy and meta tracking functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/mtg-commander-map/` only after 100% validation success
-- [ ] T114-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T114-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T114-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T114-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T114-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T114-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T114-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T114-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T114-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T114-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T114-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T114-6l Remove `features/mtg-commander-map/` directory only after all validation passes
+- [ ] T14711 Review `docs/modular-analysis-repo-main/reports/mtg-commander-map-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical commander deck analysis and meta tracking algorithms that MUST be preserved without modification
+- [ ] T14721a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T14731b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T14741c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T14751d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T14761e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T14771f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T14781g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T14791h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T14801i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T14811j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T14821k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T14831l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T14842 Extract data models from `features/mtg-commander-map/` per Section 2 (Data Architecture) of analysis, migrating commander schemas and deck analysis databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T14852a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T14862b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T14872c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T14882d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T14892e Update data model imports and references throughout codebase
+- [ ] T14903 Migrate API architecture from `features/mtg-commander-map/` per Section 3 (API Architecture) of analysis, converting deck analysis endpoints while preserving meta tracking capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T14913a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T14923b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T14933c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T14943d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T14953e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T14963f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T14973g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T14984 Migrate frontend components from `features/mtg-commander-map/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving commander visualization and deck analysis interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T14994a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T15004b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T15014c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T15024d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T15034e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T15044f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T15054g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T15064h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T15075 Create service adapter in `libs/service-adapters/mtg/mtg_commander_map_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving JavaScript dependencies and MTG data source integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T15085a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T15095b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T15105c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T15115d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T15125e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T15135f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T15145g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T15155h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T15165i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T15175j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T15186 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate deck analysis accuracy and meta tracking functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/mtg-commander-map/` only after 100% validation success
+- [ ] T15196a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T15206b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T15216c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T15226d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T15236e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T15246f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T15256g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T15266h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T15276i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T15286j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T15296k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T15306l Remove `features/mtg-commander-map/` directory only after all validation passes
 ### MTG Scripting Toolkit Asset Relocation Asset Relocation
-- [ ] T115-1 Review `docs/modular-analysis-repo-main/reports/mtg-scripting-toolkit-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical MTG automation scripts and rules engine that MUST be preserved without modification
-- [ ] T115-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T115-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T115-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T115-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T115-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T115-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T115-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T115-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T115-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T115-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T115-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T115-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T115-2 Extract data models from `features/mtg-scripting-toolkit/` per Section 2 (Data Architecture) of analysis, migrating scripting schemas and automation rule databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T115-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T115-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T115-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T115-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T115-2e Update data model imports and references throughout codebase
-- [ ] T115-3 Migrate API architecture from `features/mtg-scripting-toolkit/` per Section 3 (API Architecture) of analysis, converting automation endpoints while preserving scripting capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T115-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T115-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T115-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T115-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T115-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T115-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T115-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T115-4 Migrate frontend components from `features/mtg-scripting-toolkit/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving script editor and automation management interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T115-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T115-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T115-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T115-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T115-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T115-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T115-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T115-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T115-5 Create service adapter in `libs/service-adapters/mtg/mtg_scripting_toolkit_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and MTG rules engine libraries while maintaining 100% API compatibility for downstream consumers
-- [ ] T115-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T115-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T115-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T115-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T115-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T115-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T115-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T115-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T115-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T115-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T115-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate automation script accuracy and rules engine functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/mtg-scripting-toolkit/` only after 100% validation success
-- [ ] T115-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T115-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T115-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T115-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T115-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T115-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T115-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T115-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T115-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T115-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T115-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T115-6l Remove `features/mtg-scripting-toolkit/` directory only after all validation passes
+- [ ] T15311 Review `docs/modular-analysis-repo-main/reports/mtg-scripting-toolkit-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical MTG automation scripts and rules engine that MUST be preserved without modification
+- [ ] T15321a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T15331b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T15341c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T15351d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T15361e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T15371f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T15381g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T15391h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T15401i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T15411j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T15421k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T15431l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T15442 Extract data models from `features/mtg-scripting-toolkit/` per Section 2 (Data Architecture) of analysis, migrating scripting schemas and automation rule databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T15452a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T15462b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T15472c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T15482d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T15492e Update data model imports and references throughout codebase
+- [ ] T15503 Migrate API architecture from `features/mtg-scripting-toolkit/` per Section 3 (API Architecture) of analysis, converting automation endpoints while preserving scripting capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T15513a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T15523b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T15533c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T15543d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T15553e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T15563f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T15573g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T15584 Migrate frontend components from `features/mtg-scripting-toolkit/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving script editor and automation management interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T15594a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T15604b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T15614c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T15624d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T15634e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T15644f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T15654g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T15664h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T15675 Create service adapter in `libs/service-adapters/mtg/mtg_scripting_toolkit_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and MTG rules engine libraries while maintaining 100% API compatibility for downstream consumers
+- [ ] T15685a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T15695b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T15705c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T15715d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T15725e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T15735f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T15745g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T15755h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T15765i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T15775j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T15786 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate automation script accuracy and rules engine functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/mtg-scripting-toolkit/` only after 100% validation success
+- [ ] T15796a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T15806b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T15816c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T15826d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T15836e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T15846f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T15856g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T15866h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T15876i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T15886j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T15896k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T15906l Remove `features/mtg-scripting-toolkit/` directory only after all validation passes
 ### Card Analysis Tool Asset Relocation Asset Relocation
-- [ ] T116-1 Review `docs/modular-analysis-repo-main/reports/card-analysis-tool-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical card evaluation algorithms and market analysis engine that MUST be preserved without modification
-- [ ] T116-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T116-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T116-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T116-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T116-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T116-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T116-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T116-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T116-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T116-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T116-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T116-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T116-2 Extract data models from `features/card-analysis-tool/` per Section 2 (Data Architecture) of analysis, migrating card evaluation schemas and market data models to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T116-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T116-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T116-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T116-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T116-2e Update data model imports and references throughout codebase
-- [ ] T116-3 Migrate API architecture from `features/card-analysis-tool/` per Section 3 (API Architecture) of analysis, converting card analysis endpoints while preserving evaluation algorithms to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T116-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T116-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T116-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T116-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T116-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T116-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T116-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T116-4 Migrate frontend components from `features/card-analysis-tool/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving card evaluation and market analysis interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T116-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T116-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T116-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T116-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T116-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T116-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T116-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T116-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T116-5 Create service adapter in `libs/service-adapters/mtg/card_analysis_tool_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving analysis tool dependencies and market data integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T116-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T116-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T116-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T116-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T116-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T116-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T116-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T116-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T116-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T116-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T116-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate card evaluation accuracy and market analysis functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/card-analysis-tool/` only after 100% validation success
-- [ ] T116-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T116-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T116-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T116-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T116-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T116-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T116-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T116-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T116-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T116-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T116-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T116-6l Remove `features/card-analysis-tool/` directory only after all validation passes
+- [ ] T15911 Review `docs/modular-analysis-repo-main/reports/card-analysis-tool-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical card evaluation algorithms and market analysis engine that MUST be preserved without modification
+- [ ] T15921a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T15931b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T15941c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T15951d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T15961e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T15971f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T15981g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T15991h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T16001i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T16011j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T16021k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T16031l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T16042 Extract data models from `features/card-analysis-tool/` per Section 2 (Data Architecture) of analysis, migrating card evaluation schemas and market data models to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T16052a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T16062b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T16072c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T16082d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T16092e Update data model imports and references throughout codebase
+- [ ] T16103 Migrate API architecture from `features/card-analysis-tool/` per Section 3 (API Architecture) of analysis, converting card analysis endpoints while preserving evaluation algorithms to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T16113a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T16123b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T16133c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T16143d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T16153e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T16163f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T16173g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T16184 Migrate frontend components from `features/card-analysis-tool/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving card evaluation and market analysis interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T16194a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T16204b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T16214c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T16224d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T16234e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T16244f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T16254g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T16264h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T16275 Create service adapter in `libs/service-adapters/mtg/card_analysis_tool_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving analysis tool dependencies and market data integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T16285a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T16295b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T16305c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T16315d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T16325e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T16335f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T16345g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T16355h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T16365i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T16375j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T16386 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate card evaluation accuracy and market analysis functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/card-analysis-tool/` only after 100% validation success
+- [ ] T16396a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T16406b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T16416c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T16426d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T16436e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T16446f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T16456g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T16466h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T16476i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T16486j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T16496k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T16506l Remove `features/card-analysis-tool/` directory only after all validation passes
 ### Kong Asset Relocation Asset Relocation
-- [ ] T117-1 Review `docs/modular-analysis-repo-main/reports/kong-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical API gateway routing and plugin architecture that MUST be preserved without modification
-- [ ] T117-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T117-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T117-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T117-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T117-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T117-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T117-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T117-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T117-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T117-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T117-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T117-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T117-2 Extract data models from `features/kong/` per Section 2 (Data Architecture) of analysis, migrating gateway schemas and routing configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T117-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T117-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T117-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T117-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T117-2e Update data model imports and references throughout codebase
-- [ ] T117-3 Migrate API architecture from `features/kong/` per Section 3 (API Architecture) of analysis, converting gateway management endpoints while preserving plugin system to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T117-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T117-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T117-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T117-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T117-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T117-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T117-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T117-4 Migrate frontend components from `features/kong/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving gateway admin and plugin management interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T117-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T117-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T117-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T117-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T117-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T117-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T117-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T117-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T117-5 Create service adapter in `libs/service-adapters/infrastructure/kong_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Lua dependencies and plugin architecture integration while maintaining 100% API compatibility for downstream consumers
-- [ ] T117-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T117-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T117-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T117-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T117-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T117-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T117-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T117-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T117-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T117-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T117-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate API gateway functionality and plugin system accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/kong/` only after 100% validation success
-- [ ] T117-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T117-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T117-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T117-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T117-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T117-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T117-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T117-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T117-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T117-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T117-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T117-6l Remove `features/kong/` directory only after all validation passes
+- [ ] T16511 Review `docs/modular-analysis-repo-main/reports/kong-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical API gateway routing and plugin architecture that MUST be preserved without modification
+- [ ] T16521a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T16531b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T16541c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T16551d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T16561e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T16571f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T16581g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T16591h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T16601i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T16611j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T16621k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T16631l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T16642 Extract data models from `features/kong/` per Section 2 (Data Architecture) of analysis, migrating gateway schemas and routing configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T16652a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T16662b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T16672c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T16682d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T16692e Update data model imports and references throughout codebase
+- [ ] T16703 Migrate API architecture from `features/kong/` per Section 3 (API Architecture) of analysis, converting gateway management endpoints while preserving plugin system to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T16713a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T16723b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T16733c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T16743d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T16753e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T16763f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T16773g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T16784 Migrate frontend components from `features/kong/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving gateway admin and plugin management interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T16794a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T16804b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T16814c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T16824d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T16834e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T16844f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T16854g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T16864h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T16875 Create service adapter in `libs/service-adapters/infrastructure/kong_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Lua dependencies and plugin architecture integration while maintaining 100% API compatibility for downstream consumers
+- [ ] T16885a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T16895b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T16905c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T16915d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T16925e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T16935f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T16945g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T16955h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T16965i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T16975j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T16986 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate API gateway functionality and plugin system accuracy through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/kong/` only after 100% validation success
+- [ ] T16996a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T17006b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T17016c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T17026d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T17036e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T17046f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T17056g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T17066h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T17076i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T17086j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T17096k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T17106l Remove `features/kong/` directory only after all validation passes
 ### KasmVNC Asset Relocation Asset Relocation
-- [ ] T118-1 Review `docs/modular-analysis-repo-main/reports/KasmVNC-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical VNC streaming and remote desktop protocols that MUST be preserved without modification
-- [ ] T118-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T118-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T118-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T118-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T118-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T118-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T118-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T118-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T118-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T118-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T118-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T118-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T118-2 Extract data models from `features/KasmVNC/` per Section 2 (Data Architecture) of analysis, migrating VNC session schemas and streaming configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T118-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T118-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T118-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T118-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T118-2e Update data model imports and references throughout codebase
-- [ ] T118-3 Migrate API architecture from `features/KasmVNC/` per Section 3 (API Architecture) of analysis, converting VNC management endpoints while preserving streaming capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T118-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T118-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T118-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T118-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T118-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T118-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T118-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T118-4 Migrate frontend components from `features/KasmVNC/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving VNC viewer and session management interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T118-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T118-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T118-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T118-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T118-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T118-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T118-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T118-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T118-5 Create service adapter in `libs/service-adapters/infrastructure/kasmvnc_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving C++ VNC dependencies and streaming protocol libraries while maintaining 100% API compatibility for downstream consumers
-- [ ] T118-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T118-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T118-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T118-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T118-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T118-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T118-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T118-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T118-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T118-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T118-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate VNC streaming accuracy and remote desktop functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/KasmVNC/` only after 100% validation success
-- [ ] T118-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T118-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T118-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T118-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T118-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T118-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T118-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T118-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T118-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T118-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T118-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T118-6l Remove `features/KasmVNC/` directory only after all validation passes
+- [ ] T17111 Review `docs/modular-analysis-repo-main/reports/KasmVNC-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical VNC streaming and remote desktop protocols that MUST be preserved without modification
+- [ ] T17121a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T17131b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T17141c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T17151d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T17161e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T17171f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T17181g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T17191h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T17201i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T17211j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T17221k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T17231l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T17242 Extract data models from `features/KasmVNC/` per Section 2 (Data Architecture) of analysis, migrating VNC session schemas and streaming configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T17252a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T17262b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T17272c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T17282d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T17292e Update data model imports and references throughout codebase
+- [ ] T17303 Migrate API architecture from `features/KasmVNC/` per Section 3 (API Architecture) of analysis, converting VNC management endpoints while preserving streaming capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T17313a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T17323b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T17333c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T17343d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T17353e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T17363f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T17373g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T17384 Migrate frontend components from `features/KasmVNC/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving VNC viewer and session management interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T17394a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T17404b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T17414c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T17424d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T17434e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T17444f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T17454g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T17464h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T17475 Create service adapter in `libs/service-adapters/infrastructure/kasmvnc_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving C++ VNC dependencies and streaming protocol libraries while maintaining 100% API compatibility for downstream consumers
+- [ ] T17485a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T17495b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T17505c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T17515d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T17525e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T17535f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T17545g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T17555h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T17565i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T17575j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T17586 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate VNC streaming accuracy and remote desktop functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/KasmVNC/` only after 100% validation success
+- [ ] T17596a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T17606b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T17616c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T17626d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T17636e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T17646f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T17656g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T17666h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T17676i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T17686j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T17696k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T17706l Remove `features/KasmVNC/` directory only after all validation passes
 ### LScript Asset Relocation Asset Relocation
-- [ ] T119-1 Review `docs/modular-analysis-repo-main/reports/lscript-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical Linux automation scripts and system administration workflows that MUST be preserved without modification
-- [ ] T119-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T119-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T119-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T119-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T119-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T119-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T119-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T119-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T119-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T119-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T119-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T119-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T119-2 Extract data models from `features/lscript/` per Section 2 (Data Architecture) of analysis, migrating script execution schemas and system configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T119-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T119-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T119-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T119-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T119-2e Update data model imports and references throughout codebase
-- [ ] T119-3 Migrate API architecture from `features/lscript/` per Section 3 (API Architecture) of analysis, converting automation endpoints while preserving system administration capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T119-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T119-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T119-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T119-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T119-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T119-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T119-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T119-4 Migrate frontend components from `features/lscript/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving script management and system administration interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T119-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T119-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T119-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T119-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T119-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T119-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T119-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T119-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T119-5 Create service adapter in `libs/service-adapters/infrastructure/lscript_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving bash script dependencies and system tool integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T119-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T119-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T119-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T119-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T119-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T119-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T119-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T119-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T119-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T119-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T119-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate automation script accuracy and system administration functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/lscript/` only after 100% validation success
-- [ ] T119-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T119-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T119-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T119-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T119-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T119-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T119-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T119-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T119-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T119-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T119-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T119-6l Remove `features/lscript/` directory only after all validation passes
+- [ ] T17711 Review `docs/modular-analysis-repo-main/reports/lscript-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical Linux automation scripts and system administration workflows that MUST be preserved without modification
+- [ ] T17721a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T17731b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T17741c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T17751d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T17761e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T17771f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T17781g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T17791h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T17801i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T17811j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T17821k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T17831l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T17842 Extract data models from `features/lscript/` per Section 2 (Data Architecture) of analysis, migrating script execution schemas and system configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T17852a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T17862b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T17872c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T17882d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T17892e Update data model imports and references throughout codebase
+- [ ] T17903 Migrate API architecture from `features/lscript/` per Section 3 (API Architecture) of analysis, converting automation endpoints while preserving system administration capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T17913a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T17923b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T17933c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T17943d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T17953e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T17963f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T17973g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T17984 Migrate frontend components from `features/lscript/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving script management and system administration interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T17994a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T18004b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T18014c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T18024d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T18034e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T18044f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T18054g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T18064h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T18075 Create service adapter in `libs/service-adapters/infrastructure/lscript_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving bash script dependencies and system tool integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T18085a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T18095b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T18105c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T18115d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T18125e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T18135f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T18145g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T18155h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T18165i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T18175j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T18186 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate automation script accuracy and system administration functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/lscript/` only after 100% validation success
+- [ ] T18196a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T18206b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T18216c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T18226d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T18236e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T18246f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T18256g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T18266h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T18276i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T18286j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T18296k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T18306l Remove `features/lscript/` directory only after all validation passes
 ### Chroma MCP Asset Relocation Asset Relocation
-- [ ] T120-1 Review `docs/modular-analysis-repo-main/reports/chroma-mcp-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical vector database operations and MCP protocol integration that MUST be preserved without modification
-- [ ] T120-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T120-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T120-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T120-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T120-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T120-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T120-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T120-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T120-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T120-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T120-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T120-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T120-2 Extract data models from `features/chroma-mcp/` per Section 2 (Data Architecture) of analysis, migrating vector schemas and embedding databases while preserving similarity search to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T120-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T120-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T120-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T120-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T120-2e Update data model imports and references throughout codebase
-- [ ] T120-3 Migrate API architecture from `features/chroma-mcp/` per Section 3 (API Architecture) of analysis, converting vector database endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T120-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T120-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T120-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T120-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T120-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T120-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T120-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T120-4 Migrate frontend components from `features/chroma-mcp/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving vector management and search interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T120-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T120-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T120-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T120-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T120-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T120-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T120-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T120-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T120-5 Create service adapter in `libs/service-adapters/infrastructure/chroma_mcp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and vector database integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T120-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T120-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T120-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T120-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T120-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T120-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T120-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T120-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T120-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T120-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T120-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate vector operations accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/chroma-mcp/` only after 100% validation success
-- [ ] T120-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T120-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T120-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T120-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T120-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T120-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T120-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T120-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T120-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T120-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T120-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T120-6l Remove `features/chroma-mcp/` directory only after all validation passes
+- [ ] T18311 Review `docs/modular-analysis-repo-main/reports/chroma-mcp-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical vector database operations and MCP protocol integration that MUST be preserved without modification
+- [ ] T18321a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T18331b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T18341c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T18351d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T18361e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T18371f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T18381g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T18391h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T18401i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T18411j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T18421k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T18431l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T18442 Extract data models from `features/chroma-mcp/` per Section 2 (Data Architecture) of analysis, migrating vector schemas and embedding databases while preserving similarity search to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T18452a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T18462b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T18472c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T18482d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T18492e Update data model imports and references throughout codebase
+- [ ] T18503 Migrate API architecture from `features/chroma-mcp/` per Section 3 (API Architecture) of analysis, converting vector database endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T18513a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T18523b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T18533c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T18543d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T18553e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T18563f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T18573g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T18584 Migrate frontend components from `features/chroma-mcp/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving vector management and search interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T18594a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T18604b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T18614c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T18624d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T18634e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T18644f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T18654g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T18664h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T18675 Create service adapter in `libs/service-adapters/infrastructure/chroma_mcp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and vector database integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T18685a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T18695b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T18705c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T18715d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T18725e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T18735f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T18745g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T18755h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T18765i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T18775j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T18786 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate vector operations accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/chroma-mcp/` only after 100% validation success
+- [ ] T18796a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T18806b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T18816c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T18826d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T18836e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T18846f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T18856g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T18866h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T18876i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T18886j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T18896k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T18906l Remove `features/chroma-mcp/` directory only after all validation passes
 ### FileScope MCP Asset Relocation Asset Relocation
-- [ ] T121-1 Review `docs/modular-analysis-repo-main/reports/FileScopeMCP-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical file system operations and MCP protocol integration that MUST be preserved without modification
-- [ ] T121-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T121-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T121-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T121-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T121-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T121-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T121-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T121-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T121-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T121-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T121-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T121-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T121-2 Extract data models from `features/FileScopeMCP/` per Section 2 (Data Architecture) of analysis, migrating file operation schemas and metadata databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T121-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T121-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T121-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T121-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T121-2e Update data model imports and references throughout codebase
-- [ ] T121-3 Migrate API architecture from `features/FileScopeMCP/` per Section 3 (API Architecture) of analysis, converting file system endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T121-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T121-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T121-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T121-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T121-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T121-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T121-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T121-4 Migrate frontend components from `features/FileScopeMCP/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving file management and operation interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T121-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T121-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T121-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T121-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T121-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T121-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T121-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T121-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T121-5 Create service adapter in `libs/service-adapters/infrastructure/filescope_mcp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and file system integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T121-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T121-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T121-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T121-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T121-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T121-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T121-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T121-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T121-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T121-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T121-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate file operations accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/FileScopeMCP/` only after 100% validation success
-- [ ] T121-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T121-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T121-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T121-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T121-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T121-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T121-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T121-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T121-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T121-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T121-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T121-6l Remove `features/FileScopeMCP/` directory only after all validation passes
+- [ ] T18911 Review `docs/modular-analysis-repo-main/reports/FileScopeMCP-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical file system operations and MCP protocol integration that MUST be preserved without modification
+- [ ] T18921a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T18931b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T18941c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T18951d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T18961e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T18971f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T18981g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T18991h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T19001i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T19011j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T19021k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T19031l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T19042 Extract data models from `features/FileScopeMCP/` per Section 2 (Data Architecture) of analysis, migrating file operation schemas and metadata databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T19052a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T19062b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T19072c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T19082d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T19092e Update data model imports and references throughout codebase
+- [ ] T19103 Migrate API architecture from `features/FileScopeMCP/` per Section 3 (API Architecture) of analysis, converting file system endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T19113a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T19123b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T19133c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T19143d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T19153e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T19163f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T19173g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T19184 Migrate frontend components from `features/FileScopeMCP/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving file management and operation interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T19194a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T19204b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T19214c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T19224d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T19234e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T19244f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T19254g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T19264h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T19275 Create service adapter in `libs/service-adapters/infrastructure/filescope_mcp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and file system integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T19285a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T19295b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T19305c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T19315d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T19325e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T19335f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T19345g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T19355h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T19365i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T19375j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T19386 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate file operations accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/FileScopeMCP/` only after 100% validation success
+- [ ] T19396a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T19406b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T19416c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T19426d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T19436e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T19446f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T19456g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T19466h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T19476i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T19486j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T19496k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T19506l Remove `features/FileScopeMCP/` directory only after all validation passes
 ### Firecrawl MCP Asset Relocation Asset Relocation
-- [ ] T122-1 Review `docs/modular-analysis-repo-main/reports/firecrawl-mcp-server-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical web scraping operations and MCP protocol integration that MUST be preserved without modification
-- [ ] T122-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T122-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T122-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T122-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T122-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T122-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T122-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T122-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T122-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T122-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T122-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T122-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T122-2 Extract data models from `features/firecrawl-mcp-server/` per Section 2 (Data Architecture) of analysis, migrating scraping operation schemas and extracted data databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T122-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T122-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T122-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T122-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T122-2e Update data model imports and references throughout codebase
-- [ ] T122-3 Migrate API architecture from `features/firecrawl-mcp-server/` per Section 3 (API Architecture) of analysis, converting web scraping endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T122-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T122-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T122-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T122-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T122-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T122-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T122-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T122-4 Migrate frontend components from `features/firecrawl-mcp-server/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving scraping management and data visualization interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T122-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T122-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T122-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T122-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T122-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T122-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T122-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T122-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T122-5 Create service adapter in `libs/service-adapters/infrastructure/firecrawl_mcp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving TypeScript dependencies and web scraping integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T122-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T122-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T122-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T122-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T122-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T122-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T122-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T122-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T122-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T122-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T122-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate web scraping accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/firecrawl-mcp-server/` only after 100% validation success
-- [ ] T122-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T122-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T122-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T122-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T122-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T122-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T122-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T122-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T122-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T122-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T122-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T122-6l Remove `features/firecrawl-mcp-server/` directory only after all validation passes
+- [ ] T19511 Review `docs/modular-analysis-repo-main/reports/firecrawl-mcp-server-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical web scraping operations and MCP protocol integration that MUST be preserved without modification
+- [ ] T19521a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T19531b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T19541c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T19551d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T19561e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T19571f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T19581g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T19591h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T19601i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T19611j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T19621k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T19631l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T19642 Extract data models from `features/firecrawl-mcp-server/` per Section 2 (Data Architecture) of analysis, migrating scraping operation schemas and extracted data databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T19652a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T19662b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T19672c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T19682d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T19692e Update data model imports and references throughout codebase
+- [ ] T19703 Migrate API architecture from `features/firecrawl-mcp-server/` per Section 3 (API Architecture) of analysis, converting web scraping endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T19713a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T19723b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T19733c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T19743d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T19753e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T19763f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T19773g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T19784 Migrate frontend components from `features/firecrawl-mcp-server/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving scraping management and data visualization interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T19794a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T19804b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T19814c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T19824d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T19834e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T19844f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T19854g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T19864h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T19875 Create service adapter in `libs/service-adapters/infrastructure/firecrawl_mcp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving TypeScript dependencies and web scraping integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T19885a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T19895b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T19905c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T19915d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T19925e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T19935f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T19945g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T19955h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T19965i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T19975j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T19986 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate web scraping accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/firecrawl-mcp-server/` only after 100% validation success
+- [ ] T19996a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T20006b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T20016c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T20026d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T20036e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T20046f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T20056g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T20066h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T20076i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T20086j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T20096k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T20106l Remove `features/firecrawl-mcp-server/` directory only after all validation passes
 ### MalwareBazaar MCP Asset Relocation Asset Relocation
-- [ ] T123-1 Review `docs/modular-analysis-repo-main/reports/MalwareBazaar_MCP-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical malware analysis operations and MCP protocol integration that MUST be preserved without modification
-- [ ] T123-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T123-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T123-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T123-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T123-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T123-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T123-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T123-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T123-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T123-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T123-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T123-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T123-2 Extract data models from `features/MalwareBazaar_MCP/` per Section 2 (Data Architecture) of analysis, migrating malware analysis schemas and threat intelligence databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T123-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T123-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T123-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T123-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T123-2e Update data model imports and references throughout codebase
-- [ ] T123-3 Migrate API architecture from `features/MalwareBazaar_MCP/` per Section 3 (API Architecture) of analysis, converting malware analysis endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T123-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T123-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T123-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T123-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T123-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T123-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T123-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T123-4 Migrate frontend components from `features/MalwareBazaar_MCP/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving malware analysis and threat intelligence interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T123-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T123-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T123-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T123-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T123-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T123-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T123-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T123-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T123-5 Create service adapter in `libs/service-adapters/infrastructure/malwarebazaar_mcp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and threat intelligence integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T123-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T123-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T123-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T123-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T123-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T123-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T123-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T123-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T123-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T123-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T123-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate malware analysis accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/MalwareBazaar_MCP/` only after 100% validation success
-- [ ] T123-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T123-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T123-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T123-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T123-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T123-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T123-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T123-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T123-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T123-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T123-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T123-6l Remove `features/MalwareBazaar_MCP/` directory only after all validation passes
+- [ ] T20111 Review `docs/modular-analysis-repo-main/reports/MalwareBazaar_MCP-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical malware analysis operations and MCP protocol integration that MUST be preserved without modification
+- [ ] T20121a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T20131b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T20141c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T20151d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T20161e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T20171f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T20181g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T20191h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T20201i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T20211j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T20221k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T20231l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T20242 Extract data models from `features/MalwareBazaar_MCP/` per Section 2 (Data Architecture) of analysis, migrating malware analysis schemas and threat intelligence databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T20252a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T20262b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T20272c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T20282d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T20292e Update data model imports and references throughout codebase
+- [ ] T20303 Migrate API architecture from `features/MalwareBazaar_MCP/` per Section 3 (API Architecture) of analysis, converting malware analysis endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T20313a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T20323b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T20333c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T20343d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T20353e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T20363f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T20373g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T20384 Migrate frontend components from `features/MalwareBazaar_MCP/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving malware analysis and threat intelligence interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T20394a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T20404b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T20414c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T20424d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T20434e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T20444f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T20454g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T20464h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T20475 Create service adapter in `libs/service-adapters/infrastructure/malwarebazaar_mcp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and threat intelligence integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T20485a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T20495b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T20505c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T20515d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T20525e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T20535f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T20545g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T20555h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T20565i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T20575j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T20586 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate malware analysis accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/MalwareBazaar_MCP/` only after 100% validation success
+- [ ] T20596a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T20606b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T20616c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T20626d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T20636e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T20646f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T20656g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T20666h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T20676i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T20686j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T20696k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T20706l Remove `features/MalwareBazaar_MCP/` directory only after all validation passes
 ### MCP VirusTotal Asset Relocation Asset Relocation
-- [ ] T124-1 Review `docs/modular-analysis-repo-main/reports/mcp-virustotal-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical VirusTotal operations and MCP protocol integration that MUST be preserved without modification
-- [ ] T124-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T124-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T124-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T124-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T124-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T124-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T124-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T124-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T124-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T124-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T124-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T124-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T124-2 Extract data models from `features/mcp-virustotal/` per Section 2 (Data Architecture) of analysis, migrating VirusTotal analysis schemas and threat detection databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T124-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T124-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T124-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T124-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T124-2e Update data model imports and references throughout codebase
-- [ ] T124-3 Migrate API architecture from `features/mcp-virustotal/` per Section 3 (API Architecture) of analysis, converting VirusTotal endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T124-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T124-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T124-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T124-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T124-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T124-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T124-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T124-4 Migrate frontend components from `features/mcp-virustotal/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving threat analysis and detection interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T124-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T124-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T124-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T124-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T124-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T124-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T124-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T124-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T124-5 Create service adapter in `libs/service-adapters/infrastructure/mcp_virustotal_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and VirusTotal API integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T124-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T124-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T124-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T124-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T124-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T124-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T124-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T124-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T124-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T124-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T124-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate VirusTotal operations accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/mcp-virustotal/` only after 100% validation success
-- [ ] T124-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T124-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T124-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T124-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T124-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T124-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T124-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T124-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T124-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T124-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T124-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T124-6l Remove `features/mcp-virustotal/` directory only after all validation passes
+- [ ] T20711 Review `docs/modular-analysis-repo-main/reports/mcp-virustotal-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical VirusTotal operations and MCP protocol integration that MUST be preserved without modification
+- [ ] T20721a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T20731b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T20741c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T20751d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T20761e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T20771f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T20781g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T20791h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T20801i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T20811j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T20821k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T20831l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T20842 Extract data models from `features/mcp-virustotal/` per Section 2 (Data Architecture) of analysis, migrating VirusTotal analysis schemas and threat detection databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T20852a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T20862b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T20872c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T20882d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T20892e Update data model imports and references throughout codebase
+- [ ] T20903 Migrate API architecture from `features/mcp-virustotal/` per Section 3 (API Architecture) of analysis, converting VirusTotal endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T20913a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T20923b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T20933c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T20943d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T20953e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T20963f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T20973g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T20984 Migrate frontend components from `features/mcp-virustotal/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving threat analysis and detection interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T20994a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T21004b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T21014c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T21024d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T21034e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T21044f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T21054g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T21064h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T21075 Create service adapter in `libs/service-adapters/infrastructure/mcp_virustotal_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving Python dependencies and VirusTotal API integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T21085a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T21095b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T21105c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T21115d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T21125e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T21135f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T21145g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T21155h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T21165i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T21175j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T21186 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate VirusTotal operations accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/mcp-virustotal/` only after 100% validation success
+- [ ] T21196a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T21206b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T21216c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T21226d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T21236e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T21246f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T21256g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T21266h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T21276i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T21286j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T21296k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T21306l Remove `features/mcp-virustotal/` directory only after all validation passes
 ### n8n MCP Asset Relocation Asset Relocation
-- [ ] T125-1 Review `docs/modular-analysis-repo-main/reports/n8n-mcp-server-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical workflow operations and MCP protocol integration that MUST be preserved without modification
-- [ ] T125-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T125-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T125-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T125-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T125-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T125-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T125-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T125-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T125-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T125-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T125-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T125-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T125-2 Extract data models from `features/n8n-mcp-server/` per Section 2 (Data Architecture) of analysis, migrating workflow operation schemas and execution databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T125-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T125-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T125-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T125-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T125-2e Update data model imports and references throughout codebase
-- [ ] T125-3 Migrate API architecture from `features/n8n-mcp-server/` per Section 3 (API Architecture) of analysis, converting workflow endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T125-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T125-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T125-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T125-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T125-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T125-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T125-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T125-4 Migrate frontend components from `features/n8n-mcp-server/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving workflow management and execution interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T125-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T125-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T125-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T125-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T125-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T125-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T125-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T125-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T125-5 Create service adapter in `libs/service-adapters/infrastructure/n8n_mcp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving TypeScript dependencies and workflow integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T125-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T125-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T125-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T125-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T125-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T125-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T125-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T125-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T125-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T125-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T125-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate workflow operations accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/n8n-mcp-server/` only after 100% validation success
-- [ ] T125-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T125-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T125-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T125-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T125-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T125-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T125-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T125-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T125-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T125-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T125-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T125-6l Remove `features/n8n-mcp-server/` directory only after all validation passes
+- [ ] T21311 Review `docs/modular-analysis-repo-main/reports/n8n-mcp-server-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical workflow operations and MCP protocol integration that MUST be preserved without modification
+- [ ] T21321a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T21331b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T21341c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T21351d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T21361e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T21371f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T21381g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T21391h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T21401i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T21411j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T21421k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T21431l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T21442 Extract data models from `features/n8n-mcp-server/` per Section 2 (Data Architecture) of analysis, migrating workflow operation schemas and execution databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T21452a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T21462b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T21472c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T21482d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T21492e Update data model imports and references throughout codebase
+- [ ] T21503 Migrate API architecture from `features/n8n-mcp-server/` per Section 3 (API Architecture) of analysis, converting workflow endpoints while preserving MCP protocol capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T21513a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T21523b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T21533c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T21543d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T21553e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T21563f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T21573g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T21584 Migrate frontend components from `features/n8n-mcp-server/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving workflow management and execution interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T21594a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T21604b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T21614c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T21624d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T21634e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T21644f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T21654g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T21664h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T21675 Create service adapter in `libs/service-adapters/infrastructure/n8n_mcp_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving TypeScript dependencies and workflow integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T21685a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T21695b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T21705c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T21715d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T21725e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T21735f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T21745g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T21755h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T21765i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T21775j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T21786 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate workflow operations accuracy and MCP protocol functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/n8n-mcp-server/` only after 100% validation success
+- [ ] T21796a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T21806b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T21816c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T21826d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T21836e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T21846f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T21856g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T21866h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T21876i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T21886j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T21896k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T21906l Remove `features/n8n-mcp-server/` directory only after all validation passes
 ### SecurityOnion n8n Workflows Asset Relocation Asset Relocation
-- [ ] T126-1 Review `docs/modular-analysis-repo-main/reports/securityonion-n8n-workflows-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical security workflow automation and SecurityOnion integration that MUST be preserved without modification
-- [ ] T126-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T126-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T126-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T126-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T126-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T126-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T126-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T126-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T126-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T126-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T126-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T126-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T126-2 Extract data models from `features/securityonion-n8n-workflows/` per Section 2 (Data Architecture) of analysis, migrating security workflow schemas and automation databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T126-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T126-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T126-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T126-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T126-2e Update data model imports and references throughout codebase
-- [ ] T126-3 Migrate API architecture from `features/securityonion-n8n-workflows/` per Section 3 (API Architecture) of analysis, converting security automation endpoints while preserving workflow capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T126-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T126-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T126-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T126-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T126-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T126-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T126-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T126-4 Migrate frontend components from `features/securityonion-n8n-workflows/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving security workflow and automation interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T126-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T126-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T126-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T126-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T126-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T126-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T126-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T126-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T126-5 Create service adapter in `libs/service-adapters/infrastructure/securityonion_n8n_workflows_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving n8n workflow dependencies and SecurityOnion integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T126-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T126-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T126-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T126-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T126-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T126-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T126-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T126-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T126-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T126-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T126-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate security workflow accuracy and automation functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/securityonion-n8n-workflows/` only after 100% validation success
-- [ ] T126-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T126-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T126-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T126-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T126-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T126-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T126-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T126-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T126-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T126-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T126-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T126-6l Remove `features/securityonion-n8n-workflows/` directory only after all validation passes
+- [ ] T21911 Review `docs/modular-analysis-repo-main/reports/securityonion-n8n-workflows-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical security workflow automation and SecurityOnion integration that MUST be preserved without modification
+- [ ] T21921a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T21931b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T21941c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T21951d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T21961e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T21971f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T21981g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T21991h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T22001i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T22011j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T22021k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T22031l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T22042 Extract data models from `features/securityonion-n8n-workflows/` per Section 2 (Data Architecture) of analysis, migrating security workflow schemas and automation databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T22052a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T22062b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T22072c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T22082d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T22092e Update data model imports and references throughout codebase
+- [ ] T22103 Migrate API architecture from `features/securityonion-n8n-workflows/` per Section 3 (API Architecture) of analysis, converting security automation endpoints while preserving workflow capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T22113a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T22123b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T22133c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T22143d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T22153e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T22163f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T22173g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T22184 Migrate frontend components from `features/securityonion-n8n-workflows/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving security workflow and automation interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T22194a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T22204b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T22214c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T22224d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T22234e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T22244f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T22254g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T22264h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T22275 Create service adapter in `libs/service-adapters/infrastructure/securityonion_n8n_workflows_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving n8n workflow dependencies and SecurityOnion integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T22285a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T22295b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T22305c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T22315d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T22325e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T22335f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T22345g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T22355h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T22365i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T22375j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T22386 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate security workflow accuracy and automation functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/securityonion-n8n-workflows/` only after 100% validation success
+- [ ] T22396a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T22406b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T22416c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T22426d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T22436e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T22446f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T22456g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T22466h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T22476i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T22486j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T22496k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T22506l Remove `features/securityonion-n8n-workflows/` directory only after all validation passes
 ### Brute Ratel C4 Kit Asset Relocation Asset Relocation
-- [ ] T127-1 Review `docs/modular-analysis-repo-main/reports/brute-ratel-c4-kit-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical red team infrastructure and deployment automation that MUST be preserved without modification
-- [ ] T127-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T127-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T127-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T127-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T127-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T127-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T127-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T127-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T127-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T127-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T127-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T127-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T127-2 Extract data models from `features/brute-ratel-c4-kit/` per Section 2 (Data Architecture) of analysis, migrating deployment schemas and infrastructure configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T127-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T127-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T127-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T127-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T127-2e Update data model imports and references throughout codebase
-- [ ] T127-3 Migrate API architecture from `features/brute-ratel-c4-kit/` per Section 3 (API Architecture) of analysis, converting infrastructure endpoints while preserving deployment capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T127-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T127-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T127-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T127-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T127-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T127-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T127-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T127-4 Migrate frontend components from `features/brute-ratel-c4-kit/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving infrastructure management and deployment interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T127-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T127-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T127-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T127-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T127-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T127-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T127-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T127-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T127-5 Create service adapter in `libs/service-adapters/infrastructure/brute_ratel_c4_kit_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving deployment tool dependencies and infrastructure integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T127-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T127-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T127-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T127-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T127-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T127-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T127-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T127-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T127-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T127-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T127-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate infrastructure deployment accuracy and automation functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/brute-ratel-c4-kit/` only after 100% validation success
-- [ ] T127-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T127-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T127-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T127-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T127-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T127-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T127-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T127-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T127-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T127-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T127-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T127-6l Remove `features/brute-ratel-c4-kit/` directory only after all validation passes
+- [ ] T22511 Review `docs/modular-analysis-repo-main/reports/brute-ratel-c4-kit-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical red team infrastructure and deployment automation that MUST be preserved without modification
+- [ ] T22521a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T22531b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T22541c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T22551d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T22561e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T22571f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T22581g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T22591h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T22601i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T22611j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T22621k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T22631l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T22642 Extract data models from `features/brute-ratel-c4-kit/` per Section 2 (Data Architecture) of analysis, migrating deployment schemas and infrastructure configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T22652a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T22662b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T22672c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T22682d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T22692e Update data model imports and references throughout codebase
+- [ ] T22703 Migrate API architecture from `features/brute-ratel-c4-kit/` per Section 3 (API Architecture) of analysis, converting infrastructure endpoints while preserving deployment capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T22713a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T22723b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T22733c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T22743d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T22753e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T22763f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T22773g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T22784 Migrate frontend components from `features/brute-ratel-c4-kit/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving infrastructure management and deployment interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T22794a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T22804b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T22814c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T22824d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T22834e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T22844f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T22854g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T22864h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T22875 Create service adapter in `libs/service-adapters/infrastructure/brute_ratel_c4_kit_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving deployment tool dependencies and infrastructure integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T22885a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T22895b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T22905c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T22915d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T22925e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T22935f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T22945g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T22955h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T22965i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T22975j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T22986 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate infrastructure deployment accuracy and automation functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/brute-ratel-c4-kit/` only after 100% validation success
+- [ ] T22996a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T23006b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T23016c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T23026d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T23036e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T23046f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T23056g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T23066h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T23076i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T23086j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T23096k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T23106l Remove `features/brute-ratel-c4-kit/` directory only after all validation passes
 ### Ghostwriter Infrastructure Asset Relocation Asset Relocation
-- [ ] T128-1 Review `docs/modular-analysis-repo-main/reports/ghostwriter-infrastructure-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical penetration testing infrastructure and deployment automation that MUST be preserved without modification
-- [ ] T128-1a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T128-1b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T128-1c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T128-1d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T128-1e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T128-1f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T128-1g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T128-1h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T128-1i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T128-1j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T128-1k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T128-1l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T128-2 Extract data models from `features/ghostwriter-infrastructure/` per Section 2 (Data Architecture) of analysis, migrating infrastructure schemas and deployment configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
-- [ ] T128-2a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T128-2b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T128-2c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T128-2d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T128-2e Update data model imports and references throughout codebase
-- [ ] T128-3 Migrate API architecture from `features/ghostwriter-infrastructure/` per Section 3 (API Architecture) of analysis, converting infrastructure endpoints while preserving deployment capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
-- [ ] T128-3a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T128-3b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T128-3c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T128-3d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T128-3e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
-- [ ] T128-3f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
-- [ ] T128-3g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
-- [ ] T128-4 Migrate frontend components from `features/ghostwriter-infrastructure/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving infrastructure management and deployment interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
-- [ ] T128-4a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
-- [ ] T128-4b Integrate state management patterns from Section 6.1 with unified application state
-- [ ] T128-4c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
-- [ ] T128-4d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
-- [ ] T128-4e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
-- [ ] T128-4f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
-- [ ] T128-4g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
-- [ ] T128-4h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
-- [ ] T128-5 Create service adapter in `libs/service-adapters/infrastructure/ghostwriter_infrastructure_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving infrastructure tool dependencies and deployment integrations while maintaining 100% API compatibility for downstream consumers
-- [ ] T128-5a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
-- [ ] T128-5b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
-- [ ] T128-5c Create unified configuration management integrating tool-specific configs from Section 10.1
-- [ ] T128-5d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
-- [ ] T128-5e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
-- [ ] T128-5f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
-- [ ] T128-5g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
-- [ ] T128-5h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
-- [ ] T128-5i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
-- [ ] T128-5j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
-- [ ] T128-6 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate infrastructure deployment accuracy and penetration testing functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/ghostwriter-infrastructure/` only after 100% validation success
-- [ ] T128-6a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
-- [ ] T128-6b Validate performance baselines from Section 8.1 meet or exceed original tool performance
-- [ ] T128-6c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
-- [ ] T128-6d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
-- [ ] T128-6e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
-- [ ] T128-6f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
-- [ ] T128-6g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
-- [ ] T128-6h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
-- [ ] T128-6i **Security Testing**: Preserve security controls, authentication flows, and access patterns
-- [ ] T128-6j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
-- [ ] T128-6k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
-- [ ] T128-6l Remove `features/ghostwriter-infrastructure/` directory only after all validation passes
+- [ ] T23111 Review `docs/modular-analysis-repo-main/reports/ghostwriter-infrastructure-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical penetration testing infrastructure and deployment automation that MUST be preserved without modification
+- [ ] T23121a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [ ] T23131b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [ ] T23141c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [ ] T23151d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [ ] T23161e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [ ] T23171f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [ ] T23181g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [ ] T23191h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [ ] T23201i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [ ] T23211j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [ ] T23221k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [ ] T23231l Document preservation strategy based on analysis findings and create migration plan
+- [ ] T23242 Extract data models from `features/ghostwriter-infrastructure/` per Section 2 (Data Architecture) of analysis, migrating infrastructure schemas and deployment configuration databases to unified PostgreSQL while preserving relationships, validation rules, and performance patterns identified in Section 2.1-2.3
+- [ ] T23252a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [ ] T23262b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [ ] T23272c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [ ] T23282d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [ ] T23292e Update data model imports and references throughout codebase
+- [ ] T23303 Migrate API architecture from `features/ghostwriter-infrastructure/` per Section 3 (API Architecture) of analysis, converting infrastructure endpoints while preserving deployment capabilities to FastAPI while preserving authentication patterns, request/response schemas, and business logic identified in Section 3.1-3.3
+- [ ] T23313a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [ ] T23323b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [ ] T23333c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [ ] T23343d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [ ] T23353e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [ ] T23363f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
+- [ ] T23373g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
+- [ ] T23384 Migrate frontend components from `features/ghostwriter-infrastructure/` per Section 6 (Frontend Architecture) of analysis to React/Next.js unified interface, preserving infrastructure management and deployment interfaces, component architecture, state management patterns, and critical user interactions identified in Section 6.1-6.4
+- [ ] T23394a Convert critical frontend components from Section 6.3 to React maintaining functionality and user experience
+- [ ] T23404b Integrate state management patterns from Section 6.1 with unified application state
+- [ ] T23414c Preserve complex user interactions and performance optimizations from Section 6.2-6.4
+- [ ] T23424d **Static Assets**: Migrate CSS files, images, fonts, icons, and other static resources
+- [ ] T23434e **Client Libraries**: Preserve custom JavaScript libraries, web workers, and browser-specific code
+- [ ] T23444f **Worker Thread Systems**: Migrate web workers, service workers, background processing, and threading architectures for performance-critical operations
+- [ ] T23454g **Interactive UI Systems**: Preserve drag-and-drop interfaces, real-time editors, canvas/WebGL components, and specialized user interaction patterns
+- [ ] T23464h **Templates & Views**: Convert template engines (Jinja2, Handlebars, etc.) to React components
+- [ ] T23475 Create service adapter in `libs/service-adapters/infrastructure/ghostwriter_infrastructure_adapter.py` based on analysis Section 1.2 (Technology Stack), resolving infrastructure tool dependencies and deployment integrations while maintaining 100% API compatibility for downstream consumers
+- [ ] T23485a Resolve technology stack dependencies from Section 1.2 integrating with unified monolith stack
+- [ ] T23495b Handle external integrations from Section 5 (External Integrations) maintaining service contracts
+- [ ] T23505c Create unified configuration management integrating tool-specific configs from Section 10.1
+- [ ] T23515d **Package Dependencies**: Migrate package.json/requirements.txt dependencies, resolve version conflicts
+- [ ] T23525e **Build Assets**: Preserve build scripts, compilation steps, and deployment artifacts
+- [ ] T23535f **Runtime Dependencies**: Handle system packages, external binaries, and service dependencies
+- [ ] T23545g **Custom Libraries**: Migrate internal libraries, utilities, and shared components to libs/shared/
+- [ ] T23555h **Multi-Target Build Systems**: Preserve specialized build configurations, platform-specific builds, and export compatibility layers
+- [ ] T23565i **Development Tooling Integration**: Migrate code generators, scaffolding systems, and custom development workflow tools to unified toolchain
+- [ ] T23575j **Package Patch Management**: Preserve custom patches to third-party libraries, patch-package configurations, and modified external dependencies
+- [ ] T23586 Implement comprehensive testing strategy based on analysis Section 7 (Testing & Quality), validate infrastructure deployment accuracy and penetration testing functionality through automated tests comparing original vs integrated behavior, achieve performance baselines from Section 8, and remove tool from `features/ghostwriter-infrastructure/` only after 100% validation success
+- [ ] T23596a Implement test coverage matching Section 7.1-7.2 requirements maintaining critical test cases
+- [ ] T23606b Validate performance baselines from Section 8.1 meet or exceed original tool performance
+- [ ] T23616c Execute migration readiness criteria from Section 12.3 ensuring all success criteria met
+- [ ] T23626d **Integration Testing**: Validate cross-service communication, data flow, and API contracts
+- [ ] T23636e **Plugin System Testing**: Validate dynamic loading, operation registration, extensibility frameworks, and plugin compatibility
+- [ ] T23646f **Multi-Target Testing**: Verify functionality across all build targets (web, node, mobile, desktop) and platform-specific features
+- [ ] T23656g **Performance-Critical Testing**: Validate worker thread performance, background processing, and optimization-dependent functionality
+- [ ] T23666h **Monorepo Integration Testing**: Validate package interdependencies, workspace build orchestration, and cross-package functionality
+- [ ] T23676i **Security Testing**: Preserve security controls, authentication flows, and access patterns
+- [ ] T23686j **Documentation Migration**: Update README files, API docs, deployment guides, and user manuals
+- [ ] T23696k **Cleanup Validation**: Verify no orphaned files, unused dependencies, or broken references remain
+- [ ] T23706l Remove `features/ghostwriter-infrastructure/` directory only after all validation passes
 
 ---
 
@@ -2550,11 +2567,11 @@
 
 ### LLM Integration Enhancement
 
-- [ ] T143 [P] Enhance cyber-llm-server with security tool integration in apps/cyber-llm-server/src/integrations/ using integration patterns from security tools
-- [ ] T144 [P] Enhance mtg-llm-server with MTG tool integration in apps/mtg-llm-server/src/integrations/ using integration patterns from MTG tools
-- [ ] T145 [P] Enhance code-llm-server with development tool integration in apps/code-llm-server/src/integrations/ using integration patterns from dev tools
-- [ ] T146 Create unified LLM router in apps/jane-orchestrator/src/services/llm_router.py using routing patterns identified in source analysis
-- [ ] T147 Implement AI context sharing across all tools in apps/jane-orchestrator/src/services/ai_context_sharing.py using context patterns from analyzed tools
+- [ ] T2371 [P] Enhance cyber-llm-server with security tool integration in apps/cyber-llm-server/src/integrations/ using integration patterns from security tools
+- [ ] T2372 [P] Enhance mtg-llm-server with MTG tool integration in apps/mtg-llm-server/src/integrations/ using integration patterns from MTG tools
+- [ ] T2373 [P] Enhance code-llm-server with development tool integration in apps/code-llm-server/src/integrations/ using integration patterns from dev tools
+- [ ] T2374 Create unified LLM router in apps/jane-orchestrator/src/services/llm_router.py using routing patterns identified in source analysis
+- [ ] T2375 Implement AI context sharing across all tools in apps/jane-orchestrator/src/services/ai_context_sharing.py using context patterns from analyzed tools
 
 **Checkpoint**: LLM servers enhanced for cross-domain tool integration
 
@@ -2566,19 +2583,19 @@
 
 ### Migration Validation and Cleanup
 
-- [ ] T148 Validate all business logic preservation with measurable criteria using original test suites and performance benchmarks from source analysis:
-- [ ] T148a Extract and run original test suites from all 37 projects in features/*/tests/ against migrated implementations in apps/jane-orchestrator/tests/preservation/
-- [ ] T148b Implement API endpoint parity validation comparing original API schemas from features/*/api/ with migrated endpoints for identical input/output behavior
-- [ ] T148c Create UI workflow automation tests comparing original interfaces from features/*/frontend/ with integrated components for behavioral equivalence
-- [ ] T148d Validate algorithm preservation through identical test suite execution using test cases from features/*/tests/ against migrated algorithms
-- [ ] T148e Measure performance benchmarks comparing original deployment metrics from features/*/benchmarks/ with integrated tools for performance parity
-- [ ] T148f Create preservation compliance report generator comparing original functionality documentation from features/*/docs/ with migrated capabilities
-- [ ] T149 Create migration status tracking in apps/jane-orchestrator/src/services/migration_tracker.py monitoring migration completeness across all 37 tools
-- [ ] T150 Implement automated validation that features/ directory is completely empty and all business logic successfully migrated to monolith structure
-- [ ] T151 [P] Create integration status dashboard in apps/jane-ui/src/components/Migration/IntegrationStatus.tsx showing migration progress and validation results for all 37 tools
-- [ ] T152 [P] Document all migrated tools and their new locations in docs/migration-log.md with source file mappings from features/ to apps/ and libs/
-- [ ] T153 Remove all remaining code from features/ directory after successful migration validation with 100% business logic preservation confirmed
-- [ ] T154 Update project documentation to reflect completed integration with features/ directory empty and comprehensive source code preservation documented
+- [ ] T2376 Validate all business logic preservation with measurable criteria using original test suites and performance benchmarks from source analysis:
+- [ ] T2377 Extract and run original test suites from all 37 projects in features/*/tests/ against migrated implementations in apps/jane-orchestrator/tests/preservation/
+- [ ] T2378 Implement API endpoint parity validation comparing original API schemas from features/*/api/ with migrated endpoints for identical input/output behavior
+- [ ] T2379 Create UI workflow automation tests comparing original interfaces from features/*/frontend/ with integrated components for behavioral equivalence
+- [ ] T2380 Validate algorithm preservation through identical test suite execution using test cases from features/*/tests/ against migrated algorithms
+- [ ] T2381 Measure performance benchmarks comparing original deployment metrics from features/*/benchmarks/ with integrated tools for performance parity
+- [ ] T2382 Create preservation compliance report generator comparing original functionality documentation from features/*/docs/ with migrated capabilities
+- [ ] T2383 Create migration status tracking in apps/jane-orchestrator/src/services/migration_tracker.py monitoring migration completeness across all 37 tools
+- [ ] T2384 Implement automated validation that features/ directory is completely empty and all business logic successfully migrated to monolith structure
+- [ ] T2385 [P] Create integration status dashboard in apps/jane-ui/src/components/Migration/IntegrationStatus.tsx showing migration progress and validation results for all 37 tools
+- [ ] T2386 [P] Document all migrated tools and their new locations in docs/migration-log.md with source file mappings from features/ to apps/ and libs/
+- [ ] T2387 Remove all remaining code from features/ directory after successful migration validation with 100% business logic preservation confirmed
+- [ ] T2388 Update project documentation to reflect completed integration with features/ directory empty and comprehensive source code preservation documented
 
 **Checkpoint**: All 37 tools fully migrated with 100% business logic preservation validated through original test suites
 
@@ -2588,51 +2605,51 @@
 
 **Purpose**: Final improvements affecting multiple user stories and production readiness with comprehensive system optimization
 
-- [ ] T155 [P] Performance optimization across all service adapters using performance patterns identified in source analysis
-- [ ] T156 [P] Security hardening for all API endpoints using security configurations from analyzed tools
-- [ ] T157 [P] Accessibility improvements (WCAG 2.1 AA compliance) using accessibility patterns from existing tool UIs
-- [ ] T158 [P] Error handling enhancement using error handling patterns from all 37 tools in source analysis
-- [ ] T159 [P] Logging and monitoring setup using logging patterns from analyzed tools for production deployment
-- [ ] T160 [P] Documentation updates and API documentation using documentation patterns from docs/modular-analysis-repo-main/reports/ for all 37 integrated tools
-- [ ] T161 [P] Docker composition optimization using containerization patterns from features/*/docker/
-- [ ] T162 [P] Database performance tuning using database optimization patterns from analyzed tools
-- [ ] T163 [P] WebSocket connection scaling using WebSocket patterns from analyzed tools
-- [ ] T164 [P] Implement automated backup to Synology NAS using backup patterns from existing tools:
-- [ ] T164a Create PostgreSQL backup automation using database backup patterns from features/*/backup/
-- [ ] T164b Implement SQLite database backup using local backup patterns from analyzed tools
-- [ ] T164c Create Synology NAS integration using file transfer patterns from existing tools
-- [ ] T164d Implement backup verification using validation patterns from source analysis
-- [ ] T164e Add backup monitoring using monitoring patterns from analyzed tools
-- [ ] T165 [P] Add vulnerability scanning using security scanning patterns from analyzed security tools
-- [ ] T166 [P] Create user documentation using documentation patterns from docs/modular-analysis-repo-main/reports/ for all 37 integrated tools
-- [ ] T167 [P] Implement load testing with performance benchmarks from existing tool deployments
-- [ ] T168 [P] Setup CI/CD pipeline using deployment patterns from features/*/.github/ and features/*/ci/
-- [ ] T169a [P] Implement Security Domain performance validation using benchmarks from existing security tool deployments
-- [ ] T169b [P] Implement Productivity Domain performance validation using benchmarks from existing productivity tool deployments
-- [ ] T169c [P] Implement MTG Domain performance validation using benchmarks from existing MTG tool deployments
-- [ ] T169d [P] Implement Infrastructure Domain performance validation using benchmarks from existing infrastructure tool deployments
-- [ ] T169e [P] Create automated domain performance monitoring dashboard using monitoring patterns from analyzed tools
+- [ ] T2389 [P] Performance optimization across all service adapters using performance patterns identified in source analysis
+- [ ] T2390 [P] Security hardening for all API endpoints using security configurations from analyzed tools
+- [ ] T2391 [P] Accessibility improvements (WCAG 2.1 AA compliance) using accessibility patterns from existing tool UIs
+- [ ] T2392 [P] Error handling enhancement using error handling patterns from all 37 tools in source analysis
+- [ ] T2393 [P] Logging and monitoring setup using logging patterns from analyzed tools for production deployment
+- [ ] T2394 [P] Documentation updates and API documentation using documentation patterns from docs/modular-analysis-repo-main/reports/ for all 37 integrated tools
+- [ ] T2395 [P] Docker composition optimization using containerization patterns from features/*/docker/
+- [ ] T2396 [P] Database performance tuning using database optimization patterns from analyzed tools
+- [ ] T2397 [P] WebSocket connection scaling using WebSocket patterns from analyzed tools
+- [ ] T2398 [P] Implement automated backup to Synology NAS using backup patterns from existing tools:
+- [ ] T2399 Create PostgreSQL backup automation using database backup patterns from features/*/backup/
+- [ ] T2400 Implement SQLite database backup using local backup patterns from analyzed tools
+- [ ] T2401 Create Synology NAS integration using file transfer patterns from existing tools
+- [ ] T2402 Implement backup verification using validation patterns from source analysis
+- [ ] T2403 Add backup monitoring using monitoring patterns from analyzed tools
+- [ ] T2404 [P] Add vulnerability scanning using security scanning patterns from analyzed security tools
+- [ ] T2405 [P] Create user documentation using documentation patterns from docs/modular-analysis-repo-main/reports/ for all 37 integrated tools
+- [ ] T2406 [P] Implement load testing with performance benchmarks from existing tool deployments
+- [ ] T2407 [P] Setup CI/CD pipeline using deployment patterns from features/*/.github/ and features/*/ci/
+- [ ] T2408 [P] Implement Security Domain performance validation using benchmarks from existing security tool deployments
+- [ ] T2409 [P] Implement Productivity Domain performance validation using benchmarks from existing productivity tool deployments
+- [ ] T2410 [P] Implement MTG Domain performance validation using benchmarks from existing MTG tool deployments
+- [ ] T2411 [P] Implement Infrastructure Domain performance validation using benchmarks from existing infrastructure tool deployments
+- [ ] T2412 [P] Create automated domain performance monitoring dashboard using monitoring patterns from analyzed tools
 
 **Domain Performance Validation Tasks (Missing Coverage)**:
-- [ ] T078a [P] Create Security Domain performance validation framework testing <1s response requirement
-- [ ] T078b [P] Create Productivity Domain performance validation framework testing <2s response requirement  
-- [ ] T078c [P] Create MTG Domain performance validation framework testing <3s response requirement
-- [ ] T078d [P] Create Infrastructure Domain performance validation framework testing <5s response requirement
-- [ ] T078e [P] Implement UI response time validation for <200ms constitutional requirement
-- [ ] T078f [P] Create WebSocket latency validation for <250ms constitutional requirement
-- [ ] T078g [P] Implement API performance regression testing with domain-specific thresholds
-- [ ] T078h [P] Create comprehensive performance benchmarking dashboard
-- [ ] T078i [P] Add automated performance alerts for constitutional compliance violations
-- [ ] T078j [P] Implement load testing for domain-specific concurrent user requirements
-- [ ] T078k [P] Create performance monitoring integration with existing tool patterns
-- [ ] T078l [P] Add performance validation to CI/CD pipeline with constitutional gates
-- [ ] T078m [P] Implement performance rollback triggers when thresholds exceeded
-- [ ] T078n [P] Create domain performance optimization recommendations engine
-- [ ] T078o [P] Add executive function responsiveness validation (ADHD/autism support)
-- [ ] T078p [P] Create cross-domain performance impact analysis tools
+- [ ] T2413 [P] Create Security Domain performance validation framework testing <1s response requirement
+- [ ] T2414 [P] Create Productivity Domain performance validation framework testing <2s response requirement  
+- [ ] T2415 [P] Create MTG Domain performance validation framework testing <3s response requirement
+- [ ] T2416 [P] Create Infrastructure Domain performance validation framework testing <5s response requirement
+- [ ] T2417 [P] Implement UI response time validation for <200ms constitutional requirement
+- [ ] T2418 [P] Create WebSocket latency validation for <250ms constitutional requirement
+- [ ] T2419 [P] Implement API performance regression testing with domain-specific thresholds
+- [ ] T2420 [P] Create comprehensive performance benchmarking dashboard
+- [ ] T2421 [P] Add automated performance alerts for constitutional compliance violations
+- [ ] T2422 [P] Implement load testing for domain-specific concurrent user requirements
+- [ ] T2423 [P] Create performance monitoring integration with existing tool patterns
+- [ ] T2424 [P] Add performance validation to CI/CD pipeline with constitutional gates
+- [ ] T2425 [P] Implement performance rollback triggers when thresholds exceeded
+- [ ] T2426 [P] Create domain performance optimization recommendations engine
+- [ ] T2427 [P] Add executive function responsiveness validation (ADHD/autism support)
+- [ ] T2428 [P] Create cross-domain performance impact analysis tools
 
-- [ ] T169 Final validation of constitutional requirements using validation frameworks from source analysis
-- [ ] T170 Run complete quickstart.md validation and deployment verification using deployment patterns from all 37 tools
+- [ ] T2429 Final validation of constitutional requirements using validation frameworks from source analysis
+- [ ] T2430 Run complete quickstart.md validation and deployment verification using deployment patterns from all 37 tools
 
 ---
 
@@ -2641,54 +2658,54 @@
 **Purpose**: Comprehensive migration of all 37 tools from features/ directory to modular monolith structure using 6-step Asset Relocation Process per FR-020
 
 **Security Domain (13 tools)**:
-- [ ] T171 [P] MISP Asset Relocation: Extract threat intelligence business logic per misp-analysis.md
-- [ ] T172 [P] HELK Asset Relocation: Extract log analysis algorithms per helk-analysis.md
-- [ ] T173 [P] SecurityOnion Asset Relocation: Extract network monitoring logic per securityonion-analysis.md
-- [ ] T174 [P] Maltrail Asset Relocation: Extract traffic analysis patterns per maltrail-analysis.md
-- [ ] T175 [P] YARA-X Asset Relocation: Extract pattern matching engine per yara-x-analysis.md
-- [ ] T176 [P] CyberChef Asset Relocation: Extract data transformation recipes per cyberchef-analysis.md
-- [ ] T177 [P] Nemesis Asset Relocation: Extract offensive security workflows per nemesis-analysis.md
-- [ ] T178 [P] APTScout Asset Relocation: Extract API analysis tools per apiscout-analysis.md
-- [ ] T179 [P] BlackArch Asset Relocation: Extract penetration testing utilities per blackarch-analysis.md
-- [ ] T180 [P] Rita Asset Relocation: Extract network traffic analysis per rita-analysis.md
-- [ ] T181 [P] MCP-VirusTotal Asset Relocation: Extract threat intelligence integration per mcp-virustotal-analysis.md
-- [ ] T182 [P] MalwareBazaar Asset Relocation: Extract malware analysis integration per malwarebazaar-analysis.md
-- [ ] T183 [P] HexStrike Asset Relocation: Extract AI security analysis per hexstrike-analysis.md
+- [ ] T2431 [P] MISP Asset Relocation: Extract threat intelligence business logic per misp-analysis.md
+- [ ] T2432 [P] HELK Asset Relocation: Extract log analysis algorithms per helk-analysis.md
+- [ ] T2433 [P] SecurityOnion Asset Relocation: Extract network monitoring logic per securityonion-analysis.md
+- [ ] T2434 [P] Maltrail Asset Relocation: Extract traffic analysis patterns per maltrail-analysis.md
+- [ ] T2435 [P] YARA-X Asset Relocation: Extract pattern matching engine per yara-x-analysis.md
+- [ ] T2436 [P] CyberChef Asset Relocation: Extract data transformation recipes per cyberchef-analysis.md
+- [ ] T2437 [P] Nemesis Asset Relocation: Extract offensive security workflows per nemesis-analysis.md
+- [ ] T2438 [P] APTScout Asset Relocation: Extract API analysis tools per apiscout-analysis.md
+- [ ] T2439 [P] BlackArch Asset Relocation: Extract penetration testing utilities per blackarch-analysis.md
+- [ ] T2440 [P] Rita Asset Relocation: Extract network traffic analysis per rita-analysis.md
+- [ ] T2441 [P] MCP-VirusTotal Asset Relocation: Extract threat intelligence integration per mcp-virustotal-analysis.md
+- [ ] T2442 [P] MalwareBazaar Asset Relocation: Extract malware analysis integration per malwarebazaar-analysis.md
+- [ ] T2443 [P] HexStrike Asset Relocation: Extract AI security analysis per hexstrike-analysis.md
 
 **Productivity Domain (8 tools)**:
-- [ ] T184 [P] n8n Asset Relocation: Extract workflow orchestration engine per n8n-analysis.md
-- [ ] T185 [P] Mealie Asset Relocation: Extract recipe management workflows per mealie-analysis.md
-- [ ] T186 [P] Dispatch Asset Relocation: Extract incident management logic per dispatch-analysis.md
-- [ ] T187 [P] Actual Budget Asset Relocation: Extract financial tracking algorithms per actual-analysis.md
-- [ ] T188 [P] Firecrawl Asset Relocation: Extract web scraping engine per firecrawl-analysis.md
-- [ ] T189 [P] Goose Asset Relocation: Extract AI development agent per goose-analysis.md
-- [ ] T190 [P] IT-Tools Asset Relocation: Extract utility functions per it-tools-analysis.md
-- [ ] T191 [P] Inspector Asset Relocation: Extract debugging workflows per inspector-analysis.md
+- [ ] T2444 [P] n8n Asset Relocation: Extract workflow orchestration engine per n8n-analysis.md
+- [ ] T2445 [P] Mealie Asset Relocation: Extract recipe management workflows per mealie-analysis.md
+- [ ] T2446 [P] Dispatch Asset Relocation: Extract incident management logic per dispatch-analysis.md
+- [ ] T2447 [P] Actual Budget Asset Relocation: Extract financial tracking algorithms per actual-analysis.md
+- [ ] T2448 [P] Firecrawl Asset Relocation: Extract web scraping engine per firecrawl-analysis.md
+- [ ] T2449 [P] Goose Asset Relocation: Extract AI development agent per goose-analysis.md
+- [ ] T2450 [P] IT-Tools Asset Relocation: Extract utility functions per it-tools-analysis.md
+- [ ] T2451 [P] Inspector Asset Relocation: Extract debugging workflows per inspector-analysis.md
 
 **MTG Domain (4 tools)**:
-- [ ] T192 [P] Commander Spellbook Asset Relocation: Extract combo generation algorithms per commander-spellbook-analysis.md
-- [ ] T193 [P] MTG Commander Map Asset Relocation: Extract strategy analysis per mtg-commander-map-analysis.md
-- [ ] T194 [P] MTG Scripting Toolkit Asset Relocation: Extract deck optimization logic per mtg-scripting-toolkit-analysis.md
-- [ ] T195 [P] Card Analysis Asset Relocation: Extract card evaluation algorithms per card-analysis.md
+- [ ] T2452 [P] Commander Spellbook Asset Relocation: Extract combo generation algorithms per commander-spellbook-analysis.md
+- [ ] T2453 [P] MTG Commander Map Asset Relocation: Extract strategy analysis per mtg-commander-map-analysis.md
+- [ ] T2454 [P] MTG Scripting Toolkit Asset Relocation: Extract deck optimization logic per mtg-scripting-toolkit-analysis.md
+- [ ] T2455 [P] Card Analysis Asset Relocation: Extract card evaluation algorithms per card-analysis.md
 
 **Infrastructure Domain (12 tools)**:
-- [ ] T196 [P] Kong Asset Relocation: Extract API gateway configuration per kong-analysis.md
-- [ ] T197 [P] Ghostwriter Asset Relocation: Extract documentation generation per ghostwriter-analysis.md
-- [ ] T198 [P] KasmVNC Asset Relocation: Extract remote desktop workflows per kasmvnc-analysis.md
-- [ ] T199 [P] n8n-MCP Asset Relocation: Extract MCP server integration per n8n-mcp-analysis.md
-- [ ] T200 [P] Firecrawl-MCP Asset Relocation: Extract web scraping MCP per firecrawl-mcp-analysis.md
-- [ ] T201 [P] Chroma-MCP Asset Relocation: Extract vector database MCP per chroma-mcp-analysis.md
-- [ ] T202 [P] FileScopeMCP Asset Relocation: Extract file analysis MCP per filescope-mcp-analysis.md
-- [ ] T203 [P] LScript Asset Relocation: Extract automation scripts per lscript-analysis.md
-- [ ] T204 [P] OneX Asset Relocation: Extract security toolkit per onex-analysis.md
-- [ ] T205 [P] Meterpreter Asset Relocation: Extract penetration testing framework per meterpreter-analysis.md
-- [ ] T206 [P] Software Forensic Kit Asset Relocation: Extract code analysis tools per forensic-kit-analysis.md
-- [ ] T207 [P] Brute-Ratel Asset Relocation: Extract C4 framework integration per brute-ratel-analysis.md
+- [ ] T2456 [P] Kong Asset Relocation: Extract API gateway configuration per kong-analysis.md
+- [ ] T2457 [P] Ghostwriter Asset Relocation: Extract documentation generation per ghostwriter-analysis.md
+- [ ] T2458 [P] KasmVNC Asset Relocation: Extract remote desktop workflows per kasmvnc-analysis.md
+- [ ] T2459 [P] n8n-MCP Asset Relocation: Extract MCP server integration per n8n-mcp-analysis.md
+- [ ] T2460 [P] Firecrawl-MCP Asset Relocation: Extract web scraping MCP per firecrawl-mcp-analysis.md
+- [ ] T2461 [P] Chroma-MCP Asset Relocation: Extract vector database MCP per chroma-mcp-analysis.md
+- [ ] T2462 [P] FileScopeMCP Asset Relocation: Extract file analysis MCP per filescope-mcp-analysis.md
+- [ ] T2463 [P] LScript Asset Relocation: Extract automation scripts per lscript-analysis.md
+- [ ] T2464 [P] OneX Asset Relocation: Extract security toolkit per onex-analysis.md
+- [ ] T2465 [P] Meterpreter Asset Relocation: Extract penetration testing framework per meterpreter-analysis.md
+- [ ] T2466 [P] Software Forensic Kit Asset Relocation: Extract code analysis tools per forensic-kit-analysis.md
+- [ ] T2467 [P] Brute-Ratel Asset Relocation: Extract C4 framework integration per brute-ratel-analysis.md
 
 **Final Migration Validation**:
-- [ ] T208 Verify features/ directory is completely empty after all asset relocations
-- [ ] T209 Run comprehensive validation of all 37 tools functionality preservation
-- [ ] T210 Execute big-bang migration completion verification per FR-001 requirements
+- [ ] T2468 Verify features/ directory is completely empty after all asset relocations
+- [ ] T2469 Run comprehensive validation of all 37 tools functionality preservation
+- [ ] T2470 Execute big-bang migration completion verification per FR-001 requirements
 
 **Checkpoint**: Production-ready mental prosthetic platform with comprehensive validation and monitoring
 
@@ -2711,18 +2728,18 @@
 
 **MVP First** (Enhanced with Existing Analysis):
 1. Complete Phase 1: Setup (T001-T008) - 8 tasks
-2. Complete Phase 2: Foundational (T009-T020f) - 18 tasks  
-3. Complete Phase 3: User Story 1 (T021-T037d) - 21 tasks
-4. Complete Phase 4: User Story 2 (T038-T053) - 16 tasks
+2. Complete Phase 2: Foundational (T009-T033) - 25 tasks  
+3. Complete Phase 3: User Story 1 (T034-T054) - 21 tasks
+4. Complete Phase 4: User Story 2 (T055-T070) - 16 tasks
 5. **STOP and VALIDATE**: Test both P1 stories independently using enhanced template validation
 6. Deploy/demo core executive function platform with AI security
 
 **Comprehensive Delivery** (Source-Enhanced Migration):
-1. **Technical Foundation**: Setup + Foundational (T001-T020f) → Core platform ready
-2. **MVP**: Add User Stories 1 & 2 (T021-T053) → Test with enhanced validation → Deploy unified dashboard with AI
-3. **Core Platform**: Add User Stories 6 & 7 (T054-T077) → Test AI assistance and data integration → Deploy enhanced version
-4. **Remote Access**: Add User Story 8 (T078-T089) → Test secure remote capabilities → Deploy mobile-ready platform
-5. **Domain Migration**: Phase 8 (T090-T128) → Comprehensive tool preservation with enhanced 59-subtask validation per tool
-6. **AI Enhancement**: Phase 12 (T143-T147) → LLM server integration → Validate cross-domain AI support
-7. **Migration Completion**: Phase 13 (T148-T154) → Validate 100% business logic preservation using original test suites → Empty features/ directory
-8. **Production Polish**: Phase 14 (T155-T170) → Production readiness and optimization → Full deployment
+1. **Technical Foundation**: Setup + Foundational (T001-T033) → Core platform ready
+2. **MVP**: Add User Stories 1 & 2 (T034-T070) → Test with enhanced validation → Deploy unified dashboard with AI
+3. **Core Platform**: Add User Stories 6 & 7 (T071-T094) → Test AI assistance and data integration → Deploy enhanced version
+4. **n8n Enhancement**: Add adaptive workflows (T095-T122) → Test pattern detection and automation → Deploy workflow intelligence
+5. **Performance Validation**: Add constitutional compliance (T123-T138) → Test domain-specific performance requirements → Deploy validated platform
+6. **Remote Access**: Add User Story 8 (T139-T150) → Test secure remote capabilities → Deploy mobile-ready platform
+7. **Domain Migration**: Phase 8 Security Tools (T1511-T4106) → Comprehensive tool preservation with enhanced validation per tool
+8. **Production Polish**: Final phases → Production readiness and optimization → Full deployment
