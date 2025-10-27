@@ -16,7 +16,7 @@
     "@nx/js": "21.6.4",
     "@nx/next": "21.6.5",
     "@nx/react": "21.6.4",
-    "@nx/workspace": "21.6.4",
+    "@nx/workspace": "22.0.1",
     "@types/node": "24.8.1",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
