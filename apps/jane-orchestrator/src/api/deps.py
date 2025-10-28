@@ -15,7 +15,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from ..data.models import User
-from ..db.session import get_db
+from ..db import get_db
 from .auth.endpoints import decode_token
 
 logger = logging.getLogger(__name__)
