@@ -12,6 +12,7 @@
   "license": "ISC",
   "private": true,
   "devDependencies": {
+    "@next/eslint-plugin-next": "^16.0.0",
     "@nx/eslint": "21.6.4",
     "@nx/express": "^22.0.1",
     "@nx/js": "21.6.4",
@@ -23,6 +24,7 @@
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.1",
     "eslint": "9.37.0",
+    "eslint-config-next": "^16.0.0",
     "nx": "21.6.4",
     "typescript": "5.9.3"
   },

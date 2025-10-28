@@ -1,6 +1,7 @@
 import logging
-from typing import Dict, Any
-from fastapi import FastAPI, HTTPException, status
+from typing import Any
+
+from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
@@ -27,10 +28,10 @@ class HealthResponse(BaseModel):
 class ReadinessResponse(BaseModel):
     """Readiness check response model."""
     status: str = Field(..., description="Readiness status")
-    dependencies: Dict[str, str] = Field(..., description="Dependency statuses")
+    dependencies: dict[str, str] = Field(..., description="Dependency statuses")
 
 
-@app.get("/", response_model=Dict[str, Any])
+@app.get("/", response_model=dict[str, Any])
 async def root():
     """Root endpoint providing service information."""
     logger.info("Root endpoint accessed")
@@ -65,7 +66,7 @@ async def ready():
     Validates connectivity to dependent services (LLM servers, databases, etc.).
     """
     logger.debug("Readiness check requested")
-    
+
     # Best practice: Check actual dependencies
     dependencies = {
         "database": "connected",
@@ -73,7 +74,7 @@ async def ready():
         "mtg_llm": "available",
         "code_llm": "available"
     }
-    
+
     # In production, implement actual health checks
     # Example:
     # try:
@@ -82,7 +83,7 @@ async def ready():
     # except Exception as e:
     #     logger.error(f"Readiness check failed: {e}")
     #     raise HTTPException(status_code=503, detail="Service not ready")
-    
+
     return ReadinessResponse(
         status="ready",
         dependencies=dependencies
