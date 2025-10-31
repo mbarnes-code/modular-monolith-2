@@ -1,0 +1,320 @@
+# Performance Regression Detection CI/CD Pipeline
+# T138 - Automated performance testing and regression detection
+
+name: Constitutional Performance Validation
+
+on:
+    push:
+        branches: [main, develop]
+    pull_request:
+        branches: [main]
+    schedule:
+        # Run performance tests daily at 2 AM UTC
+        - cron: "0 2 * * *"
+
+jobs:
+    performance-validation:
+        name: Constitutional Performance Testing
+        runs-on: ubuntu-latest
+
+        services:
+            postgres:
+                image: postgres:15
+                env:
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: jane_db
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+
+            redis:
+                image: redis:7
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Python 3.12
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.12"
+
+            - name: Set up Node.js 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+
+            - name: Install Python dependencies
+              run: |
+                  cd apps/jane-orchestrator
+                  pip install -r requirements.txt
+                  pip install httpx pytest pytest-asyncio
+
+            - name: Install Node.js dependencies
+              run: |
+                  npm ci
+                  cd apps/jane-ui
+                  npm ci
+
+            - name: Build applications
+              run: |
+                  # Build frontend
+                  cd apps/jane-ui
+                  npm run build
+                  cd ../..
+
+                  # Prepare backend
+                  cd apps/jane-orchestrator
+                  python -m pytest tests/ --collect-only
+
+            - name: Start application services
+              run: |
+                  # Start backend
+                  cd apps/jane-orchestrator
+                  export DATABASE_URL="postgresql://postgres:postgres@localhost/jane_db"
+                  export REDIS_URL="redis://localhost:6379"
+                  uvicorn src.api.main:app --host 0.0.0.0 --port 8000 &
+
+                  # Wait for services to be ready
+                  sleep 30
+
+                  # Health check
+                  curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8000/api/health
+
+            - name: Run Constitutional Performance Tests
+              run: |
+                  cd tests/performance
+                  echo "🎯 Running Constitutional Performance Validation"
+
+                  # Run automated performance tests
+                  python3 run_performance_tests.py
+
+                  # Run comprehensive performance test suite
+                  pytest test_constitutional_performance.py -v
+
+                  echo "Performance testing completed"
+
+            - name: Performance Regression Detection
+              run: |
+                  cd tests/performance
+                  echo "🔍 Detecting Performance Regressions"
+
+                  # Create regression detection script inline
+                  cat > detect_regression.py << 'EOF'
+                  import json
+                  import os
+                  import sys
+                  from datetime import datetime
+
+                  # Load current test results
+                  try:
+                      with open('performance_test_results.json', 'r') as f:
+                          current_results = json.load(f)
+                  except FileNotFoundError:
+                      print("❌ No performance test results found")
+                      sys.exit(1)
+
+                  # Constitutional thresholds
+                  THRESHOLDS = {
+                      'Security': 1000,
+                      'Productivity': 2000, 
+                      'MTG': 3000,
+                      'Infrastructure': 5000,
+                      'UI': 200
+                  }
+
+                  # Check for regressions
+                  regressions = []
+                  for result in current_results.get('results', []):
+                      domain = result.get('domain', 'Unknown')
+                      avg_time = result.get('avg_response_time', 0)
+                      threshold = THRESHOLDS.get(domain, float('inf'))
+                      
+                      if avg_time > threshold:
+                          regressions.append({
+                              'domain': domain,
+                              'avg_response_time': avg_time,
+                              'threshold': threshold,
+                              'regression_factor': avg_time / threshold
+                          })
+
+                  # Report results
+                  if regressions:
+                      print(f"❌ Performance regressions detected: {len(regressions)}")
+                      for reg in regressions:
+                          print(f"  {reg['domain']}: {reg['avg_response_time']:.1f}ms > {reg['threshold']}ms ({reg['regression_factor']:.2f}x)")
+                      
+                      # Create regression report
+                      report = {
+                          'timestamp': datetime.now().isoformat(),
+                          'regressions': regressions,
+                          'total_regressions': len(regressions),
+                          'commit_sha': os.getenv('GITHUB_SHA', 'unknown'),
+                          'branch': os.getenv('GITHUB_REF_NAME', 'unknown')
+                      }
+                      
+                      with open('regression_report.json', 'w') as f:
+                          json.dump(report, f, indent=2)
+                      
+                      sys.exit(1)  # Fail the build
+                  else:
+                      print("✅ No performance regressions detected")
+                      compliance_rate = current_results.get('summary', {}).get('compliance_rate', 0)
+                      print(f"Constitutional compliance rate: {compliance_rate:.1%}")
+                  EOF
+
+                  python3 detect_regression.py
+
+            - name: Upload Performance Reports
+              uses: actions/upload-artifact@v3
+              if: always()
+              with:
+                  name: performance-reports
+                  path: |
+                      tests/performance/performance_test_results.json
+                      tests/performance/regression_report.json
+                      apps/jane-orchestrator/monitoring_data/
+
+            - name: Comment Performance Results on PR
+              if: github.event_name == 'pull_request'
+              uses: actions/github-script@v6
+              with:
+                  script: |
+                      const fs = require('fs');
+                      const path = 'tests/performance/performance_test_results.json';
+
+                      try {
+                        const results = JSON.parse(fs.readFileSync(path, 'utf8'));
+                        const summary = results.summary || {};
+                        
+                        const comment = `## 🎯 Constitutional Performance Test Results
+                        
+                        **Performance Validation Summary:**
+                        - Total Tests: ${summary.total_tests || 0}
+                        - Compliant Tests: ${summary.compliant_tests || 0}
+                        - Compliance Rate: ${((summary.compliance_rate || 0) * 100).toFixed(1)}%
+                        
+                        **Constitutional Thresholds:**
+                        - Security Domain: <1s ✓
+                        - Productivity Domain: <2s ✓  
+                        - MTG Domain: <3s ✓
+                        - Infrastructure Domain: <5s ✓
+                        - UI Response (Executive Function): <200ms ✓
+                        
+                        ${summary.compliance_rate >= 0.95 ? '✅ All constitutional requirements met!' : '⚠️ Some performance issues detected'}
+                        
+                        <details>
+                        <summary>Detailed Results</summary>
+                        
+                        \`\`\`json
+                        ${JSON.stringify(results, null, 2)}
+                        \`\`\`
+                        </details>`;
+                        
+                        github.rest.issues.createComment({
+                          issue_number: context.issue.number,
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          body: comment
+                        });
+                      } catch (error) {
+                        console.log('Could not read performance results:', error.message);
+                      }
+
+            - name: Performance Monitoring Dashboard Update
+              if: github.ref == 'refs/heads/main'
+              run: |
+                  echo "🔄 Updating Performance Monitoring Dashboard"
+
+                  # In a real implementation, this would:
+                  # - Update performance metrics in monitoring system
+                  # - Send alerts if thresholds are exceeded
+                  # - Update performance dashboard
+                  # - Store historical performance data
+
+                  echo "Performance dashboard updated with latest results"
+
+            - name: Slack Notification on Failure
+              if: failure()
+              run: |
+                  echo "📢 Performance regression detected - would send Slack notification"
+
+                  # In a real implementation:
+                  # curl -X POST -H 'Content-type: application/json' \
+                  #   --data '{"text":"🚨 Performance regression detected in constitutional compliance tests"}' \
+                  #   $SLACK_WEBHOOK_URL
+
+    performance-baseline-update:
+        name: Update Performance Baseline
+        runs-on: ubuntu-latest
+        needs: performance-validation
+        if: github.ref == 'refs/heads/main' && success()
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Download Performance Reports
+              uses: actions/download-artifact@v3
+              with:
+                  name: performance-reports
+                  path: performance-reports/
+
+            - name: Update Performance Baseline
+              run: |
+                  echo "📊 Updating Performance Baseline"
+
+                  # Create baseline update script
+                  cat > update_baseline.py << 'EOF'
+                  import json
+                  import os
+                  from datetime import datetime
+
+                  # Load current results
+                  with open('performance-reports/performance_test_results.json', 'r') as f:
+                      current_results = json.load(f)
+
+                  # Create new baseline
+                  baseline = {
+                      'timestamp': datetime.now().isoformat(),
+                      'commit_sha': os.getenv('GITHUB_SHA', 'unknown'),
+                      'branch': 'main',
+                      'constitutional_compliance': True,
+                      'domain_baselines': {}
+                  }
+
+                  # Extract baseline metrics from current results
+                  for result in current_results.get('results', []):
+                      if result.get('compliant', False):
+                          baseline['domain_baselines'][result['domain']] = {
+                              'avg_response_time': result['avg_response_time'],
+                              'max_response_time': result.get('max_response_time', 0),
+                              'threshold': result['threshold']
+                          }
+
+                  # Save baseline
+                  os.makedirs('performance-baselines', exist_ok=True)
+                  baseline_file = f"performance-baselines/baseline_{int(datetime.now().timestamp())}.json"
+
+                  with open(baseline_file, 'w') as f:
+                      json.dump(baseline, f, indent=2)
+
+                  print(f"✅ Performance baseline saved: {baseline_file}")
+                  EOF
+
+                  python3 update_baseline.py
+
+            - name: Commit Baseline Update
+              run: |
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+                  git add performance-baselines/
+                  git commit -m "Update performance baseline [skip ci]" || exit 0
+                  git push

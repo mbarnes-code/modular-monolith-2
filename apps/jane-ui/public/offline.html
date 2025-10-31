@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jane Platform - Offline</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .features {
+            text-align: left;
+            margin: 2rem 0;
+        }
+
+        .features h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .retry-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+        }
+
+        .retry-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .retry-btn:focus {
+            outline: 2px solid #ffd700;
+            outline-offset: 2px;
+        }
+
+        .status {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        /* ADHD-friendly animations */
+        @keyframes gentle-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .offline-indicator {
+            animation: gentle-pulse 2s infinite;
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Jane Platform</h1>
+        <p class="offline-indicator">You're currently offline</p>
+        
+        <div class="features">
+            <h3>Available Offline Features:</h3>
+            <ul>
+                <li>View cached dashboard and tool status</li>
+                <li>Access previously loaded executive function tools</li>
+                <li>Browse saved preferences and configurations</li>
+                <li>Review task management and productivity data</li>
+                <li>Access security tools with cached threat intelligence</li>
+                <li>Continue MTG analysis with stored deck data</li>
+            </ul>
+        </div>
+
+        <p>Your data will automatically sync when connection is restored.</p>
+        
+        <button class="retry-btn" onclick="retryConnection()">
+            🔄 Try to Reconnect
+        </button>
+
+        <div class="status" id="status">
+            <div>Status: Offline Mode</div>
+            <div>Last Sync: <span id="lastSync">Checking...</span></div>
+        </div>
+    </div>
+
+    <script>
+        // Service Worker messaging for executive function continuity
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data.type === 'SYNC_COMPLETE') {
+                    document.getElementById('status').innerHTML = `
+                        <div>Status: Back Online! 🎉</div>
+                        <div>Last Sync: ${new Date(event.data.timestamp).toLocaleTimeString()}</div>
+                    `;
+                    
+                    // Redirect to main app after successful sync
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                }
+            });
+        }
+
+        function retryConnection() {
+            const button = document.querySelector('.retry-btn');
+            button.disabled = true;
+            button.textContent = '🔄 Checking connection...';
+
+            // Test network connectivity
+            fetch('/', { method: 'HEAD', cache: 'no-cache' })
+                .then(() => {
+                    // Connection restored
+                    document.getElementById('status').innerHTML = `
+                        <div>Status: Connection Restored! ✅</div>
+                        <div>Redirecting to dashboard...</div>
+                    `;
+                    
+                    // Trigger background sync
+                    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.ready.then((registration) => {
+                            if (registration.sync) {
+                                registration.sync.register('jane-data-sync');
+                            }
+                        });
+                    }
+                    
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1500);
+                })
+                .catch(() => {
+                    // Still offline
+                    button.disabled = false;
+                    button.textContent = '🔄 Try to Reconnect';
+                    
+                    document.getElementById('status').innerHTML = `
+                        <div>Status: Still Offline 📡</div>
+                        <div>Will retry automatically...</div>
+                    `;
+                    
+                    // Auto-retry in 30 seconds (executive function support)
+                    setTimeout(retryConnection, 30000);
+                });
+        }
+
+        // Update last sync time
+        function updateLastSync() {
+            const lastSyncKey = 'jane-last-sync';
+            const lastSync = localStorage.getItem(lastSyncKey);
+            
+            if (lastSync) {
+                document.getElementById('lastSync').textContent = 
+                    new Date(parseInt(lastSync)).toLocaleString();
+            } else {
+                document.getElementById('lastSync').textContent = 'Never';
+            }
+        }
+
+        // Auto-check connection every 30 seconds (ADHD-friendly)
+        setInterval(() => {
+            fetch('/', { method: 'HEAD', cache: 'no-cache' })
+                .then(() => {
+                    // Silently redirect if connection is restored
+                    window.location.href = '/';
+                })
+                .catch(() => {
+                    // Still offline, continue showing offline page
+                });
+        }, 30000);
+
+        // Initialize
+        updateLastSync();
+        
+        // Check connection immediately on load
+        setTimeout(retryConnection, 1000);
+    </script>
+</body>
+</html>

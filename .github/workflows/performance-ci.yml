@@ -1,0 +1,79 @@
+name: Constitutional Performance Validation
+
+on:
+    push:
+        branches: [main, develop]
+    pull_request:
+        branches: [main]
+    schedule:
+        - cron: "0 2 * * *"
+
+jobs:
+    performance-test:
+        name: Performance Testing
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.12"
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+
+            - name: Install dependencies
+              run: |
+                  pip install httpx pytest pytest-asyncio
+                  npm ci
+
+            - name: Build applications
+              run: |
+                  cd apps/jane-ui && npm run build
+
+            - name: Start services
+              run: |
+                  echo "Starting jane-orchestrator service..."
+                  cd apps/jane-orchestrator
+                  python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 &
+                  sleep 30
+
+            - name: Run performance tests
+              run: |
+                  cd tests/performance
+                  python3 run_performance_tests.py
+
+            - name: Check for regressions
+              run: |
+                  cd tests/performance
+                  python3 -c "
+                  import json
+                  import sys
+
+                  try:
+                      with open('performance_test_results.json') as f:
+                          results = json.load(f)
+                      
+                      compliance_rate = results.get('summary', {}).get('compliance_rate', 0)
+                      
+                      if compliance_rate < 0.95:
+                          print(f'❌ Performance regression: {compliance_rate:.1%} compliance')
+                          sys.exit(1)
+                      else:
+                          print(f'✅ Performance validation passed: {compliance_rate:.1%} compliance')
+                  except Exception as e:
+                      print(f'Error checking results: {e}')
+                      sys.exit(1)
+                  "
+
+            - name: Upload results
+              uses: actions/upload-artifact@v3
+              if: always()
+              with:
+                  name: performance-results
+                  path: tests/performance/performance_test_results.json

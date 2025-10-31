@@ -11,6 +11,7 @@ export {
     useExecutiveFunctionSettings, useTaskTracking
 } from './ExecutiveFunctionProvider';
 export { FocusIndicator } from './FocusIndicator';
+export { MobileFocusIndicator } from './MobileFocusIndicator';
 export { TaskTracker } from './TaskTracker';
 export { WorkflowGuide } from './WorkflowGuide';
 
