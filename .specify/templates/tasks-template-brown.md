@@ -1,6 +1,8 @@
 # Tasks: [MIGRATION: FEATURE NAME]
 
-# Input (Spec): Design documents from /specs/[###-feature-name]/ Input (Legacy): Legacy codebase path [e.g., /features/MISP/] Prerequisites: plan.md (required), spec.md (required), [legacy_analysis_report.md]
+**Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
+**Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
+**Prerequisites**: plan.md (required), spec.md (required), [legacy_analysis_report.md]
 
 **Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first.
 
@@ -12,8 +14,9 @@
 - [Logic]: The exact legacy code being replaced. This is not optional.
 
 ## Path Conventions
-- **New Project**: [e.g., apps/PROJECT/src/]
+- **New Project**: [e.g., apps/PROJECT/src/] at repository root
 - **Legacy Project**: [e.g., features/MISP/app/Model/]
+- Paths shown below assume single project - adjust based on plan.md structure
 
 <!-- 
   ============================================================================
@@ -90,23 +93,18 @@ NOTE: Write Ground Truth tests against OLD code. Write Validation tests against 
 
 ### Phase 4a: Ground Truth & Validation (Write These First)
 
-    [ ] T017 [P] [F2] [Logic: Event.php::beforeFind] Ground Truth Test: Write a PHP test (test_access_control.php) that proves the original beforeFind database query filter:
-
+- [ ] T017 [P] [F2] [Logic: Event.php::beforeFind] Ground Truth Test: Write a PHP test (test_access_control.php) that proves the original beforeFind database query filter:
         Logs in as User B.
-
         Queries for User A's distribution=0 event.
-
         Asserts the query returns 0 results.
 
-    [ ] T018 [P] [F2] [Logic: Event.php::beforeFind] Validation Test: Translate the PHP test (T017) into a Python pytest (test_access_control.py) that calls the new API. This test must fail initially.
+- [ ] T018 [P] [F2] [Logic: Event.php::beforeFind] Validation Test: Translate the PHP test (T017) into a Python pytest (test_access_control.py) that calls the new API. This test must fail initially.
 
 ### Phase 4b: Porting & Integration
 
-    [ ] T019 [F2] [Logic: Event.php::beforeFind] Port Logic: Prompt the LLM to translate the database query filtering logic from beforeFind into a new Python function get_events_for_user(user) in src/services/event_service.py.
-
-    [ ] T020 [F2] [Logic: Event.php::beforeFind] Run Validation: Run the pytest (T018) against your new get_events_for_user logic. It MUST pass.
-
-    [ ] T021 [F2] Integrate Logic: Wire the proven get_events_for_user function into the main FastAPI /events endpoint.
+- [ ] T019 [F2] [Logic: Event.php::beforeFind] Port Logic: Prompt the LLM to translate the database query filtering logic from beforeFind into a new Python function get_events_for_user(user) in src/services/event_service.py.
+- [ ] T020 [F2] [Logic: Event.php::beforeFind] Run Validation: Run the pytest (T018) against your new get_events_for_user logic. It MUST pass.
+- [ ] T021 [F2] Integrate Logic: Wire the proven get_events_for_user function into the main FastAPI /events endpoint.
 
 **Checkpoint**: Access control is now provably migrated.
 
@@ -114,35 +112,23 @@ NOTE: Write Ground Truth tests against OLD code. Write Validation tests against 
 
 ## Phase N: Polish & Cross-Cutting Concerns
 
-    [ ] TXXX [P] Documentation updates in docs/
-
-    [ ] TXXX Code cleanup and refactoring of new Python code only.
-
-    [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
+- [ ] TXXX [P] Documentation updates in docs/
+- [ ] TXXX Code cleanup and refactoring of new Python code only.
+- [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
 
 ## Phase N+1: Asset Deletion (The Final Step)
 
 Purpose: To safely remove the legacy code after it has been fully replaced.
 
-    [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags for features/MISP/ have a corresponding passing validation test.
-
-    [ ] TXXX Run Full Regression Suite: Run all validation tests for all features simultaneously.
-
-    [ ] TXXX Delete Legacy Asset: After 100% validation, delete the features/MISP/ directory.
+- [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags for features/MISP/ have a corresponding passing validation test.
+- [ ] TXXX Run Full Regression Suite: Run all validation tests for all features simultaneously.
+- [ ] TXXX Delete Legacy Asset: After 100% validation, delete the features/MISP/ directory.
 
 ### Dependencies & Execution Order
 
-    Setup (Phase 1) + Foundational (Phase 2): Must be completed first.
-
-    Logic Migration (Phase 3+): Can proceed in parallel by feature.
-
-    Asset Deletion (Phase N+1): The very last step.
-
-Within Each Migration Feature (e.g., F1)
-
-    LOOP: T010 (Ground Truth Test) → T011 (Validation Test) → T012 (Port Logic) → T013 (Run Validation) → T014 (Integrate)
-
-    A task is not "done" when the code is written. It is "done" when the validation test passes.
+- **Setup (Phase 1) + Foundational (Phase 2)**: Must be completed first.
+- **Logic Migration (Phase 3+)**: Can proceed in parallel by feature.
+- **Asset Deletion (Phase N+1)**: The very last step.
 
 ---
 
@@ -186,3 +172,6 @@ With multiple developers:
 - Commit after each task or logical group
 - Stop at any checkpoint to validate story independently
 - Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
+- Within Each Migration Feature (e.g., F1)
+  - LOOP: T010 (Ground Truth Test) → T011 (Validation Test) → T012 (Port Logic) → T013 (Run Validation) → T014 (Integrate)
+  - A task is not "done" when the code is written. It is "done" when the validation test passes.
