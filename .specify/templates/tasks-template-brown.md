@@ -2,7 +2,7 @@
 
 **Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
 **Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
-**Prerequisites**: plan.md (required), spec.md (required), [legacy_analysis_report.md]
+**Prerequisites**: plan.md (required), spec.md (required), project_analysis_report.md, research.md, data-model.md, contracts/
 
 **Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first.
 
