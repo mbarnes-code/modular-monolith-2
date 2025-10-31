@@ -5,6 +5,64 @@ from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
+# Import MISP-compatible middleware and plugins
+from .middleware import (AccessLogMiddleware, AuthMiddleware,
+                         CompressionMiddleware)
+from .middleware import CorsMiddleware as MispCorsMiddleware
+from .middleware import RateLimitMiddleware, SecurityMiddleware
+# Import MISP API routers
+from .misp.events import router as misp_events_router
+from .plugins import PluginManager
+
+# Import additional MISP routers with fallbacks
+try:
+    from .misp.attributes import router as misp_attributes_router
+except ImportError:
+    from fastapi import APIRouter
+    misp_attributes_router = APIRouter(
+        prefix="/attributes", tags=["misp-attributes"]
+    )
+
+try:
+    from .misp.organizations import router as misp_organizations_router
+except ImportError:
+    from fastapi import APIRouter
+    misp_organizations_router = APIRouter(
+        prefix="/organisations", tags=["misp-organizations"]
+    )
+
+try:
+    from .misp.users import router as misp_users_router
+except ImportError:
+    from fastapi import APIRouter
+    misp_users_router = APIRouter(
+        prefix="/users", tags=["misp-users"]
+    )
+
+try:
+    from .misp.tags import router as misp_tags_router
+except ImportError:
+    from fastapi import APIRouter
+    misp_tags_router = APIRouter(
+        prefix="/tags", tags=["misp-tags"]
+    )
+
+try:
+    from .misp.auth import router as misp_auth_router
+except ImportError:
+    from fastapi import APIRouter
+    misp_auth_router = APIRouter(
+        prefix="/auth", tags=["misp-auth"]
+    )
+
+try:
+    from .misp.external_apis import router as misp_external_apis_router
+except ImportError:
+    from fastapi import APIRouter
+    misp_external_apis_router = APIRouter(
+        prefix="/external", tags=["misp-external-apis"]
+    )
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -18,6 +76,57 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Configure MISP-compatible middleware stack
+# Order matters - middleware is applied in reverse order of addition
+
+# 1. Access logging (outermost)
+app.add_middleware(AccessLogMiddleware)
+
+# 2. CORS handling
+app.add_middleware(
+    MispCorsMiddleware,
+    allow_origins=["*"],  # Configure appropriately for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+# 3. Security middleware
+app.add_middleware(
+    SecurityMiddleware,
+    csrf_check=True,
+    force_https=False,  # Configure for production
+    disable_browser_cache=True,
+    check_sec_fetch_site=True
+)
+
+# 4. Compression middleware
+app.add_middleware(CompressionMiddleware)
+
+# 5. Rate limiting middleware
+app.add_middleware(
+    RateLimitMiddleware,
+    default_window_seconds=900
+)
+
+# 6. Authentication middleware (innermost)
+app.add_middleware(
+    AuthMiddleware,
+    exempt_paths=["/", "/health", "/ready", "/docs", "/openapi.json"]
+)
+
+# Initialize plugin manager
+plugin_manager = PluginManager(app)
+
+# Include MISP API routes
+app.include_router(misp_auth_router, prefix="/api/misp")
+app.include_router(misp_events_router, prefix="/api/misp")
+app.include_router(misp_attributes_router, prefix="/api/misp")
+app.include_router(misp_organizations_router, prefix="/api/misp")
+app.include_router(misp_users_router, prefix="/api/misp")
+app.include_router(misp_tags_router, prefix="/api/misp")
+app.include_router(misp_external_apis_router, prefix="/api/misp")
+
 
 class HealthResponse(BaseModel):
     """Health check response model."""
@@ -28,7 +137,8 @@ class HealthResponse(BaseModel):
 class ReadinessResponse(BaseModel):
     """Readiness check response model."""
     status: str = Field(..., description="Readiness status")
-    dependencies: dict[str, str] = Field(..., description="Dependency statuses")
+    dependencies: dict[str,
+                       str] = Field(..., description="Dependency statuses")
 
 
 @app.get("/", response_model=dict[str, Any])
@@ -110,9 +220,13 @@ async def global_exception_handler(request, exc):
 async def startup_event():
     """Initialize resources on startup."""
     logger.info("Jane Orchestrator Service starting up...")
+    # Initialize plugin system
+    await plugin_manager.initialize()
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Clean up resources on shutdown."""
     logger.info("Jane Orchestrator Service shutting down...")
+    # Cleanup plugin system
+    await plugin_manager.shutdown()

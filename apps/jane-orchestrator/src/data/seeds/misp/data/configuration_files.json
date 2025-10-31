@@ -1,0 +1,77 @@
+{
+  "files": {
+    "config.default.php": "Main MISP configuration template",
+    "database.default.php": "Database connection configuration",
+    "bootstrap.default.php": "Application bootstrap and initialization", 
+    "core.default.php": "CakePHP core configuration",
+    "email.php": "Email configuration settings",
+    "routes.php": "URL routing configuration"
+  },
+  "critical_settings": {
+    "baseurl": {
+      "description": "MISP instance URL",
+      "migration_target": "JANE_ORCHESTRATOR.base_url",
+      "required": true
+    },
+    "org": {
+      "description": "Default organization name", 
+      "migration_target": "JANE_ORCHESTRATOR.default_org",
+      "required": true
+    },
+    "email": {
+      "description": "Contact email address",
+      "migration_target": "JANE_ORCHESTRATOR.contact_email",
+      "required": true
+    },
+    "contact": {
+      "description": "Contact information",
+      "migration_target": "JANE_ORCHESTRATOR.contact_info", 
+      "required": true
+    },
+    "background_jobs": {
+      "description": "Enable background processing",
+      "migration_target": "JANE_ORCHESTRATOR.enable_workers",
+      "required": true
+    },
+    "default_event_distribution": {
+      "description": "Default sharing level",
+      "migration_target": "JANE_ORCHESTRATOR.default_sharing",
+      "required": false
+    },
+    "salt": {
+      "description": "Security salt for hashing",
+      "migration_target": "JANE_ORCHESTRATOR.security_salt",
+      "required": true,
+      "security_sensitive": true
+    },
+    "cipherSeed": {
+      "description": "Encryption seed",
+      "migration_target": "JANE_ORCHESTRATOR.cipher_seed",
+      "required": true,
+      "security_sensitive": true
+    }
+  },
+  "security_requirements": {
+    "https_required": true,
+    "ssl_certificates": true,
+    "secure_auth": true,
+    "password_policies": true,
+    "encryption_at_rest": true,
+    "secure_session_management": true
+  },
+  "migration_mapping": {
+    "CakePHP_to_FastAPI": {
+      "config_structure": "app/Config/ -> apps/jane-orchestrator/src/config/",
+      "database_config": "database.php -> database_config.py",
+      "security_config": "core.php -> security_config.py",
+      "application_config": "config.php -> application_config.py"
+    },
+    "environment_variables": {
+      "MISP_BASEURL": "JANE_BASE_URL",
+      "MISP_ORG": "JANE_DEFAULT_ORG", 
+      "MISP_EMAIL": "JANE_CONTACT_EMAIL",
+      "MISP_SALT": "JANE_SECURITY_SALT",
+      "MISP_CIPHER": "JANE_CIPHER_SEED"
+    }
+  }
+}

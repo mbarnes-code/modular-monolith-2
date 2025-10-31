@@ -299,31 +299,31 @@
 **Goal**: Migrate 13 security tools preserving complex algorithms and data schemas per business logic analysis with layer-based service boundaries
 
 ### MISP Asset Relocation
-- [ ] T1511 Review `docs/modular-analysis-repo-main/reports/misp-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical threat intelligence correlation algorithms (8,733 lines in Event.php) that MUST be preserved without modification
-- [ ] T1521a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
-- [ ] T1531b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
-- [ ] T1541c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
-- [ ] T1551d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
-- [ ] T1561e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
-- [ ] T1571f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
-- [ ] T1581g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
-- [ ] T1591h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
-- [ ] T1601i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
-- [ ] T1611j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
-- [ ] T1621k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
-- [ ] T1631l Document preservation strategy based on analysis findings and create migration plan
-- [ ] T1642 Extract data models from `features/MISP/` per Section 2 (Data Architecture) of analysis, migrating CakePHP/MySQL schemas to unified PostgreSQL while preserving threat intelligence relationships and performance patterns
-- [ ] T1652a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
-- [ ] T1662b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
-- [ ] T1672c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
-- [ ] T1682d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
-- [ ] T1692e Update data model imports and references throughout codebase
-- [ ] T1703 Migrate API architecture from `features/MISP/` per Section 3 (API Architecture) converting CakePHP endpoints to FastAPI while preserving authentication patterns and request/response schemas
-- [ ] T1713a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
-- [ ] T1723b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
-- [ ] T1733c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
-- [ ] T1743d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
-- [ ] T1753e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
+- [X] T1511 Review `docs/modular-analysis-repo-main/reports/misp-analysis.md` Section 4 (Business Logic) and Section 11 (Domain Knowledge) to identify critical threat intelligence correlation algorithms (8,733 lines in Event.php) that MUST be preserved without modification
+- [X] T1521a Identify Category A (Complex Algorithms >5,000 lines) from Section 4.1 requiring microservice preservation 
+- [X] T1531b Identify Category B (Domain Logic 1,000-5,000 lines) from Section 4.2-4.3 for modular monolith integration
+- [X] T1541c Identify Category C (Utilities <1,000 lines) from remaining business logic for shared library integration
+- [X] T1551d **Configuration Assets**: Review Section 6/10 for config files, environment variables, initialization scripts, and bootstrapping code that must be preserved
+- [X] T1561e **Multi-Language Components**: Identify secondary language components (Python libs, Node.js tools, shell scripts) requiring separate migration paths
+- [x] T1571f **Infrastructure Dependencies**: Catalog external service dependencies, database engines, message queues, and system-level requirements
+- [x] T1581g **Plugin & Extension Systems**: Identify dynamic loading mechanisms, plugin registries, operation catalogs, and extensibility frameworks requiring preservation
+- [x] T1591h **Multi-Build Architectures**: Document specialized build targets (web, mobile, desktop, server), dual-mode exports, and platform-specific entry points
+- [X] T1601i **Performance-Critical Systems**: Catalog worker threads, background processing, caching layers, and performance-optimized components requiring specialized migration
+- [x] T1611j **Development Toolchains**: Identify code generators, scaffolding tools, custom build workflows, and developer experience utilities
+- [x] T1621k **Monorepo Architecture**: Document workspace configurations, package interdependencies, build orchestration systems (Turbo, Nx, Lerna), and shared dependency management requiring coordinated migration
+- [x] T1631l Document preservation strategy based on analysis findings and create migration plan
+- [x] T1642 Extract data models from `features/MISP/` per Section 2 (Data Architecture) of analysis, migrating CakePHP/MySQL schemas to unified PostgreSQL while preserving threat intelligence relationships and performance patterns
+- [x] T1652a Migrate critical data models from Section 2.1 maintaining field types, business rules, and relationships
+- [x] T1662b Preserve database performance patterns from Section 2.3 (indexes, query optimizations, caching strategies)
+- [X] T1672c **Schema Artifacts**: Migrate database initialization scripts, stored procedures, triggers, and custom data types
+- [x] T1682d **Data Seeding**: Preserve initial data, reference data, and configuration data migration scripts
+- [x] T1692e Update data model imports and references throughout codebase
+- [x] T1703 Migrate API architecture from `features/MISP/` per Section 3 (API Architecture) converting CakePHP endpoints to FastAPI while preserving authentication patterns and request/response schemas
+- [X] T1713a Convert API endpoints from Section 3.2 to FastAPI maintaining identical request/response behavior
+- [x] T1723b Integrate authentication/authorization patterns from Section 3.1 with unified JWT system
+- [x] T1733c Preserve external API integrations from Section 5.1 maintaining error handling and fallback behavior
+- [X] T1743d **Middleware & Plugins**: Migrate custom middleware, request interceptors, and API extensions
+- [X] T1753e **Plugin Registration Systems**: Preserve operation registries, dynamic endpoint discovery, and extensible API architectures
 - [ ] T1763f **Multi-Target API Compatibility**: Maintain dual-mode APIs (web/node), platform-specific endpoints, and cross-environment compatibility
 - [ ] T1773g **API Documentation**: Preserve OpenAPI/Swagger specs, API versioning, and developer documentation
 - [ ] T1784 Migrate frontend components from `features/MISP/` per Section 6 (Frontend Architecture) to React/Next.js unified interface, preserving component architecture and critical user interactions

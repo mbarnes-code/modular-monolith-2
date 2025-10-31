@@ -1,0 +1,61 @@
+{
+  "extraction_info": {
+    "version": "MISP 2.5.22",
+    "extraction_date": "2024-10-31",
+    "purpose": "Mental Prosthetic Platform Integration",
+    "task": "T1682d - Data Seeding: Preserve initial data, reference data, and configuration data migration scripts"
+  },
+  "data_files": {
+    "admin_settings.json": {
+      "description": "Core MISP configuration settings",
+      "record_count": 33,
+      "migration_priority": "HIGH",
+      "validation": "admin_settings_count > 30"
+    },
+    "sql_initial_data.json": {
+      "description": "Database initialization structure",
+      "tables_preserved": 13,
+      "migration_priority": "HIGH", 
+      "validation": "critical_tables_preserved"
+    },
+    "configuration_files.json": {
+      "description": "Configuration file mappings",
+      "files_mapped": 6,
+      "migration_priority": "HIGH",
+      "validation": "configuration_mapping_complete"
+    },
+    "reference_data.json": {
+      "description": "Default roles, tags, and organization",
+      "roles_count": 3,
+      "tags_count": 4,
+      "migration_priority": "HIGH",
+      "validation": "reference_data_complete"
+    }
+  },
+  "migration_notes": {
+    "database_migration": "Preserve all admin_settings and reference data with exact field mapping",
+    "configuration_migration": "Map MISP config.php settings to unified platform configuration system",
+    "permission_migration": "Integrate MISP role-based permissions with unified auth system",
+    "data_integrity": "Maintain UUIDs, relationships, and foreign key constraints"
+  },
+  "validation_requirements": {
+    "admin_settings_count": "> 30",
+    "default_roles_count": "= 3",
+    "default_tags_count": "= 4", 
+    "configuration_preservation": "100%",
+    "data_integrity_checks": "PASS",
+    "migration_completeness": "100%"
+  },
+  "next_steps": {
+    "T1692e": "Update data model imports and references throughout codebase",
+    "T1703": "Migrate API architecture from features/MISP/ preserving authentication patterns",
+    "T1784": "Migrate frontend components to React/Next.js unified interface"
+  },
+  "preservation_status": {
+    "initial_data": "PRESERVED",
+    "reference_data": "PRESERVED", 
+    "configuration_data": "PRESERVED",
+    "migration_scripts": "CREATED",
+    "validation_framework": "IMPLEMENTED"
+  }
+}
