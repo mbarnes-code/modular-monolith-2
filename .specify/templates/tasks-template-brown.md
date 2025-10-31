@@ -1,3 +1,7 @@
+---
+description: "Task list template for asset relocation and implementation"
+---
+
 # Tasks: [MIGRATION: FEATURE NAME]
 
 **Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
