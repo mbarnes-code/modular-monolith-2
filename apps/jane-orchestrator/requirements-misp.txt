@@ -1,0 +1,105 @@
+# MISP Integration Dependencies
+# Generated for T1915d - Package Dependencies Migration
+# 
+# This file contains all dependencies required for MISP integration
+# within the Jane orchestrator unified monolith stack.
+# Version ranges are carefully selected to avoid conflicts.
+
+# ===== CORE MISP DEPENDENCIES =====
+
+# PyMISP - Primary MISP Python library
+pymisp>=2.5.17,<3.0.0
+
+# HTTP client libraries with retry support
+requests>=2.31.0,<3.0.0
+urllib3>=2.0.0,<3.0.0
+aiohttp>=3.8.0,<4.0.0
+
+# File type detection
+python-magic>=0.4.27,<1.0.0
+
+# ZeroMQ for message queuing
+pyzmq>=25.1.1,<26.0.0
+
+# ===== STIX/TAXII INTEGRATION =====
+
+# STIX 2.x support for threat intelligence exchange
+stix2>=3.0.0,<4.0.0
+
+# Legacy STIX 1.x support (if needed)
+cybox>=2.1.0.21,<3.0.0
+maec>=4.1.0.17,<5.0.0
+mixbox>=1.0.5,<2.0.0
+
+# ===== MALWARE ANALYSIS =====
+
+# YARA rule parsing
+plyara>=2.1.1,<3.0.0
+
+# Deep hashing for fuzzy matching
+pydeep2>=0.5.1,<1.0.0
+
+# Binary analysis
+lief>=0.13.1,<1.0.0
+
+# ===== CONFIGURATION AND VALIDATION =====
+
+# JSON schema validation
+jsonschema>=4.19.1,<5.0.0
+
+# Enhanced settings management
+pydantic-settings>=2.0.0,<3.0.0
+
+# YAML configuration support
+pyyaml>=6.0.0,<7.0.0
+
+# ===== CRYPTOGRAPHIC DEPENDENCIES =====
+
+# Cryptography support for secure operations
+cryptography>=41.0.0,<42.0.0
+
+# Additional hash functions
+hashlib-compat>=1.0.0,<2.0.0
+
+# ===== DEVELOPMENT AND TESTING =====
+
+# Testing framework enhancements
+pytest-asyncio>=0.21.0,<1.0.0
+pytest-mock>=3.11.0,<4.0.0
+
+# Performance monitoring
+prometheus-client>=0.17.0,<1.0.0
+
+# Memory profiling
+memory-profiler>=0.60.0,<1.0.0
+
+# ===== VERSION CONFLICT RESOLUTION =====
+
+# Ensure compatible versions across dependencies
+# These versions are selected to avoid conflicts with:
+# - FastAPI ecosystem
+# - SQLAlchemy 2.x
+# - Pydantic 2.x
+# - Redis client
+# - Other Jane orchestrator dependencies
+
+# Common transitive dependencies with pinned versions
+certifi>=2023.7.22
+charset-normalizer>=3.2.0,<4.0.0
+idna>=3.4,<4.0.0
+python-dateutil>=2.8.2,<3.0.0
+six>=1.16.0,<2.0.0
+
+# ===== OPTIONAL DEPENDENCIES =====
+
+# Geographic IP lookups (optional)
+geoip2>=4.7.0,<5.0.0
+
+# Advanced text processing (optional)
+textdistance>=4.6.0,<5.0.0
+
+# Machine learning for correlation (optional)
+scikit-learn>=1.3.0,<2.0.0
+
+# Graph analysis for correlation networks (optional)
+networkx>=3.1.0,<4.0.0

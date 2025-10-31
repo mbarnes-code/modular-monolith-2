@@ -1,0 +1,233 @@
+{
+  "correlation_scenarios": [
+    {
+      "name": "Domain Correlation Test",
+      "events": [
+        {
+          "info": "Phishing Campaign Alpha",
+          "threat_level_id": 2,
+          "attributes": [
+            {
+              "category": "Network activity",
+              "type": "domain",
+              "value": "phishing-test.malicious.com"
+            },
+            {
+              "category": "Network activity", 
+              "type": "ip-src",
+              "value": "192.168.100.10"
+            }
+          ]
+        },
+        {
+          "info": "Phishing Campaign Beta",
+          "threat_level_id": 2,
+          "attributes": [
+            {
+              "category": "Network activity",
+              "type": "domain", 
+              "value": "phishing-test.malicious.com"
+            },
+            {
+              "category": "Payload delivery",
+              "type": "email-src",
+              "value": "attacker@phishing-test.malicious.com"
+            }
+          ]
+        }
+      ],
+      "expected_correlations": [
+        {
+          "attribute_type": "domain",
+          "correlation_value": "phishing-test.malicious.com",
+          "confidence_score": 1.0
+        }
+      ]
+    },
+    {
+      "name": "IP Address Correlation Test",
+      "events": [
+        {
+          "info": "Malware C2 Infrastructure",
+          "threat_level_id": 1,
+          "attributes": [
+            {
+              "category": "Network activity",
+              "type": "ip-src",
+              "value": "203.0.113.100"
+            },
+            {
+              "category": "Network activity",
+              "type": "domain",
+              "value": "c2-server.malicious.net"
+            }
+          ]
+        },
+        {
+          "info": "Data Exfiltration Activity",
+          "threat_level_id": 1,
+          "attributes": [
+            {
+              "category": "Network activity",
+              "type": "ip-dst",
+              "value": "203.0.113.100"
+            },
+            {
+              "category": "Network activity",
+              "type": "url",
+              "value": "https://203.0.113.100/exfil"
+            }
+          ]
+        }
+      ],
+      "expected_correlations": [
+        {
+          "attribute_type": "ip",
+          "correlation_value": "203.0.113.100",
+          "confidence_score": 0.9
+        }
+      ]
+    },
+    {
+      "name": "Hash Correlation Test",
+      "events": [
+        {
+          "info": "Malware Sample Analysis",
+          "threat_level_id": 2,
+          "attributes": [
+            {
+              "category": "Payload delivery",
+              "type": "md5",
+              "value": "5d41402abc4b2a76b9719d911017c592"
+            },
+            {
+              "category": "Payload delivery",
+              "type": "sha256", 
+              "value": "aec070645fe53ee3b3763059376134f058cc337247c978add178b6ccdfb0019f"
+            },
+            {
+              "category": "Artifacts dropped",
+              "type": "filename",
+              "value": "hello_malware.exe"
+            }
+          ]
+        },
+        {
+          "info": "IOC Feed Update",
+          "threat_level_id": 3,
+          "attributes": [
+            {
+              "category": "Payload delivery",
+              "type": "md5",
+              "value": "5d41402abc4b2a76b9719d911017c592"
+            },
+            {
+              "category": "Attribution",
+              "type": "threat-actor",
+              "value": "Test-Malware-Group"
+            }
+          ]
+        }
+      ],
+      "expected_correlations": [
+        {
+          "attribute_type": "md5",
+          "correlation_value": "5d41402abc4b2a76b9719d911017c592",
+          "confidence_score": 1.0
+        }
+      ]
+    }
+  ],
+  "performance_test_data": {
+    "bulk_events": {
+      "count": 100,
+      "attributes_per_event": 5,
+      "event_template": {
+        "info": "Performance Test Event {index}",
+        "threat_level_id": 3,
+        "analysis": 0,
+        "distribution": 1
+      },
+      "attribute_templates": [
+        {
+          "category": "Network activity",
+          "type": "domain",
+          "value": "perf-test-{index}.example.com"
+        },
+        {
+          "category": "Network activity",
+          "type": "ip-src", 
+          "value": "10.0.{subnet}.{host}"
+        },
+        {
+          "category": "Payload delivery",
+          "type": "md5",
+          "value": "generated_md5_hash_{index}"
+        },
+        {
+          "category": "Artifacts dropped",
+          "type": "filename",
+          "value": "test_file_{index}.exe"
+        },
+        {
+          "category": "External analysis",
+          "type": "comment",
+          "value": "Performance test comment for event {index}"
+        }
+      ]
+    },
+    "concurrent_operations": {
+      "threads": 10,
+      "operations_per_thread": 20,
+      "max_execution_time": 1.0
+    }
+  },
+  "api_compatibility_data": {
+    "misp_standard_formats": {
+      "event_format": {
+        "Event": {
+          "info": "API Compatibility Test",
+          "threat_level_id": 2,
+          "analysis": 1,
+          "distribution": 3,
+          "published": false,
+          "Attribute": [
+            {
+              "category": "Network activity",
+              "type": "domain",
+              "value": "api-compat.test.com",
+              "to_ids": true,
+              "distribution": 3
+            }
+          ],
+          "Tag": [
+            {"name": "api-test"},
+            {"name": "compatibility"}
+          ]
+        }
+      },
+      "attribute_format": {
+        "Attribute": {
+          "category": "Network activity",
+          "type": "ip-src",
+          "value": "192.168.1.100",
+          "to_ids": true,
+          "distribution": 2,
+          "comment": "API compatibility test attribute"
+        }
+      }
+    },
+    "search_parameters": {
+      "event_search": {
+        "info": "API",
+        "threat_level_id": 2,
+        "published": true
+      },
+      "attribute_search": {
+        "type": "domain",
+        "category": "Network activity",
+        "to_ids": true
+      }
+    }
+  }
+}
