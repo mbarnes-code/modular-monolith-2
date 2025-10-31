@@ -21,7 +21,7 @@
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "eslint": "9.38.0",
-    "nx": "21.6.5",
+    "nx": "22.0.2",
     "typescript": "5.9.3"
   },
   "dependencies": {
