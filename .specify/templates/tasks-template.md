@@ -1,26 +1,47 @@
 ---
-description: "Task list template for feature implementation"
+description: "Task list template for asset relocation and implementation"
 ---
 
-# Tasks: [FEATURE NAME]
+# Tasks: [MIGRATION: FEATURE NAME]
 
-**Input**: Design documents from `/specs/[###-feature-name]/`
-**Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
+**Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
+**Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
+**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY)**, research.md, data-model.md, contracts/
 
-**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
+**Project Analysis Integration**: This task template MUST reference specific sections from project_analysis_report.md:
+- Section 2 (Data Architecture) - for data model migration tasks
+- Section 3 (API Architecture) - for endpoint and authentication migration
+- Section 4 (Business Logic) - for critical algorithm preservation
+- Section 5 (External Integrations) - for third-party service continuity
+- Section 8 (Performance Characteristics) - for baseline preservation
+- Section 11 (Domain Knowledge) - for business rule preservation
 
-**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
+**Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first to establish functional baselines.
 
-## Format: `[ID] [P?] [Story] Description`
-- **[P]**: Can run in parallel (different files, no dependencies)
-- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
-- Include exact file paths in descriptions
+**Organization**: Tasks are grouped by Legacy Feature AND cross-referenced with Project Analysis sections to ensure 1:1 functional parity and comprehensive coverage.
+
+## Format: [ID] [P?] [Feature] [Analysis: Section.#] [Logic: <legacy_file::function>] Description
+- [P]: Can run in parallel
+- [Feature]: Which legacy feature this task belongs to (e.g., F1: Publishing)
+- [Analysis]: Reference to project_analysis_report.md section (e.g., Section.2.1, Section.4.1)
+- [Logic]: The exact legacy code being replaced. This is not optional.
 
 ## Path Conventions
-- **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
+- **New Project**: [e.g., apps/PROJECT/src/] at repository root
+- **Legacy Project**: [e.g., features/MISP/app/Model/]
+- **Analysis Report**: project_analysis_report.md sections for validation
 - Paths shown below assume single project - adjust based on plan.md structure
+
+## Migration Methodology: Brownfield Asset Relocation
+
+**Core Principle**: Preserve 100% functional parity while modernizing architecture.
+
+**Validation Strategy**: 
+1. Ground Truth Tests → Establish current behavior baseline
+2. Analysis Cross-Reference → Validate against documented behavior  
+3. Incremental Migration → Port one feature at a time with validation
+4. Integration Testing → Ensure new implementation matches baseline
+5. Performance Validation → Maintain or improve baseline metrics
 
 <!-- 
   ============================================================================
@@ -41,211 +62,265 @@ description: "Task list template for feature implementation"
   ============================================================================
 -->
 
-## Phase 1: Setup (Shared Infrastructure)
+## Phase 1: Analysis Validation & Legacy Environment Setup
 
-**Purpose**: Project initialization and basic structure
+**Purpose**: Validate project analysis findings and establish baseline testing environment.
 
-- [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
-
----
-
-## Phase 2: Foundational (Blocking Prerequisites)
-
-**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
-
-**⚠️ CRITICAL**: No user story work can begin until this phase is complete
-
-Examples of foundational tasks (adjust based on your project):
-
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
-
-**Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+- [ ] T001 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections are filled
+- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate current tech stack inventory against actual codebase
+- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing tests and document current coverage metrics
+- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current performance characteristics
+- [ ] T005 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM) per Section.10.1
+- [ ] T006 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function
+- [ ] T007 [P] Create new project structure per implementation plan
+- [ ] T008 [P] Initialize target framework dependencies (per analysis Section.1.2)
 
 ---
 
-## Phase 3: User Story 1 - [Title] (Priority: P1) 🎯 MVP
+## Phase 2: Data Architecture Migration
 
-**Goal**: [Brief description of what this story delivers]
+**Purpose**: Migrate data models and database schema based on analysis Section 2.
 
-**Independent Test**: [How to verify this story works on its own]
+- [ ] T009 [Analysis: Section.2.1] Inventory data models: Create comprehensive list from analysis findings
+- [ ] T010 [Analysis: Section.2.1] Database schema migration: Implement new schema preserving all relationships from Section.2.2
+- [ ] T011 [P] [Analysis: Section.2.1] Port data models: Create new framework models matching legacy field mappings exactly
+- [ ] T012 [Analysis: Section.2.3] Database performance patterns: Implement indexes and optimizations per analysis
+- [ ] T013 [Ground Truth] Data validation tests: Write tests confirming data integrity and constraints
+- [ ] T014 [Analysis: Section.2.1] Data migration scripts: Create scripts for existing data preservation
 
-### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
+**Checkpoint**: Data layer migrated with full functional parity.
 
-**NOTE: Write these tests FIRST, ensure they FAIL before implementation**
+## Phase 3: Foundational Infrastructure
 
-- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+**Purpose**: Core application infrastructure based on analysis findings.
 
-### Implementation for User Story 1
+- [ ] T015 [Analysis: Section.3.1] Authentication/authorization framework: Implement exact auth patterns from Section.3.1
+- [ ] T016 [Analysis: Section.9.1] Security measures: Implement all security patterns identified in analysis
+- [ ] T017 [P] [Analysis: Section.3.2] API routing framework: Setup endpoint structure (empty routes initially)
+- [ ] T018 [Analysis: Section.8.1] Performance monitoring: Implement baseline monitoring per Section.8.1
+- [ ] T019 [Analysis: Section.7.1] Testing framework: Setup testing infrastructure matching current patterns
+- [ ] T020 Configure error handling and logging infrastructure per Section.10.2
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+**Checkpoint**: Foundation ready with security and monitoring. NO business logic exists.
 
-**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
+## Phase 4: Critical Business Logic Migration (Feature 1) 🎯 MVP
+
+**Migration Goal**: [Brief description based on Analysis Section.4.1 findings]
+
+**Analysis Reference**: Section.4.1 - Critical Algorithms, Section.11.1 - Domain Knowledge
+
+**Independent Test**: [Test case from Analysis Section.4.1 or domain requirements]
+
+### Phase 4a: Analysis Cross-Reference & Ground Truth
+
+- [ ] T021 [Analysis: Section.4.1] Algorithm analysis: Review critical algorithm documentation for this feature
+- [ ] T022 [Analysis: Section.11.1] Domain knowledge review: Document business rules and domain concepts
+- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Ground Truth Test: Write test proving original behavior matches analysis documentation
+- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation Test: Create target framework test (initially failing)
+- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document current performance metrics for this feature
+
+### Phase 4b: Incremental Migration & Validation
+
+- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Algorithm preservation: Port exact business logic maintaining complexity characteristics
+- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation execution: Run new test against ported logic - MUST pass
+- [ ] T028 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis
+- [ ] T029 [F1] [Analysis: Section.3.2] API integration: Wire proven logic into endpoint structure
+- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics
+- [ ] T031 [F1] Integration test: End-to-end validation of feature functionality
+
+**Checkpoint**: Critical feature migrated with documented functional and performance parity.
+
+## Phase 5: Security & Authorization Migration (Feature 2)
+
+**Migration Goal**: [Based on Analysis Section.3.1 and Section.9.1 findings]
+
+**Analysis Reference**: Section.3.1 - Authentication/Authorization, Section.9.1 - Security Measures
+
+**Independent Test**: [Test case from Analysis Section.3.1 authorization patterns]
+
+### Phase 5a: Security Analysis Integration
+
+- [ ] T032 [Analysis: Section.3.1] Authorization pattern analysis: Document current access control implementation
+- [ ] T033 [Analysis: Section.9.1] Security measures inventory: Review all security patterns to preserve
+- [ ] T034 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Ground Truth Test: Prove current authorization behavior
+- [ ] T035 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Validation Test: Create target authorization test
+
+### Phase 5b: Authorization Migration
+
+- [ ] T036 [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Authorization logic port: Implement exact access control patterns
+- [ ] T037 [F2] [Analysis: Section.9.1] Security validation: Ensure all security measures maintained
+- [ ] T038 [F2] [Analysis: Section.3.1] Authorization integration: Wire into API framework
+- [ ] T039 [F2] Security testing: Validate all authorization scenarios
+
+**Checkpoint**: Authorization and security patterns migrated with full parity.
+
+## Phase 6: External Integrations Migration
+
+**Migration Goal**: Preserve all third-party service integrations per Analysis Section.5
+
+**Analysis Reference**: Section.5.1 - Third-party APIs, Section.5.2 - Auth Providers
+
+### Phase 6a: Integration Analysis & Testing
+
+- [ ] T040 [Analysis: Section.5.1] External API inventory: Document all third-party integrations
+- [ ] T041 [Analysis: Section.5.1] Integration testing: Validate current external service connections
+- [ ] T042 [P] [Analysis: Section.5.1] API client migration: Port all external API clients
+- [ ] T043 [Analysis: Section.5.1] Error handling preservation: Maintain all fallback behaviors
+
+### Phase 6b: Integration Validation
+
+- [ ] T044 [Analysis: Section.5.1] Service connectivity: Test all external integrations
+- [ ] T045 [Analysis: Section.5.2] Authentication provider testing: Validate OAuth/SSO flows
+- [ ] T046 [Analysis: Section.5.1] Caching strategy: Implement analysis-documented caching patterns
+
+## Phase 7: Performance & Quality Assurance
+
+**Migration Goal**: Meet or exceed baseline performance per Analysis Section.8
+
+**Analysis Reference**: Section.8.1 - Performance Baselines, Section.7.1 - Test Coverage
+
+### Phase 7a: Performance Validation
+
+- [ ] T047 [Analysis: Section.8.1] Performance benchmarking: Measure new implementation against baselines
+- [ ] T048 [Analysis: Section.8.2] Bottleneck analysis: Ensure no performance regressions
+- [ ] T049 [Analysis: Section.8.3] Scalability testing: Validate scaling characteristics maintained
+
+### Phase 7b: Quality Assurance
+
+- [ ] T050 [Analysis: Section.7.1] Test coverage parity: Achieve analysis-documented coverage levels
+- [ ] T051 [Analysis: Section.7.2] Critical test preservation: Migrate all critical test scenarios
+- [ ] T052 [P] [Analysis: Section.11.2] Edge case validation: Test all documented quirks and workarounds
+
+## Phase 8: Domain Knowledge Preservation
+
+**Migration Goal**: Capture all tribal knowledge per Analysis Section.11
+
+**Analysis Reference**: Section.11.1 - Business Domain, Section.11.2 - Undocumented Knowledge
+
+- [ ] T053 [Analysis: Section.11.1] Domain concept validation: Ensure all business rules preserved
+- [ ] T054 [Analysis: Section.11.2] Quirk implementation: Implement all documented workarounds
+- [ ] T055 [Analysis: Section.11.3] User behavior patterns: Validate user workflow preservation
+- [ ] T056 [P] Documentation updates reflecting analysis findings
+
+## Phase N: Cross-Cutting Concerns & Polish
+
+- [ ] TXXX [Analysis: Section.10.2] Logging and monitoring: Implement analysis-documented patterns
+- [ ] TXXX [Analysis: Section.9.2] Security hardening: Final security validation
+- [ ] TXXX [P] Code cleanup and refactoring (target framework only)
+- [ ] TXXX [Analysis: Section.13.1] Documentation updates incorporating analysis findings
+
+## Phase N+1: Migration Validation & Asset Retirement
+
+**Purpose**: Comprehensive validation before legacy asset removal.
+
+### Phase N+1a: Complete Migration Validation
+
+- [ ] TXXX [Analysis: All Sections] Full analysis cross-reference: Verify all analysis findings addressed
+- [ ] TXXX [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically
+- [ ] TXXX [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds baselines
+- [ ] TXXX [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met
+- [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags have corresponding passing validation tests
+- [ ] TXXX Run Full Regression Suite: Execute complete test suite including ground truth comparisons
+
+### Phase N+1b: Safe Asset Retirement
+
+- [ ] TXXX [Analysis: Section.12.2] Risk mitigation: Address all identified migration risks
+- [ ] TXXX Legacy asset backup: Create secure archive of legacy codebase before deletion
+- [ ] TXXX Production validation: Run new system in production-like environment
+- [ ] TXXX Stakeholder approval: Obtain sign-off from all analysis-identified stakeholders
+- [ ] TXXX Delete Legacy Asset: After 100% validation, remove legacy asset directory
+
+### Phase N+1c: Post-Migration Monitoring
+
+- [ ] TXXX [Analysis: Section.10.2] Monitoring validation: Confirm monitoring systems capture same metrics
+- [ ] TXXX [Analysis: Section.8.1] Performance monitoring: Track performance against established baselines
+- [ ] TXXX [Analysis: Section.11.3] User behavior monitoring: Validate user workflow preservation
+
+### Dependencies & Execution Order
+
+**Sequential Dependencies (Must Complete In Order):**
+- **Phase 1 (Analysis Validation)**: Must complete first - validates analysis completeness
+- **Phase 2 (Data Architecture)**: Must complete before business logic - establishes data foundation
+- **Phase 3 (Foundational Infrastructure)**: Must complete before feature migration - establishes framework
+
+**Parallel Execution Phases:**
+- **Phases 4-6 (Business Logic, Security, Integrations)**: Can proceed in parallel by feature after Phase 3
+- **Phase 7 (Performance & Quality)**: Can run in parallel with feature phases
+- **Phase 8 (Domain Knowledge)**: Can run in parallel with feature phases
+
+**Final Sequential Dependencies:**
+- **Phase N (Cross-Cutting Concerns)**: After all feature phases complete
+- **Phase N+1 (Asset Retirement)**: The absolute final step - only after complete validation
 
 ---
 
-## Phase 4: User Story 2 - [Title] (Priority: P2)
+## Implementation Strategy: Analysis-Driven Migration
 
-**Goal**: [Brief description of what this story delivers]
+### Analysis-First Approach
 
-**Independent Test**: [How to verify this story works on its own]
+1. **Complete Phase 1**: Analysis validation and baseline establishment (MANDATORY FIRST)
+2. **Complete Phase 2**: Data architecture migration (foundation for all features)
+3. **Complete Phase 3**: Infrastructure setup (framework foundation)
+4. **Begin Feature Migration**: Start with highest priority features from analysis
 
-### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
+### Critical Feature Priority (Based on Analysis Section 12.1)
 
-- [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
+1. **CRITICAL Priority Features**: Must migrate first (usually from Analysis Section 4.1)
+2. **IMPORTANT Priority Features**: Second wave migration
+3. **NICE-TO-HAVE Features**: Final migration wave
 
-### Implementation for User Story 2
+### Incremental Delivery Strategy
 
-- [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
-- [ ] T021 [US2] Implement [Service] in src/services/[service].py
-- [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T023 [US2] Integrate with User Story 1 components (if needed)
+1. **Foundation Phase** (Phases 1-3): Complete infrastructure → Validate baseline functionality
+2. **Critical Feature MVP**: Migrate one critical feature → **STOP and VALIDATE** → Deploy
+3. **Feature Increment**: Add next priority feature → Validate independently → Deploy
+4. **Continue Incrementally**: Each feature adds value without breaking previous functionality
 
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
+### Risk-Minimized Parallel Strategy
 
----
+**Sequential Foundation** (Team Together):
+1. Analysis validation (Phase 1) - entire team validates findings
+2. Data migration (Phase 2) - critical shared foundation
+3. Infrastructure setup (Phase 3) - framework foundation
 
-## Phase 5: User Story 3 - [Title] (Priority: P3)
+**Parallel Feature Migration** (After Foundation):
+- Developer A: Critical Feature 1 (Analysis Section 4.1 priority)
+- Developer B: Critical Feature 2 (Analysis Section 4.1 priority) 
+- Developer C: Security/Integration (Analysis Sections 5 & 9)
+- All developers: Continuous validation against analysis baselines
 
-**Goal**: [Brief description of what this story delivers]
-
-**Independent Test**: [How to verify this story works on its own]
-
-### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
-
-- [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
-
-### Implementation for User Story 3
-
-- [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
-- [ ] T027 [US3] Implement [Service] in src/services/[service].py
-- [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
-
-**Checkpoint**: All user stories should now be independently functional
-
----
-
-[Add more user story phases as needed, following the same pattern]
+**Validation Requirements**:
+- Each feature must pass ground truth tests before integration
+- Performance must meet Analysis Section 8.1 baselines
+- All Analysis Section 11 domain knowledge must be preserved
 
 ---
 
-## Phase N: Polish & Cross-Cutting Concerns
+## Brownfield Migration Methodology Notes
 
-**Purpose**: Improvements that affect multiple user stories
+**Task Completion Criteria:**
+- [P] tasks = different files, no dependencies (can run in parallel)
+- [Analysis] references are MANDATORY - every task must trace to analysis findings
+- [Logic] preservation is CRITICAL - exact functional behavior must be maintained
+- Ground Truth Test → Analysis Cross-Reference → Port Logic → Validate → Integrate (core loop)
+- A task is not "done" when code is written - it's "done" when validation passes AND analysis criteria are met
 
-- [ ] TXXX [P] Documentation updates in docs/
-- [ ] TXXX Code cleanup and refactoring
-- [ ] TXXX Performance optimization across all stories
-- [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
-- [ ] TXXX Security hardening
-- [ ] TXXX Run quickstart.md validation
+**Quality Gates:**
+- Every phase has explicit checkpoints requiring validation before proceeding
+- All critical algorithms (Analysis Section 4.1) must have functional parity tests
+- All performance baselines (Analysis Section 8.1) must be met or exceeded
+- All domain knowledge (Analysis Section 11) must be preserved and validated
 
----
+**Risk Mitigation:**
+- Analysis findings drive task creation - never skip analysis integration
+- Ground truth tests establish irrefutable behavioral baselines
+- Incremental migration reduces blast radius of changes
+- Performance monitoring prevents regressions
+- Stakeholder validation ensures business continuity
 
-## Dependencies & Execution Order
-
-### Phase Dependencies
-
-- **Setup (Phase 1)**: No dependencies - can start immediately
-- **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all user stories
-- **User Stories (Phase 3+)**: All depend on Foundational phase completion
-  - User stories can then proceed in parallel (if staffed)
-  - Or sequentially in priority order (P1 → P2 → P3)
-- **Polish (Final Phase)**: Depends on all desired user stories being complete
-
-### User Story Dependencies
-
-- **User Story 1 (P1)**: Can start after Foundational (Phase 2) - No dependencies on other stories
-- **User Story 2 (P2)**: Can start after Foundational (Phase 2) - May integrate with US1 but should be independently testable
-- **User Story 3 (P3)**: Can start after Foundational (Phase 2) - May integrate with US1/US2 but should be independently testable
-
-### Within Each User Story
-
-- Tests (if included) MUST be written and FAIL before implementation
-- Models before services
-- Services before endpoints
-- Core implementation before integration
-- Story complete before moving to next priority
-
-### Parallel Opportunities
-
-- All Setup tasks marked [P] can run in parallel
-- All Foundational tasks marked [P] can run in parallel (within Phase 2)
-- Once Foundational phase completes, all user stories can start in parallel (if team capacity allows)
-- All tests for a user story marked [P] can run in parallel
-- Models within a story marked [P] can run in parallel
-- Different user stories can be worked on in parallel by different team members
-
----
-
-## Parallel Example: User Story 1
-
-```bash
-# Launch all tests for User Story 1 together (if tests requested):
-Task: "Contract test for [endpoint] in tests/contract/test_[name].py"
-Task: "Integration test for [user journey] in tests/integration/test_[name].py"
-
-# Launch all models for User Story 1 together:
-Task: "Create [Entity1] model in src/models/[entity1].py"
-Task: "Create [Entity2] model in src/models/[entity2].py"
-```
-
----
-
-## Implementation Strategy
-
-### MVP First (User Story 1 Only)
-
-1. Complete Phase 1: Setup
-2. Complete Phase 2: Foundational (CRITICAL - blocks all stories)
-3. Complete Phase 3: User Story 1
-4. **STOP and VALIDATE**: Test User Story 1 independently
-5. Deploy/demo if ready
-
-### Incremental Delivery
-
-1. Complete Setup + Foundational → Foundation ready
-2. Add User Story 1 → Test independently → Deploy/Demo (MVP!)
-3. Add User Story 2 → Test independently → Deploy/Demo
-4. Add User Story 3 → Test independently → Deploy/Demo
-5. Each story adds value without breaking previous stories
-
-### Parallel Team Strategy
-
-With multiple developers:
-
-1. Team completes Setup + Foundational together
-2. Once Foundational is done:
-   - Developer A: User Story 1
-   - Developer B: User Story 2
-   - Developer C: User Story 3
-3. Stories complete and integrate independently
-
----
-
-## Notes
-
-- [P] tasks = different files, no dependencies
-- [Story] label maps task to specific user story for traceability
-- Each user story should be independently completable and testable
-- Verify tests fail before implementing
-- Commit after each task or logical group
-- Stop at any checkpoint to validate story independently
-- Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
-
-
-
+**Success Validation:**
+- Functional parity: New system behaviors match legacy system exactly
+- Performance parity: New system meets or exceeds performance baselines
+- Integration parity: All external services continue working without changes
+- Domain parity: All business rules and domain knowledge preserved
+- User parity: All user workflows continue functioning identically
