@@ -9,12 +9,38 @@
 
 [Extract from feature spec: primary requirement + technical approach from research]
 
+## Project Type & Migration Strategy
+
+**Project Type**: [GREENFIELD/BROWNFIELD] *(from spec.md selection)*
+
+### [BROWNFIELD ONLY] Migration Strategy Summary
+
+*Fill this section ONLY if project type is BROWNFIELD*
+
+**Migration Method**: [Strangler Fig / API Gateway / Blue-Green / Event-Driven / etc.]
+**Project Scale**: [SMALL/MEDIUM/LARGE/EXTREME] *(from spec.md assessment)*
+**Migration Timeline**: [X weeks based on scale and method]
+**Risk Level**: [MEDIUM/HIGH/VERY HIGH/EXTREME] *(corresponds to scale)*
+
+**Selected Approach Justification**: [Why this migration method was chosen over alternatives]
+
+**Legacy System Retirement Plan**: [How and when legacy systems will be decommissioned]
+
+**Reference Documents**:
+- See `specs/[###-feature]/migration-strategy.md` for detailed asset relocation approach
+- See `specs/[###-feature]/legacy-analysis.md` for existing system documentation
+
+---
+
 ## Technical Context
 
 <!--
   ACTION REQUIRED: Replace the content in this section with the technical details
   for the project. The structure here is presented in advisory capacity to guide
   the iteration process.
+  
+  For BROWNFIELD projects: Include both legacy and target technology decisions
+  For GREENFIELD projects: Include target technology stack only
 -->
 
 **Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
@@ -72,7 +98,11 @@ specs/[###-feature]/
 ├── data-model.md        # Phase 1 output (/speckit.plan command)
 ├── quickstart.md        # Phase 1 output (/speckit.plan command)
 ├── contracts/           # Phase 1 output (/speckit.plan command)
-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+├── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+└── [BROWNFIELD ONLY]
+    ├── migration-strategy.md    # Brownfield asset relocation strategy
+    ├── legacy-analysis.md       # Existing system documentation
+    └── data-mapping.md          # Database migration mapping
 ```
 
 ### Source Code (repository root)

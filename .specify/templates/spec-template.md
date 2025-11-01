@@ -5,6 +5,55 @@
 **Status**: Draft  
 **Input**: User description: "$ARGUMENTS"
 
+## Project Type Selection *(mandatory)*
+
+**Select project type** (this determines template sections and planning approach):
+
+- [ ] **🟢 Greenfield Project**: Building new system from scratch
+- [ ] **🔄 Brownfield Migration**: Migrating/consolidating existing systems
+
+**Selected Project Type**: [GREENFIELD/BROWNFIELD]
+
+---
+
+## [BROWNFIELD ONLY] Legacy System Assessment
+
+*Fill this section ONLY if Brownfield Migration selected above*
+
+### Existing Systems Inventory
+
+**System Count**: [Number] existing systems to migrate/consolidate
+**Project Scale**: [SMALL (1-3) / MEDIUM (4-10) / LARGE (11+) / EXTREME (25+)]
+
+```yaml
+Legacy Systems:
+  System 1:
+    Name: [e.g., "Legacy CRM"]
+    Technology: [e.g., "PHP 7.4 + MySQL"]
+    Business Value: [HIGH/MEDIUM/LOW]
+    Migration Complexity: [HIGH/MEDIUM/LOW]
+    
+  System 2:
+    Name: [e.g., "Customer Portal"] 
+    Technology: [e.g., "React + Node.js"]
+    Business Value: [HIGH/MEDIUM/LOW]
+    Migration Complexity: [HIGH/MEDIUM/LOW]
+```
+
+### Critical Business Logic Preservation
+
+**Mission-Critical Algorithms**: [List algorithms that MUST be preserved exactly]
+**Data Migration Requirements**: [Database schemas, file formats, etc.]
+**Integration Dependencies**: [External systems that must continue working]
+
+### Migration Constraints
+
+**Business Continuity**: [Uptime requirements, rollback needs]
+**Technical Constraints**: [Technology limitations, performance requirements]
+**Timeline Constraints**: [Business deadlines, regulatory requirements]
+
+---
+
 ## User Scenarios & Testing *(mandatory)*
 
 <!--
