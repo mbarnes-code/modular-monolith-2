@@ -747,16 +747,34 @@ This approach **separates technology concerns from business logic concerns**, re
 
 **Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
 **Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
-**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY)**, research.md, data-model.md, contracts/
+**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY - MUST BE COMPLETE)**, research.md, data-model.md, contracts/
+
+**🚨 ANALYSIS-DRIVEN TASK GENERATION REQUIREMENTS**: This template enforces analysis-driven quality. Tasks CANNOT be generated without completed analysis.
+
+**MANDATORY ANALYSIS VALIDATION**: Before task generation, verify analysis completeness:
+- [ ] **Section 4 (Business Logic)**: ALL critical algorithms documented with file::function references
+- [ ] **Section 2 (Data Architecture)**: ALL data models mapped with exact field relationships
+- [ ] **Section 3 (API Architecture)**: ALL endpoints documented with authentication patterns
+- [ ] **Section 5 (External Integrations)**: ALL third-party dependencies mapped with failure modes
+- [ ] **Section 8 (Performance Characteristics)**: ALL baseline metrics documented with measurement methods
+- [ ] **Section 11 (Domain Knowledge)**: ALL business rules documented with behavioral specifications
+- [ ] **Section 9 (Security & Compliance)**: ALL security patterns documented with implementation details
+
+**TEMPLATE FAILURE CONDITIONS**: This template will FAIL if:
+- Any CRITICAL analysis section is incomplete or contains placeholder text
+- Business logic functions lack specific file::function references
+- Test specifications are generic rather than analysis-derived
+- Performance baselines are missing concrete metrics
+- Domain knowledge lacks specific behavioral requirements
 
 **Project Analysis Integration**: This template requires a comprehensive project analysis (using project_analysis_template.md) to understand:
-- Section 4 (Business Logic) - Critical algorithms that must be preserved exactly
-- Section 2 (Data Architecture) - Data models and relationships for migration planning  
-- Section 3 (API Architecture) - Authentication, endpoints, and integration patterns
-- Section 5 (External Integrations) - Third-party services and failure handling
-- Section 8 (Performance Characteristics) - Baseline metrics for regression prevention
-- Section 11 (Domain Knowledge) - Business rules and tribal knowledge preservation
-- Section 9 (Security & Compliance) - Security patterns that must be maintained
+- Section 4 (Business Logic) - Critical algorithms that must be preserved exactly (PROVIDES: file::function references for all tasks)
+- Section 2 (Data Architecture) - Data models and relationships for migration planning (PROVIDES: exact field mappings and constraints)
+- Section 3 (API Architecture) - Authentication, endpoints, and integration patterns (PROVIDES: concrete endpoint specifications)
+- Section 5 (External Integrations) - Third-party services and failure handling (PROVIDES: specific integration patterns)
+- Section 8 (Performance Characteristics) - Baseline metrics for regression prevention (PROVIDES: measurable performance requirements)
+- Section 11 (Domain Knowledge) - Business rules and tribal knowledge preservation (PROVIDES: specific behavioral test cases)
+- Section 9 (Security & Compliance) - Security patterns that must be maintained (PROVIDES: concrete security validation requirements)
 
 **Migration Philosophy**: Evidence-based brownfield asset relocation with incremental feature migration to preserve 100% functional parity while modernizing architecture.
 
@@ -775,10 +793,18 @@ This approach **separates technology concerns from business logic concerns**, re
 **Organization**: Tasks are grouped by Legacy Feature AND cross-referenced with Project Analysis sections to ensure 1:1 functional parity and comprehensive coverage of all documented behaviors.
 
 ## Format: [ID] [P?] [Feature] [Logic: <legacy_file::function>] [Analysis: Section.#] Description
+
+**🚨 MANDATORY FORMAT ENFORCEMENT**:
 - [P]: Can run in parallel
 - [Feature]: Which legacy feature this task belongs to (e.g., F1: Publishing)  
-- [Logic]: The exact legacy code being replaced. This is not optional.
-- [Analysis]: MANDATORY reference to project_analysis_report.md section for validation and context
+- [Logic]: **REQUIRED** - Exact legacy code file::function from Analysis Section 4. Generic placeholders FORBIDDEN.
+- [Analysis]: **REQUIRED** - Specific section reference from completed analysis report. Must validate against actual analysis content.
+
+**TASK GENERATION RULES**:
+1. **NO GENERIC PLACEHOLDERS**: Every [Logic: ] must reference actual code from Analysis Section 4
+2. **NO INVENTED TESTS**: Test specifications must be extracted from Analysis Section 11 behavioral requirements
+3. **NO ASSUMED FUNCTIONS**: All file::function references must exist in analysis documentation
+4. **BIDIRECTIONAL VALIDATION**: Tasks must cross-reference analysis sections; analysis must support all generated tasks
 
 ## Path Conventions
 - **New Project**: [e.g., apps/PROJECT/src/] at repository root
@@ -789,12 +815,48 @@ This approach **separates technology concerns from business logic concerns**, re
 ## Analysis-Driven Migration Benefits
 
 **Why Project Analysis is Mandatory:**
+
 - **Business Logic Preservation**: Section 4 documents critical algorithms with complexity analysis - essential for determining what can/cannot be refactored
 - **Performance Baseline Protection**: Section 8 provides concrete metrics - prevents regressions during migration  
 - **Integration Continuity**: Section 5 documents external service dependencies and failure modes - prevents production outages
 - **Domain Knowledge Capture**: Section 11 captures tribal knowledge and workarounds - prevents loss of undocumented business rules
 - **Security Pattern Preservation**: Section 9 documents auth flows and security measures - prevents vulnerabilities
 - **Data Integrity Assurance**: Section 2 maps exact field relationships and constraints - prevents data corruption during migration
+
+**🚨 ANALYSIS-DRIVEN TASK QUALITY ENFORCEMENT**:
+
+Every task in this template must satisfy these quality gates:
+
+1. **Concrete File::Function References**: Tasks reference actual code locations documented in Analysis Section 4
+2. **Analysis-Derived Test Cases**: Test specifications extracted from Analysis Section 11 behavioral requirements
+3. **Measurable Success Criteria**: Performance and acceptance criteria from Analysis Sections 8 and 12
+4. **Bidirectional Validation**: Tasks validate analysis accuracy; analysis supports all task requirements
+
+**TEMPLATE USAGE PROTOCOL**:
+
+```yaml
+Step 1: Complete Analysis First
+  - Run project_analysis_template.md on legacy codebase
+  - Ensure ALL critical sections contain specific findings
+  - Validate Section 4 has file::function inventory
+  - Validate Section 11 has behavioral specifications
+
+Step 2: Extract Task Requirements
+  - Generate [Logic: ] references from Section 4 findings
+  - Extract test cases from Section 11 behavioral requirements  
+  - Extract performance criteria from Section 8 baselines
+  - Cross-reference all analysis sections for completeness
+
+Step 3: Generate Analysis-Validated Tasks
+  - Replace ALL placeholder tasks with analysis-specific tasks
+  - Ensure every task references completed analysis sections
+  - Validate bidirectional relationship: analysis→tasks, tasks→analysis
+  
+Step 4: Quality Verification
+  - Confirm zero generic placeholders remain
+  - Validate all behavioral tests have analysis source citations
+  - Ensure all file::function references exist in analysis
+```
 
 ## Incremental Migration Methodology
 
@@ -835,18 +897,37 @@ Ground Truth Test (Legacy) → Validation Test (Target) → Port Logic → Run V
 
 **Purpose**: Initialize target project and establish legacy testing environment for ground truth validation.
 
+**🚨 ANALYSIS COMPLETION GATES**: Phase 1 cannot proceed without completed analysis validation.
+
 **Phase 1 Risks & Mitigation:**
+
 - **Risk**: Legacy environment setup fails or performs differently than production
 - **Mitigation**: Document exact legacy environment requirements, use containerization for consistency
 - **Validation**: Legacy system must pass all existing workflows before proceeding
 
-- [ ] T001 Create new project structure per implementation plan
-- [ ] T002 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM/local setup)
-- [ ] T003 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function as baseline
-- [ ] T004 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections filled per analysis template
-- [ ] T005 [Analysis: Section.8.1] Document performance baselines: Extract and validate baseline metrics from analysis Section 8
-- [ ] T006 [Analysis: Section.7.1] Assess test coverage baseline: Review current test coverage and critical test cases from analysis
-- [ ] T007 [Analysis: Section.11] Review domain knowledge: Study business rules, quirks, and tribal knowledge documentation
+**MANDATORY ANALYSIS VALIDATION TASKS** (Cannot proceed without completion):
+
+- [ ] T001 **[ANALYSIS GATE]** Validate Section 4 completeness: Confirm ALL critical algorithms documented with file::function references (NO placeholders)
+- [ ] T002 **[ANALYSIS GATE]** Validate Section 11 completeness: Confirm ALL behavioral requirements documented with specific test cases (NO generic descriptions)
+- [ ] T003 **[ANALYSIS GATE]** Validate Section 2 completeness: Confirm ALL data models mapped with exact field relationships (NO schema gaps)
+- [ ] T004 **[ANALYSIS GATE]** Validate Section 8 completeness: Confirm ALL performance baselines documented with concrete metrics (NO "TBD" values)
+- [ ] T005 **[ANALYSIS GATE]** Cross-reference validation: Confirm analysis sections support each other and contain no contradictions
+
+**ANALYSIS-SUPPORTED SETUP TASKS** (Only after analysis gates pass):
+
+- [ ] T006 [Analysis: Section.1.2] Create new project structure per technology stack documented in analysis
+- [ ] T007 [Ground Truth] [Analysis: Section.6.1] Setup legacy test environment: Create isolated environment matching analysis environment documentation
+- [ ] T008 [Ground Truth] [Analysis: Section.4.1] Validate legacy functionality: Run legacy system and confirm critical workflows from analysis function as baseline
+- [ ] T009 [Analysis: Section.8.1] Document performance baselines: Extract and validate baseline metrics from completed analysis Section 8
+- [ ] T010 [Analysis: Section.7.1] Assess test coverage baseline: Review current test coverage and critical test cases from completed analysis
+- [ ] T011 [Analysis: Section.11] Review domain knowledge: Study business rules, quirks, and tribal knowledge from completed analysis documentation
+
+**PHASE 1 COMPLETION CRITERIA**: 
+
+- All analysis gates (T001-T005) must pass with ZERO incomplete sections
+- Legacy environment must successfully execute all workflows documented in Analysis Section 4
+- Performance baselines must be measurable and documented per Analysis Section 8
+- All subsequent tasks must reference specific analysis findings (no generic placeholders)
 
 ---
 
@@ -1084,29 +1165,55 @@ File Impact:
 
 ### Phase 3a: Analysis Cross-Reference & Ground Truth Tests (Write These First)
 
-**NOTE**: Analysis-informed Ground Truth tests against OLD code. Validation tests against NEW code.
+**🚨 ANALYSIS-DRIVEN TEST GENERATION**: Tests must be extracted from completed analysis, NOT invented.
 
-- [ ] T017 [Analysis: Section.4.1] Algorithm analysis review: Study critical algorithm documentation for publishRouter function from analysis
-- [ ] T018 [Analysis: Section.11.1] Domain knowledge review: Review business rules and domain concepts for event publishing from analysis
-- [ ] T019 [P] [F1] [Logic: Event.php::publishRouter] [Analysis: Section.4.1] Ground Truth Test: Write test against legacy code proving original publishRouter function behavior per analysis documentation:
-        - FAILS when given a 'Draft' event (confirmed in Analysis Section 4.1)
-        - PASSES when given a 'Validated' event (confirmed in Analysis Section 4.1)  
-        - [Include edge cases documented in Analysis Section 11.2]
-- [ ] T020 [P] [F1] [Logic: Event.php::publishRouter] [Analysis: Section.4.1] Validation Test: Translate analysis-informed ground truth test to target framework test (initially fails - new code doesn't exist)
-- [ ] T021 [Analysis: Section.8.1] Performance baseline documentation: Record current publishRouter performance metrics from analysis
+**MANDATORY ANALYSIS EXTRACTION TASKS**:
+
+- [ ] T017 **[ANALYSIS EXTRACTION]** [Analysis: Section.4.1] Extract algorithm specifications: From completed analysis, identify exact file::function references for Feature 1 (NO placeholders - must be actual functions)
+- [ ] T018 **[ANALYSIS EXTRACTION]** [Analysis: Section.11.1] Extract behavioral requirements: From completed analysis, extract specific behavioral test cases for Feature 1 (NO generic tests - must be analysis-documented behaviors)
+- [ ] T019 **[ANALYSIS VALIDATION]** Cross-reference check: Verify Analysis Section 4.1 algorithm documentation matches Analysis Section 11.1 behavioral specifications for consistency
+
+**ANALYSIS-INFORMED GROUND TRUTH TESTS** (Only after extraction tasks complete):
+
+- [ ] T020 [P] [F1] [Logic: {EXTRACTED_FROM_ANALYSIS_SECTION_4.1}] [Analysis: Section.4.1] Ground Truth Test: Write test against legacy code proving original {FUNCTION_NAME} behavior per analysis documentation:
+        - {SPECIFIC_BEHAVIOR_1_FROM_SECTION_11.1}
+        - {SPECIFIC_BEHAVIOR_2_FROM_SECTION_11.1}
+        - {EDGE_CASES_FROM_SECTION_11.2}
+        - **NOTE**: Replace {PLACEHOLDERS} with actual analysis findings - NO generic behaviors
+- [ ] T021 [P] [F1] [Logic: {EXTRACTED_FROM_ANALYSIS_SECTION_4.1}] [Analysis: Section.4.1] Validation Test: Translate analysis-informed ground truth test to target framework test (initially fails - new code doesn't exist)
+- [ ] T022 [Analysis: Section.8.1] Performance baseline documentation: Record current {FUNCTION_NAME} performance metrics from completed analysis (must be specific metrics, not "TBD")
+
+**EXAMPLE ANALYSIS-DRIVEN TASK** (Replace with your analysis findings):
+
+```markdown
+- [ ] T020 [P] [F1] [Logic: Event.php::publishRouter] [Analysis: Section.4.1] Ground Truth Test: Write test against legacy code proving original publishRouter function behavior per analysis documentation:
+        - FAILS when given a 'Draft' event (confirmed in Analysis Section 4.1.3)
+        - SUCCEEDS when given 'Validated' event and updates published=1 (confirmed in Analysis Section 4.1.3)
+        - Triggers sync to external servers on success (confirmed in Analysis Section 11.2.1)
+        - [All edge cases from Analysis Section 11.2.2-11.2.5]
+```
 
 ### Phase 3b: Analysis-Guided Incremental Migration Loop
 
-- [ ] T022 [P] [F1] [Logic: Event.php::Event()] [Analysis: Section.2.1] Port Models: Implement Event model in target framework based on analysis data model section
-- [ ] T023 [F1] [Logic: Event.php::publishRouter] [Analysis: Section.4.1] Port Logic: **IMPLEMENTATION REQUIRED** - Choose implementation strategy:
-        * **Copy & Modernize**: Copy Event.php::publishRouter code to target framework, replace framework calls, preserve exact business logic
+**🚨 ANALYSIS-SPECIFIC IMPLEMENTATION TASKS**: Replace all {PLACEHOLDERS} with actual analysis findings before execution.
+
+- [ ] T023 [P] [F1] [Logic: {EXTRACTED_FROM_ANALYSIS_SECTION_2.1}] [Analysis: Section.2.1] Port Models: Implement {MODEL_NAME} model in target framework based on analysis data model section (must reference specific model fields and relationships)
+- [ ] T024 [F1] [Logic: {EXTRACTED_FROM_ANALYSIS_SECTION_4.1}] [Analysis: Section.4.1] Port Logic: **IMPLEMENTATION REQUIRED** - Choose implementation strategy:
+        * **Copy & Modernize**: Copy {ACTUAL_FILE}::{ACTUAL_FUNCTION} code to target framework, replace framework calls, preserve exact business logic
         * **Behavior-Driven Rewrite**: Reimplement from analysis documentation, ensuring all documented behaviors preserved
         * **Incremental Refactor**: Port in layers (data→logic→API) maintaining exact functionality
-- [ ] T024 [F1] [Logic: Event.php::publishRouter] [Analysis: Section.4.1] Run Validation: Execute validation test against ported logic - MUST pass before proceeding
-- [ ] T025 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis
-- [ ] T026 [F1] [Analysis: Section.3.2] Integrate Logic: Wire proven publishRouter logic into target framework API endpoint per analysis endpoint patterns
-- [ ] T027 [F1] Full Integration Test: End-to-end test of complete feature through API - MUST pass
-- [ ] T028 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics from analysis
+- [ ] T025 [F1] [Logic: {EXTRACTED_FROM_ANALYSIS_SECTION_4.1}] [Analysis: Section.4.1] Run Validation: Execute validation test against ported logic - MUST pass before proceeding
+- [ ] T026 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis (must reference specific quirks from analysis)
+- [ ] T027 [F1] [Analysis: Section.3.2] Integrate Logic: Wire proven {FUNCTION_NAME} logic into target framework API endpoint per analysis endpoint patterns
+- [ ] T028 [F1] Full Integration Test: End-to-end test of complete feature through API - MUST pass
+- [ ] T029 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics from analysis (must reference specific metrics)
+
+**TEMPLATE USAGE NOTE**: Before using these tasks, you MUST:
+
+1. Replace {EXTRACTED_FROM_ANALYSIS_SECTION_X.Y} with actual file::function references from your completed analysis
+2. Replace {MODEL_NAME}, {FUNCTION_NAME}, {ACTUAL_FILE}, {ACTUAL_FUNCTION} with specific names from analysis
+3. Ensure all referenced analysis sections exist and contain concrete findings
+4. Validate that behavioral requirements and performance metrics are documented in analysis
 
 **Checkpoint**: Feature 1 migrated with analysis-validated functional and performance parity. Ready for production use.
 
@@ -1307,12 +1414,38 @@ For features with external service dependencies documented in Analysis Section 5
 
 ### Phase N.1: Analysis-Validated Complete Migration Validation
 
-- [ ] TXXX [Analysis: All Sections] Full analysis cross-reference: Verify ALL analysis findings have been addressed in migration
-- [ ] TXXX Verify Full Migration: Confirm ALL [Logic: ...] tags have corresponding passing validation tests
-- [ ] TXXX [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically per analysis
-- [ ] TXXX Run Full Regression Suite: Execute complete test suite including all ground truth comparisons  
-- [ ] TXXX [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds analysis baselines
-- [ ] TXXX [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met
+**🚨 FINAL ANALYSIS-DRIVEN QUALITY GATES**: Migration cannot be considered complete without analysis validation.
+
+**MANDATORY FINAL VALIDATION TASKS**:
+
+- [ ] TXXX **[ANALYSIS COMPLETENESS AUDIT]** [Analysis: All Sections] Full analysis cross-reference: Verify ALL analysis findings have been addressed in migration with ZERO unresolved items
+- [ ] TXXX **[LOGIC PRESERVATION AUDIT]** Verify Full Migration: Confirm ALL [Logic: ...] tags have corresponding passing validation tests with NO placeholder references
+- [ ] TXXX **[ALGORITHM PARITY AUDIT]** [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically per analysis behavioral specifications
+- [ ] TXXX **[GROUND TRUTH VALIDATION]** Run Full Regression Suite: Execute complete test suite including all ground truth comparisons with 100% pass rate
+- [ ] TXXX **[PERFORMANCE REGRESSION AUDIT]** [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds analysis baselines with concrete measurements
+- [ ] TXXX **[SUCCESS CRITERIA AUDIT]** [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met with documented evidence
+
+**BIDIRECTIONAL QUALITY ASSURANCE VERIFICATION**:
+
+- [ ] TXXX **[ANALYSIS → TASKS]** Forward validation: Every finding in analysis has been addressed by migration tasks
+- [ ] TXXX **[TASKS → ANALYSIS]** Reverse validation: Every task references specific analysis findings with no generic implementations
+- [ ] TXXX **[BEHAVIORAL CONSISTENCY]** Test specification audit: All test cases can be traced back to Analysis Section 11 behavioral requirements
+- [ ] TXXX **[REFERENCE INTEGRITY]** File::function audit: All [Logic: ] references exist in analysis and have been successfully migrated
+
+**FINAL TEMPLATE QUALITY CERTIFICATION**:
+
+- [ ] TXXX **[ZERO PLACEHOLDERS]** Confirm no {PLACEHOLDER} text remains in any task descriptions
+- [ ] TXXX **[ANALYSIS COMPLETENESS]** Confirm all critical analysis sections (2,3,4,5,8,9,11) contain specific findings, not generic content
+- [ ] TXXX **[TASK SPECIFICITY]** Confirm all tasks reference actual code and behaviors, not invented requirements
+
+**MIGRATION COMPLETION CRITERIA**: Migration is complete ONLY when:
+
+1. All analysis sections are complete and contain specific findings (NO placeholders)
+2. All tasks reference actual analysis findings (NO generic implementations)
+3. All [Logic: ] references trace to real code documented in analysis
+4. All test specifications derive from Analysis Section 11 behavioral requirements
+5. All performance validations reference concrete metrics from Analysis Section 8
+6. Bidirectional validation passes: analysis supports tasks, tasks implement analysis
 - [ ] TXXX Production validation: Run new system in production-like environment with real data
 - [ ] TXXX Stakeholder approval: Obtain sign-off from analysis-identified business stakeholders and users
 

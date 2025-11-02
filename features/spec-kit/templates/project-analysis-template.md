@@ -1,4 +1,4 @@
-# Universal Project Analysis Template (v1.0)
+# Universal Project Analysis Template (v1.1)
 
 **Purpose**: Capture 90%+ of project information needed for migration, integration, or reimplementation
 
@@ -8,6 +8,69 @@
 - Copy actual code snippets for critical business logic
 - Include WHY decisions were made, not just WHAT exists
 - Mark sections as [CRITICAL], [IMPORTANT], or [NICE-TO-HAVE] based on migration priority
+
+## TECHNICAL CONTENT GUIDANCE (Important for Validation)
+
+**Legitimate Technical Patterns** - These are NOT placeholders and should be included as examples:
+
+**✅ JSON Configurations & API Responses**:
+```json
+{"rules": [{"identifier": "suspicious_strings"}]}
+{"status": "ok", "data": {"users": 1250}}
+[{"name": "admin", "permissions": ["read", "write"]}]
+```
+
+**✅ Hex Patterns & Binary Data** (Security/Analysis Tools):
+```
+{6A 40 68 ?? ?? 00 00}
+0x41414141
+\x90\x90\x90\x90
+```
+
+**✅ Code Template Variables** (In Documentation):
+```
+{syslog_time}, {src_ip}, {user_id}
+${DATABASE_URL}, ${API_KEY}
+{match.rule}, {object.property}
+```
+
+**✅ Technical Identifiers**:
+```
+API Endpoints: /api/v1/users/{id}, /health/check
+File Paths: src/components/UserList.tsx, apps/api/src/lib/entities.ts
+CLI Commands: docker run --name {container}
+Database Fields: user_id, created_at, is_active
+```
+
+**✅ Domain-Specific Syntax**:
+```
+MTG: {1}{W}{U}{B}{R}{G}, {T}: Add {C}
+SQL: SELECT * FROM users WHERE id = ?
+Regex: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+YARA: rule suspicious_file { condition: $hex_pattern }
+```
+
+**✅ Honest Responses for Inapplicable Sections**:
+- "N/A" - Section doesn't apply to this project type
+- "None" - Feature is not implemented
+- "TBD" - Planned but not yet implemented (with explanation)
+
+**❌ Actual Placeholders to Avoid**:
+- [TODO: Add details]
+- [REPLACE WITH ACTUAL VALUES]  
+- {template_placeholder}
+- [Your system name here]
+
+## DOMAIN-APPROPRIATE SECTION REQUIREMENTS
+
+**Security Tools**: May skip Business Logic, Frontend Architecture sections
+**CLI Libraries**: May skip Authentication, External Integrations sections  
+**Developer Tools**: May skip Business Logic, Performance sections
+**Business Applications**: Should complete all sections
+**Frameworks**: Should be comprehensive across all sections
+
+When a section truly doesn't apply, provide a brief explanation:
+"N/A - CLI tool has no user interface" or "N/A - Library provides functions, no auth needed"
 
 ---
 

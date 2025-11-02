@@ -5,6 +5,21 @@
 **Business Impact**: LOW-IMPACT (requires evidence-based justification - see validation section)
 **For More Detail**: [Link to condensed or full analysis if available]
 
+## TECHNICAL CONTENT GUIDANCE (Important for Validation)
+
+**Legitimate Technical Patterns** - These are NOT placeholders:
+
+**✅ JSON/Config Examples**: `{"status": "ok"}`, `[{"id": 1, "name": "test"}]`
+**✅ Hex/Binary Patterns**: `{6A 40 68 ?? ?? 00 00}`, `0x41414141`  
+**✅ Code Variables**: `{syslog_time}`, `${API_KEY}`, `{match.rule}`
+**✅ Technical IDs**: `/api/v1/users/{id}`, `src/lib/entities.ts`
+**✅ Domain Syntax**: `{1}{W}{U}` (MTG), `SELECT * WHERE id = ?` (SQL)
+**✅ Honest N/A**: "N/A - CLI tool has no frontend" (when section doesn't apply)
+
+**❌ Avoid Placeholders**: `[TODO]`, `{template_var}`, `[Your details here]`
+
+**Domain Flexibility**: Security tools may skip Business Logic, CLI libraries may skip Auth sections.
+
 ---
 
 ## 1. System Overview & Business Context
