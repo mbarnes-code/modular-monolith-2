@@ -17,7 +17,7 @@ minio = "^7.2.14"
 common = { path = "../../libs/common", develop = true }
 tomli = "^2.2.1"
 asyncpg = "^0.30.0"
-requests = "^2.32.3"
+requests = "^2.32.5"
 
 [build-system]
 requires = ["poetry-core"]

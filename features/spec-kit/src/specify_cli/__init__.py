@@ -34,7 +34,7 @@ import sys
 import tempfile
 import zipfile
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 import httpx
 # For cross-platform keyboard input
@@ -1429,6 +1429,308 @@ def init(
         enhancement_lines), title="Enhancement Commands", border_style="cyan", padding=(1, 2))
     console.print()
     console.print(enhancements_panel)
+
+
+@app.command()
+def validate(
+    files: Optional[List[str]] = typer.Argument(
+        None, help="Analysis files to validate (default: find project-analysis*.md files)"),
+    config: Optional[str] = typer.Option(
+        None, "--config", help="Path to validation config file (.specify-config.yaml)"),
+    level: Optional[str] = typer.Option(
+        None, "--level", help="Validation level: permissive, standard, strict, enterprise"),
+    threshold: Optional[float] = typer.Option(
+        None, "--threshold", help="Quality score threshold (0-100)"),
+    output_format: str = typer.Option(
+        "console", "--format", help="Output format: console, json"),
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Show detailed validation information"),
+):
+    """
+    Validate project analysis files using the universal-first approach.
+
+    This command implements the agreed validation approach:
+    - Progressive scoring (60+ threshold by default vs binary pass/fail)
+    - Technical pattern recognition (distinguishes legitimate content from placeholders)
+    - Explicit N/A handling (accepts N/A responses with explanations)
+    - Universal-first with opt-in enhancements
+
+    Examples:
+        specify validate                                    # Auto-find analysis files
+        specify validate analysis/project-analysis-*.md     # Specific files  
+        specify validate --level=strict                     # Stricter validation
+        specify validate --threshold=80                     # Custom threshold
+        specify validate --config=.specify-config.yaml     # Custom config
+    """
+    try:
+        from .validators import (AnalysisValidator, ValidationConfig,
+                                 ValidationLevel)
+    except ImportError:
+        # When run directly, use absolute import
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent))
+        from validators import (AnalysisValidator, ValidationConfig,
+                                ValidationLevel)
+
+    show_banner()
+    console.print("[bold]Validating Analysis Files[/bold]\n")
+
+    # Load configuration
+    config_path = None
+    if config:
+        config_path = Path(config)
+        if not config_path.exists():
+            console.print(f"[red]Error:[/red] Config file not found: {config}")
+            raise typer.Exit(1)
+    else:
+        # Look for default config file
+        default_config = Path(".specify-config.yaml")
+        if default_config.exists():
+            config_path = default_config
+
+    validation_config = ValidationConfig(config_path)
+
+    # Override config with command line options
+    if level:
+        try:
+            ValidationLevel(level)  # Validate level
+            validation_config.config['validation']['level'] = level
+        except ValueError:
+            console.print(
+                f"[red]Error:[/red] Invalid validation level: {level}")
+            console.print(
+                "Valid levels: permissive, standard, strict, enterprise")
+            raise typer.Exit(1)
+
+    if threshold is not None:
+        if not 0 <= threshold <= 100:
+            console.print(
+                "[red]Error:[/red] Threshold must be between 0 and 100")
+            raise typer.Exit(1)
+        validation_config.config['validation']['quality_threshold'] = threshold
+
+    # Find files to validate
+    if not files:
+        # Auto-discover analysis files
+        analysis_files = []
+        for pattern in ["project-analysis*.md", "**/project-analysis*.md"]:
+            analysis_files.extend(Path(".").glob(pattern))
+
+        if not analysis_files:
+            console.print("[yellow]No analysis files found.[/yellow]")
+            console.print("Looking for files matching: project-analysis*.md")
+            console.print("\nCreate analysis files using:")
+            console.print("  specify init --type=brownfield")
+            raise typer.Exit(0)
+
+        files = [str(f) for f in analysis_files]
+
+    validator = AnalysisValidator(validation_config)
+
+    # Validate each file
+    results = []
+    overall_passed = 0
+
+    for file_path_str in files:
+        file_path = Path(file_path_str)
+
+        if not file_path.exists():
+            console.print(f"[red]File not found:[/red] {file_path}")
+            continue
+
+        console.print(f"[cyan]Validating:[/cyan] {file_path}")
+
+        report = validator.validate_analysis_file(file_path)
+        results.append((file_path, report))
+
+        if report.threshold_met:
+            overall_passed += 1
+            status_color = "green"
+            status_text = "PASS"
+        else:
+            status_color = "yellow"
+            status_text = "NEEDS WORK"
+
+        console.print(
+            f"  [{status_color}]{status_text}[/] Score: {report.score:.1f}/100 (threshold: {validation_config.get_quality_threshold()})")
+        console.print(
+            f"  Sections: {report.passed_sections}/{report.total_sections} passed")
+
+        if verbose or not report.threshold_met:
+            if report.issues:
+                console.print("  Issues:")
+                for issue in report.issues[:5]:  # Show first 5 issues
+                    icon = "⚠️" if issue.result_type.value == "warning" else "❌" if issue.result_type.value == "error" else "ℹ️"
+                    console.print(
+                        f"    {icon} {issue.section}: {issue.message}")
+
+                if len(report.issues) > 5:
+                    console.print(
+                        f"    ... and {len(report.issues) - 5} more issues")
+
+        console.print()
+
+    # Summary
+    total_files = len(results)
+    if total_files > 1:
+        console.print(
+            f"[bold]Summary:[/bold] {overall_passed}/{total_files} files passed validation")
+
+        if overall_passed == total_files:
+            console.print(
+                "[bold green]✓ All analysis files meet quality standards![/bold green]")
+        elif overall_passed > 0:
+            console.print(
+                f"[yellow]⚠️ {total_files - overall_passed} files need improvement[/yellow]")
+        else:
+            console.print(
+                "[red]❌ No files meet minimum quality standards[/red]")
+
+    # JSON output option
+    if output_format == "json":
+        import json
+        output_data = {
+            "summary": {
+                "total_files": total_files,
+                "passed_files": overall_passed,
+                "validation_config": validation_config.config
+            },
+            "results": [
+                {
+                    "file": str(file_path),
+                    "score": report.score,
+                    "threshold_met": report.threshold_met,
+                    "sections_passed": report.passed_sections,
+                    "total_sections": report.total_sections,
+                    "issues": [
+                        {
+                            "type": issue.result_type.value,
+                            "section": issue.section,
+                            "message": issue.message
+                        }
+                        for issue in report.issues
+                    ]
+                }
+                for file_path, report in results
+            ]
+        }
+
+        json_output = json.dumps(output_data, indent=2)
+        console.print(json_output)
+
+    # Configuration info
+    if verbose:
+        console.print(
+            f"\n[dim]Validation Level:[/dim] {validation_config.get_validation_level().value}")
+        console.print(
+            f"[dim]Quality Threshold:[/dim] {validation_config.get_quality_threshold()}")
+        console.print(
+            f"[dim]Technical Patterns:[/dim] {'Enabled' if validation_config.uses_technical_patterns() else 'Disabled'}")
+        console.print(
+            f"[dim]N/A Responses:[/dim] {'Allowed' if validation_config.allows_na_responses() else 'Not Allowed'}")
+
+        if config_path:
+            console.print(f"[dim]Config File:[/dim] {config_path}")
+
+    # Exit code based on results
+    if overall_passed < total_files:
+        raise typer.Exit(1)  # Some files failed
+
+
+@app.command()
+def config(
+    init: bool = typer.Option(
+        False, "--init", help="Create default config file"),
+    show: bool = typer.Option(
+        False, "--show", help="Show current configuration"),
+):
+    """
+    Manage validation configuration settings.
+
+    Creates and manages .specify-config.yaml files for customizing validation behavior.
+    All enhancements are opt-in and preserve greenfield functionality by default.
+
+    Examples:
+        specify config --init      # Create default config file
+        specify config --show      # Show current configuration
+    """
+    try:
+        from .validators import ValidationConfig, create_default_config_file
+    except ImportError:
+        # When run directly, use absolute import
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent))
+        from validators import ValidationConfig, create_default_config_file
+
+    show_banner()
+
+    config_path = Path(".specify-config.yaml")
+
+    if init:
+        if config_path.exists():
+            console.print(
+                f"[yellow]Config file already exists:[/yellow] {config_path}")
+            overwrite = typer.confirm("Overwrite existing config file?")
+            if not overwrite:
+                console.print(
+                    "[yellow]Configuration initialization cancelled[/yellow]")
+                raise typer.Exit(0)
+
+        create_default_config_file(config_path)
+        console.print(
+            f"[green]✓[/green] Created default configuration: {config_path}")
+        console.print("\n[cyan]Configuration features (all opt-in):[/cyan]")
+        console.print(
+            "  • Progressive scoring (60+ threshold vs binary pass/fail)")
+        console.print(
+            "  • Technical pattern recognition (legitimate content vs placeholders)")
+        console.print(
+            "  • Explicit N/A handling (accepts explained N/A responses)")
+        console.print(
+            "  • Configurable validation levels (permissive to enterprise)")
+        console.print(f"\n[dim]Edit {config_path} to customize settings[/dim]")
+        return
+
+    if show:
+        if not config_path.exists():
+            console.print(f"[yellow]No config file found.[/yellow]")
+            console.print(
+                f"Create one with: [cyan]specify config --init[/cyan]")
+            console.print(f"\n[dim]Using built-in defaults:[/dim]")
+        else:
+            console.print(f"[cyan]Configuration file:[/cyan] {config_path}")
+
+        # Show current effective configuration
+        config = ValidationConfig(
+            config_path if config_path.exists() else None)
+
+        console.print(f"\n[bold]Current Settings:[/bold]")
+        console.print(
+            f"  Validation Level: [cyan]{config.get_validation_level().value}[/cyan]")
+        console.print(
+            f"  Quality Threshold: [cyan]{config.get_quality_threshold()}[/cyan]")
+        console.print(
+            f"  Technical Patterns: [cyan]{'Enabled' if config.uses_technical_patterns() else 'Disabled'}[/cyan]")
+        console.print(
+            f"  N/A Responses: [cyan]{'Allowed' if config.allows_na_responses() else 'Not Allowed'}[/cyan]")
+
+        console.print(
+            f"\n[bold]Project Type:[/bold] [cyan]{config.config['project']['type']}[/cyan]")
+
+        if 'advanced' in config.config:
+            advanced = config.config['advanced']
+            console.print(f"\n[bold]Advanced Features (Opt-in):[/bold]")
+            console.print(
+                f"  Domain Detection: [cyan]{'Enabled' if advanced.get('domain_detection', False) else 'Disabled'}[/cyan]")
+            console.print(
+                f"  Confidence Threshold: [cyan]{advanced.get('confidence_threshold', 0.75)}[/cyan]")
+
+        return
+
+    # Default behavior - show help
+    console.print("[yellow]No action specified.[/yellow]")
+    console.print(
+        "Use [cyan]specify config --help[/cyan] for available options.")
 
 
 @app.command()

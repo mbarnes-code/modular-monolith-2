@@ -1,0 +1,23 @@
+# Spec-Kit Validation Configuration
+# Universal-first approach with opt-in enhancements
+
+project:
+  type: universal  # Default: never assume domain unless explicitly set
+
+validation:
+  quality_threshold: 60              # Practical threshold (40-95 range)
+  allow_na_responses: true           # Accept N/A for inapplicable sections
+  technical_pattern_recognition: true # Recognize legitimate technical content
+  level: standard                    # permissive|standard|strict|enterprise
+
+# Advanced features (explicit opt-in only)
+advanced:
+  domain_detection: false            # Must be explicitly enabled
+  confidence_threshold: 0.75         # High bar for auto-classification
+  custom_patterns: []                # User-defined pattern extensions
+
+# Usage examples:
+# specify validate                           # Use defaults
+# specify validate --level=strict           # Override strictness
+# specify validate --threshold=80           # Override threshold
+# specify validate --config=custom.yaml    # Use custom config
