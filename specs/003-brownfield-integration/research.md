@@ -356,6 +356,81 @@ UI Interactions: <200ms (executive function support)
        - Status preservation across sessions
    ```
 
+### 3.3 Cross-Device Responsive Design Strategy (CHK045)
+
+**CSS Framework Consolidation Analysis**:
+
+```yaml
+Framework Inventory Assessment:
+  Proven Responsive Frameworks:
+    - Bootstrap 4.6.2: CyberChef, Ghostwriter (proven responsive grid system)
+    - Emotion CSS: Actual Budget (CSS-in-JS: small: 512px, medium: 730px, wide: 1100px)
+    - Tailwind CSS: Commander Spellbook (utility-first responsive classes)
+    
+  Vue Component Libraries:
+    - Naive UI: IT-Tools (Vue 3 component library with responsive breakpoints)
+    - Vuetify 3.9.7: Mealie (Vue Material Design with built-in responsive design)
+    - n8n Design System: Custom Vue.js design system with SCSS responsive patterns
+    
+  Legacy Requirements:
+    - Custom CSS: Maltrail (manual media queries: 680px, 600px breakpoints)
+    - Vanilla JavaScript: 15 projects (need responsive retrofit)
+    - jQuery: 3 projects (legacy responsive patterns)
+    - No UI: 12+ CLI-only tools (need new responsive interfaces)
+```
+
+**Unified Framework Strategy**:
+
+```yaml
+Responsive Design Consolidation:
+  Standardized Breakpoint System:
+    - Adopt Actual Budget's proven system (512px/730px/1100px)
+    - Rationale: Matches <200ms performance requirements in existing tests
+    - Implementation: Framework-agnostic CSS custom properties
+    
+  Progressive Enhancement Approach:
+    - CLI Tool Retrofit: Responsive wrapper components for command-line tools
+    - Legacy Framework Migration: Preserve responsive patterns during technology updates
+    - Performance Optimization: CSS-in-JS patterns for executive function support
+    
+  Cross-Framework Compatibility:
+    - React Projects: Leverage existing responsive patterns from Actual Budget
+    - Vue Projects: Integrate with existing Vuetify/Naive UI responsive systems  
+    - Vanilla JS: Retrofit with standardized responsive utility classes
+```
+
+**Device Category Support Strategy**:
+
+```yaml
+Device Categories with Performance Targets:
+  Desktop Workstations (>1100px):
+    - Usage: Primary development/analysis environment (existing strength)
+    - Performance Target: <200ms interaction response, full feature access
+    - Implementation: Optimized for complex data visualization and analysis tools
+    
+  Laptops (730-1100px):
+    - Usage: Mobile security analysis and incident response
+    - Performance Target: <200ms response, optimized layouts for smaller screens
+    - Implementation: Responsive grid systems with priority-based feature display
+    
+  Tablets (512-730px):
+    - Usage: Executive dashboards and monitoring interfaces
+    - Performance Target: <250ms response, touch-optimized interfaces
+    - Implementation: Touch-first interaction patterns with gesture support
+    
+  Smartphones (<512px):
+    - Usage: Critical alerts and basic monitoring
+    - Performance Target: <300ms response, essential features only
+    - Implementation: Progressive web app patterns with offline functionality
+    
+  Large Displays (>1400px):
+    - Usage: SOC monitoring walls and data visualization
+    - Performance Target: <150ms response, enhanced data density
+    - Implementation: Multi-column layouts with real-time data streaming
+```
+
+**Performance Target Integration**: Maintain <200ms UI response per FR-013 across all device categories
+
 ## 4. Risk Mitigation Research
 
 ### 4.1 Business Logic Preservation Strategies

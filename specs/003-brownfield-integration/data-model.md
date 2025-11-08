@@ -1136,6 +1136,30 @@ File Format Conversions:
     - Binary formats → base64 encoding with metadata preservation
 ```
 
+#### Schema-Based Data Migration Framework
+
+**Migration Strategy**: Single PostgreSQL 15 instance with domain-specific schemas
+
+**Schema Architecture**:
+
+```sql
+-- Domain isolation using PostgreSQL schemas
+CREATE SCHEMA security_domain;     -- MISP, SecurityOnion, YARA-X, CyberChef
+CREATE SCHEMA productivity_domain; -- Actual Budget, Mealie, Dispatch, n8n
+CREATE SCHEMA mtg_domain;         -- Commander Spellbook, MTG Commander Map  
+CREATE SCHEMA infrastructure_domain; -- Kong, KasmVNC, IT-Tools
+CREATE SCHEMA jane_orchestrator;   -- Cross-domain coordination
+```
+
+**Critical Migration Patterns**:
+
+1. **MISP MySQL → security_domain**: Use existing INSTALL/POSTGRESQL-*.sql within dedicated schema
+2. **Commander Spellbook PostgreSQL**: pg_dump | psql with schema isolation
+3. **Actual Budget SQLite CRDT**: Custom converter preserving conflict-free replicated data structures
+4. **n8n TypeORM workflows**: Standard migration with search_path=infrastructure_domain
+
+**Validation**: Schema-level testing using existing 3,795+ test files with isolated test schemas
+
 ### 6.3 Data Validation and Quality Assurance
 
 ```sql

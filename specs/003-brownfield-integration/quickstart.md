@@ -656,6 +656,23 @@ Category C: Integration Exotic Patterns (557 patterns)
     - n8n-to-Dispatch incident escalation timing
     - Kong-to-MISP API rate limiting behavior validation
     - KasmVNC-to-IT-Tools session state preservation
+
+Category D: Edge Case Exotic Patterns (CHK039, CHK040) 
+  Zero-Data Scenario Testing (197 patterns):
+    - Empty threat intelligence databases with graceful degradation
+    - Zero recipe collections with onboarding guidance preservation  
+    - Empty MTG card databases with tutorial system activation
+    - No service configurations with default template loading
+    - Empty n8n workflow libraries with example workflow injection
+    - Zero audit logs with baseline logging system initialization
+    
+  Large Dataset Migration Testing (143 patterns):
+    - MISP datasets >100,000 indicators with memory optimization
+    - Mealie recipe collections >50,000 entries with pagination
+    - SecurityOnion event streams >1M events/hour with buffering
+    - n8n workflow libraries >10,000 workflows with lazy loading
+    - MTG card databases >25,000 cards with indexed searching
+    - Dispatch incident histories >100,000 cases with archival
 ```
 
 #### Exotic Pattern Migration Validation Framework
@@ -703,6 +720,52 @@ class ExoticPatternValidator:
         
         assert original_state['execution_path'] == migrated_state['execution_path']
         assert original_state['variable_state'] == migrated_state['variable_state']
+    
+    async def validate_zero_data_scenarios(self):
+        """CHK039: Validate zero-data scenario requirements across all domains"""
+        # Security domain zero-data validation
+        empty_misp = await self._test_empty_misp_database()
+        assert empty_misp['onboarding_active'] == True
+        assert empty_misp['default_templates_loaded'] == True
+        assert empty_misp['graceful_degradation'] == True
+        
+        # Productivity domain zero-data validation  
+        empty_mealie = await self._test_empty_mealie_collection()
+        assert empty_mealie['tutorial_activated'] == True
+        assert empty_mealie['sample_recipes_available'] == True
+        
+        # MTG domain zero-data validation
+        empty_mtg = await self._test_empty_card_database()
+        assert empty_mtg['tutorial_system_active'] == True
+        assert empty_mtg['basic_rules_loaded'] == True
+        
+        # Infrastructure domain zero-data validation
+        empty_services = await self._test_zero_service_configs()
+        assert empty_services['default_templates_loaded'] == True
+        assert empty_services['setup_wizard_active'] == True
+        
+    async def validate_large_dataset_migration(self):
+        """CHK040: Validate large dataset migration requirements with optimization"""
+        # MISP large dataset validation (>100k indicators)
+        large_misp = await self._test_misp_100k_indicators()
+        assert large_misp['memory_usage_mb'] < 2000  # Optimization requirement
+        assert large_misp['migration_time_minutes'] < 30  # Performance requirement
+        assert large_misp['data_integrity_check'] == True  # Accuracy requirement
+        
+        # Mealie large dataset validation (>50k recipes)  
+        large_mealie = await self._test_mealie_50k_recipes()
+        assert large_mealie['pagination_working'] == True
+        assert large_mealie['search_performance_ms'] < 500
+        
+        # SecurityOnion stream validation (>1M events/hour)
+        large_security_onion = await self._test_security_onion_1m_events()
+        assert large_security_onion['buffer_overflow'] == False
+        assert large_security_onion['processing_latency_ms'] < 50
+        
+        # n8n workflow library validation (>10k workflows)
+        large_n8n = await self._test_n8n_10k_workflows()
+        assert large_n8n['lazy_loading_active'] == True
+        assert large_n8n['ui_responsive'] == True
 EOF
 
 # 3. Set up automated exotic pattern regression testing
