@@ -1,0 +1,95 @@
+Actual Budget - Experimental Archive Manifest
+==============================================
+
+Date Created: 2025-11-09
+Location: /workspaces/modular-monolith-2/experimental-archive/actual/
+Source: /workspaces/modular-monolith-2/features/actual/packages/
+Purpose: Preserve non-essential features for future exploration
+
+Contents:
+---------
+
+1. desktop-electron/
+   - Purpose: Electron desktop application wrapper
+   - Size: ~682 LOC in index.ts
+   - Key files:
+     * index.ts - Main Electron process
+     * preload.ts - Renderer preload script
+     * menu.ts - Native menu definitions
+     * server.ts - Background server process
+     * security.ts - Security policies
+     * window-state.ts - Window state persistence
+     * package.json - Electron dependencies
+   - Dependencies: electron ^38.3.0, electron-builder ^26.0.12
+
+2. plugins-service/
+   - Purpose: Client-side plugin system (INCOMPLETE FEATURE)
+   - Size: ~150 LOC in plugin-service-worker.ts
+   - Key files:
+     * src/plugin-service-worker.ts - Service worker for plugin loading
+     * package.json - Workbox dependencies
+   - Status: Disabled in UI (disableToggle={true})
+   - Upstream: https://github.com/actualbudget/actual/issues/4049
+
+3. platform/
+   - Purpose: Cross-platform abstraction layer
+   - Size: ~700 LOC across adapters
+   - Structure:
+     * server/asyncStorage/ - Async key-value storage
+     * server/connection/ - WebSocket/HTTP client
+     * server/fetch/ - HTTP client abstraction
+     * server/fs/ - File system operations
+     * server/indexeddb/ - IndexedDB wrapper
+     * server/log/ - Logging infrastructure
+     * server/sqlite/ - SQLite adapter
+     * client/fetch/ - Browser fetch wrapper
+     * client/undo/ - Undo/redo manager
+   - Purpose: Node.js/Browser/React Native abstraction
+
+File Counts:
+-----------
+Total directories: 12
+Total files: ~50
+Total LOC: ~1900
+Migration effort saved: 17-21 hours
+
+Why Archived:
+-------------
+- Electron: Web deployment doesn't need desktop packaging (0% business value)
+- Platform: Python has superior equivalents (sqlite3, pathlib, httpx, logging)
+- Plugins: Incomplete feature, disabled in upstream UI
+
+Revival Conditions:
+------------------
+- Electron: Desktop distribution requirement emerges
+- Platform: Multi-runtime architecture needed (TypeScript + Python)
+- Plugins: Upstream completes plugin API (Actual v26+)
+
+Documentation:
+-------------
+- README.md - Full analysis and context
+- REVIVAL-GUIDE.md - Step-by-step revival process
+- /tmp/actual-platform-analysis.md - Detailed evaluation
+
+Related Files:
+-------------
+- Migration tasks: specs/003-brownfield-integration/tasks-individual/tasks-actual.md
+- Gap analysis: /tmp/actual-gaps-analysis.md
+- Final summary: /tmp/actual-migration-final-summary.md
+
+Integrity:
+----------
+Original source: Actual Budget v25.10.0
+Archive method: cp -r (preserves all files)
+Verification: Manual inspection of key files
+
+Notes:
+------
+- This archive preserves code only, not git history
+- For full history, see upstream: https://github.com/actualbudget/actual
+- Archive is READ-ONLY reference, not for active development
+- Create new tasks in main migration if revival needed
+
+Contact:
+--------
+See main project README for migration team contacts

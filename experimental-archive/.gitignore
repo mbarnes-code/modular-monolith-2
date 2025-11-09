@@ -1,0 +1,48 @@
+# Experimental Archive .gitignore
+
+# Large binary files (keep docs, archive source code)
+*.dmg
+*.exe
+*.appx
+*.msi
+*.deb
+*.rpm
+*.pkg
+*.app
+
+# Node modules (if accidentally copied)
+**/node_modules/
+
+# Build artifacts (if accidentally copied)
+**/build/
+**/dist/
+**/.next/
+**/.nuxt/
+
+# IDE files (if accidentally copied)
+**/.vscode/
+**/.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Keep all markdown and text documentation
+!*.md
+!*.txt
+!*.json
+
+# Keep source code
+!*.ts
+!*.tsx
+!*.js
+!*.jsx
+!*.py
+!*.css
+!*.scss
+!*.html
+
+# Note: This archive is for CODE REFERENCE, not for active development
+# All archived code is READ-ONLY and should not be modified

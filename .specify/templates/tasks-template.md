@@ -1,8 +1,47 @@
 ---
 description: "Task list template for asset relocation and implementation"
+parent_task: "../tasks.md#TXXX"
+parent_phase: "Phase X: [Domain] Migrations"
+return_to: "../tasks.md#TXXX"
+domain: "[security|productivity|mtg|infrastructure]"
+target_service: "apps/[SERVICE]/src/"
+legacy_path: "features/[FEATURE]"
+estimated_hours: XX
 ---
 
 # Tasks: [MIGRATION: FEATURE NAME]
+
+**⬆️ PARENT TASK**: [`tasks.md#TXXX`](../tasks.md#TXXX)  
+**⬇️ RETURN TO**: [`tasks.md#TXXX`](../tasks.md#TXXX)
+
+---
+
+## Handoff Context
+
+**Called From**: `tasks.md` Phase X, Task TXXX  
+**Entry Condition**: [Domain] service foundation ready (Phase 1-4 complete)  
+**Exit Condition**: All tasks below complete + validation tests pass  
+**Return Action**: Mark TXXX complete in parent `tasks.md`, proceed to next task
+
+**Handoff Protocol**: See [`HANDOFF-PROTOCOL.md`](./HANDOFF-PROTOCOL.md) for complete workflow documentation.
+
+---
+
+## Pre-Flight Checklist ✅
+
+**Verify these conditions before starting any tasks below**:
+
+- [ ] Parent Phase 1-4 marked complete in `tasks.md`
+- [ ] `apps/[SERVICE]/src/` exists with base infrastructure
+- [ ] Database migrations from Phase 2 applied
+- [ ] Authentication/authorization from Phase 3 working
+- [ ] Test framework from Phase 3 operational
+- [ ] Legacy environment setup: `features/[FEATURE]/` accessible
+- [ ] Project analysis report completed and validated
+
+**⚠️ If any checklist item fails**: STOP and return to parent `tasks.md` to complete prerequisites.
+
+---
 
 **Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
 **Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
@@ -324,3 +363,44 @@ description: "Task list template for asset relocation and implementation"
 - Integration parity: All external services continue working without changes
 - Domain parity: All business rules and domain knowledge preserved
 - User parity: All user workflows continue functioning identically
+
+---
+
+## Post-Flight Checklist ✅
+
+**Verify these conditions before marking parent task complete**:
+
+- [ ] All tasks T001-TXXX marked complete above
+- [ ] Integration tests pass: `pytest tests/[domain]/test_[feature]_integration.py`
+- [ ] Performance baselines met (documented in `migration-validation.md`)
+- [ ] Ground truth tests confirm functional parity with legacy
+- [ ] Legacy `features/[FEATURE]/` backed up to `archive/`
+- [ ] Migration completion documented in `migration-validation.md`
+- [ ] All analysis findings from project_analysis_report.md addressed
+- [ ] No regressions in existing functionality
+- [ ] Security audit passed (if applicable)
+- [ ] Accessibility compliance maintained (WCAG 2.1 AA)
+
+**⚠️ If any checklist item fails**: DO NOT mark parent task complete. Fix issues and re-validate.
+
+**Completion Action**:
+1. Mark all checkboxes above ✅
+2. Run validation command: `pytest tests/[domain]/test_[feature]_integration.py`
+3. Document completion in `migration-validation.md`
+4. Mark parent task TXXX complete in `tasks.md`
+5. Proceed to return task (next in sequence) in `tasks.md`
+
+**Documentation Update Required**:
+```markdown
+# In migration-validation.md
+
+### [FEATURE NAME] Migration (TXXX)
+- **Status**: ✅ Complete
+- **Completed**: [DATE]
+- **Estimated Hours**: XX
+- **Actual Hours**: XX
+- **Tests**: X passed, 0 failed
+- **Performance**: All baselines met/exceeded
+- **Notes**: [Any notable achievements or challenges]
+```
+

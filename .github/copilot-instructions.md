@@ -115,15 +115,14 @@ python tests/performance/infrastructure-domain-validation.py
 
 - **Security Tools**: <1s response (threat analysis criticality)
 - **Productivity Tools**: <2s response (task management workflows)
-- **MTG Tools**: <3s response (game analysis complexity)
+- **TCG Tools**: <3s response (game analysis complexity)
 - **Infrastructure Tools**: <5s response (system operations tolerance)
 - **Cross-Tool Sync**: 250ms WebSocket latency (real-time data flow)
 - **UI Interactions**: <200ms (executive function support)
 
 ## Migration Strategy (Constitutional)
 
-- **Approach**: Big-bang migration (all 37 tools simultaneously) with framework preservation
-- **Categories**: A (Complex Algorithms → microservices when needed), B (Domain Logic → modular with framework preservation), C (Utilities → shared libs, technology choice based on preservation requirements)
+ **Categories**: A (Complex Algorithms → microservices when needed), B (Domain Logic → modular with framework preservation), C (Utilities → shared libs, technology choice based on preservation requirements)
 - **Completion Criteria**: features/ directory empty, 100% functionality preserved, evidence-based technology choices
 - **Validation**: Automated testing, feature parity verification, performance benchmarks, framework compatibility
 
@@ -135,8 +134,175 @@ python tests/performance/infrastructure-domain-validation.py
 - **Phase 14**: Production polish and performance validation (20 tasks)
 - **Key Features Added**: User preferences (FR-008), domain performance validation (NFR-006), rollback capabilities (FR-013)
 
+## Document Handoff Protocol for Migration Tasks
+
+When working with brownfield migration tasks, follow this hierarchical workflow:
+
+### 1. Starting Point: Top-Level Orchestration
+
+**Always begin with**: `specs/003-brownfield-integration/tasks.md`
+
+This is the master orchestration document that coordinates:
+
+- Foundation phases (1-4): Shared infrastructure setup
+- Individual project migrations (Phase 5+): Delegated to individual task files
+- Integration and polish phases: Final validation
+
+### 2. Detecting Handoff Points
+
+**Look for the `[HANDOFF]` tag** in task descriptions:
+
+```markdown
+- [ ] T100 [HANDOFF] Migrate CyberChef
+  - **File**: tasks-individual/tasks-cyberchef.md
+  - **Entry Condition**: Phase 1-4 complete, security-service foundation ready
+  - **Exit Condition**: All tasks complete + validation tests pass
+  - **Validation**: pytest tests/security/test_cyberchef_integration.py
+  - **Return To**: T101
+```
+
+This signals delegation to a child document for detailed implementation.
+
+### 3. Handoff Execution Workflow
+
+When encountering a `[HANDOFF]` task:
+
+**Step 1: Verify Entry Condition**
+
+- Read the entry condition from the handoff task
+- Verify all prerequisites are met (e.g., foundation phases complete)
+- If NOT met: Complete prerequisites first before proceeding
+
+**Step 2: Open Child Document**
+
+- Navigate to the file specified in the "File:" field
+- Review the handoff context and metadata at the top
+- Example: `specs/003-brownfield-integration/tasks-individual/tasks-cyberchef.md`
+
+**Step 3: Execute Pre-Flight Checklist**
+
+- Work through the Pre-Flight Checklist ✅ section at the top of child document
+- Verify ALL items before starting any tasks
+- If any item fails: STOP and return to parent document to resolve
+
+**Step 4: Complete All Child Tasks**
+
+- Execute all tasks in the child document sequentially (unless marked `[P]` for parallel)
+- Follow the brownfield migration methodology
+- Maintain functional parity with legacy code
+- Run validation tests as specified
+
+**Step 5: Execute Post-Flight Checklist**
+
+- Work through the Post-Flight Checklist ✅ section at the bottom
+- Verify ALL completion criteria are met
+- Run the validation command specified in the handoff task
+- Document completion in `migration-validation.md`
+
+**Step 6: Return to Parent**
+
+- Mark the parent `[HANDOFF]` task complete in `tasks.md`
+- Proceed to the "Return To" task specified in handoff metadata
+- Continue with next task in parent orchestration
+
+### 4. Parallel Handoffs
+
+Tasks marked `[P] [HANDOFF]` can execute in parallel:
+
+```markdown
+- [ ] T100 [P] [HANDOFF] Migrate CyberChef
+- [ ] T101 [P] [HANDOFF] Migrate Maltrail
+- [ ] T102 [P] [HANDOFF] Migrate HELK
+```
+
+**Parallel Execution Rules**:
+
+1. Each can start independently (no dependencies between them)
+2. Create separate branches: `migration/cyberchef`, `migration/maltrail`, etc.
+3. Each must complete fully (all exit conditions met) before merging
+4. All parallel tasks must complete before proceeding past that phase
+
+### 5. Completion Criteria
+
+**A task is NOT complete until**:
+
+- ✅ All checkboxes in the child document are marked
+- ✅ All validation tests pass
+- ✅ Exit conditions verified
+- ✅ Completion documented in migration-validation.md
+- ✅ Parent handoff task marked complete
+- ✅ No regressions introduced
+
+**Never skip**:
+
+- Pre-flight checklists (prevents wasted work on incomplete foundations)
+- Post-flight validation (ensures quality before returning)
+- Documentation updates (maintains audit trail)
+
+### 6. Error Handling
+
+**If Entry Conditions Fail**:
+
+- STOP child task execution
+- Document blocker in migration-validation.md
+- Return to parent tasks.md to resolve prerequisites
+- Do not proceed until conditions are met
+
+**If Exit Conditions Fail**:
+
+- DO NOT mark parent task complete
+- Debug and fix issues in child implementation
+- Re-run validation tests
+- Only mark complete when all exit criteria pass
+
+**If Validation Tests Fail**:
+
+- Review test failures and fix implementation
+- Ensure ground truth tests confirm functional parity
+- Re-test until all pass
+- Document results before marking complete
+
+### 7. Complete Handoff Protocol Documentation
+
+For full details, see: `specs/003-brownfield-integration/HANDOFF-PROTOCOL.md`
+
+This document includes:
+
+- Complete workflow examples
+- State tracking guidance
+- Branching strategies for parallel work
+- Progress tracking in migration-validation.md
+- Quality gates and checkpoints
+
+### 8. Practical Example Flow
+
+```
+1. Start: specs/003-brownfield-integration/tasks.md
+2. Find: [ ] T100 [HANDOFF] Migrate CyberChef
+3. Verify: Entry condition met (Phase 1-4 complete)
+4. Open: tasks-individual/tasks-cyberchef.md
+5. Check: Pre-Flight Checklist (all ✅)
+6. Execute: All tasks T001-T040 in child doc
+7. Check: Post-Flight Checklist (all ✅)
+8. Validate: pytest tests/security/test_cyberchef_integration.py (pass)
+9. Document: Update migration-validation.md
+10. Return: Mark T100 complete in tasks.md
+11. Continue: Proceed to T101 in tasks.md
+```
+
+### 9. Key Principles
+
+**Sequential Foundation** → Complete phases 1-4 before ANY individual migrations
+**Parallel Execution** → Multiple projects can migrate simultaneously after foundation
+**Quality Gates** → Never skip pre-flight or post-flight validation
+**Complete Return** → Only mark parent complete when ALL child work is done
+**Continuous Documentation** → Update migration-validation.md throughout
+
+---
+
 ## Recent Changes
 
+- 2025-11-09: Document handoff protocol v1.0.0 - Hierarchical task delegation system for brownfield migrations
 - 2025-10-26: Constitutional reform v2.0.0 - Separated universal principles from platform-specific requirements
 - 2025-10-26: Technology stack confirmation - React/Next.js primary frontend based on evidence-based analysis
 - 2025-10-22: Architecture clarification - Modular monolith codebase with optional 3-device deployment, framework-agnostic approach based on business logic needs
