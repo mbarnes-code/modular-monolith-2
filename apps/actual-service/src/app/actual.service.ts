@@ -5,7 +5,15 @@
  * It acts as a bridge between the Actual Budget application and the Jane platform.
  */
 
+import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
+
+interface ActualConfiguration {
+  name: string;
+  version: string;
+  description: string;
+  path: string;
+}
 
 export class ActualService {
   private actualPath: string;
@@ -36,10 +44,9 @@ export class ActualService {
    */
   async isInstalled(): Promise<boolean> {
     try {
-      const fs = require('fs');
       const path = resolve(this.actualPath, 'package.json');
-      return fs.existsSync(path);
-    } catch (error) {
+      return existsSync(path);
+    } catch {
       return false;
     }
   }
@@ -47,15 +54,14 @@ export class ActualService {
   /**
    * Get Actual Budget configuration
    */
-  async getConfiguration(): Promise<any> {
+  async getConfiguration(): Promise<ActualConfiguration> {
     if (!(await this.isInstalled())) {
       throw new Error('Actual Budget is not installed');
     }
 
     try {
-      const fs = require('fs');
       const packagePath = resolve(this.actualPath, 'package.json');
-      const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
+      const packageJson = JSON.parse(readFileSync(packagePath, 'utf-8'));
 
       return {
         name: packageJson.name,

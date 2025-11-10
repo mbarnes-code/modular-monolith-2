@@ -1,11 +1,8 @@
 {
   "recommendations": [
-    // Core Development
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "streetsidesoftware.code-spell-checker",
-
-    // Python Development Stack
     "ms-python.python",
     "ms-python.vscode-pylance",
     "ms-python.black-formatter",
@@ -13,57 +10,35 @@
     "ms-python.isort",
     "ms-python.debugpy",
     "kevinrose.vsc-python-indent",
-
-    // TypeScript/JavaScript Development
     "ms-vscode.vscode-typescript-next",
     "formulahendry.auto-rename-tag",
     "christian-kohler.path-intellisense",
     "steoates.autoimport-es6-ts",
-
-    // React/Next.js Development
     "bradlc.vscode-tailwindcss",
     "dsznajder.es7-react-js-snippets",
-
-    // NX Monorepo Management
     "nrwl.angular-console",
-
-    // Infrastructure & DevOps
     "ms-azuretools.vscode-docker",
     "ms-kubernetes-tools.vscode-kubernetes-tools",
     "ms-vscode-remote.remote-containers",
     "hashicorp.terraform",
-
-    // Configuration & Data Formats
     "redhat.vscode-yaml",
     "ms-vscode.vscode-json",
     "tamasfe.even-better-toml",
-
-    // Git & Version Control
     "eamodio.gitlens",
     "mhutchie.git-graph",
     "github.vscode-pull-request-github",
-
-    // API Development & Testing
     "humao.rest-client",
     "42crunch.vscode-openapi",
     "rangav.vscode-thunder-client",
-
-    // AI & Productivity
     "GitHub.copilot",
     "GitHub.copilot-chat",
-
-    // Markdown & Documentation
     "yzhang.markdown-all-in-one",
     "bierner.markdown-preview-github-styles",
     "davidanson.vscode-markdownlint",
-
-    // Development Utilities
     "aaron-bond.better-comments",
     "gruntfuggly.todo-tree",
     "ms-vscode.hexeditor",
     "vscode-icons-team.vscode-icons",
-
-    // Language Support (Optional)
     "rust-lang.rust-analyzer",
     "redhat.java",
     "vscjava.vscode-java-pack"

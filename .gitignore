@@ -100,3 +100,7 @@ kubeconfig
 Thumbs.db
 .AppleDouble
 .LSOverride
+
+# Next.js
+.next
+out

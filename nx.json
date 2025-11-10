@@ -79,7 +79,28 @@
     "dispatch-service": "apps/dispatch-service",
     "mealie-service": "apps/mealie-service",
     "hexstrike-service": "apps/hexstrike-service",
+    "commander-spellbook-site": "apps/commander-spellbook-site",
+    "commander-spellbook-backend": "apps/commander-spellbook-backend",
     "dispatch-core": "libs/dispatch-core",
     "dispatch-database": "libs/dispatch-database"
-  }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/next/plugin",
+      "options": {
+        "startTargetName": "next:start",
+        "buildTargetName": "next:build",
+        "devTargetName": "next:dev",
+        "serveStaticTargetName": "serve-static",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps"
+      }
+    },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "eslint:lint"
+      }
+    }
+  ]
 }

@@ -364,6 +364,87 @@
         "panel": "shared"
       },
       "problemMatcher": []
+    },
+
+    // Commander Spellbook Tasks
+    {
+      "label": "Serve Commander Spellbook Site",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "commander-spellbook-site"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "source": "ts",
+        "applyTo": "closedDocuments",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*",
+          "endsPattern": ".*ready on.*"
+        }
+      }
+    },
+    {
+      "label": "Serve Commander Spellbook Backend",
+      "type": "shell",
+      "command": "python",
+      "args": ["manage.py", "runserver", "0.0.0.0:8081"],
+      "options": {
+        "cwd": "${workspaceFolder}/apps/commander-spellbook-backend/backend"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Commander Spellbook Site",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "commander-spellbook-site"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Commander Spellbook Backend",
+      "type": "shell",
+      "command": "python",
+      "args": ["-m", "pytest"],
+      "options": {
+        "cwd": "${workspaceFolder}/apps/commander-spellbook-backend"
+      },
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
     }
   ]
 }

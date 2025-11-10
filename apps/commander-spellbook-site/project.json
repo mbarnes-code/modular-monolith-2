@@ -1,0 +1,83 @@
+{
+  "name": "commander-spellbook-site",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/commander-spellbook-site/src",
+  "projectType": "application",
+  "tags": ["scope:mtg", "type:frontend", "framework:nextjs"],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/commander-spellbook-site"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/commander-spellbook-site"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:dev",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "commander-spellbook-site:build",
+        "dev": true,
+        "port": 3001
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "commander-spellbook-site:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "commander-spellbook-site:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "commander-spellbook-site:build:production"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "jest",
+        "cwd": "apps/commander-spellbook-site"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/commander-spellbook-site/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "apps/commander-spellbook-site"
+      }
+    },
+    "cypress:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cypress run",
+        "cwd": "apps/commander-spellbook-site"
+      }
+    },
+    "cypress:open": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cypress open",
+        "cwd": "apps/commander-spellbook-site"
+      }
+    }
+  }
+}

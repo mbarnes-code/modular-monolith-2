@@ -1,0 +1,51 @@
+{
+  "name": "commander-spellbook-backend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/commander-spellbook-backend/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python manage.py runserver 0.0.0.0:8080",
+        "cwd": "apps/commander-spellbook-backend"
+      }
+    },
+    "migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python manage.py migrate",
+        "cwd": "apps/commander-spellbook-backend"
+      }
+    },
+    "makemigrations": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python manage.py makemigrations",
+        "cwd": "apps/commander-spellbook-backend"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m pytest",
+        "cwd": "apps/commander-spellbook-backend"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flake8 .",
+        "cwd": "apps/commander-spellbook-backend"
+      }
+    },
+    "collectstatic": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python manage.py collectstatic --noinput",
+        "cwd": "apps/commander-spellbook-backend"
+      }
+    }
+  },
+  "tags": ["scope:mtg", "type:backend", "framework:django"]
+}
