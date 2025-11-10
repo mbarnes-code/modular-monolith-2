@@ -13,7 +13,7 @@
   "private": true,
   "devDependencies": {
     "@next/eslint-plugin-next": "^16.0.0",
-    "@nx/eslint": "21.6.4",
+    "@nx/eslint": "22.0.2",
     "@nx/express": "^22.0.1",
     "@nx/js": "22.0.1",
     "@nx/next": "21.6.5",
