@@ -1,0 +1,90 @@
+{
+  "name": "mealie-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/mealie-service/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "development",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/mealie-service",
+        "main": "apps/mealie-service/src/main.ts",
+        "tsConfig": "apps/mealie-service/tsconfig.app.json",
+        "assets": [],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/mealie-service/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/mealie-service/src/environments/environment.ts",
+              "with": "apps/mealie-service/src/environments/environment.dev.ts"
+            }
+          ]
+        },
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/mealie-service/src/environments/environment.ts",
+              "with": "apps/mealie-service/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "mealie-service:build",
+        "env": {
+          "MEALIE_PORT": "9925",
+          "MEALIE_HOST": "0.0.0.0"
+        }
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "mealie-service:build:development",
+          "env": {
+            "MEALIE_PORT": "9925",
+            "MEALIE_HOST": "0.0.0.0"
+          }
+        },
+        "production": {
+          "buildTarget": "mealie-service:build:production",
+          "env": {
+            "MEALIE_PORT": "9925",
+            "MEALIE_HOST": "0.0.0.0"
+          }
+        }
+      }
+    },
+
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/mealie-service/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "coverage": true
+        }
+      }
+    }
+  },
+  "tags": ["type:service", "domain:productivity", "framework:node"]
+}

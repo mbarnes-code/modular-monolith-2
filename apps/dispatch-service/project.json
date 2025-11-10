@@ -7,21 +7,46 @@
     "serve": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "uvicorn src.main:app --reload --host 0.0.0.0 --port 8013",
-        "cwd": "apps/dispatch-service"
+        "command": "/home/codespace/.python/current/bin/python -m uvicorn main:app --reload --host 0.0.0.0 --port 8013",
+        "cwd": "apps/dispatch-service/src",
+        "env": {
+          "PYTHONPATH": "apps/dispatch-service/src"
+        }
+      }
+    },
+    "serve-prod": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "/home/codespace/.python/current/bin/python -m uvicorn main:app --host 0.0.0.0 --port 8013",
+        "cwd": "apps/dispatch-service/src",
+        "env": {
+          "PYTHONPATH": "apps/dispatch-service/src"
+        }
       }
     },
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "echo 'Building dispatch service...'",
-        "cwd": "apps/dispatch-service"
+        "commands": [
+          "python -m pip install -e .",
+          "echo 'Dispatch service built successfully'"
+        ],
+        "cwd": "apps/dispatch-service",
+        "parallel": false
       }
     },
     "test": {
-      "executor": "nx:run-commands", 
+      "executor": "nx:run-commands",
       "options": {
-        "command": "python -m pytest tests/ -v",
+        "command": "python -m pytest tests/ -v --tb=short",
+        "cwd": "apps/dispatch-service"
+      },
+      "dependsOn": ["^build"]
+    },
+    "test-cov": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m pytest tests/ -v --cov=src --cov-report=term-missing",
         "cwd": "apps/dispatch-service"
       }
     },
@@ -31,7 +56,43 @@
         "command": "ruff check src/",
         "cwd": "apps/dispatch-service"
       }
+    },
+    "lint-fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ruff check src/ --fix",
+        "cwd": "apps/dispatch-service"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ruff format src/ tests/",
+        "cwd": "apps/dispatch-service"
+      }
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m mypy src/",
+        "cwd": "apps/dispatch-service"
+      }
+    },
+    "migrations-upgrade": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "alembic upgrade head",
+        "cwd": "apps/dispatch-service"
+      }
+    },
+    "migrations-downgrade": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "alembic downgrade -1",
+        "cwd": "apps/dispatch-service"
+      }
     }
   },
-  "tags": ["type:service", "domain:productivity", "scope:backend"]
+  "tags": ["type:service", "domain:incident-management", "scope:backend"],
+  "implicitDependencies": ["dispatch-core", "dispatch-database"]
 }

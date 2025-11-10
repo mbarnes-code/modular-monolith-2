@@ -1,0 +1,30 @@
+{
+  "name": "dispatch-core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/dispatch-core/src",
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ruff check src/",
+        "cwd": "libs/dispatch-core"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ruff format src/",
+        "cwd": "libs/dispatch-core"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m pytest tests/ -v",
+        "cwd": "libs/dispatch-core"
+      }
+    }
+  },
+  "tags": ["type:library", "domain:dispatch", "scope:shared"]
+}

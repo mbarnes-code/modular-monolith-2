@@ -1,0 +1,29 @@
+{
+  "name": "mealie-service",
+  "version": "1.0.0",
+  "description": "Mealie recipe management service integration for Jane platform",
+  "main": "src/main.ts",
+  "scripts": {
+    "start": "node dist/apps/mealie-service/main.js",
+    "dev": "nx serve mealie-service",
+    "build": "nx build mealie-service",
+    "test": "nx test mealie-service",
+    "lint": "nx lint mealie-service"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.0.0"
+  },
+  "keywords": [
+    "mealie",
+    "recipes",
+    "meal-planning",
+    "food",
+    "cooking",
+    "jane-platform"
+  ]
+}

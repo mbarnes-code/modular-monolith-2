@@ -1,6 +1,6 @@
 # Dispatch Service
 
-Integration service for Netflix's Dispatch incident management platform within the Mental Prosthetic Platform.
+Integration service for Netflix's Dispatch incident management platform within the Mental Prosthetic Platform, organized following NX best practices.
 
 ## Overview
 
@@ -12,14 +12,36 @@ Dispatch is an incident management and orchestration platform that provides:
 - **Post-Incident Analysis**: Review and learning capabilities
 - **Tool Integration**: Deep integration with existing organizational tools
 
-## Architecture
+## NX Architecture
 
-This service follows the modular monolith architecture with:
+This service follows NX best practices with a clean separation of concerns:
 
-- **API Layer** (`src/api/`): FastAPI endpoints and routing
-- **Data Layer** (`src/data/`): SQLAlchemy models and database schemas
-- **Services Layer** (`src/services/`): Business logic and external integrations
-- **Domains Layer** (`src/domains/`): Domain-specific business rules
+### **Project Structure**
+```
+apps/dispatch-service/           # Main application
+├── src/
+│   ├── app/                    # Application core (config, extensions, models)
+│   ├── api/                    # FastAPI endpoints and routing
+│   ├── domains/                # Domain-specific business logic
+│   ├── services/               # Business logic and external integrations
+│   └── main.py                 # Application entry point
+└── tests/                      # Application tests
+
+libs/dispatch-core/              # Shared core library
+├── src/
+│   ├── types.py               # Shared type definitions
+│   ├── enums.py               # Application enumerations
+│   ├── exceptions.py          # Custom exceptions
+│   └── utils.py               # Utility functions
+
+libs/dispatch-database/          # Database library
+└── src/
+    └── data/                   # Database models, migrations, schemas
+```
+
+### **Dependencies**
+- **dispatch-service** → depends on → **dispatch-core**, **dispatch-database**
+- **dispatch-database** → depends on → **dispatch-core**
 
 ## Performance Target
 
@@ -31,41 +53,42 @@ This service follows the modular monolith architecture with:
 ### Prerequisites
 
 - Python 3.12+
-- FastAPI
-- SQLAlchemy
-- Alembic for database migrations
+- NX workspace
+- FastAPI, SQLAlchemy, Alembic
 
-### Running the Service
+### NX Commands
 
 ```bash
-# From the workspace root
-npx nx serve dispatch-service
+# Development
+npx nx serve dispatch-service              # Start development server
+npx nx serve-prod dispatch-service         # Start production server
 
-# Or directly with uvicorn
-cd apps/dispatch-service
-uvicorn src.main:app --reload --host 0.0.0.0 --port 8013
+# Building
+npx nx build dispatch-service              # Build the service
+
+# Testing
+npx nx test dispatch-service               # Run tests
+npx nx test-cov dispatch-service          # Run tests with coverage
+
+# Code Quality
+npx nx lint dispatch-service              # Run linting
+npx nx lint-fix dispatch-service          # Fix linting issues
+npx nx format dispatch-service            # Format code
+npx nx type-check dispatch-service        # Type checking
+
+# Database
+npx nx migrations-upgrade dispatch-service # Run database migrations
+npx nx migrations-downgrade dispatch-service # Rollback migrations
 ```
 
-### Testing
+### Running Multiple Commands
 
 ```bash
-# Run tests
-npx nx test dispatch-service
+# Quality checks
+npx nx run-many --target=lint --projects=dispatch-service,dispatch-core,dispatch-database
 
-# Or directly with pytest
-cd apps/dispatch-service
-python -m pytest tests/ -v
-```
-
-### Linting
-
-```bash
-# Run linting
-npx nx lint dispatch-service
-
-# Or directly with ruff
-cd apps/dispatch-service
-ruff check src/
+# Build all dispatch projects
+npx nx run-many --target=build --projects=dispatch-service,dispatch-core,dispatch-database
 ```
 
 ## API Endpoints
@@ -80,24 +103,76 @@ ruff check src/
 
 ### Integration Status
 
-🚧 **Current Status**: Service skeleton created, Dispatch integration pending
+🚧 **Current Status**: NX reorganization complete, API integration in progress
 
-The service currently provides placeholder implementations. Full Dispatch integration requires:
+The service has been restructured following NX best practices:
 
-1. Database schema migration from original Dispatch
-2. Authentication and authorization setup
-3. Integration with external services (Slack, Jira, etc.)
-4. Business logic porting with preservation requirements
-5. Performance optimization for <2s response times
+✅ **Completed**:
+- Clean project structure with shared libraries
+- Proper dependency management
+- Enhanced NX targets (lint, format, type-check, etc.)
+- Separated core utilities and database layer
+- Improved build and test processes
+
+🚧 **In Progress**:
+- Full API router integration
+- Database connection setup
+- Authentication and authorization
+- External service integrations
+
+## Shared Libraries
+
+### **dispatch-core** (`libs/dispatch-core`)
+Shared utilities, types, enums, and exceptions used across the Dispatch ecosystem.
+
+**Key Features**:
+- Type definitions for consistent data structures
+- Application-wide enumerations
+- Custom exception classes
+- Common utility functions
+
+**Usage**: 
+```python
+from dispatch_core.types import DispatchModel
+from dispatch_core.enums import IncidentStatus
+from dispatch_core.exceptions import DispatchException
+```
+
+### **dispatch-database** (`libs/dispatch-database`)
+Database models, migrations, and data access utilities.
+
+**Key Features**:
+- SQLAlchemy models and relationships
+- Alembic migration configurations
+- Database connection utilities
+- Data access patterns
+
+**Usage**:
+```python
+from dispatch_database.data.database import get_db
+from dispatch_database.data.models import Incident
+```
+
+## NX Best Practices Implemented
+
+✅ **Project Organization**: Clean separation between apps and libs
+✅ **Dependency Management**: Explicit project dependencies
+✅ **Build Targets**: Comprehensive build, test, lint, format targets
+✅ **Code Quality**: Ruff formatting, MyPy type checking, pytest testing
+✅ **Caching**: Proper .gitignore with cache directories excluded
+✅ **Tagging**: Proper project tags for type, domain, and scope
+✅ **Library Extraction**: Common code moved to reusable libraries
 
 ## Related Documentation
 
 - [Original Dispatch Repository](https://github.com/Netflix/dispatch) (Archived)
 - [Dispatch Documentation](https://netflix.github.io/dispatch/)
+- [NX Documentation](https://nx.dev)
 - [Mental Prosthetic Platform Architecture](../../docs/)
 
-## Tags
+## Project Tags
 
 - `type:service` - Service application
-- `domain:productivity` - Productivity domain (incident management)
+- `domain:incident-management` - Incident management domain
 - `scope:backend` - Backend service
+- **Dependencies**: `dispatch-core`, `dispatch-database`

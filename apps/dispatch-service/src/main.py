@@ -30,19 +30,57 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
-# TODO: Enable when dependencies are resolved
-# from .logging import configure_logging
-# configure_logging()
-
-# Configure extensions (Sentry, etc.) - TODO: Enable later
-# from .extensions import configure_extensions
-# configure_extensions()
-
-# Import after logging is configured (disabled for now)
-# from .api.api import api_router
-# from .api.rate_limiter import limiter
-
 log = logging.getLogger(__name__)
+
+# Import shared libraries
+try:
+    import sys
+    core_path = "/workspaces/modular-monolith-2/libs/dispatch-core/src"
+    db_path = "/workspaces/modular-monolith-2/libs/dispatch-database/src"
+    sys.path.insert(0, core_path)
+    sys.path.insert(0, db_path)
+
+    import dispatch_types as dispatch_types  # noqa: F401
+    import enums as dispatch_enums  # noqa: F401
+    import exceptions as dispatch_exceptions  # noqa: F401
+    import utils as dispatch_utils  # noqa: F401
+    log.info("✅ Dispatch core library imported successfully")
+
+    # Database library imports (when needed)
+    # import database, alert, query, source
+    # log.info("✅ Dispatch database library imported successfully")
+
+except ImportError as e:
+    log.warning(f"Shared libraries not available: {e}")
+    dispatch_enums = None
+    dispatch_exceptions = None
+    dispatch_types = None
+    dispatch_utils = None
+
+# Application imports (using relative imports)
+try:
+    from .app.logging import configure_logging
+    configure_logging()
+except ImportError:
+    log.info("App logging configuration not available, using basic config")
+
+try:
+    from .app.extensions import configure_extensions
+    configure_extensions()
+except ImportError:
+    log.info("App extensions not available")
+
+# Import API router when ready
+api_router_available = False
+api_router = None
+limiter = None
+
+try:
+    from .api.api import api_router
+    from .api.rate_limiter import limiter
+    api_router_available = True
+except ImportError as e:
+    log.info(f"API router not available: {e}")
 
 
 async def not_found(request, exc):
@@ -57,12 +95,12 @@ async def not_found(request, exc):
 async def lifespan(app: FastAPI):
     """Application lifespan management."""
     log.info("Starting Dispatch Service...")
-    
+
     # Startup logic here if needed
     # e.g., initialize database connections, load plugins, etc.
-    
+
     yield
-    
+
     # Shutdown logic here if needed
     log.info("Shutting down Dispatch Service...")
 
@@ -81,9 +119,17 @@ app = FastAPI(
 # Add exception handlers after app creation
 app.add_exception_handler(404, not_found)
 
-# Configure rate limiting (disabled for now)
-# app.state.limiter = limiter
-# app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+# Configure rate limiting
+if api_router_available and limiter is not None:
+    try:
+        app.state.limiter = limiter
+        # from slowapi.errors import RateLimitExceeded
+        # from slowapi import _rate_limit_exceeded_handler
+        # app.add_exception_handler(RateLimitExceeded,
+        #                          _rate_limit_exceeded_handler)
+        log.info("Rate limiting configured")
+    except Exception as e:
+        log.warning(f"Rate limiting setup failed: {e}")
 
 # Add middleware
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -95,8 +141,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include the main API router (will be enabled when imports are fixed)
-# app.include_router(api_router, prefix="/api/v1")
+# Include the main API router
+if api_router_available and api_router is not None:
+    app.include_router(api_router, prefix="/api/v1")
+    log.info("Full API router enabled")
+else:
+    log.info("Using basic endpoints only - API router not available")
 
 
 @app.get("/")
