@@ -1,0 +1,41 @@
+Project Name,Domain,Type,LOC,Files,Has Frontend,Has Backend,Has API,Has Database,Complexity,Feasibility Score,Timeline (Months),Blockers Count,Recommended,Risk Level,Domain Assignment,Key Technologies,Notes
+MalwareBazaar_MCP,Security/Threat Intelligence,Python MCP Server,383,7,FALSE,TRUE,TRUE,FALSE,EASY,95,0.2-0.3,0,YES,LOW,Security - Threat Intelligence,Python,Simple API wrapper - excellent migration candidate
+CyberChef,Security/Utilities,React Frontend,3038,877,TRUE,FALSE,FALSE,FALSE,EASY,90,0.2-0.3,0,YES,LOW,Security - Utilities,JavaScript/TypeScript,Pure client-side - no backend dependencies
+spec-kit,Development/Specification,Python CLI Tool,2707,87,FALSE,FALSE,TRUE,FALSE,EASY,90,0.2-0.3,0,YES,LOW,Development - Specification,Python,DDD specification toolkit - self-documenting
+apiscout,Security/Analysis,Python CLI Tool,10723,51,FALSE,FALSE,FALSE,FALSE,EASY,85,0.3,0,YES,LOW,Security - Analysis,Python,Standalone security analysis tool
+chroma-mcp,Development/Tooling,Python MCP Server,1588,16,FALSE,TRUE,TRUE,FALSE,EASY,85,0.2-0.3,1,YES,LOW,Development - Vector DB,Python,Vector database integration
+mcp-virustotal,Security/Threat Intelligence,Node.js MCP Server,2373,29,FALSE,TRUE,TRUE,FALSE,EASY,85,0.2-0.3,1,YES,LOW,Security - Threat Intelligence,JavaScript/TypeScript,External API wrapper - requires API key
+n8n-mcp-server,Automation/Tooling,Node.js MCP Server,4106,93,FALSE,TRUE,TRUE,FALSE,EASY,85,0.4-0.5,1,YES,LOW,Automation - Workflows,JavaScript/TypeScript,n8n workflow bridge - requires n8n
+mtg-commander-map,Gaming/Magic,Python Scripts,3670,21,FALSE,FALSE,FALSE,FALSE,EASY,85,0.2-0.3,0,YES,LOW,Gaming - MTG Data,Python,MTG data processing scripts
+mtg-scripting-toolkit,Gaming/Magic,TypeScript Library,4628,87,FALSE,FALSE,FALSE,FALSE,EASY,85,0.2-0.3,0,YES,LOW,Gaming - MTG,JavaScript/TypeScript,Standalone NPM library
+it-tools,Development/Utilities,React Frontend,9990,497,TRUE,FALSE,FALSE,FALSE,EASY,85,0.3-0.4,0,YES,LOW,Development - Utilities,JavaScript/TypeScript,IT utility tools collection
+firecrawl-mcp-server,Development/Tooling,Node.js MCP Server,792,28,FALSE,TRUE,TRUE,FALSE,EASY,80,0.2-0.3,1,YES,LOW,Development - Web Tools,JavaScript/TypeScript,Web scraping wrapper - delegates to Firecrawl
+lscript,Development/Scripting,Shell Scripts,0,22,FALSE,FALSE,FALSE,FALSE,EASY,80,0.2,0,YES,LOW,Development - Utilities,Shell,Utility bash scripts
+commander-spellbook-site,Gaming/Magic,React Frontend,13225,238,TRUE,FALSE,FALSE,FALSE,EASY,80,0.3-0.4,0,YES,LOW,Gaming - MTG,JavaScript/TypeScript/CSS,Frontend-only - clear API dependency
+hexstrike-ai,Security/AI,Python Package,22759,12,FALSE,FALSE,FALSE,FALSE,EASY,75,0.3-0.4,1,YES,MEDIUM,Security - AI,Python,AI-powered security - requires ML dependencies
+FileScopeMCP,Development/Tooling,Node.js MCP Server,12971,27,FALSE,TRUE,TRUE,FALSE,MEDIUM,75,0.4-0.6,2,YES,MEDIUM,Development - Tooling,JavaScript/TypeScript,File scoping service - MCP specific
+inspector,Development/Debugging,Full-stack TypeScript,24078,160,TRUE,TRUE,TRUE,FALSE,MEDIUM,72,0.7-1,1,CONDITIONAL,MEDIUM,Development - Debugging,JavaScript/TypeScript,Client/server bidirectional communication
+maltrail,Security/Monitoring,Python Application,14542,2913,TRUE,TRUE,TRUE,FALSE,MEDIUM,70,0.7-1,2,CONDITIONAL,MEDIUM,Security - Monitoring,Python/JavaScript,Malware traffic detection - network access required
+mealie,Productivity/Recipes,Full-stack FastAPI + Vue,68472,1488,TRUE,TRUE,TRUE,TRUE,MEDIUM,68,0.7-1,2,CONDITIONAL,MEDIUM,Productivity - Recipes,Python/Vue.js,Recipe management - multiple auth methods
+commander-spellbook-backend,Gaming/Magic,Python Backend,24124,399,FALSE,TRUE,TRUE,TRUE,MEDIUM,70,0.7-1,1,CONDITIONAL,MEDIUM,Gaming - MTG,Python,MTG spell data backend
+securityonion-n8n-workflows,Security/Automation,n8n Workflows,0,7,FALSE,FALSE,TRUE,FALSE,MEDIUM,72,0.2-0.3,1,CONDITIONAL,MEDIUM,Security - Automation,JSON,Pre-defined workflows - requires n8n
+Nemesis,Security/Data Processing,Full-stack Python + JavaScript,36015,350,TRUE,TRUE,TRUE,TRUE,HARD,60,3-4,4,CONDITIONAL,MEDIUM,Security - Data Processing,Python/JavaScript/TypeScript,Complex post-exploitation pipeline
+dispatch,Security/Automation,Full-stack FastAPI + React,110420,1565,TRUE,TRUE,TRUE,TRUE,HARD,58,4-6,4,CONDITIONAL,MEDIUM,Security - Automation,Python/JavaScript/TypeScript,Incident management - 150+ API endpoints
+actual,Productivity/Finance,Full-stack Node.js + React,188186,2571,TRUE,TRUE,TRUE,TRUE,HARD,65,3-5,4,CONDITIONAL,MEDIUM,Productivity - Finance,JavaScript/TypeScript/SQL,Well-modularized monorepo - complex sync protocol
+Ghostwriter,Security/Automation,Full-stack Django + React,156822,1221,TRUE,TRUE,TRUE,TRUE,HARD,55,4-6,4,CONDITIONAL,HIGH,Security - Offensive Operations,Python/JavaScript/TypeScript,Django monolith - GraphQL layer adds complexity
+firecrawl,Development/Web Tools,Full-stack Monorepo,151542,888,FALSE,TRUE,TRUE,TRUE,HARD,62,4-6,3,CONDITIONAL,HIGH,Development - Web Tools,TypeScript/Python/Rust,Monorepo with multiple apps - Rust components
+goose,Development/AI,Full-stack Rust + TypeScript,170514,1655,TRUE,TRUE,TRUE,FALSE,HARD,50,6-8,4,NOT RECOMMENDED,HIGH,Development - AI,Rust/JavaScript/TypeScript,Heavy Rust async - agent framework specific
+yara-x,Security/Detection,Rust + Polyglot,90088,1372,FALSE,TRUE,TRUE,FALSE,HARD,58,3-4,2,NOT RECOMMENDED,MEDIUM,Security - Detection,Rust/Go/Python,Use as external service - multiple language bindings
+MISP,Security/Threat Intelligence,Full-stack PHP + JavaScript,253500,2138,TRUE,TRUE,TRUE,TRUE,VERY HARD,15,12+,7,NO,VERY HIGH,Security - Threat Intelligence,PHP/JavaScript/Python,Legacy codebase - complete rewrite needed
+n8n,Automation/Workflows,Full-stack Monorepo TypeScript,1453140,12762,TRUE,TRUE,TRUE,TRUE,VERY HARD,10,18+,3,NO,VERY HIGH,Automation - Workflows,JavaScript/TypeScript,Largest project - 500+ integration nodes
+Brute-Ratel-C4-Community-Kit,Security/Offensive Tools,Compiled C/C++ + Scripts,108,44,FALSE,FALSE,FALSE,FALSE,VERY HARD,10,N/A,3,NO,VERY HIGH,Security - Offensive Tools,C/C++/Shell/Python,Binary payloads - legal/security concerns
+KasmVNC,Infrastructure/Remote Access,Compiled C/C++ Application,893,752,FALSE,FALSE,FALSE,FALSE,VERY HARD,5,N/A,5,NO,VERY HIGH,Infrastructure,C/C++/Shell/Python,Low-level VNC server - architecture-specific
+meterpreter,Security/Offensive Tools,Payload Framework,4670,3116,FALSE,FALSE,FALSE,FALSE,VERY HARD,8,N/A,1,NO,VERY HIGH,Security - Offensive Tools,C/C++/Python,Compiled payloads - legal concerns
+HELK,Security/Analytics,Infrastructure Automation,467,791,FALSE,FALSE,FALSE,FALSE,VERY HARD,20,N/A,4,NO,VERY HIGH,Security - Analytics,Shell/Ruby,ELK stack deployment - infrastructure focused
+blackarch,Security/Infrastructure,Package Repository,0,5536,FALSE,FALSE,FALSE,FALSE,VERY HARD,5,N/A,2,NO,VERY HIGH,Security - Infrastructure,Shell,Package repository - not code
+kong,Infrastructure/API Gateway,Mixed Infrastructure,4836,2373,FALSE,TRUE,TRUE,FALSE,VERY HARD,15,N/A,3,NO,VERY HIGH,Infrastructure,Python/Shell/Rust,API gateway component - not service
+securityonion,Security/Infrastructure,Mixed Configuration,8828,1688,FALSE,FALSE,FALSE,FALSE,VERY HARD,25,N/A,4,NO,VERY HIGH,Security - Infrastructure,Python/Shell,Infrastructure configuration - Salt/Pillar focus
+rita,Unknown,Empty,0,0,FALSE,FALSE,FALSE,FALSE,N/A,0,0,0,NO,N/A,Unknown,Unknown,Empty repository
+software-forensic-kit,Unknown,Empty,0,0,FALSE,FALSE,FALSE,FALSE,N/A,0,0,0,NO,N/A,Unknown,Unknown,Empty repository
+onex,Unknown,Unknown,0,12,FALSE,FALSE,FALSE,FALSE,UNKNOWN,0,0,0,NO,N/A,Unknown,Unknown,Minimal - unclear purpose
+
