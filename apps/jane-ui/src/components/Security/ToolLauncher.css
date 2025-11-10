@@ -1,0 +1,418 @@
+/**
+ * Tool Launcher Component Styles
+ * 
+ * Executive function accommodated styling for security tool launcher
+ */
+
+.tool-launcher {
+  padding: 1.5rem;
+  background: var(--surface-primary, #ffffff);
+  font-family: var(--font-family-primary, 'Inter', sans-serif);
+}
+
+.launcher-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-primary, #e5e7eb);
+}
+
+.launcher-header h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary, #111827);
+  margin: 0 0 0.5rem 0;
+}
+
+.header-description {
+  color: var(--text-secondary, #6b7280);
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Controls Section */
+.controls-section {
+  margin-bottom: 2rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.search-box {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 2px solid var(--border-secondary, #d1d5db);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--surface-primary, #ffffff);
+  color: var(--text-primary, #111827);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-500, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary, #6b7280);
+}
+
+/* Category Filter */
+.category-filter {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.category-filter button {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--border-secondary, #d1d5db);
+  border-radius: 6px;
+  background: var(--surface-primary, #ffffff);
+  color: var(--text-secondary, #6b7280);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.category-filter button:hover {
+  border-color: var(--primary-300, #93c5fd);
+  background: var(--primary-50, #eff6ff);
+  color: var(--primary-600, #2563eb);
+}
+
+.category-filter button.active {
+  border-color: var(--primary-500, #3b82f6);
+  background: var(--primary-500, #3b82f6);
+  color: white;
+}
+
+.category-filter button:focus {
+  outline: 2px solid var(--focus-ring, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Tools List */
+.tools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tool-item {
+  background: var(--surface-primary, #ffffff);
+  border: 2px solid var(--border-secondary, #d1d5db);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.15s ease;
+}
+
+.tool-item:hover {
+  border-color: var(--primary-300, #93c5fd);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.tool-item.selected {
+  border-color: var(--primary-500, #3b82f6);
+  background: var(--primary-50, #eff6ff);
+}
+
+.tool-info {
+  margin-bottom: 1.5rem;
+}
+
+.tool-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.tool-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tool-icon {
+  font-size: 1.5rem;
+}
+
+.tool-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin: 0;
+}
+
+.status-indicator {
+  font-size: 0.875rem;
+}
+
+.config-required {
+  font-size: 1rem;
+  color: var(--warning-500, #f59e0b);
+}
+
+.tool-description {
+  color: var(--text-secondary, #6b7280);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* Features */
+.tool-features {
+  margin-bottom: 1rem;
+}
+
+.features-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin: 0 0 0.5rem 0;
+}
+
+.features-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feature-item {
+  padding: 0.25rem 0.5rem;
+  background: var(--surface-secondary, #f3f4f6);
+  color: var(--text-secondary, #6b7280);
+  font-size: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-secondary, #d1d5db);
+}
+
+/* Configuration */
+.tool-config {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--surface-secondary, #f9fafb);
+  border: 1px solid var(--border-secondary, #d1d5db);
+  border-radius: 8px;
+}
+
+.config-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin: 0 0 0.75rem 0;
+}
+
+.config-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.config-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-secondary, #d1d5db);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: var(--surface-primary, #ffffff);
+  color: var(--text-primary, #111827);
+}
+
+.config-input:focus {
+  outline: none;
+  border-color: var(--primary-500, #3b82f6);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Tool Actions */
+.tool-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.launch-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: var(--primary-500, #3b82f6);
+  color: white;
+}
+
+.launch-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.launch-btn.online:hover:not(:disabled) {
+  background: var(--primary-600, #2563eb);
+}
+
+.launch-btn.offline {
+  background: var(--gray-400, #9ca3af);
+}
+
+.launch-btn.error {
+  background: var(--error-500, #ef4444);
+}
+
+.launch-btn:focus {
+  outline: 2px solid var(--focus-ring, #3b82f6);
+  outline-offset: 2px;
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.config-btn,
+.help-btn {
+  padding: 0.75rem;
+  border: 2px solid var(--border-secondary, #d1d5db);
+  border-radius: 8px;
+  background: var(--surface-primary, #ffffff);
+  color: var(--text-secondary, #6b7280);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 1rem;
+}
+
+.config-btn:hover,
+.help-btn:hover {
+  border-color: var(--primary-300, #93c5fd);
+  background: var(--primary-50, #eff6ff);
+  color: var(--primary-600, #2563eb);
+}
+
+.config-btn:focus,
+.help-btn:focus {
+  outline: 2px solid var(--focus-ring, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* No Tools Message */
+.no-tools-message {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-secondary, #6b7280);
+}
+
+.no-tools-message p {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+}
+
+.clear-filters-btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--primary-500, #3b82f6);
+  border-radius: 8px;
+  background: var(--primary-500, #3b82f6);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.clear-filters-btn:hover {
+  background: var(--primary-600, #2563eb);
+  border-color: var(--primary-600, #2563eb);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tool-launcher {
+    padding: 1rem;
+  }
+  
+  .tool-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  
+  .tool-identity {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .tool-actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .launch-btn {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .category-filter {
+    gap: 0.25rem;
+  }
+  
+  .category-filter button {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .tool-item {
+    border-width: 3px;
+  }
+  
+  .launch-btn:focus,
+  .config-btn:focus,
+  .help-btn:focus {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .tool-item,
+  .launch-btn,
+  .config-btn,
+  .help-btn,
+  .category-filter button {
+    transition: none;
+  }
+  
+  .loading-spinner {
+    animation: none;
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "security-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/security-service/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "uvicorn src.main:app --reload --host 0.0.0.0 --port 8011",
+        "cwd": "apps/security-service"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Building security service...'",
+        "cwd": "apps/security-service"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands", 
+      "options": {
+        "command": "python -m pytest tests/ -v",
+        "cwd": "apps/security-service"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ruff check src/",
+        "cwd": "apps/security-service"
+      }
+    }
+  },
+  "tags": ["type:service", "domain:security", "scope:backend"]
+}

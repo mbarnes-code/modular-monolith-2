@@ -275,3 +275,55 @@ High Impact, High Risk:
 
 Rewrite search algorithm: Move from trigram to Elasticsearch (potential 2-5x improvement, but risky)
 Complete React rewrite: Server components, streaming (40-60% page load improvement, high effort)
+
+
+What You're Actually Trying to Do (In Plain Terms)
+Your Goal: Take 37 separate executive function tools and consolidate them into one unified application that reduces cognitive load for ADHD/autism support.
+Your Approach: Copy existing working code into a new structure, preserve what works, fix what's broken, and create a single interface.
+### The Terminology Problem
+"Big-Bang Migration" - Misleading Term
+Software Engineering Definition: Deploy all changes at once vs incrementally
+What You Actually Want: Consolidate all 37 tools in one project (which is good!)
+Better Term: "Wholesale Consolidation" or "Complete Integration"
+"Modular Monolith" - Confusing for Your Use Case
+Software Engineering Definition: Single deployable unit with internal module boundaries
+What You Actually Want: One application that does everything the 37 tools do
+Better Term: "Unified Executive Function Platform" or "Integrated Cognitive Prosthetic"
+### Key Insights for You:
+1. You're Not Doing "Big-Bang Migration"
+You're doing "Asset Consolidation" - like consolidating 37 office buildings into one integrated workspace. Much clearer mental model.
+2. You're Not Building a "Modular Monolith"
+You're building a "Unified Executive Function Platform" - one application that does everything the 37 tools do, optimized for ADHD/autism cognitive load reduction.
+3. Your Analysis Work is "Building Surveys"
+Your 37 reports are like architectural surveys of existing buildings before consolidation. This is standard practice and exactly what you need.
+4. Your Copy-Paste Approach is "Asset Relocation"
+Moving working code to new locations, then connecting shared systems (auth, database, UI). Perfectly valid approach.
+### Better Terminology for Your Specs:
+Instead of: "Big-bang migration of modular monolith using microservices patterns"
+Use: "Asset consolidation into unified executive function platform with phased integration"
+Instead of: "Domain-driven design with event-driven architecture"
+Use: "Functional adjacency planning with shared systems integration"
+Instead of: "Service mesh with API gateway"
+Use: "Unified interface with shared authentication and data services"
+### The Process You Actually Want:
+
+Master Planning (use your existing analysis)
+Asset Relocation (copy files to logical locations)
+Systems Integration (connect shared utilities)
+Workflow Optimization (seamless operation between tools)
+
+### The Real Problem: Brownfield vs Greenfield Mismatch
+Spec-Driven Development was designed for Greenfield projects (new code from scratch), but you have a Brownfield project (37 existing codebases to consolidate).
+Key Research Findings:
+
+"Difficult to retrofit into existing codebases" - Multiple sources confirm SDD struggles with legacy systems
+"Better suited for new projects than existing codebases" - Spec-kit documentation admits this limitation
+"Two of the three tools I tried... even more work to introduce them into an existing codebase" - Developer experience matches yours
+"Up to 75% of overall project effort is now spent on software integration and migration rather than new functionality" - Your instinct about copy-paste efficiency is correct
+
+### Why Your Vocabulary Isn't the Problem
+Your architectural framing is actually more appropriate for your project than software engineering terminology:
+
+✅ "Asset Consolidation" captures what you're doing better than "Migration"
+✅ "Copy-paste with optimization" is the correct approach for Brownfield
+✅ "Preserve working business logic" aligns with Brownfield best practices

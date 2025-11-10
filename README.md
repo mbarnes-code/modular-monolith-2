@@ -1,18 +1,26 @@
-# Jane Monorepo
+# Jane Monorepo - Mental Prosthetic Platform
 
-An NX monorepo with FastAPI orchestrator, Next.js 15 + React 19 UI, and multiple LLM servers.
+An NX monorepo implementing a hybrid domain-based architecture with 4 domain services, n8n workflow orchestration, Next.js 15 + React 19 UI, and specialized LLM servers for AI-first executive function support.
 
-## Structure
+## Hybrid Domain-Based Architecture
+
+**Current State**: Skeleton structure ready for migration to hybrid architecture
+**Target State**: 4 domain services + n8n orchestration + specialized AI servers
 
 ```
 jane-monorepo/
 ├── .github/                 # GitHub configuration (workflows, issue templates)
 ├── apps/
-│   ├── jane-orchestrator/   # FastAPI orchestrator service (Python 3.12)
-│   ├── jane-ui/             # Next.js 15 + React 19 application
-│   ├── cyber-llm-server/    # Cybersecurity LLM Server (Python vLLM)
-│   ├── mtg-llm-server/      # Magic: The Gathering LLM Server (Python vLLM)
-│   └── code-llm-server/     # Code generation LLM Server (Python vLLM)
+│   ├── n8n-workflow-service/     # Central orchestration with AI enhancement (NEW)
+│   ├── security-service/         # Security domain - 13 tools (NEW)
+│   ├── productivity-service/     # Productivity domain - 8 tools (NEW)
+│   ├── mtg-service/             # MTG domain - 4 tools (NEW)
+│   ├── infrastructure-service/  # Infrastructure domain - 12 tools (NEW)
+│   ├── jane-ui/                 # Next.js 15 + React 19 unified interface
+│   ├── cyber-llm-server/        # Security domain AI (Python vLLM)
+│   ├── mtg-llm-server/          # MTG domain AI (Python vLLM)
+│   ├── infrastructure-llm-server/ # Infrastructure domain AI (Python vLLM)
+│   └── jane-orchestrator/       # LEGACY: To be removed after migration
 ├── docs/                    # Documentation files
 │   ├── base skeleton version docs/  # Base documentation and setup guides
 │   └── modular-analysis-repo-main/  # Analysis and architectural documentation
@@ -120,16 +128,16 @@ jane-monorepo/
 
 - **Node.js**: 20
 - **Python**: 3.12
-- **TypeScript**: 5.9.3 (exact version)
-- **Next.js**: 15.5.4 (exact version)
-- **React**: 19.2.0 (exact version)
-- **FastAPI**: 0.119.0 (exact version)
-- **Django**: 5.2.7 (exact version)
-- **SQLAlchemy**: 2.0.44 (exact version)
-- **Pydantic**: 2.12.0 (exact version)
-- **Uvicorn**: 0.37.0 (exact version)
-- **vLLM**: 0.11.0 (exact version)
-- **NX**: 21.6.4 (exact version)
+- **TypeScript**: 5.9.3
+- **Next.js**: 15.5.4
+- **React**: 19.2.0
+- **FastAPI**: 0.119.0 
+- **Django**: 5.2.7 
+- **SQLAlchemy**: 2.0.44 
+- **Pydantic**: 2.12.0 
+- **Uvicorn**: 0.37.0 
+- **vLLM**: 0.11.0 
+- **NX**: 21.6.4 
 - **Rust**: 1.70+ (for specific integrations)
 - **Java**: 17 LTS (for specific integrations)
 
@@ -194,24 +202,36 @@ If you prefer manual installation:
 
 ## Running Applications
 
-### UI Application
+### Hybrid Architecture Services
 
+**Central Orchestration:**
 ```bash
-npx nx serve jane-ui
+npx nx serve n8n-workflow-service   # Port 8010 (NEW)
 ```
 
-### Orchestrator Service
-
+**Domain Services:**
 ```bash
-npx nx serve jane-orchestrator
+npx nx serve security-service        # Port 8011 (NEW)
+npx nx serve productivity-service    # Port 8012 (NEW)  
+npx nx serve mtg-service            # Port 8013 (NEW)
+npx nx serve infrastructure-service  # Port 8014 (NEW)
 ```
 
-### LLM Servers
-
+**Frontend:**
 ```bash
-npx nx serve cyber-llm-server   # Port 8001
-npx nx serve mtg-llm-server     # Port 8002
-npx nx serve code-llm-server    # Port 8003
+npx nx serve jane-ui                # Port 3000
+```
+
+**AI Servers:**
+```bash
+npx nx serve cyber-llm-server       # Port 8001 (Security AI)
+npx nx serve mtg-llm-server         # Port 8002 (MTG AI)
+npx nx serve infrastructure-llm-server # Port 8003 (Infrastructure AI)
+```
+
+**Legacy (Remove after migration):**
+```bash
+npx nx serve jane-orchestrator      # Port 8000 (DEPRECATED)
 ```
 
 ### Using Docker Compose
@@ -237,9 +257,31 @@ npx nx build jane-ui
 
 ## Project Structure
 
-This monorepo follows NX best practices with:
+## Migration Status
 
-- **apps/**: Application code (deployable services)
-- **libs/**: Shared libraries and components
-- **projects/**: Domain-specific project files
+**Current Phase**: Ready for hybrid architecture migration
+
+### Migration Steps:
+1. **✅ Planning Complete**: Hybrid domain-based architecture designed
+2. **🔄 Ready to Execute**: 37 tools in `features/` directory ready for migration
+3. **⏳ Pending**: Create 5 new services (n8n-workflow + 4 domains)
+4. **⏳ Pending**: Migrate tools from `features/` to domain services
+5. **⏳ Pending**: Implement n8n orchestration with AI enhancement
+6. **⏳ Pending**: Remove legacy `jane-orchestrator`
+
+### Success Criteria:
+- ✅ **features/ directory empty** (all 37 tools migrated)
+- ⏳ **5 services operational** (n8n + 4 domains)
+- ⏳ **AI-first workflows** executing via n8n orchestration
+- ⏳ **60/40 performance split** (AI speed prioritized over UI)
+
+See `specs/002-mental-prosthetic-refinement/implementation-guide.md` for detailed migration commands.
+
+## Project Structure
+
+This monorepo follows NX best practices with hybrid domain-based architecture:
+
+- **apps/**: Domain services + AI servers + unified UI
+- **libs/**: Shared libraries and domain-specific components
+- **features/**: 37 tools awaiting migration (target: empty directory)
 - **infrastructure/**: Infrastructure as Code (IaC) and deployment configurations

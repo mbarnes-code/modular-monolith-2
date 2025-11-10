@@ -1,0 +1,89 @@
+{
+  "default_roles": [
+    {
+      "name": "admin",
+      "permissions": {
+        "add": true,
+        "modify": true,
+        "modify_org": true,
+        "publish": true,
+        "delegate": true,
+        "sync": true,
+        "admin": true,
+        "audit": true,
+        "full": true,
+        "auth": true,
+        "site_admin": true,
+        "regexp_access": true,
+        "tagger": true,
+        "template": true,
+        "sharing_group": true,
+        "tag_editor": true,
+        "sighting": true,
+        "object_template": true
+      },
+      "default_role": false
+    },
+    {
+      "name": "org admin",
+      "permissions": {
+        "add": true,
+        "modify": true,
+        "modify_org": true,
+        "publish": true,
+        "delegate": true,
+        "sync": false,
+        "admin": false,
+        "audit": true,
+        "full": false,
+        "auth": true,
+        "site_admin": false,
+        "regexp_access": false,
+        "tagger": true,
+        "template": true,
+        "sharing_group": true,
+        "tag_editor": true,
+        "sighting": true,
+        "object_template": true
+      },
+      "default_role": false
+    },
+    {
+      "name": "user",
+      "permissions": {
+        "add": true,
+        "modify": true,
+        "modify_org": false,
+        "publish": false,
+        "delegate": false,
+        "sync": false,
+        "admin": false,
+        "audit": false,
+        "full": false,
+        "auth": false,
+        "site_admin": false,
+        "regexp_access": false,
+        "tagger": false,
+        "template": false,
+        "sharing_group": false,
+        "tag_editor": false,
+        "sighting": true,
+        "object_template": false
+      },
+      "default_role": true
+    }
+  ],
+  "default_tags": [
+    {"name": "tlp:white", "colour": "#ffffff", "exportable": true},
+    {"name": "tlp:green", "colour": "#33cc33", "exportable": true},
+    {"name": "tlp:amber", "colour": "#ff9900", "exportable": true},
+    {"name": "tlp:red", "colour": "#cc0033", "exportable": false}
+  ],
+  "default_organization": {
+    "name": "ORGNAME",
+    "description": "Default organization",
+    "uuid": "52c3f29c-6704-4ba0-866a-ce10c4d8b80c",
+    "local": true,
+    "nationality": "Not specified"
+  }
+}

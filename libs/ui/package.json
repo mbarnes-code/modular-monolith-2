@@ -1,0 +1,37 @@
+{
+  "name": "@mental-prosthetic/ui",
+  "version": "1.0.0",
+  "description": "UI components with executive function accommodations for mental prosthetic platform",
+  "main": "components/index.ts",
+  "types": "components/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "keywords": [
+    "react",
+    "ui",
+    "components",
+    "accessibility",
+    "adhd",
+    "autism",
+    "executive-function",
+    "mental-prosthetic"
+  ],
+  "author": "Mental Prosthetic Platform",
+  "license": "MIT"
+}

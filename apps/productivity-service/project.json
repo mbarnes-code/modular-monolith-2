@@ -1,0 +1,37 @@
+{
+  "name": "productivity-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/productivity-service/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "uvicorn src.main:app --reload --host 0.0.0.0 --port 8012",
+        "cwd": "apps/productivity-service"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Building productivity service...'",
+        "cwd": "apps/productivity-service"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands", 
+      "options": {
+        "command": "python -m pytest tests/ -v",
+        "cwd": "apps/productivity-service"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ruff check src/",
+        "cwd": "apps/productivity-service"
+      }
+    }
+  },
+  "tags": ["type:service", "domain:productivity", "scope:backend"]
+}

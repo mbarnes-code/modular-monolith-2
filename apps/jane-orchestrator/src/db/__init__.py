@@ -1,1 +1,5 @@
-# Database layer
+"""Database layer for Jane Orchestrator."""
+
+from .session import get_db
+
+__all__ = ["get_db"]

@@ -1,0 +1,26 @@
+# Infrastructure Service Dependencies
+fastapi==0.119.0
+uvicorn[standard]==0.37.0
+pydantic==2.12.0
+sqlalchemy==2.0.44
+asyncpg==0.29.0
+redis==5.0.1
+python-multipart==0.0.6
+httpx==0.25.0
+
+# Infrastructure-specific dependencies
+docker==6.1.3
+kubernetes==28.1.0
+psutil==5.9.6
+pydantic-settings==2.0.3
+
+# MCP server dependencies
+websockets==12.0
+json-rpc==1.15.0
+
+# TODO: Add actual dependencies from these tools when migrating:
+# - Kong, Ghostwriter, KasmVNC, RITA
+# - Chroma MCP, n8n MCP Server, Firecrawl MCP Server
+# - MalwareBazaar MCP, MCP VirusTotal
+# - HexStrike AI, Software Forensic Kit
+# - And all MCP servers infrastructure

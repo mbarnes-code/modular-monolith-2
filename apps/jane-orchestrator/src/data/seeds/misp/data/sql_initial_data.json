@@ -1,0 +1,65 @@
+{
+  "mysql_schema_available": true,
+  "postgresql_schema_available": true,
+  "tables_to_preserve": [
+    "admin_settings",
+    "roles",
+    "organisations",
+    "sharing_groups", 
+    "servers",
+    "tags",
+    "taxonomies",
+    "taxonomy_predicates",
+    "galaxies",
+    "galaxy_clusters",
+    "warninglists",
+    "warninglist_entries",
+    "warninglist_types"
+  ],
+  "initial_data_notes": {
+    "admin_settings": "Core MISP configuration",
+    "roles": "User permission templates (admin, org admin, user)",
+    "organisations": "Default organization structure",
+    "tags": "TLP and classification tags",
+    "taxonomies": "MISP taxonomy definitions",
+    "galaxies": "Threat intelligence galaxies",
+    "warninglists": "False positive prevention lists"
+  },
+  "critical_tables": {
+    "admin_settings": {
+      "purpose": "System configuration storage",
+      "migration_priority": "HIGH",
+      "data_preservation": "REQUIRED"
+    },
+    "roles": {
+      "purpose": "User permission templates",
+      "migration_priority": "HIGH", 
+      "data_preservation": "REQUIRED"
+    },
+    "organisations": {
+      "purpose": "Organization management",
+      "migration_priority": "HIGH",
+      "data_preservation": "REQUIRED"
+    },
+    "tags": {
+      "purpose": "Event and attribute tagging",
+      "migration_priority": "MEDIUM",
+      "data_preservation": "RECOMMENDED"
+    },
+    "taxonomies": {
+      "purpose": "Structured classification",
+      "migration_priority": "MEDIUM",
+      "data_preservation": "RECOMMENDED"
+    },
+    "galaxies": {
+      "purpose": "Threat intelligence clusters",
+      "migration_priority": "MEDIUM", 
+      "data_preservation": "RECOMMENDED"
+    },
+    "warninglists": {
+      "purpose": "False positive prevention",
+      "migration_priority": "LOW",
+      "data_preservation": "OPTIONAL"
+    }
+  }
+}
