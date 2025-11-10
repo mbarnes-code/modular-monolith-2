@@ -1,0 +1,108 @@
+{
+  "name": "hexstrike-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/hexstrike-service/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m hexstrike.api.main",
+        "cwd": "apps/hexstrike-service/src"
+      }
+    },
+    "serve-legacy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python hexstrike_server.py",
+        "cwd": "apps/hexstrike-service/src"
+      }
+    },
+    "serve-mcp": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m hexstrike.mcp.client",
+        "cwd": "apps/hexstrike-service/src"
+      }
+    },
+    "serve-mcp-legacy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python hexstrike_mcp.py",
+        "cwd": "apps/hexstrike-service/src"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Building hexstrike service...'",
+        "cwd": "apps/hexstrike-service"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands", 
+      "options": {
+        "command": "python -m pytest tests/ -v",
+        "cwd": "apps/hexstrike-service"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ruff check src/",
+        "cwd": "apps/hexstrike-service"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m black src/ tests/ --line-length 79",
+        "cwd": "apps/hexstrike-service"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pip install -r requirements.txt",
+        "cwd": "apps/hexstrike-service"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t hexstrike-service .",
+        "cwd": "apps/hexstrike-service"
+      }
+    },
+    "docker:up": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose up -d",
+        "cwd": "apps/hexstrike-service"
+      }
+    },
+    "docker:down": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose down",
+        "cwd": "apps/hexstrike-service"
+      }
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mypy src/hexstrike",
+        "cwd": "apps/hexstrike-service"
+      }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "find . -type d -name '__pycache__' -exec rm -rf {} + && find . -name '*.pyc' -delete",
+        "cwd": "apps/hexstrike-service"
+      }
+    }
+  },
+  "tags": ["type:application", "domain:security", "tech:python", "tech:mcp", "tech:docker"],
+  "implicitDependencies": []
+}

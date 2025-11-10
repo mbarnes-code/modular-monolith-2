@@ -38,6 +38,9 @@
       ],
       "@jane-monorepo/ui/domain-security": [
         "libs/ui/domain-security/index.ts"
+      ],
+      "@mealie/shared": [
+        "apps/mealie-service/libs/mealie-shared/src/index.ts"
       ]
     }
   },

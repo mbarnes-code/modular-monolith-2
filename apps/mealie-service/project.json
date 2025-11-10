@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/mealie-service/src",
   "projectType": "application",
+
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
@@ -84,7 +85,38 @@
           "coverage": true
         }
       }
+    },
+    "build-all": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx build mealie-shared",
+          "echo 'Main integration service ready'"
+        ],
+        "cwd": "apps/mealie-service"
+      }
+    },
+    "serve-all": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx serve mealie-api",
+          "nx serve mealie-web"
+        ],
+        "parallel": true,
+        "cwd": "apps/mealie-service"
+      }
+    },
+    "install-all": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx install mealie-api",
+          "nx install mealie-web"
+        ],
+        "cwd": "apps/mealie-service"
+      }
     }
   },
-  "tags": ["type:service", "domain:productivity", "framework:node"]
+  "tags": ["type:service", "domain:productivity", "framework:node", "framework:python", "framework:vue"]
 }

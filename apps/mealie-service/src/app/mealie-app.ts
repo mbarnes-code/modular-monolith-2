@@ -1,20 +1,10 @@
 import express = require('express');
+import { HTTP_STATUS, MealieConfig } from '@mealie/shared';
 import { promises as fs } from 'fs';
 import path = require('path');
 
-export interface MealieConfig {
-  port: number;
-  host: string;
-  database: {
-    url: string;
-    type: string;
-  };
-  frontend: {
-    enabled: boolean;
-    path: string;
-    api_url: string;
-  };
-}
+// Re-export for backward compatibility
+export { MealieConfig };
 
 /**
  * MealieApp - Main application class for Mealie service
@@ -117,7 +107,7 @@ export class MealieApp {
     // This will forward requests to the actual Mealie Python service
     
     router.use((req, res) => {
-      res.status(501).json({
+      res.status(HTTP_STATUS.NOT_IMPLEMENTED).json({
         error: 'API proxy not yet implemented',
         message: 'This endpoint will proxy to the Mealie Python backend',
         path: req.originalUrl,

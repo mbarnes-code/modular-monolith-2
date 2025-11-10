@@ -5,10 +5,8 @@ Provides unified configuration across all 37 integrated tools with
 executive function accommodations and constitutional compliance settings.
 """
 
-import os
 from enum import Enum
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseSettings, Field, validator
 

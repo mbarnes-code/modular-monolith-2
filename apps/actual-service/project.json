@@ -1,0 +1,130 @@
+{
+  "name": "actual-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/actual-service/src",
+  "projectType": "application",
+  "tags": [
+    "type:app",
+    "domain:productivity",
+    "framework:react",
+    "backend:node",
+    "scope:actual-budget"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/actual-budget/build"],
+      "options": {
+        "command": "yarn build:browser",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "build:service": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/actual-service",
+        "main": "apps/actual-service/src/main.ts",
+        "tsConfig": "apps/actual-service/tsconfig.app.json"
+      }
+    },
+    "build:browser": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./bin/package-browser",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "build:server": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn build:server",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "build:desktop": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./bin/package-electron",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn start",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "serve:server": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn start:server",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "serve:desktop": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn start:desktop",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/actual-service/jest.config.ts"
+      }
+    },
+    "test:actual": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn test",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn e2e",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/actual-service/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "lint:actual": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn lint",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn lint:fix",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn typecheck",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn install",
+        "cwd": "apps/actual-service/actual-budget"
+      }
+    }
+  }
+}

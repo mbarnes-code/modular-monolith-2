@@ -1,0 +1,44 @@
+{
+  "name": "mealie-api",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/mealie-service/apps/mealie-api",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m uvicorn main:app --reload --host 0.0.0.0 --port ${MEALIE_API_PORT:-9000}",
+        "cwd": "apps/mealie-service/apps/mealie-api"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry install",
+        "cwd": "apps/mealie-service"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m pytest tests/",
+        "cwd": "apps/mealie-service/apps/mealie-api"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m ruff check .",
+        "cwd": "apps/mealie-service/apps/mealie-api"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m black .",
+        "cwd": "apps/mealie-service/apps/mealie-api"
+      }
+    }
+  },
+  "tags": ["type:api", "domain:productivity", "framework:fastapi", "language:python"]
+}

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  hexstrike-service:
+    build:
+      context: .
+      target: development
+    ports:
+      - "8000:8000"
+      - "8001:8001"  # MCP port
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./.env:/app/.env
+    environment:
+      - HEXSTRIKE_ENV=development
+      - HEXSTRIKE_DEBUG=true
+    command: python -m hexstrike.api.main
+    restart: unless-stopped
+    
+  hexstrike-mcp:
+    build:
+      context: .
+      target: development
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./src:/app/src
+      - ./.env:/app/.env
+    environment:
+      - HEXSTRIKE_ENV=development
+      - HEXSTRIKE_DEBUG=true
+    command: python -m hexstrike.mcp.client
+    restart: unless-stopped
+    depends_on:
+      - hexstrike-service
+
+networks:
+  default:
+    name: hexstrike-network

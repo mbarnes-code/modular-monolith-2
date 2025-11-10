@@ -2,6 +2,42 @@
 
 This service integrates [Mealie](https://github.com/mealie-recipes/mealie) - a self-hosted recipe manager and meal planner - into the Jane platform.
 
+**Note**: This directory contains the complete Mealie application moved from `features/mealie/` into the proper NX project structure.
+
+## Project Structure
+
+Following NX best practices, the Mealie service is organized as a workspace containing multiple applications and shared libraries:
+
+```
+apps/mealie-service/
+├── src/                           # Node.js integration service (main entry point)
+├── apps/                          # NX Applications
+│   ├── mealie-api/               # Python/FastAPI backend
+│   │   ├── main.py               # FastAPI application entry
+│   │   ├── routes/               # API routes
+│   │   ├── services/             # Business logic
+│   │   ├── db/                   # Database models & migrations
+│   │   └── tests/                # Python tests
+│   └── mealie-web/               # Nuxt.js/Vue frontend
+│       ├── pages/                # Vue pages
+│       ├── components/           # Vue components
+│       ├── composables/          # Vue composables
+│       └── assets/               # Static assets
+├── libs/                         # Shared Libraries
+│   └── mealie-shared/            # Shared types, constants, utilities
+│       ├── src/types.ts          # TypeScript interfaces
+│       ├── src/constants.ts      # App constants
+│       └── src/utils.ts          # Utility functions
+├── tools/                        # Development tools
+│   ├── code-generation/          # Code generators
+│   └── scripts/                  # Build/dev scripts
+├── docker/                       # Docker configuration
+├── docs/                         # Documentation
+├── nx.json                       # NX workspace configuration
+├── pyproject.toml                # Python dependencies
+└── LICENSE                       # AGPL license
+```
+
 ## Features
 
 - **Recipe Management**: Import, organize, and manage recipes
@@ -55,17 +91,28 @@ MAX_FILE_SIZE=100MB
 ## Development
 
 ```bash
-# Start development server
-nx serve mealie-service
+# Install all dependencies
+nx install-all mealie-service
 
-# Build for production
-nx build mealie-service
+# Start all services in development mode
+nx serve-all mealie-service
+
+# Or start services individually:
+nx serve mealie-service    # Node.js integration service (port 9925)
+nx serve mealie-api        # Python FastAPI backend (port 9000)
+nx serve mealie-web        # Nuxt.js frontend (port 3000)
+
+# Build all components
+nx build-all mealie-service
 
 # Run tests
-nx test mealie-service
+nx test mealie-service     # Integration service tests
+nx test mealie-api         # Python backend tests
+nx test mealie-web         # Frontend tests
 
 # Lint code
-nx lint mealie-service
+nx lint mealie-api         # Python linting
+nx lint mealie-web         # Frontend linting
 ```
 
 ## Integration with Jane Platform

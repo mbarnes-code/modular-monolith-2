@@ -1,0 +1,26 @@
+{
+  "name": "mealie-shared",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/mealie-service/libs/mealie-shared/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/mealie-service/libs/mealie-shared",
+        "main": "apps/mealie-service/libs/mealie-shared/src/index.ts",
+        "tsConfig": "apps/mealie-service/libs/mealie-shared/tsconfig.lib.json"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/mealie-service/libs/mealie-shared/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": ["type:lib", "domain:productivity", "scope:shared"]
+}

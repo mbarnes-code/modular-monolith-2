@@ -1,14 +1,16 @@
+import { DEFAULT_PATHS, DEFAULT_PORTS } from '@mealie/shared';
+
 export const environment = {
   production: true,
   host: process.env.MEALIE_HOST || '0.0.0.0',
-  port: parseInt(process.env.MEALIE_PORT || '9925'),
+  port: parseInt(process.env.MEALIE_PORT || DEFAULT_PORTS.INTEGRATION_SERVICE.toString()),
   database: {
     url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@postgres:5432/mealie',
     type: 'postgresql' as const
   },
   frontend: {
     enabled: process.env.MEALIE_FRONTEND_ENABLED !== 'false',
-    path: process.env.MEALIE_FRONTEND_PATH || './frontend/dist',
+    path: process.env.MEALIE_FRONTEND_PATH || DEFAULT_PATHS.WEB_OUTPUT,
     api_url: process.env.MEALIE_API_URL || 'https://mealie.example.com'
   },
   auth: {

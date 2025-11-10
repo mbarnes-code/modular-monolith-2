@@ -78,6 +78,7 @@
     "infrastructure-service": "apps/infrastructure-service",
     "dispatch-service": "apps/dispatch-service",
     "mealie-service": "apps/mealie-service",
+    "hexstrike-service": "apps/hexstrike-service",
     "dispatch-core": "libs/dispatch-core",
     "dispatch-database": "libs/dispatch-database"
   }

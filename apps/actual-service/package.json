@@ -1,0 +1,28 @@
+{
+  "name": "actual-service",
+  "version": "0.0.1",
+  "private": true,
+  "description": "NX integration service for Actual Budget personal finance system",
+  "scripts": {
+    "build": "nx build actual-service",
+    "build:service": "nx build:service actual-service",
+    "build:browser": "nx build:browser actual-service",
+    "build:server": "nx build:server actual-service",
+    "build:desktop": "nx build:desktop actual-service",
+    "serve": "nx serve actual-service",
+    "serve:server": "nx serve:server actual-service",
+    "serve:desktop": "nx serve:desktop actual-service",
+    "test": "nx test actual-service",
+    "e2e": "nx e2e actual-service",
+    "lint": "nx lint actual-service",
+    "lint:fix": "nx lint:fix actual-service",
+    "typecheck": "nx typecheck actual-service"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "~5.2.0"
+  }
+}
