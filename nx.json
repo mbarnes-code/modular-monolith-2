@@ -75,6 +75,7 @@
     "security-service": "apps/security-service",
     "productivity-service": "apps/productivity-service",
     "mtg-service": "apps/mtg-service",
-    "infrastructure-service": "apps/infrastructure-service"
+    "infrastructure-service": "apps/infrastructure-service",
+    "dispatch-service": "apps/dispatch-service"
   }
 }
