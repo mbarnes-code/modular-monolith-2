@@ -1,27 +1,27 @@
 ---
-description: "Task list template for asset relocation and implementation"
-parent_task: "../tasks.md#TXXX"
-parent_phase: "Phase X: Productivity Migrations"
-return_to: "../tasks.md#TXXX"
-domain: "productivity"
-target_service: "apps/productivity-service/src/"
+description: "MCP Inspector migration to modular monolith Infrastructure Domain"
+parent_task: "../tasks.md#T150"
+parent_phase: "Phase 8: Infrastructure Domain Migrations"
+return_to: "../tasks.md#T151"
+domain: "infrastructure"
+target_service: "apps/jane-orchestrator/src/domains/infrastructure/"
 legacy_path: "features/inspector"
-estimated_hours: 25
+estimated_hours: 35
 ---
 
-# Tasks: [MIGRATION: Inspector]
+# Tasks: [MIGRATION: MCP Inspector]
 
-**⬆️ PARENT TASK**: [`tasks.md#TXXX`](../tasks.md#TXXX)  
-**⬇️ RETURN TO**: [`tasks.md#TXXX`](../tasks.md#TXXX)
+**⬆️ PARENT TASK**: [`tasks.md#T150`](../tasks.md#T150)  
+**⬇️ RETURN TO**: [`tasks.md#T151`](../tasks.md#T151)
 
 ---
 
 ## Handoff Context
 
-**Called From**: `tasks.md` Phase X, Task TXXX  
-**Entry Condition**: Productivity service foundation ready (Phase 1-4 complete)  
-**Exit Condition**: All tasks below complete + validation tests pass  
-**Return Action**: Mark TXXX complete in parent `tasks.md`, proceed to next task
+**Called From**: `tasks.md` Phase 8, Task T150  
+**Entry Condition**: Infrastructure domain foundation ready (Phase 1-4 complete), MCP protocol integration established  
+**Exit Condition**: All tasks below complete + validation tests pass + MCP Inspector fully integrated  
+**Return Action**: Mark T150 complete in parent `tasks.md`, proceed to T151
 
 **Handoff Protocol**: See [`HANDOFF-PROTOCOL.md`](./HANDOFF-PROTOCOL.md) for complete workflow documentation.
 
@@ -32,55 +32,47 @@ estimated_hours: 25
 **Verify these conditions before starting any tasks below**:
 
 - [ ] Parent Phase 1-4 marked complete in `tasks.md`
-- [ ] `apps/productivity-service/src/` exists with base infrastructure
-- [ ] Database migrations from Phase 2 applied
+- [ ] `apps/jane-orchestrator/src/domains/infrastructure/` exists with base infrastructure
+- [ ] MCP protocol foundation established in shared libraries
 - [ ] Authentication/authorization from Phase 3 working
-- [ ] Test framework from Phase 3 operational
-- [ ] Legacy environment setup: `features/inspector/` accessible
-- [ ] Project analysis report completed and validated
+- [ ] Test framework from Phase 3 operational with MCP testing capability
+- [ ] Legacy environment setup: `features/inspector/` accessible and buildable
+- [ ] Project analysis report completed: `inspector-analysis.md` reviewed
+- [ ] Node.js 22+ available for MCP SDK compatibility
+- [ ] WebSocket and HTTP server infrastructure ready
 
 **⚠️ If any checklist item fails**: STOP and return to parent `tasks.md` to complete prerequisites.
 
 ---
 
-**Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
-**Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
-**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY)**, research.md, data-model.md, contracts/
+**Input (Legacy)**: Legacy codebase path `features/inspector/` (MCP Inspector monorepo)
+**Input (Analysis)**: `inspector-analysis.md` (MANDATORY reference document)
+**Prerequisites**: Infrastructure domain foundation ready, MCP protocol understanding
 
-**Project Analysis Integration**: This task template MUST reference specific sections from project_analysis_report.md:
-- Section 2 (Data Architecture) - for data model migration tasks
-- Section 3 (API Architecture) - for endpoint and authentication migration
-- Section 4 (Business Logic) - for critical algorithm preservation
-- Section 5 (External Integrations) - for third-party service continuity
-- Section 8 (Performance Characteristics) - for baseline preservation
-- Section 11 (Domain Knowledge) - for business rule preservation
+**MCP Inspector Project Analysis Integration**: 
+- Section 2 (Data Architecture) - Stateless session management and configuration models  
+- Section 3 (API Architecture) - Proxy endpoints, WebSocket connections, authentication
+- Section 4 (Business Logic) - Message routing algorithms, transport creation strategies
+- Section 5 (External Integrations) - MCP server protocol compliance, SDK integration
+- Section 11 (Domain Knowledge) - MCP protocol expertise, transport abstractions
 
-**Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first to establish functional baselines.
+**DDD Domain Boundaries for Inspector**:
+1. **MCP Protocol Domain** - JSON-RPC 2.0, bidirectional messaging, capability negotiation
+2. **Transport Management Domain** - stdio/SSE/HTTP transport creation and lifecycle
+3. **Development Tools Domain** - Debugging UI, testing capabilities, developer workflows  
+4. **Session Management Domain** - Connection state, authentication, configuration persistence
+5. **Proxy Infrastructure Domain** - Message routing, protocol bridging, security validation
 
-**Organization**: Tasks are grouped by Legacy Feature AND cross-referenced with Project Analysis sections to ensure 1:1 functional parity and comprehensive coverage.
+**Migration Methodology**: Brownfield Asset Relocation with MCP Protocol Preservation
 
-## Format: [ID] [P?] [Feature] [Analysis: Section.#] [Logic: <legacy_file::function>] Description
-- [P]: Can run in parallel
-- [Feature]: Which legacy feature this task belongs to (e.g., F1: Publishing)
-- [Analysis]: Reference to project_analysis_report.md section (e.g., Section.2.1, Section.4.1)
-- [Logic]: The exact legacy code being replaced. This is not optional.
-
-## Path Conventions
-- **New Project**: [e.g., apps/PROJECT/src/] at repository root
-- **Legacy Project**: [e.g., features/MISP/app/Model/]
-- **Analysis Report**: project_analysis_report.md sections for validation
-- Paths shown below assume single project - adjust based on plan.md structure
-
-## Migration Methodology: Brownfield Asset Relocation
-
-**Core Principle**: Preserve 100% functional parity while modernizing architecture.
+**Core Principle**: Preserve 100% MCP protocol compliance and debugging functionality while integrating into Infrastructure Domain.
 
 **Validation Strategy**: 
-1. Ground Truth Tests → Establish current behavior baseline
-2. Analysis Cross-Reference → Validate against documented behavior  
-3. Incremental Migration → Port one feature at a time with validation
-4. Integration Testing → Ensure new implementation matches baseline
-5. Performance Validation → Maintain or improve baseline metrics
+1. Ground Truth Tests → Establish MCP protocol behavior baseline with existing tests
+2. Transport Compatibility → Validate stdio/SSE/HTTP transport preservation
+3. Message Routing Fidelity → Ensure bidirectional proxy maintains exact behavior
+4. Developer Experience → Preserve CLI and UI workflows for MCP debugging
+5. Performance Validation → Maintain <10ms message routing latency
 
 <!-- 
   ============================================================================
@@ -101,195 +93,269 @@ estimated_hours: 25
   ============================================================================
 -->
 
-## Phase 1: Analysis Validation & Legacy Environment Setup
+## Phase 1: MCP Inspector Analysis Validation & Legacy Environment Setup
 
-**Purpose**: Validate project analysis findings and establish baseline testing environment.
+**Purpose**: Validate Inspector analysis findings and establish MCP protocol testing baseline.
 
-- [ ] T001 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections are filled
-- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate current tech stack inventory against actual codebase
-- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing tests and document current coverage metrics
-- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current performance characteristics
-- [ ] T005 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM) per Section.10.1
-- [ ] T006 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function
-- [ ] T007 [P] Create new project structure per implementation plan
-- [ ] T008 [P] Initialize target framework dependencies (per analysis Section.1.2)
+- [ ] T001 **[Analysis Validation]** Validate inspector-analysis.md completeness: Confirm all CRITICAL sections (2,3,4,5,11) documented
+- [ ] T002 **[Technology Stack]** Verify MCP SDK dependencies: Validate @modelcontextprotocol/sdk compatibility with target infrastructure  
+- [ ] T003 **[P]** **[Test Baseline]** Run existing Inspector tests: Execute Jest + Playwright test suite and document coverage
+- [ ] T004 **[Performance Baseline]** Measure MCP proxy latency: Document current <10ms message routing performance
+- [ ] T005 **[Ground Truth]** Setup legacy MCP testbed: Create working Inspector environment with stdio/SSE/HTTP test servers
+- [ ] T006 **[Ground Truth]** Validate MCP protocol compliance: Test Inspector against reference MCP servers for baseline behavior
+- [ ] T007 **[P]** Create Inspector domain structure: Setup `apps/jane-orchestrator/src/domains/infrastructure/mcp-inspector/`
+- [ ] T008 **[P]** Initialize MCP dependencies: Install @modelcontextprotocol/sdk in unified backend
+
+**Checkpoint**: Legacy Inspector fully operational with documented MCP protocol behavior baseline.
 
 ---
 
-## Phase 2: Data Architecture Migration
+## Phase 2: MCP Protocol Domain Foundation
 
-**Purpose**: Migrate data models and database schema based on analysis Section 2.
+**Purpose**: Establish MCP protocol abstractions in shared libraries based on Analysis Section 4.1 & 11.1.
 
-- [ ] T009 [Analysis: Section.2.1] Inventory data models: Create comprehensive list from analysis findings
-- [ ] T010 [Analysis: Section.2.1] Database schema migration: Implement new schema preserving all relationships from Section.2.2
-- [ ] T011 [P] [Analysis: Section.2.1] Port data models: Create new framework models matching legacy field mappings exactly
-- [ ] T012 [Analysis: Section.2.3] Database performance patterns: Implement indexes and optimizations per analysis
-- [ ] T013 [Ground Truth] Data validation tests: Write tests confirming data integrity and constraints
-- [ ] T014 [Analysis: Section.2.1] Data migration scripts: Create scripts for existing data preservation
+- [ ] T009 **[MCP Protocol Domain]** Extract MCP types: Create `libs/shared/src/mcp/types.ts` with JSON-RPC 2.0 and MCP type definitions
+- [ ] T010 **[Transport Abstraction]** Create transport factory: Port `transport.ts` logic to `libs/shared/src/mcp/transports/`
+- [ ] T011 **[P]** **[Analysis: Section.4.1]** Port message proxy algorithm: Create `libs/shared/src/mcp/proxy.ts` with bidirectional routing logic
+- [ ] T012 **[Session Management]** Create session models: Implement stateless session management based on Analysis Section 2.1
+- [ ] T013 **[Ground Truth]** MCP protocol tests: Write comprehensive tests for message routing and transport creation
+- [ ] T014 **[Validation]** Cross-transport compatibility: Validate stdio/SSE/HTTP transports work identically
 
-**Checkpoint**: Data layer migrated with full functional parity.
+**Checkpoint**: MCP protocol foundation ready with transport abstraction and message routing.
 
-## Phase 3: Foundational Infrastructure
+## Phase 3: Development Tools Domain Infrastructure  
 
-**Purpose**: Core application infrastructure based on analysis findings.
+**Purpose**: Core Inspector debugging infrastructure based on Analysis Section 6 (Frontend Architecture).
 
-- [ ] T015 [Analysis: Section.3.1] Authentication/authorization framework: Implement exact auth patterns from Section.3.1
-- [ ] T016 [Analysis: Section.9.1] Security measures: Implement all security patterns identified in analysis
-- [ ] T017 [P] [Analysis: Section.3.2] API routing framework: Setup endpoint structure (empty routes initially)
-- [ ] T018 [Analysis: Section.8.1] Performance monitoring: Implement baseline monitoring per Section.8.1
-- [ ] T019 [Analysis: Section.7.1] Testing framework: Setup testing infrastructure matching current patterns
-- [ ] T020 Configure error handling and logging infrastructure per Section.10.2
+- [ ] T015 **[Session Auth]** Implement Inspector session auth: Port session token validation from Analysis Section 3.1
+- [ ] T016 **[Security]** DNS rebinding protection: Implement origin validation middleware per Analysis Section 9.1  
+- [ ] T017 **[P]** **[API Framework]** Setup Inspector endpoints: Create /health, /mcp, /ws routes in infrastructure domain
+- [ ] T018 **[Monitoring]** MCP connection monitoring: Implement connection state tracking and error reporting
+- [ ] T019 **[Test Framework]** Setup MCP testing infrastructure: Create test utilities for mocking MCP servers
+- [ ] T020 Configure structured logging for MCP protocol debugging per Analysis Section 10.2
 
-**Checkpoint**: Foundation ready with security and monitoring. NO business logic exists.
+**Checkpoint**: Inspector API framework ready with authentication and monitoring. NO business logic.
 
-## Phase 4: Critical Business Logic Migration (Feature 1) 🎯 MVP
+## Phase 4: Critical MCP Message Routing (Core Feature) 🎯 MVP
 
-**Migration Goal**: [Brief description based on Analysis Section.4.1 findings]
+**Migration Goal**: Bidirectional MCP message proxy preserving exact protocol behavior
 
-**Analysis Reference**: Section.4.1 - Critical Algorithms, Section.11.1 - Domain Knowledge
+**Analysis Reference**: Section 4.1 - MCP Message Proxy Algorithm, Section 11.1 - MCP Protocol Domain Knowledge
 
-**Independent Test**: [Test case from Analysis Section.4.1 or domain requirements]
+**Independent Test**: Message routing between web client and MCP server via different transports
 
-### Phase 4a: Analysis Cross-Reference & Ground Truth
+### Phase 4a: Message Routing Analysis & Ground Truth
 
-- [ ] T021 [Analysis: Section.4.1] Algorithm analysis: Review critical algorithm documentation for this feature
-- [ ] T022 [Analysis: Section.11.1] Domain knowledge review: Document business rules and domain concepts
-- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Ground Truth Test: Write test proving original behavior matches analysis documentation
-- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation Test: Create target framework test (initially failing)
-- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document current performance metrics for this feature
+- [ ] T021 **[Algorithm Analysis]** Review mcpProxy.ts logic: Document exact bidirectional message handling behavior
+- [ ] T022 **[Domain Knowledge]** MCP protocol rules: Document JSON-RPC 2.0 compliance and message lifecycle requirements  
+- [ ] T023 **[P]** **[Ground Truth]** **[Logic: server/src/mcpProxy.ts::mcpProxy]** Test original message routing: Validate proxy routes messages correctly
+- [ ] T024 **[P]** **[Validation Test]** Create new proxy tests: Setup failing tests for unified backend message routing
+- [ ] T025 **[Performance]** Measure routing latency: Document current <1ms per message routing performance
 
-### Phase 4b: Incremental Migration & Validation
+### Phase 4b: Message Routing Migration & Validation
 
-- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Algorithm preservation: Port exact business logic maintaining complexity characteristics
-- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation execution: Run new test against ported logic - MUST pass
-- [ ] T028 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis
-- [ ] T029 [F1] [Analysis: Section.3.2] API integration: Wire proven logic into endpoint structure
-- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics
-- [ ] T031 [F1] Integration test: End-to-end validation of feature functionality
+- [ ] T026 **[Core Logic]** **[Analysis: Section.4.1]** **[Logic: server/src/mcpProxy.ts::mcpProxy]** Port message proxy: Implement bidirectional routing in infrastructure domain
+- [ ] T027 **[Validation]** **[Logic: server/src/mcpProxy.ts::mcpProxy]** Test message routing: Verify new implementation passes ground truth tests
+- [ ] T028 **[Edge Cases]** **[Analysis: Section.11.2]** Handle connection failures: Implement JSON-RPC error responses and cleanup
+- [ ] T029 **[Integration]** Wire proxy to API endpoints: Connect message routing to /mcp and /ws endpoints  
+- [ ] T030 **[Performance]** Validate routing latency: Confirm new implementation maintains <1ms routing performance
+- [ ] T031 **[Integration Test]** End-to-end MCP communication: Test full client→proxy→server→proxy→client flow
 
-**Checkpoint**: Critical feature migrated with documented functional and performance parity.
+**Checkpoint**: MCP message routing migrated with documented functional and performance parity.
 
-## Phase 5: Security & Authorization Migration (Feature 2)
+## Phase 5: Transport Management Domain Migration (Feature 2)
 
-**Migration Goal**: [Based on Analysis Section.3.1 and Section.9.1 findings]
+**Migration Goal**: Transport creation and lifecycle management preserving stdio/SSE/HTTP compatibility
 
-**Analysis Reference**: Section.3.1 - Authentication/Authorization, Section.9.1 - Security Measures
+**Analysis Reference**: Section 4.1 - Transport Creation Strategy, Section 5.1 - MCP Server Integration
 
-**Independent Test**: [Test case from Analysis Section.3.1 authorization patterns]
+**Independent Test**: Transport creation for all protocol types with authentication
 
-### Phase 5a: Security Analysis Integration
+### Phase 5a: Transport Strategy Analysis
 
-- [ ] T032 [Analysis: Section.3.1] Authorization pattern analysis: Document current access control implementation
-- [ ] T033 [Analysis: Section.9.1] Security measures inventory: Review all security patterns to preserve
-- [ ] T034 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Ground Truth Test: Prove current authorization behavior
-- [ ] T035 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Validation Test: Create target authorization test
+- [ ] T032 **[Transport Analysis]** Review transport.ts patterns: Document stdio/SSE/HTTP creation and configuration logic
+- [ ] T033 **[External Integration]** MCP server compatibility: Review transport-specific authentication and header handling
+- [ ] T034 **[P]** **[Ground Truth]** **[Logic: cli/src/transport.ts::createTransport]** Test transport creation: Validate all transport types work correctly  
+- [ ] T035 **[P]** **[Validation Test]** Create transport factory tests: Setup failing tests for unified transport management
 
-### Phase 5b: Authorization Migration
+### Phase 5b: Transport Management Migration
 
-- [ ] T036 [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Authorization logic port: Implement exact access control patterns
-- [ ] T037 [F2] [Analysis: Section.9.1] Security validation: Ensure all security measures maintained
-- [ ] T038 [F2] [Analysis: Section.3.1] Authorization integration: Wire into API framework
-- [ ] T039 [F2] Security testing: Validate all authorization scenarios
+- [ ] T036 **[Transport Logic]** **[Analysis: Section.4.1]** **[Logic: cli/src/transport.ts::createTransport]** Port transport factory: Implement transport creation in infrastructure domain
+- [ ] T037 **[Integration]** **[Analysis: Section.5.1]** Authentication preservation: Maintain header forwarding and OAuth passthrough
+- [ ] T038 **[Transport Lifecycle]** Connection management: Wire transport creation into session management
+- [ ] T039 **[Compatibility Test]** Validate all transport types: Test stdio command execution, SSE connections, HTTP requests
 
-**Checkpoint**: Authorization and security patterns migrated with full parity.
+**Checkpoint**: Transport management migrated with full stdio/SSE/HTTP compatibility.
 
-## Phase 6: External Integrations Migration
+## Phase 6: Development Tools UI Domain Migration
 
-**Migration Goal**: Preserve all third-party service integrations per Analysis Section.5
+**Migration Goal**: Inspector web UI preserving exact debugging functionality
 
-**Analysis Reference**: Section.5.1 - Third-party APIs, Section.5.2 - Auth Providers
+**Analysis Reference**: Section 6 - Frontend Architecture, Section 11.3 - User Behavior Patterns
 
-### Phase 6a: Integration Analysis & Testing
+### Phase 6a: UI Architecture Analysis & Planning
 
-- [ ] T040 [Analysis: Section.5.1] External API inventory: Document all third-party integrations
-- [ ] T041 [Analysis: Section.5.1] Integration testing: Validate current external service connections
-- [ ] T042 [P] [Analysis: Section.5.1] API client migration: Port all external API clients
-- [ ] T043 [Analysis: Section.5.1] Error handling preservation: Maintain all fallback behaviors
+- [ ] T040 **[Frontend Analysis]** Review React components: Document App.tsx, Sidebar.tsx, and tab-based routing patterns
+- [ ] T041 **[UI Integration]** Plan frontend integration: Design Inspector UI embedding strategy within Jane UI
+- [ ] T042 **[P]** **[Component Migration]** Extract Inspector components: Create reusable components in `libs/ui/src/inspector/`
+- [ ] T043 **[State Management]** Session state integration: Connect Inspector state to unified frontend state management
 
-### Phase 6b: Integration Validation
+### Phase 6b: UI Integration & Validation
 
-- [ ] T044 [Analysis: Section.5.1] Service connectivity: Test all external integrations
-- [ ] T045 [Analysis: Section.5.2] Authentication provider testing: Validate OAuth/SSO flows
-- [ ] T046 [Analysis: Section.5.1] Caching strategy: Implement analysis-documented caching patterns
+- [ ] T044 **[UI Integration]** Embed Inspector in Jane UI: Create Inspector tool interface within unified frontend
+- [ ] T045 **[User Experience]** Preserve debugging workflows: Maintain tools/resources/prompts/console tab functionality
+- [ ] T046 **[Visual Integration]** Inspector visual consistency: Adapt Inspector UI to match Jane design system
 
-## Phase 7: Performance & Quality Assurance
+## Phase 7: MCP Developer Experience & CLI Migration
 
-**Migration Goal**: Meet or exceed baseline performance per Analysis Section.8
+**Migration Goal**: Preserve CLI debugging workflows and developer experience
 
-**Analysis Reference**: Section.8.1 - Performance Baselines, Section.7.1 - Test Coverage
+**Analysis Reference**: Section 7 - Testing & Quality, Section 11.3 - User Behavior Patterns
 
-### Phase 7a: Performance Validation
+### Phase 7a: CLI Integration Analysis
 
-- [ ] T047 [Analysis: Section.8.1] Performance benchmarking: Measure new implementation against baselines
-- [ ] T048 [Analysis: Section.8.2] Bottleneck analysis: Ensure no performance regressions
-- [ ] T049 [Analysis: Section.8.3] Scalability testing: Validate scaling characteristics maintained
+- [ ] T047 **[CLI Analysis]** Review mcp-inspector CLI: Document command-line interface and startup workflows
+- [ ] T048 **[Developer Experience]** CLI integration strategy: Plan CLI preservation within unified platform
+- [ ] T049 **[Workflow Testing]** Validate developer workflows: Test `npx @modelcontextprotocol/inspector` usage patterns
 
-### Phase 7b: Quality Assurance
+### Phase 7b: CLI Preservation & Developer Tools
 
-- [ ] T050 [Analysis: Section.7.1] Test coverage parity: Achieve analysis-documented coverage levels
-- [ ] T051 [Analysis: Section.7.2] Critical test preservation: Migrate all critical test scenarios
-- [ ] T052 [P] [Analysis: Section.11.2] Edge case validation: Test all documented quirks and workarounds
+- [ ] T050 **[CLI Migration]** Preserve Inspector CLI: Maintain mcp-inspector command compatibility  
+- [ ] T051 **[Developer Tools]** MCP debugging integration: Embed Inspector functionality in unified development tools
+- [ ] T052 **[P]** **[Documentation]** Update developer documentation: Document Inspector usage within unified platform
 
-## Phase 8: Domain Knowledge Preservation
+## Phase 8: MCP Protocol Domain Expertise Integration
 
-**Migration Goal**: Capture all tribal knowledge per Analysis Section.11
+**Migration Goal**: Preserve MCP protocol tribal knowledge and debugging capabilities
 
-**Analysis Reference**: Section.11.1 - Business Domain, Section.11.2 - Undocumented Knowledge
+**Analysis Reference**: Section 11.1 - Business Domain Expertise, Section 11.2 - Undocumented Knowledge
 
-- [ ] T053 [Analysis: Section.11.1] Domain concept validation: Ensure all business rules preserved
-- [ ] T054 [Analysis: Section.11.2] Quirk implementation: Implement all documented workarounds
-- [ ] T055 [Analysis: Section.11.3] User behavior patterns: Validate user workflow preservation
-- [ ] T056 [P] Documentation updates reflecting analysis findings
+- [ ] T053 **[Domain Knowledge]** Document MCP protocol expertise: Capture transport quirks, stdio process handling, SSE polyfills
+- [ ] T054 **[Protocol Quirks]** **[Analysis: Section.11.2]** Implement MCP workarounds: Port stdio zombie process prevention and error handling
+- [ ] T055 **[Developer Workflows]** **[Analysis: Section.11.3]** Validate debugging patterns: Ensure MCP server testing workflows preserved
+- [ ] T056 **[P]** Update MCP protocol documentation with unified platform integration patterns
 
-## Phase N: Cross-Cutting Concerns & Polish
+## Phase 9: Integration Testing & Performance Validation
 
-- [ ] TXXX [Analysis: Section.10.2] Logging and monitoring: Implement analysis-documented patterns
-- [ ] TXXX [Analysis: Section.9.2] Security hardening: Final security validation
-- [ ] TXXX [P] Code cleanup and refactoring (target framework only)
-- [ ] TXXX [Analysis: Section.13.1] Documentation updates incorporating analysis findings
+**Migration Goal**: Comprehensive validation of Inspector functionality within unified platform
 
-## Phase N+1: Migration Validation & Asset Retirement
+**Analysis Reference**: Section 8 - Performance Characteristics, Section 12.3 - Success Criteria
 
-**Purpose**: Comprehensive validation before legacy asset removal.
+- [ ] T057 **[Performance Testing]** **[Analysis: Section.8.1]** Measure MCP proxy performance: Validate <10ms message routing in unified platform
+- [ ] T058 **[Protocol Compliance]** **[Analysis: Section.12.3]** Validate MCP protocol compliance: Test against MCP specification requirements
+- [ ] T059 **[Cross-Domain Integration]** Test Inspector with other domains: Validate Inspector works within broader platform context
+- [ ] T060 **[Developer Experience]** End-to-end developer workflow: Test MCP server development and debugging workflows
 
-### Phase N+1a: Complete Migration Validation
+**Checkpoint**: Inspector fully integrated with validated performance and functionality.
 
-- [ ] TXXX [Analysis: All Sections] Full analysis cross-reference: Verify all analysis findings addressed
-- [ ] TXXX [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically
-- [ ] TXXX [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds baselines
-- [ ] TXXX [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met
-- [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags have corresponding passing validation tests
-- [ ] TXXX Run Full Regression Suite: Execute complete test suite including ground truth comparisons
+## Phase 10: Migration Validation & Asset Retirement
 
-### Phase N+1b: Safe Asset Retirement
+**Purpose**: Comprehensive validation before legacy Inspector removal.
 
-- [ ] TXXX [Analysis: Section.12.2] Risk mitigation: Address all identified migration risks
-- [ ] TXXX Legacy asset backup: Create secure archive of legacy codebase before deletion
-- [ ] TXXX Production validation: Run new system in production-like environment
-- [ ] TXXX Stakeholder approval: Obtain sign-off from all analysis-identified stakeholders
-- [ ] TXXX Delete Legacy Asset: After 100% validation, remove legacy asset directory
+### Phase 10a: Complete Migration Validation
 
-### Phase N+1c: Post-Migration Monitoring
+- [ ] T061 **[Analysis Cross-Reference]** Validate all analysis findings addressed: Confirm Sections 2,3,4,5,11 fully implemented
+- [ ] T062 **[Algorithm Parity]** **[Analysis: Section.4.1]** Validate message routing identical: Confirm proxy behavior matches legacy exactly  
+- [ ] T063 **[Performance Regression]** **[Analysis: Section.8.1]** Validate performance maintained: Confirm <10ms routing, <100ms connections
+- [ ] T064 **[Success Criteria]** **[Analysis: Section.12.3]** Verify all Inspector requirements: Test 100% feature parity checklist
+- [ ] T065 Verify complete migration: Confirm all [Logic: ...] tasks have passing validation tests
+- [ ] T066 Run comprehensive test suite: Execute all MCP protocol tests with ground truth comparisons
 
-- [ ] TXXX [Analysis: Section.10.2] Monitoring validation: Confirm monitoring systems capture same metrics
-- [ ] TXXX [Analysis: Section.8.1] Performance monitoring: Track performance against established baselines
-- [ ] TXXX [Analysis: Section.11.3] User behavior monitoring: Validate user workflow preservation
+### Phase 10b: Safe Legacy Asset Retirement
+
+- [ ] T067 **[Risk Mitigation]** **[Analysis: Section.12.2]** Address migration risks: Validate MCP protocol compatibility maintained
+- [ ] T068 Legacy Inspector backup: Archive `features/inspector/` before deletion with version documentation
+- [ ] T069 Production validation: Test Inspector functionality in unified platform production environment
+- [ ] T070 MCP community validation: Confirm Inspector migration maintains ecosystem compatibility
+- [ ] T071 **[Asset Retirement]** Delete legacy Inspector: Remove `features/inspector/` after 100% validation complete
+
+### Phase 10c: Post-Migration MCP Ecosystem Monitoring
+
+- [ ] T072 **[Monitoring]** **[Analysis: Section.10.2]** MCP protocol monitoring: Track message routing performance and connection health
+- [ ] T073 **[Performance Tracking]** **[Analysis: Section.8.1]** Continuous performance monitoring: Validate ongoing <10ms routing performance
+- [ ] T074 **[Developer Experience]** **[Analysis: Section.11.3]** Monitor MCP debugging workflows: Track developer usage patterns and satisfaction
 
 ### Dependencies & Execution Order
 
 **Sequential Dependencies (Must Complete In Order):**
-- **Phase 1 (Analysis Validation)**: Must complete first - validates analysis completeness
-- **Phase 2 (Data Architecture)**: Must complete before business logic - establishes data foundation
-- **Phase 3 (Foundational Infrastructure)**: Must complete before feature migration - establishes framework
+
+- **Phase 1 (MCP Analysis & Environment)**: Must complete first - validates MCP Inspector analysis and establishes testbed
+- **Phase 2 (MCP Protocol Domain)**: Must complete before business logic - establishes MCP protocol foundation
+- **Phase 3 (Development Tools Infrastructure)**: Must complete before Inspector features - establishes API framework
 
 **Parallel Execution Phases:**
-- **Phases 4-6 (Business Logic, Security, Integrations)**: Can proceed in parallel by feature after Phase 3
-- **Phase 7 (Performance & Quality)**: Can run in parallel with feature phases
-- **Phase 8 (Domain Knowledge)**: Can run in parallel with feature phases
 
-**Final Sequential Dependencies:**
-- **Phase N (Cross-Cutting Concerns)**: After all feature phases complete
-- **Phase N+1 (Asset Retirement)**: The absolute final step - only after complete validation
+- **Phases 4-5 (Message Routing & Transport Management)**: Core MCP functionality can proceed in parallel after Phase 3
+- **Phases 6-7 (UI Migration & CLI Preservation)**: Developer experience features can run parallel with core MCP features
+- **Phase 8 (Domain Expertise Integration)**: Can run in parallel with all feature phases
+- **Phases 9-10 (Testing & Retirement)**: Must complete after all feature phases
+
+## MCP Inspector Migration Notes
+
+**For Infrastructure Domain Team**: Inspector migration requires MCP protocol expertise and careful transport handling.
+
+**Key MCP-Specific Considerations**:
+
+**1. MCP Protocol Preservation**:
+
+1. Message routing algorithm (mcpProxy.ts) is CRITICAL - exact behavior preservation required
+2. Transport creation strategy must handle stdio/SSE/HTTP identically  
+3. JSON-RPC 2.0 compliance must be maintained throughout migration
+4. Session management must preserve stateless debugging characteristics
+
+**2. Developer Experience Priority**:
+
+- CLI interface (`mcp-inspector` command) must work identically
+- All transport types (stdio, SSE, streamable-http) must function unchanged
+- Browser-based debugging UI must preserve all tabs and functionality
+- MCP server compatibility must be maintained 100%
+
+**3. Performance Requirements**:
+
+- Message routing latency must stay <1ms per message
+- Connection establishment must stay <100ms for all transport types
+- UI responsiveness must maintain <200ms interactions (executive function requirement)
+- WebSocket connections must maintain <10ms message latency
+
+**4. Domain Integration Strategy**:
+
+- Inspector becomes part of Infrastructure Domain (developer tools)
+- MCP protocol abstractions go in `libs/shared/src/mcp/`
+- UI components integrate with Jane UI design system
+- CLI preserved as infrastructure development tool
+
+**5. Critical Validation Gates**:
+
+- Every transport type must pass ground truth tests against original Inspector
+- All MCP servers used in testing must work identically with migrated version
+- Performance regression testing must validate <1ms message routing
+- Developer workflow validation with real MCP server development scenarios
+
+## Post-Flight Checklist ✅
+
+**Mark complete ONLY when all MCP Inspector conditions verified**:
+
+- [ ] All tasks T001-T074 marked complete with validation evidence
+- [ ] All MCP protocol compliance tests pass (stdio/SSE/HTTP transports)
+- [ ] Message routing performance <1ms validated under load
+- [ ] CLI interface `mcp-inspector` works identically to legacy version
+- [ ] All Inspector UI tabs (tools/resources/prompts/console) function correctly
+- [ ] Ground Truth tests pass for Inspector vs original behavior
+- [ ] MCP server compatibility validated with reference implementations  
+- [ ] Developer debugging workflows preserved and documented
+- [ ] Integration tests demonstrate Inspector works within unified platform
+- [ ] Performance benchmarks meet MCP ecosystem requirements
+
+**⚠️ MCP Inspector Retirement Gate**:
+
+1. Mark all checkboxes above ✅
+2. Validate with MCP community that debugging capabilities preserved
+3. Test Inspector with multiple real MCP server implementations
+4. Document completion in `migration-validation.md` with MCP protocol compliance evidence
+5. Archive `features/inspector/` with full npm workspace structure
+6. ONLY THEN proceed with legacy Inspector deletion
+
+**MCP Community Impact**: Inspector is critical infrastructure for MCP ecosystem - migration failure affects entire MCP developer community.
 
 ---
 

@@ -433,13 +433,14 @@ Each `[HANDOFF]` task represents completion of an entire project migration. See 
   - **Return To**: T095
   - **Est. Hours**: 20
 
-- [ ] T095 [P] [HANDOFF] Migrate Maltrail
+- [ ] T095 [CRITICAL] [HANDOFF] Migrate Maltrail Network Security Monitor
   - **File**: [`tasks-individual/tasks-maltrail.md`](tasks-individual/tasks-maltrail.md)
-  - **Entry Condition**: Phase 1-2 complete, apps/security-service/ foundation ready
-  - **Exit Condition**: All tasks in tasks-maltrail.md complete + validation tests pass
-  - **Validation**: `pytest tests/security/test_maltrail_integration.py`
+  - **Description**: DDD-based migration of real-time network threat detection system (400K+ indicators, 50+ feeds)
+  - **Entry Condition**: Phase 1-4 complete, security-service foundation ready, packet capture environment available
+  - **Exit Condition**: All 115 tasks complete + network monitoring domain operational + performance validated
+  - **Validation**: `pytest apps/security-service/tests/domains/network_monitoring/ -v --ground-truth`
   - **Return To**: T096
-  - **Est. Hours**: 35
+  - **Est. Hours**: 65 (CRITICAL security capability - requires network security expert)
 
 - [ ] T096 [P] [HANDOFF] Migrate MalwareBazaar MCP
   - **File**: [`tasks-individual/tasks-malwarebazaar-mcp.md`](tasks-individual/tasks-malwarebazaar-mcp.md)
@@ -607,11 +608,11 @@ Each `[HANDOFF]` task represents completion of an entire project migration. See 
 
 - [ ] T114 [P] [HANDOFF] Migrate Commander Spellbook Site
   - **File**: [`tasks-individual/tasks-commander-spellbook-site.md`](tasks-individual/tasks-commander-spellbook-site.md)
-  - **Entry Condition**: Phase 1-2 complete, apps/mtg-service/ foundation ready, T113 (backend) complete
-  - **Exit Condition**: All tasks in tasks-commander-spellbook-site.md complete + validation tests pass
-  - **Validation**: `pytest tests/mtg/test_commander_spellbook_site_integration.py`
+  - **Entry Condition**: Phase 1-2 complete, TCG domain foundation ready, T113 (backend) complete
+  - **Exit Condition**: All tasks T001-T079 in tasks-commander-spellbook-site.md complete + Cypress E2E tests pass
+  - **Validation**: `npm run test:integration` (TCG domain)
   - **Return To**: T115
-  - **Est. Hours**: 35
+  - **Est. Hours**: 42
 
 - [ ] T115 [P] [HANDOFF] Migrate MTG Commander Map
   - **File**: [`tasks-individual/tasks-mtg-commander-map.md`](tasks-individual/tasks-mtg-commander-map.md)

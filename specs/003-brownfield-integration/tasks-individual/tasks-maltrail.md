@@ -1,27 +1,42 @@
 ---
-description: "Task list template for asset relocation and implementation"
-parent_task: "../tasks.md#TXXX"
-parent_phase: "Phase X: Security Migrations"
-return_to: "../tasks.md#TXXX"
+description: "DDD-based modular monolith migration for Maltrail network security monitoring"
+parent_task: "../tasks.md#T095"
+parent_phase: "Phase 5: Security Domain Migration"  
+return_to: "../tasks.md#T096"
 domain: "security"
-target_service: "apps/security-service/src/"
+target_service: "apps/security-service/src/domains/network_monitoring/"
 legacy_path: "features/maltrail"
-estimated_hours: 35
+estimated_hours: 65
+priority: "CRITICAL - Core network security monitoring capability"
 ---
 
-# Tasks: [MIGRATION: Maltrail]
+# Tasks: [MIGRATION: Maltrail Network Security Monitor]
 
-**⬆️ PARENT TASK**: [`tasks.md#TXXX`](../tasks.md#TXXX)  
-**⬇️ RETURN TO**: [`tasks.md#TXXX`](../tasks.md#TXXX)
+**⬆️ PARENT TASK**: [`tasks.md#T095`](../tasks.md#T095) - Security Domain Migration  
+**⬇️ RETURN TO**: [`tasks.md#T096`](../tasks.md#T096) - Next security tool migration
+
+---
+
+## 🚨 CRITICAL SECURITY TOOL MIGRATION
+
+**Maltrail** is a core network security monitoring system providing real-time threat detection through:
+
+- **400K+ threat intelligence indicators** from 50+ external feeds
+- **Sub-millisecond packet analysis** for high-volume networks (up to 10Gbps)  
+- **Multi-protocol detection** (DNS, HTTP, TCP) with heuristic analysis
+- **Real-time security event logging** with forensic analysis capabilities
+- **SIEM integration** via multiple log formats (CSV, CEF, JSON, Syslog)
+
+**Business Impact**: Loss of network threat detection during migration creates security blind spots.
 
 ---
 
 ## Handoff Context
 
-**Called From**: `tasks.md` Phase X, Task TXXX  
+**Called From**: `tasks.md` Phase 5, Task T095 - Security Domain Migration  
 **Entry Condition**: Security service foundation ready (Phase 1-4 complete)  
 **Exit Condition**: All tasks below complete + validation tests pass  
-**Return Action**: Mark TXXX complete in parent `tasks.md`, proceed to next task
+**Return Action**: Mark T095 complete in parent `tasks.md`, proceed to T096
 
 **Handoff Protocol**: See [`HANDOFF-PROTOCOL.md`](./HANDOFF-PROTOCOL.md) for complete workflow documentation.
 
@@ -37,370 +52,364 @@ estimated_hours: 35
 - [ ] Authentication/authorization from Phase 3 working
 - [ ] Test framework from Phase 3 operational
 - [ ] Legacy environment setup: `features/maltrail/` accessible
-- [ ] Project analysis report completed and validated
+- [ ] Maltrail analysis report completed and validated (maltrail-analysis.md)
+- [ ] Network packet capture environment available for testing
+- [ ] Threat intelligence feed access confirmed
 
 **⚠️ If any checklist item fails**: STOP and return to parent `tasks.md` to complete prerequisites.
 
 ---
 
-**Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
-**Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
-**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY)**, research.md, data-model.md, contracts/
+## Migration Scope & Domain Analysis
 
-**Project Analysis Integration**: This task template MUST reference specific sections from project_analysis_report.md:
-- Section 2 (Data Architecture) - for data model migration tasks
-- Section 3 (API Architecture) - for endpoint and authentication migration
-- Section 4 (Business Logic) - for critical algorithm preservation
-- Section 5 (External Integrations) - for third-party service continuity
-- Section 8 (Performance Characteristics) - for baseline preservation
-- Section 11 (Domain Knowledge) - for business rule preservation
+**Input (Analysis)**: `maltrail-analysis.md` - Comprehensive technical analysis  
+**Input (Legacy)**: `features/maltrail/` - Python-based network security monitor  
+**Output (Target)**: `apps/security-service/src/domains/network_monitoring/` - DDD-bounded context
 
-**Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first to establish functional baselines.
+**Domain-Driven Design Context**: Maltrail represents the **Network Threat Detection** bounded context within the Security domain, responsible for:
 
-**Organization**: Tasks are grouped by Legacy Feature AND cross-referenced with Project Analysis sections to ensure 1:1 functional parity and comprehensive coverage.
+- **Threat Intelligence Aggregation** - 50+ external feeds, 400K+ indicators
+- **Real-time Packet Analysis** - Multi-protocol detection (DNS, HTTP, TCP)  
+- **Security Event Management** - Structured logging and SIEM integration
+- **Analyst Dashboard** - Web interface for threat investigation
 
-## Format: [ID] [P?] [Feature] [Analysis: Section.#] [Logic: <legacy_file::function>] Description
-- [P]: Can run in parallel
-- [Feature]: Which legacy feature this task belongs to (e.g., F1: Publishing)
-- [Analysis]: Reference to project_analysis_report.md section (e.g., Section.2.1, Section.4.1)
-- [Logic]: The exact legacy code being replaced. This is not optional.
-
-## Path Conventions
-- **New Project**: [e.g., apps/PROJECT/src/] at repository root
-- **Legacy Project**: [e.g., features/MISP/app/Model/]
-- **Analysis Report**: project_analysis_report.md sections for validation
-- Paths shown below assume single project - adjust based on plan.md structure
-
-## Migration Methodology: Brownfield Asset Relocation
-
-**Core Principle**: Preserve 100% functional parity while modernizing architecture.
-
-**Validation Strategy**: 
-1. Ground Truth Tests → Establish current behavior baseline
-2. Analysis Cross-Reference → Validate against documented behavior  
-3. Incremental Migration → Port one feature at a time with validation
-4. Integration Testing → Ensure new implementation matches baseline
-5. Performance Validation → Maintain or improve baseline metrics
-
-<!-- 
-  ============================================================================
-  IMPORTANT: The tasks below are SAMPLE TASKS for illustration purposes only.
-  
-  The /speckit.tasks command MUST replace these with actual tasks based on:
-  - User stories from spec.md (with their priorities P1, P2, P3...)
-  - Feature requirements from plan.md
-  - Entities from data-model.md
-  - Endpoints from contracts/
-  
-  Tasks MUST be organized by user story so each story can be:
-  - Implemented independently
-  - Tested independently
-  - Delivered as an MVP increment
-  
-  DO NOT keep these sample tasks in the generated tasks.md file.
-  ============================================================================
--->
-
-## Phase 1: Analysis Validation & Legacy Environment Setup
-
-**Purpose**: Validate project analysis findings and establish baseline testing environment.
-
-- [ ] T001 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections are filled
-- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate current tech stack inventory against actual codebase
-- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing tests and document current coverage metrics
-- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current performance characteristics
-- [ ] T005 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM) per Section.10.1
-- [ ] T006 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function
-- [ ] T007 [P] Create new project structure per implementation plan
-- [ ] T008 [P] Initialize target framework dependencies (per analysis Section.1.2)
+**Performance Requirements**: <1s detection latency (Security domain tier)
 
 ---
 
-## Phase 2: Data Architecture Migration
+## DDD Architecture Design
 
-**Purpose**: Migrate data models and database schema based on analysis Section 2.
+**Bounded Context**: Network Threat Detection
 
-- [ ] T009 [Analysis: Section.2.1] Inventory data models: Create comprehensive list from analysis findings
-- [ ] T010 [Analysis: Section.2.1] Database schema migration: Implement new schema preserving all relationships from Section.2.2
-- [ ] T011 [P] [Analysis: Section.2.1] Port data models: Create new framework models matching legacy field mappings exactly
-- [ ] T012 [Analysis: Section.2.3] Database performance patterns: Implement indexes and optimizations per analysis
-- [ ] T013 [Ground Truth] Data validation tests: Write tests confirming data integrity and constraints
-- [ ] T014 [Analysis: Section.2.1] Data migration scripts: Create scripts for existing data preservation
+**Aggregate Roots**:
 
-**Checkpoint**: Data layer migrated with full functional parity.
+- `ThreatIntelligence` - Manages 400K+ indicators from 50+ feeds
+- `SecurityEvent` - Tracks detected malicious network activity
+- `NetworkSession` - Represents analyzed network connections
 
-## Phase 3: Foundational Infrastructure
+**Value Objects**:
 
-**Purpose**: Core application infrastructure based on analysis findings.
+- `TrailIndicator` - IP/domain/URL with threat categorization
+- `IPAddress` - Network address with geolocation metadata
+- `ThreatCategory` - Standardized threat classification
+- `DetectionRule` - Heuristic and pattern-based detection logic
 
-- [ ] T015 [Analysis: Section.3.1] Authentication/authorization framework: Implement exact auth patterns from Section.3.1
-- [ ] T016 [Analysis: Section.9.1] Security measures: Implement all security patterns identified in analysis
-- [ ] T017 [P] [Analysis: Section.3.2] API routing framework: Setup endpoint structure (empty routes initially)
-- [ ] T018 [Analysis: Section.8.1] Performance monitoring: Implement baseline monitoring per Section.8.1
-- [ ] T019 [Analysis: Section.7.1] Testing framework: Setup testing infrastructure matching current patterns
-- [ ] T020 Configure error handling and logging infrastructure per Section.10.2
+**Domain Services**:
 
-**Checkpoint**: Foundation ready with security and monitoring. NO business logic exists.
+- `PacketAnalyzer` - Real-time multi-protocol packet inspection
+- `FeedAggregator` - Threat intelligence feed management
+- `EventProcessor` - Security event generation and logging
+- `WhitelistManager` - False positive filtering
 
-## Phase 4: Critical Business Logic Migration (Feature 1) 🎯 MVP
+**Infrastructure Services**:
 
-**Migration Goal**: [Brief description based on Analysis Section.4.1 findings]
-
-**Analysis Reference**: Section.4.1 - Critical Algorithms, Section.11.1 - Domain Knowledge
-
-**Independent Test**: [Test case from Analysis Section.4.1 or domain requirements]
-
-### Phase 4a: Analysis Cross-Reference & Ground Truth
-
-- [ ] T021 [Analysis: Section.4.1] Algorithm analysis: Review critical algorithm documentation for this feature
-- [ ] T022 [Analysis: Section.11.1] Domain knowledge review: Document business rules and domain concepts
-- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Ground Truth Test: Write test proving original behavior matches analysis documentation
-- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation Test: Create target framework test (initially failing)
-- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document current performance metrics for this feature
-
-### Phase 4b: Incremental Migration & Validation
-
-- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Algorithm preservation: Port exact business logic maintaining complexity characteristics
-- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation execution: Run new test against ported logic - MUST pass
-- [ ] T028 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis
-- [ ] T029 [F1] [Analysis: Section.3.2] API integration: Wire proven logic into endpoint structure
-- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics
-- [ ] T031 [F1] Integration test: End-to-end validation of feature functionality
-
-**Checkpoint**: Critical feature migrated with documented functional and performance parity.
-
-## Phase 5: Security & Authorization Migration (Feature 2)
-
-**Migration Goal**: [Based on Analysis Section.3.1 and Section.9.1 findings]
-
-**Analysis Reference**: Section.3.1 - Authentication/Authorization, Section.9.1 - Security Measures
-
-**Independent Test**: [Test case from Analysis Section.3.1 authorization patterns]
-
-### Phase 5a: Security Analysis Integration
-
-- [ ] T032 [Analysis: Section.3.1] Authorization pattern analysis: Document current access control implementation
-- [ ] T033 [Analysis: Section.9.1] Security measures inventory: Review all security patterns to preserve
-- [ ] T034 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Ground Truth Test: Prove current authorization behavior
-- [ ] T035 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Validation Test: Create target authorization test
-
-### Phase 5b: Authorization Migration
-
-- [ ] T036 [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Authorization logic port: Implement exact access control patterns
-- [ ] T037 [F2] [Analysis: Section.9.1] Security validation: Ensure all security measures maintained
-- [ ] T038 [F2] [Analysis: Section.3.1] Authorization integration: Wire into API framework
-- [ ] T039 [F2] Security testing: Validate all authorization scenarios
-
-**Checkpoint**: Authorization and security patterns migrated with full parity.
-
-## Phase 6: External Integrations Migration
-
-**Migration Goal**: Preserve all third-party service integrations per Analysis Section.5
-
-**Analysis Reference**: Section.5.1 - Third-party APIs, Section.5.2 - Auth Providers
-
-### Phase 6a: Integration Analysis & Testing
-
-- [ ] T040 [Analysis: Section.5.1] External API inventory: Document all third-party integrations
-- [ ] T041 [Analysis: Section.5.1] Integration testing: Validate current external service connections
-- [ ] T042 [P] [Analysis: Section.5.1] API client migration: Port all external API clients
-- [ ] T043 [Analysis: Section.5.1] Error handling preservation: Maintain all fallback behaviors
-
-### Phase 6b: Integration Validation
-
-- [ ] T044 [Analysis: Section.5.1] Service connectivity: Test all external integrations
-- [ ] T045 [Analysis: Section.5.2] Authentication provider testing: Validate OAuth/SSO flows
-- [ ] T046 [Analysis: Section.5.1] Caching strategy: Implement analysis-documented caching patterns
-
-## Phase 7: Performance & Quality Assurance
-
-**Migration Goal**: Meet or exceed baseline performance per Analysis Section.8
-
-**Analysis Reference**: Section.8.1 - Performance Baselines, Section.7.1 - Test Coverage
-
-### Phase 7a: Performance Validation
-
-- [ ] T047 [Analysis: Section.8.1] Performance benchmarking: Measure new implementation against baselines
-- [ ] T048 [Analysis: Section.8.2] Bottleneck analysis: Ensure no performance regressions
-- [ ] T049 [Analysis: Section.8.3] Scalability testing: Validate scaling characteristics maintained
-
-### Phase 7b: Quality Assurance
-
-- [ ] T050 [Analysis: Section.7.1] Test coverage parity: Achieve analysis-documented coverage levels
-- [ ] T051 [Analysis: Section.7.2] Critical test preservation: Migrate all critical test scenarios
-- [ ] T052 [P] [Analysis: Section.11.2] Edge case validation: Test all documented quirks and workarounds
-
-## Phase 8: Domain Knowledge Preservation
-
-**Migration Goal**: Capture all tribal knowledge per Analysis Section.11
-
-**Analysis Reference**: Section.11.1 - Business Domain, Section.11.2 - Undocumented Knowledge
-
-- [ ] T053 [Analysis: Section.11.1] Domain concept validation: Ensure all business rules preserved
-- [ ] T054 [Analysis: Section.11.2] Quirk implementation: Implement all documented workarounds
-- [ ] T055 [Analysis: Section.11.3] User behavior patterns: Validate user workflow preservation
-- [ ] T056 [P] Documentation updates reflecting analysis findings
-
-## Phase N: Cross-Cutting Concerns & Polish
-
-- [ ] TXXX [Analysis: Section.10.2] Logging and monitoring: Implement analysis-documented patterns
-- [ ] TXXX [Analysis: Section.9.2] Security hardening: Final security validation
-- [ ] TXXX [P] Code cleanup and refactoring (target framework only)
-- [ ] TXXX [Analysis: Section.13.1] Documentation updates incorporating analysis findings
-
-## Phase N+1: Migration Validation & Asset Retirement
-
-**Purpose**: Comprehensive validation before legacy asset removal.
-
-### Phase N+1a: Complete Migration Validation
-
-- [ ] TXXX [Analysis: All Sections] Full analysis cross-reference: Verify all analysis findings addressed
-- [ ] TXXX [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically
-- [ ] TXXX [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds baselines
-- [ ] TXXX [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met
-- [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags have corresponding passing validation tests
-- [ ] TXXX Run Full Regression Suite: Execute complete test suite including ground truth comparisons
-
-### Phase N+1b: Safe Asset Retirement
-
-- [ ] TXXX [Analysis: Section.12.2] Risk mitigation: Address all identified migration risks
-- [ ] TXXX Legacy asset backup: Create secure archive of legacy codebase before deletion
-- [ ] TXXX Production validation: Run new system in production-like environment
-- [ ] TXXX Stakeholder approval: Obtain sign-off from all analysis-identified stakeholders
-- [ ] TXXX Delete Legacy Asset: After 100% validation, remove legacy asset directory
-
-### Phase N+1c: Post-Migration Monitoring
-
-- [ ] TXXX [Analysis: Section.10.2] Monitoring validation: Confirm monitoring systems capture same metrics
-- [ ] TXXX [Analysis: Section.8.1] Performance monitoring: Track performance against established baselines
-- [ ] TXXX [Analysis: Section.11.3] User behavior monitoring: Validate user workflow preservation
-
-### Dependencies & Execution Order
-
-**Sequential Dependencies (Must Complete In Order):**
-- **Phase 1 (Analysis Validation)**: Must complete first - validates analysis completeness
-- **Phase 2 (Data Architecture)**: Must complete before business logic - establishes data foundation
-- **Phase 3 (Foundational Infrastructure)**: Must complete before feature migration - establishes framework
-
-**Parallel Execution Phases:**
-- **Phases 4-6 (Business Logic, Security, Integrations)**: Can proceed in parallel by feature after Phase 3
-- **Phase 7 (Performance & Quality)**: Can run in parallel with feature phases
-- **Phase 8 (Domain Knowledge)**: Can run in parallel with feature phases
-
-**Final Sequential Dependencies:**
-- **Phase N (Cross-Cutting Concerns)**: After all feature phases complete
-- **Phase N+1 (Asset Retirement)**: The absolute final step - only after complete validation
+- `PacketCaptureService` - Low-level packet capture (pcapy-ng)
+- `ThreatFeedClient` - External API integrations
+- `SIEMExporter` - Log format conversion (CSV, CEF, JSON, Syslog)
 
 ---
 
-## Implementation Strategy: Analysis-Driven Migration
+## Migration Methodology
 
-### Analysis-First Approach
+**Core Principle**: Preserve 100% functional parity while establishing domain boundaries.
 
-1. **Complete Phase 1**: Analysis validation and baseline establishment (MANDATORY FIRST)
-2. **Complete Phase 2**: Data architecture migration (foundation for all features)
-3. **Complete Phase 3**: Infrastructure setup (framework foundation)
-4. **Begin Feature Migration**: Start with highest priority features from analysis
+**Domain Architecture Strategy**:
 
-### Critical Feature Priority (Based on Analysis Section 12.1)
+1. **Bounded Context Extraction** → Isolate network monitoring domain
+2. **Aggregate Root Identification** → Core business entities
+3. **Value Object Migration** → Immutable threat indicators  
+4. **Domain Service Preservation** → Critical algorithms (sensor.py detection engine)
+5. **Infrastructure Layer** → Packet capture, database persistence, web API
 
-1. **CRITICAL Priority Features**: Must migrate first (usually from Analysis Section 4.1)
-2. **IMPORTANT Priority Features**: Second wave migration
-3. **NICE-TO-HAVE Features**: Final migration wave
+**Validation Framework**:
 
-### Incremental Delivery Strategy
-
-1. **Foundation Phase** (Phases 1-3): Complete infrastructure → Validate baseline functionality
-2. **Critical Feature MVP**: Migrate one critical feature → **STOP and VALIDATE** → Deploy
-3. **Feature Increment**: Add next priority feature → Validate independently → Deploy
-4. **Continue Incrementally**: Each feature adds value without breaking previous functionality
-
-### Risk-Minimized Parallel Strategy
-
-**Sequential Foundation** (Team Together):
-1. Analysis validation (Phase 1) - entire team validates findings
-2. Data migration (Phase 2) - critical shared foundation
-3. Infrastructure setup (Phase 3) - framework foundation
-
-**Parallel Feature Migration** (After Foundation):
-- Developer A: Critical Feature 1 (Analysis Section 4.1 priority)
-- Developer B: Critical Feature 2 (Analysis Section 4.1 priority) 
-- Developer C: Security/Integration (Analysis Sections 5 & 9)
-- All developers: Continuous validation against analysis baselines
-
-**Validation Requirements**:
-- Each feature must pass ground truth tests before integration
-- Performance must meet Analysis Section 8.1 baselines
-- All Analysis Section 11 domain knowledge must be preserved
+- **Ground Truth Tests** → Establish packet processing baselines
+- **Domain Invariant Tests** → Validate business rules preservation
+- **Integration Tests** → SIEM compatibility and feed processing  
+- **Performance Tests** → Sub-second detection requirements
 
 ---
 
-## Brownfield Migration Methodology Notes
+## Phase 1: Domain Analysis & Ground Truth Establishment
 
-**Task Completion Criteria:**
-- [P] tasks = different files, no dependencies (can run in parallel)
-- [Analysis] references are MANDATORY - every task must trace to analysis findings
-- [Logic] preservation is CRITICAL - exact functional behavior must be maintained
-- Ground Truth Test → Analysis Cross-Reference → Port Logic → Validate → Integrate (core loop)
-- A task is not "done" when code is written - it's "done" when validation passes AND analysis criteria are met
+**Purpose**: Validate analysis findings and establish packet processing baseline.
 
-**Quality Gates:**
-- Every phase has explicit checkpoints requiring validation before proceeding
-- All critical algorithms (Analysis Section 4.1) must have functional parity tests
-- All performance baselines (Analysis Section 8.1) must be met or exceeded
-- All domain knowledge (Analysis Section 11) must be preserved and validated
+### T001-T010: Analysis Validation & Legacy Environment
 
-**Risk Mitigation:**
-- Analysis findings drive task creation - never skip analysis integration
-- Ground truth tests establish irrefutable behavioral baselines
-- Incremental migration reduces blast radius of changes
-- Performance monitoring prevents regressions
-- Stakeholder validation ensures business continuity
+- [ ] T001 **[CRITICAL]** **[Analysis: Section.1]** Validate Maltrail analysis completeness: Confirm all critical sections documented in maltrail-analysis.md
+- [ ] T002 **[CRITICAL]** **[Analysis: Section.1.2]** Technology stack verification: Validate Python 2.6+/3.x compatibility and pcapy-ng dependencies  
+- [ ] T003 **[P]** **[Analysis: Section.8.1]** Performance baseline establishment: Document current packet processing rates (target: <1ms detection latency)
+- [ ] T004 **[Ground Truth]** Setup legacy test environment: Create isolated Maltrail deployment with packet capture capability
+- [ ] T005 **[Ground Truth]** **[Logic: sensor.py::main()]** Validate legacy functionality: Run full detection cycle with live traffic
+- [ ] T006 **[P]** **[Analysis: Section.4.1]** Algorithm inventory: Document all detection algorithms in sensor.py detection engine
+- [ ] T007 **[Analysis: Section.2.1]** Data model analysis: Map threat intelligence and event log data structures
+- [ ] T008 **[Analysis: Section.5.1]** External integration inventory: Validate all 50+ threat intelligence feeds accessible
+- [ ] T009 Create new DDD project structure: Initialize `apps/security-service/src/domains/network_monitoring/`
+- [ ] T010 **[P]** Initialize target framework dependencies: FastAPI, SQLAlchemy, Redis for new implementation
 
-**Success Validation:**
-- Functional parity: New system behaviors match legacy system exactly
-- Performance parity: New system meets or exceeds performance baselines
-- Integration parity: All external services continue working without changes
-- Domain parity: All business rules and domain knowledge preserved
-- User parity: All user workflows continue functioning identically
+**Checkpoint**: Legacy system operational with documented baselines, new project structure ready.
+
+---
+
+## Phase 2: Domain Model & Data Architecture
+
+**Purpose**: Establish DDD domain model and migrate core data structures.
+
+### T011-T025: Aggregate Roots & Value Objects
+
+- [ ] T011 **[DDD]** **[Analysis: Section.2.1]** Design ThreatIntelligence aggregate: Model 400K+ threat indicators with feed attribution
+- [ ] T012 **[DDD]** **[Analysis: Section.2.1]** Design SecurityEvent aggregate: Model detected incidents with network context
+- [ ] T013 **[DDD]** **[Analysis: Section.2.1]** Design NetworkSession aggregate: Model analyzed network connections
+- [ ] T014 **[P]** **[Value Object]** **[Logic: core/enums.py::TRAIL]** Create TrailIndicator value object: IP/domain/URL with type classification
+- [ ] T015 **[P]** **[Value Object]** **[Logic: core/addr.py]** Create IPAddress value object: Network address with validation and geolocation
+- [ ] T016 **[P]** **[Value Object]** Create ThreatCategory value object: Standardized threat classification system
+- [ ] T017 **[P]** **[Value Object]** **[Logic: core/settings.py]** Create DetectionRule value object: Heuristic and pattern-based rules
+- [ ] T018 **[Database Schema]** **[Analysis: Section.2.3]** Create threat intelligence table: Store 400K+ indicators with indexes
+- [ ] T019 **[Database Schema]** **[Analysis: Section.2.3]** Create security events table: Time-series storage with partitioning
+- [ ] T020 **[Database Schema]** Create network sessions table: Connection metadata and analysis results
+- [ ] T021 **[P]** **[Analysis: Section.2.3]** Implement database performance patterns: Hash lookups and time-based partitioning  
+- [ ] T022 **[Ground Truth]** **[Logic: core/trailsdict.py]** Data validation tests: Verify threat indicator parsing and storage
+- [ ] T023 **[Ground Truth]** **[Logic: core/log.py]** Event validation tests: Verify security event data structure preservation
+- [ ] T024 **[Migration Script]** Create trail database migration: Import existing threat intelligence data
+- [ ] T025 **[Integration Test]** Database performance validation: Confirm O(1) trail lookups and sub-second queries
+
+**Checkpoint**: Domain model established with validated data persistence and performance.
+
+---
+
+## Phase 3: Core Domain Services
+
+**Purpose**: Migrate critical business logic while preserving algorithmic behavior.
+
+### T026-T040: Packet Analysis Engine
+
+- [ ] T026 **[Domain Service]** **[Analysis: Section.4.1]** **[Logic: sensor.py::_check_domain()]** Create PacketAnalyzer service: Multi-protocol analysis engine
+- [ ] T027 **[CRITICAL]** **[Analysis: Section.4.1]** **[Logic: sensor.py::_check_http()]** Port HTTP detection logic: Preserve exact URL/header analysis algorithms  
+- [ ] T028 **[CRITICAL]** **[Analysis: Section.4.1]** **[Logic: sensor.py::_check_tcp()]** Port TCP detection logic: Preserve connection analysis and port scanning detection
+- [ ] T029 **[P]** **[Analysis: Section.4.1]** **[Logic: sensor.py DNS analysis]** Port DNS detection logic: Domain hierarchy matching and heuristics
+- [ ] T030 **[Domain Service]** **[Analysis: Section.11.2]** **[Logic: core/common.py::check_whitelisted()]** Create WhitelistManager: False positive filtering service
+- [ ] T031 **[P]** **[Analysis: Section.4.1]** **[Logic: sensor.py heuristics]** Port heuristic detection: Long domain detection and behavioral analysis
+- [ ] T032 **[Ground Truth]** **[Logic: sensor.py detection engine]** Packet analysis validation: Test detection accuracy against known threats
+- [ ] T033 **[Performance Test]** **[Analysis: Section.8.1]** Detection latency validation: Confirm <1ms per packet requirement
+- [ ] T034 **[Performance Test]** **[Analysis: Section.8.2]** Throughput validation: Confirm 10Gbps processing capability  
+- [ ] T035 **[Integration Test]** Multi-protocol detection test: Validate DNS, HTTP, TCP detection accuracy
+- [ ] T036 **[Domain Invariant]** Trail matching validation: Verify exact behavioral match with legacy system
+- [ ] T037 **[P]** **[Logic: sensor.py::_process_packet()]** Port packet processing pipeline: Preserve exact analysis workflow
+- [ ] T038 **[Domain Service]** **[Analysis: Section.4.3]** Create EventProcessor: Security event generation and queuing
+- [ ] T039 **[Integration]** Packet capture integration: Connect to infrastructure PacketCaptureService
+- [ ] T040 **[Regression Test]** Full detection engine validation: End-to-end packet-to-event pipeline testing
+
+**Checkpoint**: Core detection engine migrated with validated algorithmic parity.
+
+---
+
+## Phase 4: Threat Intelligence Management  
+
+**Purpose**: Migrate threat feed aggregation and management systems.
+
+### T041-T055: Feed Aggregation System
+
+- [ ] T041 **[Domain Service]** **[Analysis: Section.4.1]** **[Logic: core/update.py]** Create FeedAggregator service: Multi-source threat intelligence management
+- [ ] T042 **[CRITICAL]** **[Analysis: Section.5.1]** **[Logic: trails/feeds/*.py]** Port feed parsers: Migrate all 50+ external feed integrations
+- [ ] T043 **[P]** **[Analysis: Section.5.1]** **[Logic: trails/feeds/abuseipdb.py]** Port AbuseIPDB feed: Known attacker IP addresses
+- [ ] T044 **[P]** **[Analysis: Section.5.1]** **[Logic: trails/feeds/openphish.py]** Port OpenPhish feed: Phishing URL database
+- [ ] T045 **[P]** **[Analysis: Section.5.1]** **[Logic: trails/feeds/emergingthreats*.py]** Port Emerging Threats feeds: Network security rules
+- [ ] T046 **[Data Processing]** **[Analysis: Section.4.1]** **[Logic: core/update.py::update_trails()]** Port feed normalization: Standardize indicator formats across feeds  
+- [ ] T047 **[Performance]** **[Analysis: Section.8.1]** Feed update optimization: Maintain 30-300s update window for all feeds
+- [ ] T048 **[Domain Service]** **[Analysis: Section.11.2]** Deduplication logic: Remove duplicate indicators across feeds
+- [ ] T049 **[Infrastructure]** **[Analysis: Section.5.1]** External API clients: HTTP clients with retry logic and error handling
+- [ ] T050 **[P]** **[Logic: trails/static/]** Static trail integration: User-defined and curated threat indicators
+- [ ] T051 **[Ground Truth]** **[Analysis: Section.5.1]** Feed validation tests: Verify all 50+ feeds download and parse correctly  
+- [ ] T052 **[Integration Test]** Trail database rebuild: Validate complete feed aggregation cycle
+- [ ] T053 **[Performance Test]** **[Analysis: Section.8.1]** Memory usage validation: Confirm 2-4GB RAM for 400K+ indicators
+- [ ] T054 **[Domain Invariant]** Feed quality validation: Verify threat categorization and confidence scoring
+- [ ] T055 **[Error Handling]** **[Analysis: Section.5.1]** Feed failure resilience: Graceful degradation with cached data
+
+**Checkpoint**: Threat intelligence system operational with all feeds integrated.
+
+---
+
+## Phase 5: Security Event Management
+
+**Purpose**: Migrate logging, analysis, and SIEM integration capabilities.
+
+### T056-T070: Event Processing & Export
+
+- [ ] T056 **[Domain Service]** **[Analysis: Section.2.1]** **[Logic: core/log.py]** Create EventProcessor: Security event lifecycle management
+- [ ] T057 **[CRITICAL]** **[Analysis: Section.3.2]** **[Logic: server.py events API]** Port event query API: Time-based event retrieval with filtering
+- [ ] T058 **[P]** **[Analysis: Section.5.2]** **[Logic: core/log.py CSV format]** Port CSV export: Native log format for SIEM ingestion
+- [ ] T059 **[P]** **[Analysis: Section.5.2]** **[Logic: CEF format code]** Port CEF export: Common Event Format for enterprise SIEM
+- [ ] T060 **[P]** **[Analysis: Section.5.2]** Port JSON export: Structured data format for modern log analysis
+- [ ] T061 **[P]** **[Analysis: Section.5.2]** Port Syslog export: Standard logging protocol support
+- [ ] T062 **[Infrastructure]** **[Analysis: Section.2.3]** Time-based partitioning: Efficient historical data queries
+- [ ] T063 **[Performance]** **[Analysis: Section.8.1]** Event writing optimization: Asynchronous batched logging  
+- [ ] T064 **[Integration]** **[Analysis: Section.5.2]** SIEM integration: Fail2ban endpoint and log forwarding
+- [ ] T065 **[Ground Truth]** **[Logic: core/log.py logging]** Event format validation: Verify log structure preservation
+- [ ] T066 **[Integration Test]** SIEM compatibility test: Validate ingestion by external security platforms
+- [ ] T067 **[Performance Test]** **[Analysis: Section.8.1]** Query response validation: 200ms-5s response time targets
+- [ ] T068 **[Domain Invariant]** Event data integrity: Verify no data loss during high-volume processing
+- [ ] T069 **[P]** **[Analysis: Section.10.2]** Operational logging: System health and performance metrics
+- [ ] T070 **[Error Recovery]** Log rotation and archival: Automated log management with retention policies
+
+**Checkpoint**: Event management system operational with SIEM integration validated.
+
+---
+
+## Phase 6: Web Interface & API Layer
+
+**Purpose**: Migrate analyst dashboard and API endpoints.
+
+### T071-T085: Analyst Dashboard & API
+
+- [ ] T071 **[API Layer]** **[Analysis: Section.3.1]** **[Logic: core/httpd.py auth]** Port authentication system: SHA256 with session management
+- [ ] T072 **[API Layer]** **[Analysis: Section.3.1]** **[Logic: core/httpd.py authorization]** Port authorization: UID-based access control with IP filtering
+- [ ] T073 **[CRITICAL]** **[Analysis: Section.3.2]** **[Logic: server.py dashboard]** Port main dashboard: Real-time security event visualization
+- [ ] T074 **[P]** **[Analysis: Section.6.2]** **[Logic: html/js/main.js event processing]** Port client-side processing: Large dataset handling in browser
+- [ ] T075 **[P]** **[Analysis: Section.6.2]** **[Logic: html/js/main.js geolocation]** Port geolocation visualization: Attack origin mapping
+- [ ] T076 **[API Endpoint]** **[Analysis: Section.3.2]** **[Logic: /events endpoint]** Port event data API: Compressed JSON event streaming
+- [ ] T077 **[API Endpoint]** **[Analysis: Section.3.2]** **[Logic: /fail2ban endpoint]** Port Fail2ban integration: Automated IP blocking support
+- [ ] T078 **[API Endpoint]** **[Analysis: Section.3.2]** **[Logic: /update endpoint]** Port trail update API: Manual threat intelligence refresh
+- [ ] T079 **[Performance]** **[Analysis: Section.6.4]** Client-side optimization: 10K events/second processing requirement
+- [ ] T080 **[UI/UX]** **[Executive Function]** Dashboard responsiveness: <200ms UI interactions per constitutional requirement
+- [ ] T081 **[Ground Truth]** **[Logic: html/index.html]** Web interface validation: Feature parity with legacy dashboard
+- [ ] T082 **[Integration Test]** API endpoint testing: Validate all HTTP endpoints with authentication  
+- [ ] T083 **[Performance Test]** **[Analysis: Section.8.1]** Web response validation: 2-5s initial load, sub-5s data queries
+- [ ] T084 **[Security Test]** **[Analysis: Section.9.1]** Authentication security: Verify session management and access controls
+- [ ] T085 **[Cross-browser Test]** **[Analysis: Section.6.4]** Browser compatibility: IE9+ and modern browser support
+
+**Checkpoint**: Web interface operational with analyst workflow support.
+
+---
+
+## Phase 7: Infrastructure Integration & Performance
+
+**Purpose**: Integrate with infrastructure services and validate performance requirements.
+
+### T086-T100: Infrastructure & Optimization
+
+- [ ] T086 **[Infrastructure]** **[Logic: sensor.py pcapy integration]** PacketCaptureService integration: Low-level packet capture interface
+- [ ] T087 **[Infrastructure]** **[Analysis: Section.5.1]** ThreatFeedClient integration: HTTP clients for external API access
+- [ ] T088 **[Infrastructure]** **[Analysis: Section.5.2]** SIEMExporter integration: Multi-format log export service
+- [ ] T089 **[P]** **[Analysis: Section.2.3]** Database optimization: Index tuning and query performance
+- [ ] T090 **[P]** **[Analysis: Section.8.2]** Memory optimization: Trail database memory usage patterns
+- [ ] T091 **[Performance]** **[Analysis: Section.8.1]** Packet processing optimization: Maintain <1ms detection latency
+- [ ] T092 **[Performance]** **[Analysis: Section.8.1]** Network throughput validation: 10Gbps processing capability
+- [ ] T093 **[Monitoring]** **[Analysis: Section.10.2]** Health check implementation: System status and performance metrics
+- [ ] T094 **[P]** **[Analysis: Section.10.1]** Configuration management: Unified settings with environment variable support
+- [ ] T095 **[Security]** **[Analysis: Section.9.2]** Security hardening: Address weak password hashing and privilege issues
+- [ ] T096 **[Error Handling]** **[Analysis: Section.10.2]** Operational resilience: Graceful failure handling and recovery
+- [ ] T097 **[Load Test]** **[Analysis: Section.8.3]** Scalability validation: High-volume traffic processing
+- [ ] T098 **[Integration Test]** End-to-end system test: Complete packet-to-dashboard workflow
+- [ ] T099 **[Performance Regression]** **[Analysis: Section.8.1]** Baseline comparison: Validate no performance degradation
+- [ ] T100 **[Documentation]** Operational procedures: Deployment, monitoring, and troubleshooting guides
+
+**Checkpoint**: Production-ready system with validated performance characteristics.
+
+---
+
+## Phase 8: Migration Validation & Production Readiness
+
+**Purpose**: Comprehensive validation and preparation for legacy system retirement.
+
+### T101-T115: Final Validation & Cutover
+
+- [ ] T101 **[CRITICAL]** **[Analysis: All Sections]** Complete analysis cross-reference: Verify all analysis findings addressed
+- [ ] T102 **[CRITICAL]** **[Analysis: Section.4.1]** Algorithm parity validation: Confirm detection engine behavioral match
+- [ ] T103 **[CRITICAL]** **[Analysis: Section.8.1]** Performance regression testing: Validate all performance baselines met or exceeded
+- [ ] T104 **[Ground Truth]** **[Analysis: Section.12.3]** Success criteria verification: Confirm all migration requirements met
+- [ ] T105 **[Comprehensive Test]** Full regression suite: Execute complete test suite including ground truth comparisons  
+- [ ] T106 **[P]** **[Analysis: Section.9.1]** Security validation: Penetration testing and vulnerability assessment
+- [ ] T107 **[P]** **[Analysis: Section.5.1]** Feed integration validation: Verify all 50+ threat intelligence feeds operational
+- [ ] T108 **[P]** **[Analysis: Section.5.2]** SIEM integration validation: Confirm compatibility with enterprise security platforms
+- [ ] T109 **[Production Test]** **[Analysis: Section.10.1]** Production environment validation: Deploy in production-like environment
+- [ ] T110 **[User Acceptance]** **[Analysis: Section.11.3]** Stakeholder approval: Security team validation of analyst workflows
+- [ ] T111 **[Documentation]** **[Analysis: Section.13.1]** Knowledge transfer: Comprehensive documentation and training materials
+- [ ] T112 **[Backup]** **[Analysis: Section.12.2]** Legacy asset backup: Secure archive of original codebase
+- [ ] T113 **[Monitoring]** **[Analysis: Section.10.2]** Production monitoring: Establish performance and health monitoring
+- [ ] T114 **[Cutover Plan]** Parallel operation: Run new system alongside legacy for validation period  
+- [ ] T115 **[Asset Retirement]** **[Analysis: Section.12.2]** Legacy system decommission: Safe removal after validation period
+
+**Checkpoint**: Migration complete with validated production system and legacy retirement.
 
 ---
 
 ## Post-Flight Checklist ✅
 
-**Verify these conditions before marking parent task complete**:
+**Verify these completion criteria before marking parent task complete**:
 
-- [ ] All tasks T001-TXXX marked complete above
-- [ ] Integration tests pass: `pytest tests/security/test_maltrail_integration.py`
-- [ ] Performance baselines met (documented in `migration-validation.md`)
-- [ ] Ground truth tests confirm functional parity with legacy
-- [ ] Legacy `features/maltrail/` backed up to `archive/`
-- [ ] Migration completion documented in `migration-validation.md`
-- [ ] All analysis findings from project_analysis_report.md addressed
-- [ ] No regressions in existing functionality
-- [ ] Security audit passed (if applicable)
-- [ ] Accessibility compliance maintained (WCAG 2.1 AA)
+- [ ] All 115 migration tasks completed successfully
+- [ ] Ground truth tests pass (packet processing behavioral match)
+- [ ] Performance requirements met (<1s detection, 10Gbps throughput)
+- [ ] All 50+ threat intelligence feeds operational  
+- [ ] SIEM integration validated (CSV, CEF, JSON, Syslog formats)
+- [ ] Web interface fully functional with <200ms response
+- [ ] Security hardening complete (authentication, authorization, encryption)
+- [ ] Production deployment successful with monitoring
+- [ ] Stakeholder approval from security operations team
+- [ ] Legacy system archived and decommissioned
+- [ ] Documentation complete for operational handover
 
-**⚠️ If any checklist item fails**: DO NOT mark parent task complete. Fix issues and re-validate.
+**Validation Command**: `pytest apps/security-service/tests/domains/network_monitoring/ -v --ground-truth`
 
-**Completion Action**:
-1. Mark all checkboxes above ✅
-2. Run validation command: `pytest tests/security/test_maltrail_integration.py`
-3. Document completion in `migration-validation.md`
-4. Mark parent task TXXX complete in `tasks.md`
-5. Proceed to return task (next in sequence) in `tasks.md`
+**⚠️ If any checklist item fails**: DO NOT mark parent task complete. Debug and resolve all issues before returning to parent `tasks.md`.
 
-**Documentation Update Required**:
-```markdown
-# In migration-validation.md
+---
 
-### Maltrail Migration (TXXX)
-- **Status**: ✅ Complete
-- **Completed**: [DATE]
-- **Estimated Hours**: XX
-- **Actual Hours**: XX
-- **Tests**: X passed, 0 failed
-- **Performance**: All baselines met/exceeded
-- **Notes**: [Any notable achievements or challenges]
-```
+## Dependencies & Critical Path
 
+**Sequential Dependencies (Must Complete In Order)**:
+
+1. **Phase 1 (Analysis Validation)** → Must complete first - validates analysis completeness
+2. **Phase 2 (Domain Model)** → Must complete before business logic - establishes data foundation  
+3. **Phase 3 (Core Services)** → Must complete before integrations - establishes detection engine
+
+**Parallel Execution Opportunities**:
+
+- **Phases 4-6 (Threat Intel, Events, Web)** → Can proceed in parallel after Phase 3
+- **Phase 7 (Infrastructure)** → Can run in parallel with Phases 4-6
+- **Testing Activities** → Ground truth and performance tests throughout
+
+**Critical Path Items** (Cannot be parallelized):
+
+- T001-T010: Analysis validation and ground truth establishment
+- T026-T040: Core packet analysis engine (algorithmic preservation)
+- T101-T115: Final validation and production cutover
+
+**Resource Requirements**:
+
+- **Network Security Expert**: Phases 1, 3, 8 (analysis validation, detection engine, final validation)
+- **Backend Developer**: Phases 2, 4, 5, 7 (domain model, services, infrastructure)
+- **Frontend Developer**: Phase 6 (web interface and API layer)
+- **DevOps Engineer**: Phase 7, 8 (infrastructure integration, production deployment)
+
+---
+
+## Migration Success Metrics
+
+**Functional Metrics**:
+
+- ✅ 100% packet capture and analysis functionality preserved  
+- ✅ All 50+ threat intelligence feeds operational
+- ✅ Detection accuracy ≥95% of legacy performance
+- ✅ All log formats and SIEM integration working
+
+**Performance Metrics**:
+
+- ✅ Detection latency <1ms (Security domain requirement)
+- ✅ Network throughput ≥10Gbps processing capability
+- ✅ Memory usage ≤4GB for full threat database  
+- ✅ Web interface response <5s for large datasets
+
+**Quality Metrics**:
+
+- ✅ Security vulnerabilities resolved (authentication, privileges)
+- ✅ Code quality improvements (testing, documentation)
+- ✅ Operational monitoring and health checks implemented
+- ✅ Executive function UI accommodations (<200ms interactions)
+
+**Integration Metrics**:
+
+- ✅ Domain boundary properly established within Security service
+- ✅ DDD principles applied (aggregates, value objects, domain services)
+- ✅ Infrastructure layer cleanly separated from domain logic
+- ✅ Unified security platform integration validated

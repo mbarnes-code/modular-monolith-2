@@ -1,27 +1,28 @@
 ---
-description: "Task list template for asset relocation and implementation"
-parent_task: "../tasks.md#TXXX"
-parent_phase: "Phase X: Infrastructure Migrations"
-return_to: "../tasks.md#TXXX"
+description: "KasmVNC remote desktop migration to modular monolith infrastructure service"
+parent_task: "../tasks.md#T120"
+parent_phase: "Phase 3f: Infrastructure Domain Migrations"
+return_to: "../tasks.md#T121"
 domain: "infrastructure"
 target_service: "apps/infrastructure-service/src/"
-legacy_path: "features/kasmvnc"
-estimated_hours: 30
+legacy_path: "features/KasmVNC"
+estimated_hours: 45
+complexity: "EXTREME - C++ codebase with deep X11/graphics integration"
 ---
 
-# Tasks: [MIGRATION: KasmVNC]
+# Tasks: [MIGRATION: KasmVNC Remote Desktop Service]
 
-**⬆️ PARENT TASK**: [`tasks.md#TXXX`](../tasks.md#TXXX)  
-**⬇️ RETURN TO**: [`tasks.md#TXXX`](../tasks.md#TXXX)
+**⬆️ PARENT TASK**: [`tasks.md#T120`](../tasks.md#T120)  
+**⬇️ RETURN TO**: [`tasks.md#T121`](../tasks.md#T121)
 
 ---
 
 ## Handoff Context
 
-**Called From**: `tasks.md` Phase X, Task TXXX  
-**Entry Condition**: Infrastructure service foundation ready (Phase 1-4 complete)  
-**Exit Condition**: All tasks below complete + validation tests pass  
-**Return Action**: Mark TXXX complete in parent `tasks.md`, proceed to next task
+**Called From**: `tasks.md` Phase 3f, Task T120  
+**Entry Condition**: Infrastructure service foundation ready (Phases 1-3e complete)  
+**Exit Condition**: All KasmVNC migration tasks complete + validation tests pass  
+**Return Action**: Mark T120 complete in parent `tasks.md`, proceed to T121
 
 **Handoff Protocol**: See [`HANDOFF-PROTOCOL.md`](./HANDOFF-PROTOCOL.md) for complete workflow documentation.
 
@@ -31,56 +32,67 @@ estimated_hours: 30
 
 **Verify these conditions before starting any tasks below**:
 
-- [ ] Parent Phase 1-4 marked complete in `tasks.md`
+- [ ] Parent Phases 1-3e marked complete in `tasks.md`
 - [ ] `apps/infrastructure-service/src/` exists with base infrastructure
 - [ ] Database migrations from Phase 2 applied
 - [ ] Authentication/authorization from Phase 3 working
 - [ ] Test framework from Phase 3 operational
-- [ ] Legacy environment setup: `features/kasmvnc/` accessible
-- [ ] Project analysis report completed and validated
+- [ ] Legacy environment setup: `features/KasmVNC/` accessible and buildable
+- [ ] KasmVNC analysis report validated against live system
+- [ ] X11/Xorg development environment configured
+- [ ] Docker build environment for C++ compilation ready
+- [ ] WebSocket test infrastructure operational
 
 **⚠️ If any checklist item fails**: STOP and return to parent `tasks.md` to complete prerequisites.
 
 ---
 
-**Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
-**Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
-**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY)**, research.md, data-model.md, contracts/
+## KasmVNC Migration Overview
 
-**Project Analysis Integration**: This task template MUST reference specific sections from project_analysis_report.md:
-- Section 2 (Data Architecture) - for data model migration tasks
-- Section 3 (API Architecture) - for endpoint and authentication migration
-- Section 4 (Business Logic) - for critical algorithm preservation
-- Section 5 (External Integrations) - for third-party service continuity
-- Section 8 (Performance Characteristics) - for baseline preservation
-- Section 11 (Domain Knowledge) - for business rule preservation
+**Business Context**: KasmVNC is a web-based remote desktop solution providing secure browser-based access to Linux desktops. This migration preserves the core C++ VNC server while integrating it into the infrastructure service domain with modern API wrappers and configuration management.
 
-**Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first to establish functional baselines.
+**Technical Challenge**: This is one of the most complex migrations involving:
 
-**Organization**: Tasks are grouped by Legacy Feature AND cross-referenced with Project Analysis sections to ensure 1:1 functional parity and comprehensive coverage.
+- **94,067 lines of C++ code** with deep X11/graphics integration
+- **Real-time streaming protocols** (VNC over WebSocket)
+- **Binary framebuffer data processing** and adaptive compression
+- **X11 server integration** requiring system-level privileges
+- **Multi-client session management** with quality adaptation
 
-## Format: [ID] [P?] [Feature] [Analysis: Section.#] [Logic: <legacy_file::function>] Description
-- [P]: Can run in parallel
-- [Feature]: Which legacy feature this task belongs to (e.g., F1: Publishing)
-- [Analysis]: Reference to project_analysis_report.md section (e.g., Section.2.1, Section.4.1)
-- [Logic]: The exact legacy code being replaced. This is not optional.
+**Domain Boundary Strategy**: KasmVNC operates as a **specialized subprocess** within the infrastructure service, with the Python FastAPI layer providing configuration management, session orchestration, and API endpoints while the C++ core handles the performance-critical VNC protocol.
 
-## Path Conventions
-- **New Project**: [e.g., apps/PROJECT/src/] at repository root
-- **Legacy Project**: [e.g., features/MISP/app/Model/]
-- **Analysis Report**: project_analysis_report.md sections for validation
-- Paths shown below assume single project - adjust based on plan.md structure
+---
 
-## Migration Methodology: Brownfield Asset Relocation
+## Migration Strategy: Hybrid Architecture Preservation
 
-**Core Principle**: Preserve 100% functional parity while modernizing architecture.
+**Architecture Decision**: KasmVNC will operate as a **managed subprocess** within the infrastructure service, preserving the high-performance C++ core while adding Python-based orchestration.
 
-**Validation Strategy**: 
-1. Ground Truth Tests → Establish current behavior baseline
-2. Analysis Cross-Reference → Validate against documented behavior  
-3. Incremental Migration → Port one feature at a time with validation
-4. Integration Testing → Ensure new implementation matches baseline
-5. Performance Validation → Maintain or improve baseline metrics
+**Domain Boundaries**:
+
+1. **VNC Protocol Domain** (C++ Core) - Preserved in `features/KasmVNC/`
+   - Real-time framebuffer streaming
+   - X11 server integration  
+   - Binary protocol handling
+   - Adaptive compression algorithms
+
+2. **Remote Desktop Management Domain** (Python Integration) - New in `apps/infrastructure-service/src/remote_desktop/`
+   - Session lifecycle management
+   - Configuration management
+   - Authentication integration
+   - REST API endpoints
+   - Process orchestration
+
+**Integration Pattern**: FastAPI service manages KasmVNC processes as specialized workers, providing modern API layer while preserving performance-critical C++ implementation.
+
+## Task Organization
+
+**Critical Insight**: Rather than porting 94k lines of C++, this migration focuses on **service integration** and **API modernization** while preserving the proven VNC core as a managed subprocess.
+
+**Task Format**: `[ID] [Domain] [Analysis: Section.#] [Logic: file::function] Description`
+
+- **[Domain]**: VNC (C++ core preservation) | RDM (Remote Desktop Management - new Python layer)
+- **[Analysis]**: Reference to kasmvnc-analysis.md sections
+- **[Logic]**: Exact code location for integration points
 
 <!-- 
   ============================================================================
@@ -101,18 +113,189 @@ estimated_hours: 30
   ============================================================================
 -->
 
-## Phase 1: Analysis Validation & Legacy Environment Setup
+## Phase 1: Legacy System Validation & Environment Setup
 
-**Purpose**: Validate project analysis findings and establish baseline testing environment.
+**Purpose**: Establish KasmVNC baseline and prepare integration environment
 
-- [ ] T001 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections are filled
-- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate current tech stack inventory against actual codebase
-- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing tests and document current coverage metrics
-- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current performance characteristics
-- [ ] T005 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM) per Section.10.1
-- [ ] T006 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function
-- [ ] T007 [P] Create new project structure per implementation plan
-- [ ] T008 [P] Initialize target framework dependencies (per analysis Section.1.2)
+- [ ] T001 [VNC] [Analysis: Section.1.1] Validate KasmVNC build environment: Confirm C++ compilation, CMake, and all dependencies work
+- [ ] T002 [VNC] [Analysis: Section.8.1] Performance baseline measurement: Document framebuffer streaming latency, encoding performance, and memory usage
+- [ ] T003 [VNC] [Analysis: Section.7.1] Execute existing test suite: Run all tests in `features/KasmVNC/tests/` and document coverage
+- [ ] T004 [RDM] Create remote desktop management structure: Initialize `apps/infrastructure-service/src/remote_desktop/` domain
+- [ ] T005 [P] [VNC] [Analysis: Section.5.1] X11 integration validation: Confirm X11 server connection, framebuffer access, and input injection
+- [ ] T006 [P] [RDM] Setup Python process management: Create subprocess orchestration infrastructure for managing KasmVNC instances
+- [ ] T007 [VNC] [Logic: unix/kasmvnc_defaults.yaml::configuration] Configuration baseline: Document all configuration parameters and their effects
+- [ ] T008 [RDM] [Analysis: Section.10.1] Docker integration setup: Create containerized build environment for KasmVNC compilation
+
+**Checkpoint**: KasmVNC builds successfully and can stream desktop to browser clients with documented baseline performance.
+
+---
+
+## Phase 2: Configuration Management Domain
+
+**Purpose**: Create Python-based configuration management for KasmVNC instances
+
+- [ ] T009 [RDM] [Analysis: Section.2.1] Desktop configuration models: Create Pydantic models for desktop resolution, pixel depth, GPU settings
+- [ ] T010 [RDM] [Analysis: Section.2.1] Network configuration models: Create models for SSL, WebSocket ports, IP binding, protocol settings
+- [ ] T011 [RDM] [Analysis: Section.2.1] User session models: Create models for session type, concurrency, idle timeout management
+- [ ] T012 [P] [RDM] Configuration validation service: Implement validation rules per analysis Section.4.2
+- [ ] T013 [P] [RDM] [Logic: unix/kasmvnc.yaml::config_merge] Configuration templating: Create YAML template generation from Python models
+- [ ] T014 [RDM] Database schema for sessions: Create PostgreSQL tables for session management, user assignments, and resource tracking
+- [ ] T015 [RDM] Configuration persistence: Implement save/load configuration with versioning and rollback capability
+
+**Checkpoint**: Python service can generate valid KasmVNC configuration files and manage session metadata in database.
+
+---
+
+## Phase 3: Session Lifecycle Management Domain
+
+**Purpose**: Create session orchestration layer managing KasmVNC process lifecycle
+
+- [ ] T016 [RDM] [Analysis: Section.4.3] Session state machine: Implement VNC connection lifecycle (INITIAL → PROTOCOL_VERSION → SECURITY_HANDSHAKE → NORMAL_OPERATION)
+- [ ] T017 [RDM] [Logic: common/rfb/VNCServerST.cxx::addSocket] Process spawning service: Create subprocess management for KasmVNC server instances
+- [ ] T018 [RDM] [Analysis: Section.8.1] Performance monitoring: Implement real-time monitoring of framebuffer latency, encoding times, bandwidth
+- [ ] T019 [P] [RDM] Session cleanup service: Handle process termination, resource cleanup, and temporary file management
+- [ ] T020 [P] [RDM] [Analysis: Section.11.2] Error handling: Implement X11 server crash recovery, process restart logic, client disconnection handling
+- [ ] T021 [RDM] Multi-session coordination: Implement concurrent session limits, resource allocation, and session queuing
+- [ ] T022 [RDM] [Logic: unix/vncserver::session_management] Health monitoring: Process health checks, automatic restart, resource usage tracking
+
+**Checkpoint**: Python service can spawn, monitor, and manage KasmVNC processes with full lifecycle control.
+
+---
+
+## Phase 4: Authentication & Security Integration Domain 🎯 MVP
+
+**Migration Goal**: Integrate KasmVNC security with unified authentication system while preserving VNC protocol security
+
+**Analysis Reference**: Section.3.1 - Authentication/Authorization, Section.9.1 - Security Measures
+
+### Phase 4a: Security Analysis & Ground Truth
+
+- [ ] T023 [RDM] [Analysis: Section.3.1] VNC authentication analysis: Document DES password system, WebSocket security, SSL certificate handling
+- [ ] T024 [VNC] [Logic: common/rfb/SSecurityVncAuth.cxx::authenticate] Ground Truth security test: Validate current VNC password authentication works
+- [ ] T025 [P] [RDM] [Analysis: Section.9.1] Security audit: Review weak DES encryption, document security limitations and mitigation strategies
+- [ ] T026 [P] [RDM] SSL certificate management: Create certificate generation, rotation, and validation services
+
+### Phase 4b: Modern Authentication Integration
+
+- [ ] T027 [RDM] [Logic: common/rfb/Security.cxx::selectSecurity] Authentication bridge: Create JWT → VNC password bridge maintaining protocol compatibility
+- [ ] T028 [RDM] [Analysis: Section.3.1] Session-based authorization: Implement user → session mapping with role-based access control
+- [ ] T029 [RDM] [Analysis: Section.9.1] Enhanced security: Add brute force protection, audit logging, and session monitoring
+- [ ] T030 [RDM] Security validation: End-to-end security testing with modern auth integrated with VNC protocol
+
+**Checkpoint**: Users authenticate via unified system, sessions are securely mapped to VNC processes, all security audit requirements met.
+
+---
+
+## Phase 5: REST API & WebSocket Proxy Domain
+
+**Purpose**: Create modern REST API layer and WebSocket proxying for browser clients
+
+- [ ] T031 [RDM] [Analysis: Section.3.2] Session management endpoints: Create REST APIs for session create, list, delete, status operations  
+- [ ] T032 [RDM] [Analysis: Section.3.2] Configuration endpoints: Create REST APIs for desktop configuration, network settings, user preferences
+- [ ] T033 [RDM] [Logic: common/network/WebSocket.cxx::upgrade] WebSocket proxy service: Create intelligent proxy routing client WebSocket connections to VNC processes
+- [ ] T034 [P] [RDM] [Analysis: Section.8.1] Connection load balancing: Implement client connection routing based on session load and server capacity
+- [ ] T035 [P] [RDM] API documentation: Create OpenAPI specifications for all remote desktop management endpoints
+- [ ] T036 [RDM] [Analysis: Section.11.3] Client capability negotiation: Handle browser compatibility, mobile device support, touch interface adaptation
+- [ ] T037 [RDM] Connection monitoring: Real-time connection status, bandwidth monitoring, quality adaptation feedback
+
+**Checkpoint**: REST API provides full session management, WebSocket proxy routes clients to appropriate VNC processes with load balancing.
+
+---
+
+## Phase 6: Performance Optimization & Quality Adaptation Domain
+
+**Purpose**: Preserve and enhance KasmVNC's adaptive compression and performance characteristics
+
+### Phase 6a: Performance Integration Analysis
+
+- [ ] T038 [VNC] [Analysis: Section.4.1] Compression algorithm preservation: Validate JPEG, WebP, ZRLE encoding performance matches baseline
+- [ ] T039 [VNC] [Logic: common/rfb/TightJPEGEncoder.cxx::encode] JPEG encoding validation: Confirm libjpeg-turbo integration maintains 5-15ms encode times
+- [ ] T040 [P] [RDM] [Analysis: Section.8.1] Performance metrics collection: Implement detailed performance monitoring and reporting
+- [ ] T041 [P] [VNC] [Analysis: Section.4.1] Content-aware encoding validation: Test text vs image vs video region classification accuracy
+
+### Phase 6b: Quality Adaptation Enhancement
+
+- [ ] T042 [RDM] [Logic: common/rfb/Congestion.cxx::adaptQuality] Quality adaptation integration: Create Python-based quality control interfacing with C++ encoders
+- [ ] T043 [RDM] [Analysis: Section.8.2] Bandwidth monitoring: Implement network condition detection and quality adjustment recommendations
+- [ ] T044 [VNC] [Analysis: Section.8.1] Multi-client optimization: Validate per-client quality settings and cached region sharing
+- [ ] T045 [RDM] Performance dashboard: Create real-time performance monitoring UI for session quality and resource usage
+
+**Checkpoint**: All KasmVNC performance characteristics preserved, enhanced monitoring provides visibility into optimization decisions.
+
+---
+
+## Phase 7: X11 Integration & System Dependencies Domain
+
+**Purpose**: Ensure robust X11 server integration and system-level dependency management
+
+- [ ] T046 [VNC] [Analysis: Section.5.1] X11 server compatibility validation: Test with various graphics drivers, confirm damage tracking performance
+- [ ] T047 [RDM] [Logic: unix/xserver/hw/vnc/XserverDesktop.cxx::framebuffer] X11 integration monitoring: Monitor framebuffer access, detect server restarts, handle reconnection
+- [ ] T048 [RDM] [Analysis: Section.5.1] Graphics driver optimization: Implement hardware acceleration detection and fallback strategies
+- [ ] T049 [P] [RDM] System resource management: Memory usage monitoring, process limits, resource cleanup on session termination
+- [ ] T050 [P] [VNC] [Analysis: Section.11.2] Input handling preservation: Validate keyboard mapping, international layouts, mouse/touch input accuracy
+- [ ] T051 [RDM] Container integration: Ensure KasmVNC works properly in containerized environments with display forwarding
+- [ ] T052 [RDM] [Analysis: Section.10.1] Deployment packaging: Create deployment packages maintaining all system dependencies
+
+**Checkpoint**: X11 integration robust across different graphics configurations, containerized deployment fully functional.
+
+---
+
+## Phase 8: Testing & Quality Assurance Domain
+
+**Purpose**: Comprehensive testing ensuring functional and performance parity
+
+### Phase 8a: Functional Testing
+
+- [ ] T053 [VNC] [Analysis: Section.7.2] VNC protocol compliance testing: Validate RFB protocol implementation maintains compatibility
+- [ ] T054 [RDM] End-to-end session testing: Test complete user workflow from authentication through desktop access to session cleanup
+- [ ] T055 [P] [VNC] [Analysis: Section.7.2] Multi-client testing: Validate concurrent connections, quality per client, resource sharing
+- [ ] T056 [P] [RDM] Browser compatibility testing: Test across Chrome, Firefox, Safari, Edge with various client configurations
+
+### Phase 8b: Performance & Load Testing
+
+- [ ] T057 [VNC] [Analysis: Section.8.1] Performance regression testing: Confirm no performance degradation vs baseline measurements
+- [ ] T058 [RDM] Load testing: Test system behavior under high concurrent session load, memory pressure, network congestion
+- [ ] T059 [VNC] [Analysis: Section.8.3] Scalability validation: Confirm scaling characteristics match analysis projections  
+- [ ] T060 [RDM] Stress testing: Test failure scenarios including X11 server crashes, network failures, process termination
+
+**Checkpoint**: All tests pass, performance matches or exceeds baseline, system handles failure scenarios gracefully.
+
+---
+
+## Phase 9: Documentation & Knowledge Transfer Domain
+
+**Purpose**: Capture operational knowledge and deployment procedures
+
+- [ ] T061 [RDM] [Analysis: Section.13.1] API documentation: Complete OpenAPI documentation for all remote desktop management endpoints
+- [ ] T062 [VNC] [Analysis: Section.11.2] Operational procedures: Document deployment, configuration, troubleshooting, and monitoring procedures
+- [ ] T063 [P] [RDM] Configuration management guide: Document session configuration, security settings, performance tuning
+- [ ] T064 [P] [VNC] [Analysis: Section.11.1] Domain knowledge preservation: Document VNC protocol quirks, X11 integration details, performance optimization strategies
+- [ ] T065 [RDM] Monitoring and alerting setup: Create monitoring dashboards, alerting rules, and operational runbooks
+- [ ] T066 [RDM] [Analysis: Section.10.2] Backup and recovery procedures: Document session data backup, configuration restoration, disaster recovery
+
+**Checkpoint**: Complete operational documentation available, knowledge transfer completed, system ready for production deployment.
+
+---
+
+## Phase 10: Production Integration & Validation
+
+**Purpose**: Final production integration and comprehensive validation
+
+### Phase 10a: Production Environment Setup
+
+- [ ] T067 [RDM] Production deployment: Deploy to production environment with all security hardening and monitoring
+- [ ] T068 [VNC] [Analysis: Section.9.1] Security hardening validation: Confirm all security measures operational in production environment
+- [ ] T069 [P] [RDM] Performance monitoring: Validate production performance monitoring, alerting, and dashboard functionality
+- [ ] T070 [P] [RDM] Backup validation: Test backup and recovery procedures in production environment
+
+### Phase 10b: Final Validation & Asset Preservation
+
+- [ ] T071 [RDM] [Analysis: Section.12.3] Success criteria validation: Confirm all migration success criteria met per analysis
+- [ ] T072 [VNC] Legacy asset preservation: Create archive of original KasmVNC codebase with build instructions and documentation
+- [ ] T073 [RDM] Production validation: Run complete validation suite against production deployment
+- [ ] T074 [RDM] Stakeholder acceptance: Obtain formal approval from infrastructure domain stakeholders for migration completion
+
+**Checkpoint**: KasmVNC migration complete, production system operational, legacy assets preserved, all success criteria met.
 
 ---
 
@@ -275,21 +458,73 @@ estimated_hours: 30
 - [ ] TXXX [Analysis: Section.8.1] Performance monitoring: Track performance against established baselines
 - [ ] TXXX [Analysis: Section.11.3] User behavior monitoring: Validate user workflow preservation
 
-### Dependencies & Execution Order
+---
 
-**Sequential Dependencies (Must Complete In Order):**
-- **Phase 1 (Analysis Validation)**: Must complete first - validates analysis completeness
-- **Phase 2 (Data Architecture)**: Must complete before business logic - establishes data foundation
-- **Phase 3 (Foundational Infrastructure)**: Must complete before feature migration - establishes framework
+## Dependencies & Execution Strategy
 
-**Parallel Execution Phases:**
-- **Phases 4-6 (Business Logic, Security, Integrations)**: Can proceed in parallel by feature after Phase 3
-- **Phase 7 (Performance & Quality)**: Can run in parallel with feature phases
-- **Phase 8 (Domain Knowledge)**: Can run in parallel with feature phases
+### Phase Dependencies
 
-**Final Sequential Dependencies:**
-- **Phase N (Cross-Cutting Concerns)**: After all feature phases complete
-- **Phase N+1 (Asset Retirement)**: The absolute final step - only after complete validation
+**Sequential Phases (Must Complete in Order):**
+
+1. **Phase 1** (Legacy System Validation) → **Phase 2** (Configuration Management) → **Phase 3** (Session Lifecycle)
+2. **Phase 4** (Authentication Integration) - Can start after Phase 3
+3. **Phases 5-7** (API, Performance, X11) - Can run in parallel after Phase 4
+4. **Phases 8-9** (Testing, Documentation) - Can run in parallel after Phases 5-7
+5. **Phase 10** (Production Integration) - Must be last, after all other phases
+
+**Parallel Execution Opportunities:**
+
+- **Phase 2-3**: Configuration and session management can develop in parallel
+- **Phase 5-7**: API development, performance optimization, and X11 integration can proceed simultaneously
+- **Phase 8-9**: Testing and documentation can be developed concurrently
+
+### Critical Path Analysis
+
+**Longest Path**: Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5 → Phase 10 (estimated 35 hours)
+**Parallel Optimization**: Phases 6-9 can reduce timeline to ~45 hours total with 2-3 developers
+
+---
+
+## Risk Management & Quality Gates
+
+### Migration-Specific Risks
+
+**Risk 1: C++ Process Integration Complexity**
+- **Mitigation**: Preserve C++ core as subprocess, minimize integration surface area
+- **Quality Gate**: Successful process spawning and communication before Phase 3
+
+**Risk 2: X11 Server Integration Brittleness**  
+- **Mitigation**: Comprehensive X11 driver testing, robust error handling
+- **Quality Gate**: X11 integration must work across 3+ different graphics configurations
+
+**Risk 3: Performance Regression in Real-Time Streaming**
+- **Mitigation**: Continuous performance benchmarking against baseline
+- **Quality Gate**: All performance metrics must meet or exceed baseline before Phase 10
+
+### Success Criteria Validation
+
+**Functional Requirements:**
+
+- [ ] VNC protocol streaming maintains <16ms latency for 1080p at 60fps
+- [ ] Multi-client support handles 5+ concurrent connections without degradation  
+- [ ] Authentication integrates with unified system while preserving VNC protocol security
+- [ ] Session management provides full lifecycle control via REST API
+- [ ] WebSocket proxy routes clients correctly with load balancing
+
+**Technical Requirements:**
+
+- [ ] C++ KasmVNC core preserved with 100% functional parity
+- [ ] Python service layer provides modern API and orchestration
+- [ ] X11 integration works across multiple graphics driver configurations
+- [ ] Performance monitoring provides real-time visibility into system health
+- [ ] Security hardening addresses all analysis-identified vulnerabilities
+
+**Integration Requirements:**
+
+- [ ] Seamless integration with infrastructure service domain
+- [ ] Configuration management via unified platform APIs
+- [ ] Monitoring integration with platform-wide observability stack
+- [ ] Authentication integration with platform security model
 
 ---
 
@@ -368,39 +603,72 @@ estimated_hours: 30
 
 ## Post-Flight Checklist ✅
 
-**Verify these conditions before marking parent task complete**:
+**Verify all completion criteria before marking parent task T120 complete**:
 
-- [ ] All tasks T001-TXXX marked complete above
-- [ ] Integration tests pass: `pytest tests/infrastructure/test_kasmvnc_integration.py`
-- [ ] Performance baselines met (documented in `migration-validation.md`)
-- [ ] Ground truth tests confirm functional parity with legacy
-- [ ] Legacy `features/kasmvnc/` backed up to `archive/`
-- [ ] Migration completion documented in `migration-validation.md`
-- [ ] All analysis findings from project_analysis_report.md addressed
-- [ ] No regressions in existing functionality
-- [ ] Security audit passed (if applicable)
-- [ ] Accessibility compliance maintained (WCAG 2.1 AA)
+### Technical Validation
 
-**⚠️ If any checklist item fails**: DO NOT mark parent task complete. Fix issues and re-validate.
+- [ ] All 74 tasks (T001-T074) marked complete above ✅
+- [ ] KasmVNC C++ core builds successfully in integration environment
+- [ ] Python remote desktop management service operational in `apps/infrastructure-service/src/remote_desktop/`
+- [ ] WebSocket proxy correctly routes client connections to VNC processes
+- [ ] Session lifecycle management handles create/monitor/cleanup workflows
+- [ ] Authentication integration maintains VNC protocol security
+- [ ] Performance baselines met or exceeded (framebuffer streaming <16ms latency)
+
+### Integration Validation
+
+- [ ] Run complete validation suite: `pytest tests/infrastructure/test_kasmvnc_integration.py` - ALL PASS
+- [ ] End-to-end browser client → Python API → C++ VNC server → X11 desktop workflow functional
+- [ ] Multi-client concurrent session testing successful (5+ clients)
+- [ ] Configuration management via REST API operational
+- [ ] Session monitoring and performance metrics collection working
+- [ ] X11 server integration robust across different graphics driver configurations
+
+### Domain Architecture Validation
+
+- [ ] **VNC Protocol Domain** preserved: C++ core maintains all streaming performance characteristics
+- [ ] **Remote Desktop Management Domain** operational: Python layer provides modern orchestration
+- [ ] Domain boundaries properly implemented: Clear separation between performance-critical C++ and management Python code
+- [ ] Process management robust: KasmVNC subprocess lifecycle fully controlled by Python service
+- [ ] Configuration management: YAML templates generated correctly from Python models
+
+### Production Readiness
+
+- [ ] Security hardening complete (SSL certificates, authentication, audit logging)
+- [ ] Production deployment successful with all monitoring operational
+- [ ] Documentation complete (API docs, operational procedures, troubleshooting guides)
+- [ ] Legacy KasmVNC asset preserved in `archive/KasmVNC/` with build instructions
+- [ ] Migration validation documented in `migration-validation.md`
+
+### Stakeholder Acceptance
+
+- [ ] Infrastructure domain stakeholders approve migration completion
+- [ ] Performance validation confirms no regressions vs baseline (Section 8.1 kasmvnc-analysis.md)
+- [ ] All analysis success criteria from Section 12.3 verified
+- [ ] Production system handles expected load and failure scenarios
+
+**⚠️ ONLY mark parent task T120 complete when ALL items above are ✅**
 
 **Completion Action**:
-1. Mark all checkboxes above ✅
+1. Mark all checkboxes above ✅  
 2. Run validation command: `pytest tests/infrastructure/test_kasmvnc_integration.py`
 3. Document completion in `migration-validation.md`
-4. Mark parent task TXXX complete in `tasks.md`
-5. Proceed to return task (next in sequence) in `tasks.md`
+4. Mark parent task T120 complete in `tasks.md`
+5. Return to T121 in `tasks.md`
 
 **Documentation Update Required**:
 ```markdown
 # In migration-validation.md
 
-### KasmVNC Migration (TXXX)
-- **Status**: ✅ Complete
+### KasmVNC Migration (T120)
+- **Status**: ✅ Complete  
 - **Completed**: [DATE]
-- **Estimated Hours**: XX
-- **Actual Hours**: XX
+- **Estimated Hours**: 45
+- **Actual Hours**: [ACTUAL]
 - **Tests**: X passed, 0 failed
-- **Performance**: All baselines met/exceeded
-- **Notes**: [Any notable achievements or challenges]
+- **Performance**: All baselines met/exceeded - framebuffer streaming <16ms maintained
+- **Architecture**: Hybrid preserved - C++ core + Python orchestration 
+- **Domain Integration**: Infrastructure service domain successfully extended
+- **Notes**: [Any notable achievements or challenges with X11 integration, process management, etc.]
 ```
 

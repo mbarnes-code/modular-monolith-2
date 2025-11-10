@@ -1,27 +1,46 @@
 ---
-description: "Task list template for asset relocation and implementation"
-parent_task: "../tasks.md#TXXX"
-parent_phase: "Phase X: Mtg Migrations"
-return_to: "../tasks.md#TXXX"
+description: "MTG Scripting Toolkit - TypeScript toolkit migration to unified MTG service"
+parent_task: "../tasks.md#T116"
+parent_phase: "Phase 3e: MTG Domain Migrations"
+return_to: "../tasks.md#T117"
 domain: "mtg"
 target_service: "apps/mtg-service/src/"
 legacy_path: "features/mtg-scripting-toolkit"
 estimated_hours: 35
+migration_type: "Category B - Domain Logic Preservation"
+complexity: "HIGH - Complex algorithms + external API integrations"
 ---
 
 # Tasks: [MIGRATION: MTG Scripting Toolkit]
 
-**⬆️ PARENT TASK**: [`tasks.md#TXXX`](../tasks.md#TXXX)  
-**⬇️ RETURN TO**: [`tasks.md#TXXX`](../tasks.md#TXXX)
+**⬆️ PARENT TASK**: [`tasks.md#T116`](../tasks.md#T116)  
+**⬇️ RETURN TO**: [`tasks.md#T117`](../tasks.md#T117)
 
 ---
 
+## Migration Summary
+
+**Project**: MTG Scripting Toolkit - TypeScript research toolkit → Python FastAPI service  
+**Complexity**: HIGH - Complex MTG domain algorithms + external API integrations  
+**Key Assets**: Color sorting algorithm, spell checking, Scryfall API integration, 28 example scripts  
+**Migration Approach**: Domain-Driven Design with MTG bounded contexts preservation
+
+**Critical Success Factors**:
+
+- **Algorithm Preservation**: Magic color sorting (WUBRG) must maintain exact player-familiar ordering
+- **Performance Baselines**: Sorting <10ms, spell checking ~100ms, bulk processing ~50ms  
+- **External APIs**: Scryfall, Commander Spellbook, Cube Cobra integrations preserved
+- **Domain Knowledge**: MTG color identity rules, card naming conventions maintained exactly
+- **Functional Parity**: All 28 TypeScript example scripts → Python equivalents with identical outputs
+
 ## Handoff Context
 
-**Called From**: `tasks.md` Phase X, Task TXXX  
-**Entry Condition**: Mtg service foundation ready (Phase 1-4 complete)  
+**Called From**: `tasks.md` Phase 3e, Task T116  
+**Entry Condition**: Phase 1-2 complete, apps/mtg-service/ foundation ready  
 **Exit Condition**: All tasks below complete + validation tests pass  
-**Return Action**: Mark TXXX complete in parent `tasks.md`, proceed to next task
+**Return Action**: Mark T116 complete in parent `tasks.md`, proceed to T117
+
+**Migration Context**: TypeScript-based MTG analysis toolkit with critical domain algorithms
 
 **Handoff Protocol**: See [`HANDOFF-PROTOCOL.md`](./HANDOFF-PROTOCOL.md) for complete workflow documentation.
 
@@ -43,44 +62,41 @@ estimated_hours: 35
 
 ---
 
-**Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
-**Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
-**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY)**, research.md, data-model.md, contracts/
+**Input (Spec)**: MTG Scripting Toolkit Analysis Report from `modular-analysis-repo-main/reports/mtg-scripting-toolkit-analysis.md`  
+**Input (Legacy)**: TypeScript codebase at `features/mtg-scripting-toolkit/`  
+**Prerequisites**: **mtg-scripting-toolkit-analysis.md (MANDATORY)**, Phase 1-2 foundation complete, apps/mtg-service/ base structure ready
 
-**Project Analysis Integration**: This task template MUST reference specific sections from project_analysis_report.md:
-- Section 2 (Data Architecture) - for data model migration tasks
-- Section 3 (API Architecture) - for endpoint and authentication migration
-- Section 4 (Business Logic) - for critical algorithm preservation
-- Section 5 (External Integrations) - for third-party service continuity
-- Section 8 (Performance Characteristics) - for baseline preservation
-- Section 11 (Domain Knowledge) - for business rule preservation
+**Project Analysis Integration**: This migration MUST reference specific sections from mtg-scripting-toolkit-analysis.md:
 
-**Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first to establish functional baselines.
+- Section 2 (Data Architecture) - Card models, Combo structures, Cube data relationships
+- Section 3 (API Architecture) - Scryfall API integration, caching patterns, error handling
+- Section 4 (Business Logic) - Critical MTG algorithms (color sorting, spell checking, deduplication)
+- Section 5 (External Integrations) - Scryfall API, Commander Spellbook, Cube Cobra integrations
+- Section 8 (Performance Characteristics) - Bulk data processing, caching strategy optimization
+- Section 11 (Domain Knowledge) - MTG color identity, card naming conventions, format legalities
 
-**Organization**: Tasks are grouped by Legacy Feature AND cross-referenced with Project Analysis sections to ensure 1:1 functional parity and comprehensive coverage.
+**Tests**: Ground Truth tests MANDATORY for all critical algorithms. TypeScript to Python validation required.
 
-## Format: [ID] [P?] [Feature] [Analysis: Section.#] [Logic: <legacy_file::function>] Description
-- [P]: Can run in parallel
-- [Feature]: Which legacy feature this task belongs to (e.g., F1: Publishing)
-- [Analysis]: Reference to project_analysis_report.md section (e.g., Section.2.1, Section.4.1)
-- [Logic]: The exact legacy code being replaced. This is not optional.
+**Organization**: Tasks grouped by MTG Domain Features with DDD bounded context preservation.
 
-## Path Conventions
-- **New Project**: [e.g., apps/PROJECT/src/] at repository root
-- **Legacy Project**: [e.g., features/MISP/app/Model/]
-- **Analysis Report**: project_analysis_report.md sections for validation
-- Paths shown below assume single project - adjust based on plan.md structure
+## MTG Domain Bounded Contexts
 
-## Migration Methodology: Brownfield Asset Relocation
+- **Card Data Context**: Scryfall integration, card models, search functionality
+- **Analysis Context**: Color sorting, spell checking, deduplication algorithms  
+- **Integration Context**: External APIs, caching layer, bulk data management
+- **Scripting Context**: Analysis workflows, example patterns, utility functions
 
-**Core Principle**: Preserve 100% functional parity while modernizing architecture.
+## Migration Methodology: TypeScript → Python Domain Logic Preservation
 
-**Validation Strategy**: 
-1. Ground Truth Tests → Establish current behavior baseline
-2. Analysis Cross-Reference → Validate against documented behavior  
-3. Incremental Migration → Port one feature at a time with validation
-4. Integration Testing → Ensure new implementation matches baseline
-5. Performance Validation → Maintain or improve baseline metrics
+**Core Principle**: Preserve MTG domain expertise while migrating to unified Python service architecture.
+
+**Validation Strategy**:
+
+1. Ground Truth Tests → Run existing TypeScript examples to establish behavioral baselines
+2. Analysis Cross-Reference → Validate against documented MTG domain rules in analysis
+3. Algorithm Preservation → Port critical algorithms maintaining functional and performance parity
+4. Integration Continuity → Preserve all external API integrations with enhanced error handling
+5. Domain Validation → Ensure MTG-specific business rules are maintained exactly
 
 <!-- 
   ============================================================================
@@ -103,191 +119,197 @@ estimated_hours: 35
 
 ## Phase 1: Analysis Validation & Legacy Environment Setup
 
-**Purpose**: Validate project analysis findings and establish baseline testing environment.
+**Purpose**: Validate MTG Scripting Toolkit analysis findings and establish TypeScript baseline testing environment.
 
-- [ ] T001 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections are filled
-- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate current tech stack inventory against actual codebase
-- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing tests and document current coverage metrics
-- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current performance characteristics
-- [ ] T005 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM) per Section.10.1
-- [ ] T006 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function
-- [ ] T007 [P] Create new project structure per implementation plan
-- [ ] T008 [P] Initialize target framework dependencies (per analysis Section.1.2)
+- [ ] T001 [Analysis: Section.1] Validate MTG toolkit analysis completeness: Confirm all CRITICAL sections for TypeScript toolkit documented
+- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate TypeScript, Node.js, tsx runtime against actual codebase at `features/mtg-scripting-toolkit/`
+- [ ] T003 [P] [Analysis: Section.7.1] Example scripts baseline: Run all 28 example scripts and document current outputs as Ground Truth
+- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure bulk data download (10-30s), card sorting (<10ms), spell checking (~100ms)
+- [ ] T005 [Ground Truth] Setup TypeScript test environment: Install Node.js 18+, npm dependencies, validate tsx execution
+- [ ] T006 [Ground Truth] Validate critical workflows: Execute card search, combo analysis, cube comparison scripts
+- [ ] T007 [P] Create MTG service structure: Initialize `apps/mtg-service/src/` with Python FastAPI foundation
+- [ ] T008 [P] Initialize Python MTG dependencies: Setup Python equivalents for TypeScript libraries (requests, pandas, pydantic)
 
 ---
 
-## Phase 2: Data Architecture Migration
+## Phase 2: MTG Data Models Migration
 
-**Purpose**: Migrate data models and database schema based on analysis Section 2.
+**Purpose**: Migrate MTG-specific data models from TypeScript types to Python models based on analysis Section 2.
 
-- [ ] T009 [Analysis: Section.2.1] Inventory data models: Create comprehensive list from analysis findings
-- [ ] T010 [Analysis: Section.2.1] Database schema migration: Implement new schema preserving all relationships from Section.2.2
-- [ ] T011 [P] [Analysis: Section.2.1] Port data models: Create new framework models matching legacy field mappings exactly
-- [ ] T012 [Analysis: Section.2.3] Database performance patterns: Implement indexes and optimizations per analysis
-- [ ] T013 [Ground Truth] Data validation tests: Write tests confirming data integrity and constraints
-- [ ] T014 [Analysis: Section.2.1] Data migration scripts: Create scripts for existing data preservation
+- [ ] T009 [Analysis: Section.2.1] Inventory MTG data models: Card (Scryfall), Combo (Commander Spellbook), CubeCobraCard from `utils/*/types.ts`
+- [ ] T010 [Analysis: Section.2.1] Create Python Card model: Port `utils/scryfall/types.ts` Card interface to Pydantic model preserving all fields
+- [ ] T011 [P] [Analysis: Section.2.1] Create Python Combo model: Port Commander Spellbook types with card relationships
+- [ ] T012 [Analysis: Section.2.3] Implement caching data models: File-based cache structure for bulk data and API responses
+- [ ] T013 [Ground Truth] Data model validation tests: Ensure Python models handle all TypeScript data cases exactly
+- [ ] T014 [Analysis: Section.2.2] Card relationship mappings: Oracle ID grouping, set relationships, combo card associations
 
-**Checkpoint**: Data layer migrated with full functional parity.
+**Checkpoint**: MTG data models migrated maintaining Scryfall API compatibility.
 
-## Phase 3: Foundational Infrastructure
+## Phase 3: External API Integration Infrastructure
 
-**Purpose**: Core application infrastructure based on analysis findings.
+**Purpose**: Core infrastructure for Scryfall API and external service integration based on analysis Section 3.
 
-- [ ] T015 [Analysis: Section.3.1] Authentication/authorization framework: Implement exact auth patterns from Section.3.1
-- [ ] T016 [Analysis: Section.9.1] Security measures: Implement all security patterns identified in analysis
-- [ ] T017 [P] [Analysis: Section.3.2] API routing framework: Setup endpoint structure (empty routes initially)
-- [ ] T018 [Analysis: Section.8.1] Performance monitoring: Implement baseline monitoring per Section.8.1
-- [ ] T019 [Analysis: Section.7.1] Testing framework: Setup testing infrastructure matching current patterns
-- [ ] T020 Configure error handling and logging infrastructure per Section.10.2
+- [ ] T015 [Analysis: Section.3.1] No authentication required: Document public API access patterns (Scryfall, Commander Spellbook, Cube Cobra)
+- [ ] T016 [Analysis: Section.9.1] API security measures: Implement rate limiting, request throttling, error handling
+- [ ] T017 [P] [Analysis: Section.3.2] API client framework: Setup HTTP client infrastructure for external APIs
+- [ ] T018 [Analysis: Section.8.1] Caching infrastructure: Implement file-based caching matching TypeScript `.cache` directory pattern
+- [ ] T019 [Analysis: Section.7.1] API testing framework: Setup testing infrastructure for external API mocking and validation
+- [ ] T020 Configure error handling: Network failures, rate limiting, service degradation per Section.5.1
 
-**Checkpoint**: Foundation ready with security and monitoring. NO business logic exists.
+**Checkpoint**: External API infrastructure ready. NO MTG business logic exists yet.
 
-## Phase 4: Critical Business Logic Migration (Feature 1) 🎯 MVP
+## Phase 4: Critical MTG Algorithm Migration (Magic Color Sorting) 🎯 MVP
 
-**Migration Goal**: [Brief description based on Analysis Section.4.1 findings]
+**Migration Goal**: Port Magic Color Identity Sorting algorithm from `utils/mtg/sort.ts` and `utils/mtg/magicSort.ts`
 
-**Analysis Reference**: Section.4.1 - Critical Algorithms, Section.11.1 - Domain Knowledge
+**Analysis Reference**: Section.4.1 - Critical Algorithm (MUST PRESERVE), Section.11.1 - MTG Domain Knowledge
 
-**Independent Test**: [Test case from Analysis Section.4.1 or domain requirements]
+**Independent Test**: WUBRG color order validation with multicolor groupings
 
-### Phase 4a: Analysis Cross-Reference & Ground Truth
+### Phase 4a: Algorithm Analysis & Ground Truth
 
-- [ ] T021 [Analysis: Section.4.1] Algorithm analysis: Review critical algorithm documentation for this feature
-- [ ] T022 [Analysis: Section.11.1] Domain knowledge review: Document business rules and domain concepts
-- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Ground Truth Test: Write test proving original behavior matches analysis documentation
-- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation Test: Create target framework test (initially failing)
-- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document current performance metrics for this feature
+- [ ] T021 [Analysis: Section.4.1] Magic color sorting analysis: Review critical WUBRG ordering algorithm (~90 lines, Medium complexity)
+- [ ] T022 [Analysis: Section.11.1] MTG color domain knowledge: Document color identity rules, multicolor groupings, land categorization
+- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: utils/mtg/sort.ts::magicSort] Ground Truth Test: Test current TypeScript sorting with all color combinations
+- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: utils/mtg/sort.ts::magicSort] Python Validation Test: Create Python test (initially failing)
+- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document <10ms sort time for 360-720 cards, O(n log n) complexity
 
-### Phase 4b: Incremental Migration & Validation
+### Phase 4b: Algorithm Migration & Validation
 
-- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Algorithm preservation: Port exact business logic maintaining complexity characteristics
-- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation execution: Run new test against ported logic - MUST pass
-- [ ] T028 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis
-- [ ] T029 [F1] [Analysis: Section.3.2] API integration: Wire proven logic into endpoint structure
-- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics
-- [ ] T031 [F1] Integration test: End-to-end validation of feature functionality
+- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: utils/mtg/sort.ts::magicSort] Algorithm preservation: Port exact WUBRG ordering maintaining lodash.sortBy patterns
+- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: utils/mtg/colorGroup.ts] Color group determination: Port color group logic (mono/multi/colorless/land)
+- [ ] T028 [F1] [Analysis: Section.11.2] MTG edge cases: Double-faced cards, hybrid mana, colorless cards that produce colored mana
+- [ ] T029 [F1] [Analysis: Section.3.2] Sorting API endpoint: Create FastAPI endpoint for card sorting functionality
+- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm Python implementation maintains <10ms sort time
+- [ ] T031 [F1] Integration test: End-to-end test with complete Magic card database (~25,000 cards in ~50ms)
 
-**Checkpoint**: Critical feature migrated with documented functional and performance parity.
+**Checkpoint**: Magic color sorting migrated with MTG player-familiar ordering preserved.
 
-## Phase 5: Security & Authorization Migration (Feature 2)
+## Phase 5: Card Name Spell Checking Migration (Feature 2)
 
-**Migration Goal**: [Based on Analysis Section.3.1 and Section.9.1 findings]
+**Migration Goal**: Port spell checking algorithm from `utils/mtg/spellCheckCardNames.ts` with fuzzy matching
 
-**Analysis Reference**: Section.3.1 - Authentication/Authorization, Section.9.1 - Security Measures
+**Analysis Reference**: Section.4.1 - Critical Algorithm (MUST PRESERVE), Section.11.2 - MTG Card Naming
 
-**Independent Test**: [Test case from Analysis Section.3.1 authorization patterns]
+**Independent Test**: Card name validation against Scryfall database with fuzzy suggestions
 
-### Phase 5a: Security Analysis Integration
+### Phase 5a: Spell Checking Analysis Integration
 
-- [ ] T032 [Analysis: Section.3.1] Authorization pattern analysis: Document current access control implementation
-- [ ] T033 [Analysis: Section.9.1] Security measures inventory: Review all security patterns to preserve
-- [ ] T034 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Ground Truth Test: Prove current authorization behavior
-- [ ] T035 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Validation Test: Create target authorization test
+- [ ] T032 [Analysis: Section.4.1] Spell checking analysis: Document fuzzy matching algorithm (~50 lines, Medium complexity)
+- [ ] T033 [Analysis: Section.11.2] MTG card naming conventions: Double-faced cards (//), Adventure cards, special characters
+- [ ] T034 [P] [F2] [Analysis: Section.4.1] [Logic: utils/mtg/spellCheckCardNames.ts::spellCheckCardNames] Ground Truth Test: Test current validation behavior
+- [ ] T035 [P] [F2] [Analysis: Section.4.1] [Logic: utils/mtg/spellCheckCardNames.ts::spellCheckCardNames] Python Validation Test: Create Fuse.js equivalent test
 
-### Phase 5b: Authorization Migration
+### Phase 5b: Spell Checking Migration
 
-- [ ] T036 [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Authorization logic port: Implement exact access control patterns
-- [ ] T037 [F2] [Analysis: Section.9.1] Security validation: Ensure all security measures maintained
-- [ ] T038 [F2] [Analysis: Section.3.1] Authorization integration: Wire into API framework
-- [ ] T039 [F2] Security testing: Validate all authorization scenarios
+- [ ] T036 [F2] [Analysis: Section.4.1] [Logic: utils/mtg/spellCheckCardNames.ts] Fuzzy matching port: Implement Python equivalent of Fuse.js fuzzy search
+- [ ] T037 [F2] [Analysis: Section.11.2] Card name format handling: Double-faced cards, Adventure cards, special character support
+- [ ] T038 [F2] [Analysis: Section.5.1] Scryfall bulk data integration: Connect spell checker to bulk card name database
+- [ ] T039 [F2] Performance validation: Maintain ~100ms for small lists, ~1s for hundreds of names
 
-**Checkpoint**: Authorization and security patterns migrated with full parity.
+**Checkpoint**: Card name spell checking migrated with MTG-specific name format support.
 
-## Phase 6: External Integrations Migration
+## Phase 6: Scryfall API Integration Migration
 
-**Migration Goal**: Preserve all third-party service integrations per Analysis Section.5
+**Migration Goal**: Preserve all external API integrations per Analysis Section.5 (Scryfall, Commander Spellbook, Cube Cobra)
 
-**Analysis Reference**: Section.5.1 - Third-party APIs, Section.5.2 - Auth Providers
+**Analysis Reference**: Section.5.1 - Third-party APIs (CRITICAL - no auth required)
 
-### Phase 6a: Integration Analysis & Testing
+### Phase 6a: External API Integration Analysis
 
-- [ ] T040 [Analysis: Section.5.1] External API inventory: Document all third-party integrations
-- [ ] T041 [Analysis: Section.5.1] Integration testing: Validate current external service connections
-- [ ] T042 [P] [Analysis: Section.5.1] API client migration: Port all external API clients
-- [ ] T043 [Analysis: Section.5.1] Error handling preservation: Maintain all fallback behaviors
+- [ ] T040 [Analysis: Section.5.1] Scryfall API integration: Port `utils/scryfall/` client with search, bulk data, card lookup
+- [ ] T041 [Analysis: Section.5.1] Commander Spellbook integration: Port Google Sheets CSV fetching for combo data
+- [ ] T042 [P] [Analysis: Section.5.1] Cube Cobra integration: Port cube list fetching (unofficial API)
+- [ ] T043 [Analysis: Section.5.1] Caching layer migration: Port `.cache` directory pattern with TTL management
 
-### Phase 6b: Integration Validation
+### Phase 6b: API Integration Validation
 
-- [ ] T044 [Analysis: Section.5.1] Service connectivity: Test all external integrations
-- [ ] T045 [Analysis: Section.5.2] Authentication provider testing: Validate OAuth/SSO flows
-- [ ] T046 [Analysis: Section.5.1] Caching strategy: Implement analysis-documented caching patterns
+- [ ] T044 [Analysis: Section.5.1] Scryfall connectivity: Test search API (~100-175 req/sec), bulk data downloads (no limits)
+- [ ] T045 [Analysis: Section.5.1] Rate limiting implementation: Client-side throttling to respect Scryfall limits
+- [ ] T046 [Analysis: Section.5.1] Error handling: Network failures, service outages, cache fallback strategies
 
-## Phase 7: Performance & Quality Assurance
+## Phase 7: First Printing Deduplication & Utility Functions
 
-**Migration Goal**: Meet or exceed baseline performance per Analysis Section.8
+**Migration Goal**: Complete utility function migration and performance optimization per Analysis Section.8
 
-**Analysis Reference**: Section.8.1 - Performance Baselines, Section.7.1 - Test Coverage
+**Analysis Reference**: Section.8.1 - Performance Baselines, Section.4.1 - Simple Algorithms
 
-### Phase 7a: Performance Validation
+### Phase 7a: Utility Algorithm Migration
 
-- [ ] T047 [Analysis: Section.8.1] Performance benchmarking: Measure new implementation against baselines
-- [ ] T048 [Analysis: Section.8.2] Bottleneck analysis: Ensure no performance regressions
-- [ ] T049 [Analysis: Section.8.3] Scalability testing: Validate scaling characteristics maintained
+- [ ] T047 [Analysis: Section.4.1] [Logic: utils/mtg/uniqueFirstPrintings.ts] First printing deduplication: Port O(n) algorithm for removing reprints
+- [ ] T048 [Analysis: Section.4.1] [Logic: utils/mtg/compareLists.ts] Card list comparison: Port cube comparison utilities
+- [ ] T049 [Analysis: Section.4.1] [Logic: utils/mtg/card.ts] Card property utilities: Port power/toughness parsing, word count functions
 
-### Phase 7b: Quality Assurance
+### Phase 7b: Performance & Quality Validation
 
-- [ ] T050 [Analysis: Section.7.1] Test coverage parity: Achieve analysis-documented coverage levels
-- [ ] T051 [Analysis: Section.7.2] Critical test preservation: Migrate all critical test scenarios
-- [ ] T052 [P] [Analysis: Section.11.2] Edge case validation: Test all documented quirks and workarounds
+- [ ] T050 [Analysis: Section.8.1] Bulk processing performance: Validate ~50ms for complete Magic database deduplication
+- [ ] T051 [Analysis: Section.7.1] Example script migration: Port 28 TypeScript example scripts to Python equivalents
+- [ ] T052 [P] [Analysis: Section.11.2] MTG edge case validation: Test all documented card format quirks and special cases
 
-## Phase 8: Domain Knowledge Preservation
+## Phase 8: MTG Domain Knowledge Preservation & API Endpoints
 
-**Migration Goal**: Capture all tribal knowledge per Analysis Section.11
+**Migration Goal**: Preserve MTG domain expertise and create unified API per Analysis Section.11
 
-**Analysis Reference**: Section.11.1 - Business Domain, Section.11.2 - Undocumented Knowledge
+**Analysis Reference**: Section.11.1 - MTG Domain Rules, Section.11.2 - Card Format Quirks
 
-- [ ] T053 [Analysis: Section.11.1] Domain concept validation: Ensure all business rules preserved
-- [ ] T054 [Analysis: Section.11.2] Quirk implementation: Implement all documented workarounds
-- [ ] T055 [Analysis: Section.11.3] User behavior patterns: Validate user workflow preservation
-- [ ] T056 [P] Documentation updates reflecting analysis findings
+- [ ] T053 [Analysis: Section.11.1] MTG color identity validation: Ensure Commander format rules preserved exactly
+- [ ] T054 [Analysis: Section.11.2] Card naming quirks: Double-faced cards, Adventure cards, special characters, ligatures
+- [ ] T055 [Analysis: Section.11.1] Format legality business rules: Standard, Pioneer, Modern, Legacy, Vintage, Commander restrictions
+- [ ] T056 [P] FastAPI endpoint creation: Expose MTG toolkit functions as REST API endpoints for unified platform integration
 
-## Phase N: Cross-Cutting Concerns & Polish
+## Phase 9: Cross-Cutting Concerns & Polish
 
-- [ ] TXXX [Analysis: Section.10.2] Logging and monitoring: Implement analysis-documented patterns
-- [ ] TXXX [Analysis: Section.9.2] Security hardening: Final security validation
-- [ ] TXXX [P] Code cleanup and refactoring (target framework only)
-- [ ] TXXX [Analysis: Section.13.1] Documentation updates incorporating analysis findings
+- [ ] T057 [Analysis: Section.10.2] Structured logging: Implement console output patterns for analysis workflow debugging
+- [ ] T058 [Analysis: Section.9.1] API security hardening: Rate limiting, request validation, error message sanitization
+- [ ] T059 [P] Code optimization: Python performance tuning for bulk data processing and algorithm execution
+- [ ] T060 [Analysis: Section.13.1] Documentation migration: Port README examples and TypeScript patterns to Python equivalents
 
-## Phase N+1: Migration Validation & Asset Retirement
+## Phase 10: Migration Validation & Asset Retirement
 
-**Purpose**: Comprehensive validation before legacy asset removal.
+**Purpose**: Comprehensive validation before TypeScript asset removal.
 
-### Phase N+1a: Complete Migration Validation
+### Phase 10a: Complete MTG Migration Validation
 
-- [ ] TXXX [Analysis: All Sections] Full analysis cross-reference: Verify all analysis findings addressed
-- [ ] TXXX [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically
-- [ ] TXXX [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds baselines
-- [ ] TXXX [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met
-- [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags have corresponding passing validation tests
-- [ ] TXXX Run Full Regression Suite: Execute complete test suite including ground truth comparisons
+- [ ] T061 [Analysis: All Sections] Full analysis cross-reference: Verify all MTG toolkit analysis findings addressed
+- [ ] T062 [Analysis: Section.4.1] Algorithm parity validation: Confirm color sorting, spell checking, deduplication function identically
+- [ ] T063 [Analysis: Section.8.1] Performance regression testing: Validate all performance baselines maintained (sorting <10ms, etc.)
+- [ ] T064 [Analysis: Section.12.3] Success criteria verification: All 28 example scripts have Python equivalents
+- [ ] T065 Verify Full Migration: All [Logic: ...] references have passing Ground Truth validation tests
+- [ ] T066 Run Full Regression Suite: Execute complete test suite with TypeScript vs Python output comparison
 
-### Phase N+1b: Safe Asset Retirement
+### Phase 10b: Safe TypeScript Asset Retirement
 
-- [ ] TXXX [Analysis: Section.12.2] Risk mitigation: Address all identified migration risks
-- [ ] TXXX Legacy asset backup: Create secure archive of legacy codebase before deletion
-- [ ] TXXX Production validation: Run new system in production-like environment
-- [ ] TXXX Stakeholder approval: Obtain sign-off from all analysis-identified stakeholders
-- [ ] TXXX Delete Legacy Asset: After 100% validation, remove legacy asset directory
+- [ ] T067 [Analysis: Section.12.2] Risk mitigation: Verify all external API integrations preserved
+- [ ] T068 TypeScript toolkit backup: Archive `features/mtg-scripting-toolkit/` before removal
+- [ ] T069 Production validation: Run Python MTG service in unified platform environment
+- [ ] T070 Lucky Paper stakeholder approval: Validate content creation workflows preserved
+- [ ] T071 Delete Legacy Asset: After 100% validation, remove `features/mtg-scripting-toolkit/`
 
-### Phase N+1c: Post-Migration Monitoring
+### Phase 10c: Post-Migration MTG Service Monitoring
 
-- [ ] TXXX [Analysis: Section.10.2] Monitoring validation: Confirm monitoring systems capture same metrics
-- [ ] TXXX [Analysis: Section.8.1] Performance monitoring: Track performance against established baselines
-- [ ] TXXX [Analysis: Section.11.3] User behavior monitoring: Validate user workflow preservation
+- [ ] T072 [Analysis: Section.10.2] API monitoring: Track MTG service endpoint performance and usage
+- [ ] T073 [Analysis: Section.8.1] Performance monitoring: Continuous validation against TypeScript baselines
+- [ ] T074 [Analysis: Section.11.3] MTG workflow monitoring: Ensure cube analysis and content creation workflows remain optimal
 
 ### Dependencies & Execution Order
 
 **Sequential Dependencies (Must Complete In Order):**
-- **Phase 1 (Analysis Validation)**: Must complete first - validates analysis completeness
-- **Phase 2 (Data Architecture)**: Must complete before business logic - establishes data foundation
-- **Phase 3 (Foundational Infrastructure)**: Must complete before feature migration - establishes framework
+
+- **Phase 1 (Analysis Validation)**: Must complete first - validates MTG toolkit analysis and establishes TypeScript baseline
+- **Phase 2 (Data Models)**: Must complete before algorithms - establishes MTG data foundation (Card, Combo models)
+- **Phase 3 (API Infrastructure)**: Must complete before feature migration - establishes Scryfall integration framework
 
 **Parallel Execution Phases:**
-- **Phases 4-6 (Business Logic, Security, Integrations)**: Can proceed in parallel by feature after Phase 3
-- **Phase 7 (Performance & Quality)**: Can run in parallel with feature phases
-- **Phase 8 (Domain Knowledge)**: Can run in parallel with feature phases
+
+- **Phases 4-5 (Critical Algorithms)**: Can proceed in parallel - Color sorting and Spell checking are independent
+- **Phase 6 (External APIs)**: Can run in parallel with algorithm migration
+- **Phase 7 (Utility Functions)**: Can run in parallel after Phase 4-5 complete
+- **Phase 8 (Domain Knowledge)**: Can run in parallel with utility migration
 
 **Final Sequential Dependencies:**
+
+- **Phase 9 (Polish)**: After all algorithm and API phases complete
+- **Phase 10 (Validation & Retirement)**: Must be final phase - comprehensive testing before TypeScript removal
 - **Phase N (Cross-Cutting Concerns)**: After all feature phases complete
 - **Phase N+1 (Asset Retirement)**: The absolute final step - only after complete validation
 
@@ -315,23 +337,51 @@ estimated_hours: 35
 3. **Feature Increment**: Add next priority feature → Validate independently → Deploy
 4. **Continue Incrementally**: Each feature adds value without breaking previous functionality
 
-### Risk-Minimized Parallel Strategy
+### MTG Toolkit Migration Strategy
 
-**Sequential Foundation** (Team Together):
-1. Analysis validation (Phase 1) - entire team validates findings
-2. Data migration (Phase 2) - critical shared foundation
-3. Infrastructure setup (Phase 3) - framework foundation
+**Sequential Foundation** (Required Order):
 
-**Parallel Feature Migration** (After Foundation):
-- Developer A: Critical Feature 1 (Analysis Section 4.1 priority)
-- Developer B: Critical Feature 2 (Analysis Section 4.1 priority) 
-- Developer C: Security/Integration (Analysis Sections 5 & 9)
-- All developers: Continuous validation against analysis baselines
+1. TypeScript Analysis Validation (Phase 1) - Establish Ground Truth baselines from all 28 example scripts
+2. MTG Data Models (Phase 2) - Card, Combo, Cube data structures in Python
+3. External API Infrastructure (Phase 3) - Scryfall, Commander Spellbook, Cube Cobra integrations
 
-**Validation Requirements**:
-- Each feature must pass ground truth tests before integration
-- Performance must meet Analysis Section 8.1 baselines
-- All Analysis Section 11 domain knowledge must be preserved
+**Parallel Algorithm Migration** (After Foundation):
+
+- **Magic Color Sorting** (Phase 4) - Critical WUBRG ordering algorithm
+- **Card Name Spell Checking** (Phase 5) - Fuzzy matching with MTG naming conventions  
+- **External API Integration** (Phase 6) - Can proceed parallel to algorithms
+- **Utility Functions** (Phase 7) - After core algorithms complete
+
+**MTG-Specific Validation Requirements**:
+
+- Ground Truth tests compare TypeScript vs Python outputs exactly
+- Performance baselines: Sorting <10ms, spell checking ~100ms, bulk processing ~50ms
+- MTG domain knowledge preserved: Color identity rules, card naming conventions, format legalities
+
+---
+
+## MTG Domain Migration Notes
+
+**Task Completion Criteria:**
+
+- **[Analysis] references** are MANDATORY - every task traces to `mtg-scripting-toolkit-analysis.md`
+- **[Logic] preservation** is CRITICAL - MTG algorithms must maintain exact functional behavior
+- **Ground Truth Test → TypeScript Baseline → Port to Python → Validate Parity → API Integration** (core loop)
+- A task is "done" when Python output matches TypeScript output exactly AND performance baselines are met
+
+**MTG-Specific Quality Gates:**
+
+- Color sorting MUST maintain WUBRG ordering that MTG players expect
+- Card name validation MUST handle double-faced cards, Adventure cards, special characters
+- External API integrations MUST preserve rate limiting and caching strategies
+- All 28 example scripts MUST have functional Python equivalents
+
+**Success Criteria:**
+
+- **Performance**: All Analysis Section 8.1 baselines met or exceeded
+- **Functional Parity**: TypeScript toolkit completely replaced by Python service
+- **MTG Domain**: All Magic-specific business rules preserved exactly
+- **Integration**: FastAPI endpoints ready for unified platform
 
 ---
 
@@ -357,12 +407,13 @@ estimated_hours: 35
 - Performance monitoring prevents regressions
 - Stakeholder validation ensures business continuity
 
-**Success Validation:**
-- Functional parity: New system behaviors match legacy system exactly
-- Performance parity: New system meets or exceeds performance baselines
-- Integration parity: All external services continue working without changes
-- Domain parity: All business rules and domain knowledge preserved
-- User parity: All user workflows continue functioning identically
+**MTG Toolkit Success Validation:**
+
+- **Functional Parity**: Python MTG service produces identical outputs to TypeScript toolkit
+- **Performance Parity**: All analysis baselines met (sorting <10ms, spell checking ~100ms, bulk processing ~50ms)
+- **Integration Parity**: Scryfall API, Commander Spellbook, Cube Cobra connections preserved
+- **Domain Parity**: All MTG business rules (color identity, card naming, format legalities) preserved exactly
+- **Workflow Parity**: All 28 TypeScript example scripts have functional Python equivalents
 
 ---
 
@@ -370,37 +421,42 @@ estimated_hours: 35
 
 **Verify these conditions before marking parent task complete**:
 
-- [ ] All tasks T001-TXXX marked complete above
-- [ ] Integration tests pass: `pytest tests/mtg/test_mtg_scripting_toolkit_integration.py`
-- [ ] Performance baselines met (documented in `migration-validation.md`)
-- [ ] Ground truth tests confirm functional parity with legacy
-- [ ] Legacy `features/mtg-scripting-toolkit/` backed up to `archive/`
+- [ ] All tasks T001-T074 marked complete above  
+- [ ] MTG Integration tests pass: `pytest tests/mtg/test_mtg_scripting_toolkit_integration.py`
+- [ ] Performance baselines met: Color sorting <10ms, spell checking ~100ms, bulk processing ~50ms
+- [ ] Ground truth tests confirm functional parity: All 28 example scripts have Python equivalents with identical outputs
+- [ ] TypeScript toolkit backed up: `features/mtg-scripting-toolkit/` → `archive/mtg-scripting-toolkit-backup/`
 - [ ] Migration completion documented in `migration-validation.md`
-- [ ] All analysis findings from project_analysis_report.md addressed
-- [ ] No regressions in existing functionality
-- [ ] Security audit passed (if applicable)
-- [ ] Accessibility compliance maintained (WCAG 2.1 AA)
+- [ ] All analysis findings from `mtg-scripting-toolkit-analysis.md` addressed
+- [ ] No regressions in Scryfall API integration or external service connectivity
+- [ ] MTG domain expertise preserved: Color identity rules, card naming conventions, format legalities
+- [ ] FastAPI endpoints functional: MTG service integrates with unified platform
 
-**⚠️ If any checklist item fails**: DO NOT mark parent task complete. Fix issues and re-validate.
+**⚠️ If any checklist item fails**: DO NOT mark parent task T116 complete. Fix issues and re-validate.
 
 **Completion Action**:
+
 1. Mark all checkboxes above ✅
 2. Run validation command: `pytest tests/mtg/test_mtg_scripting_toolkit_integration.py`
 3. Document completion in `migration-validation.md`
-4. Mark parent task TXXX complete in `tasks.md`
-5. Proceed to return task (next in sequence) in `tasks.md`
+4. Mark parent task T116 complete in `tasks.md`
+5. Proceed to return task T117 in `tasks.md`
 
 **Documentation Update Required**:
+
 ```markdown
 # In migration-validation.md
 
-### MTG Scripting Toolkit Migration (TXXX)
+### MTG Scripting Toolkit Migration (T116)
 - **Status**: ✅ Complete
 - **Completed**: [DATE]
-- **Estimated Hours**: XX
-- **Actual Hours**: XX
-- **Tests**: X passed, 0 failed
-- **Performance**: All baselines met/exceeded
-- **Notes**: [Any notable achievements or challenges]
+- **Estimated Hours**: 35
+- **Actual Hours**: [ACTUAL]
+- **Tests**: All Ground Truth tests passed, TypeScript vs Python parity confirmed
+- **Performance**: Color sorting <10ms ✅, spell checking ~100ms ✅, bulk processing ~50ms ✅
+- **External APIs**: Scryfall, Commander Spellbook, Cube Cobra integrations preserved
+- **Domain Knowledge**: All MTG business rules and conventions preserved
+- **Legacy Asset**: features/mtg-scripting-toolkit/ backed up and removed
+- **Notes**: TypeScript research toolkit successfully migrated to Python FastAPI service
 ```
 

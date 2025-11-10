@@ -1,18 +1,20 @@
 ---
-description: "Task list template for asset relocation and implementation"
-parent_task: "../tasks.md#TXXX"
-parent_phase: "Phase X: Mtg Migrations"
-return_to: "../tasks.md#TXXX"
+description: "DDD-based migration of Commander Spellbook backend to modular monolith architecture"
+parent_task: "../tasks.md#T130"
+parent_phase: "Phase 8: MTG Migrations"
+return_to: "../tasks.md#T131"
 domain: "mtg"
 target_service: "apps/mtg-service/src/"
 legacy_path: "features/commander-spellbook-backend"
-estimated_hours: 45
+estimated_hours: 85
+critical_algorithms: ["variant_generation", "combo_graph", "color_identity", "mana_parsing"]
+external_dependencies: ["scryfall_api", "discord_oauth", "card_pricing_apis"]
 ---
 
-# Tasks: [MIGRATION: Commander Spellbook Backend]
+# Tasks: [MIGRATION: Commander Spellbook Backend - MTG Combo Database]
 
-**⬆️ PARENT TASK**: [`tasks.md#TXXX`](../tasks.md#TXXX)  
-**⬇️ RETURN TO**: [`tasks.md#TXXX`](../tasks.md#TXXX)
+**⬆️ PARENT TASK**: [`tasks.md#T130`](../tasks.md#T130)  
+**⬇️ RETURN TO**: [`tasks.md#T131`](../tasks.md#T131)
 
 ---
 
@@ -82,52 +84,37 @@ estimated_hours: 45
 4. Integration Testing → Ensure new implementation matches baseline
 5. Performance Validation → Maintain or improve baseline metrics
 
-<!-- 
-  ============================================================================
-  IMPORTANT: The tasks below are SAMPLE TASKS for illustration purposes only.
-  
-  The /speckit.tasks command MUST replace these with actual tasks based on:
-  - User stories from spec.md (with their priorities P1, P2, P3...)
-  - Feature requirements from plan.md
-  - Entities from data-model.md
-  - Endpoints from contracts/
-  
-  Tasks MUST be organized by user story so each story can be:
-  - Implemented independently
-  - Tested independently
-  - Delivered as an MVP increment
-  
-  DO NOT keep these sample tasks in the generated tasks.md file.
-  ============================================================================
--->
 
 ## Phase 1: Analysis Validation & Legacy Environment Setup
 
-**Purpose**: Validate project analysis findings and establish baseline testing environment.
+**Purpose**: Validate Commander Spellbook analysis and establish baseline testing for MTG combo database.
 
-- [ ] T001 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections are filled
-- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate current tech stack inventory against actual codebase
-- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing tests and document current coverage metrics
-- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current performance characteristics
-- [ ] T005 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM) per Section.10.1
-- [ ] T006 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function
-- [ ] T007 [P] Create new project structure per implementation plan
-- [ ] T008 [P] Initialize target framework dependencies (per analysis Section.1.2)
+- [ ] T001 [Analysis: Section.1] Validate Commander Spellbook analysis completeness: Confirm Django/DRF architecture documented
+- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Python 3.x, Django 4.x, PostgreSQL, DRF confirmed
+- [ ] T003 [P] [Analysis: Section.7.1] MTG test coverage baseline: Run pytest suite, document combo generation test results  
+- [ ] T004 [Analysis: Section.8.1] Variant generation performance baseline: Measure current combo-to-variant generation times
+- [ ] T005 [Ground Truth] Setup Commander Spellbook environment: Docker compose up, verify Scryfall integration works
+- [ ] T006 [Ground Truth] Validate core MTG functionality: Test combo search, variant generation, card lookup workflows
+- [ ] T007 [P] Create MTG service DDD structure: `domains/combos/`, `domains/cards/`, `domains/variants/`  
+- [ ] T008 [P] Initialize FastAPI dependencies: Async PostgreSQL, Pydantic models, dependency injection setup
 
 ---
 
-## Phase 2: Data Architecture Migration
+## Phase 2: MTG Domain Data Architecture Migration
 
-**Purpose**: Migrate data models and database schema based on analysis Section 2.
+**Purpose**: Migrate MTG-specific data models with complex relationships and validation rules.
 
-- [ ] T009 [Analysis: Section.2.1] Inventory data models: Create comprehensive list from analysis findings
-- [ ] T010 [Analysis: Section.2.1] Database schema migration: Implement new schema preserving all relationships from Section.2.2
-- [ ] T011 [P] [Analysis: Section.2.1] Port data models: Create new framework models matching legacy field mappings exactly
-- [ ] T012 [Analysis: Section.2.3] Database performance patterns: Implement indexes and optimizations per analysis
-- [ ] T013 [Ground Truth] Data validation tests: Write tests confirming data integrity and constraints
-- [ ] T014 [Analysis: Section.2.1] Data migration scripts: Create scripts for existing data preservation
+- [ ] T009 [Analysis: Section.2.1] MTG Entity modeling: Card, Combo, Variant, Feature, Template domain models  
+- [ ] T010 [Analysis: Section.2.1] Complex relationship schema: Many-to-many with through tables, variant hashing logic
+- [ ] T011 [P] [Card Domain] [Logic: models/card.py::Card] Port Card model: Oracle ID, Scryfall integration, mana cost validation
+- [ ] T012 [P] [Combo Domain] [Logic: models/combo.py::Combo] Port Combo model: Recipe pattern, status workflow, prefetch manager
+- [ ] T013 [P] [Variant Domain] [Logic: models/variant.py::Variant] Port Variant model: Hash-based IDs, popularity computation
+- [ ] T014 [P] [Feature Domain] [Logic: models/feature.py::Feature] Port Feature model: MTG effect taxonomy, dependency chains
+- [ ] T015 [Analysis: Section.2.3] MTG-specific indexes: Combo search, variant lookup, card filtering optimizations
+- [ ] T016 [Ground Truth] MTG data validation: Mana cost format, color identity rules, Commander legality tests
+- [ ] T017 [Analysis: Section.2.1] Legacy data migration: Commander Spellbook PostgreSQL to new schema scripts
 
-**Checkpoint**: Data layer migrated with full functional parity.
+**Checkpoint**: MTG domain data layer with complex relationships and validation migrated.
 
 ## Phase 3: Foundational Infrastructure
 
@@ -142,138 +129,156 @@ estimated_hours: 45
 
 **Checkpoint**: Foundation ready with security and monitoring. NO business logic exists.
 
-## Phase 4: Critical Business Logic Migration (Feature 1) 🎯 MVP
+## Phase 4: Combo Variant Generation Algorithm Migration 🎯 MVP
 
-**Migration Goal**: [Brief description based on Analysis Section.4.1 findings]
+**Migration Goal**: Port the exponentially complex variant generation algorithm (O(C^N)) that auto-generates specific MTG combo implementations from general recipes
 
-**Analysis Reference**: Section.4.1 - Critical Algorithms, Section.11.1 - Domain Knowledge
+**Analysis Reference**: Section.4.1 - Variant Generation Algorithm (1400+ LOC), Section.11.1 - MTG Domain Knowledge
 
-**Independent Test**: [Test case from Analysis Section.4.1 or domain requirements]
+**Independent Test**: Generate variants from simple 2-card combo vs complex multi-template combo with cyclical dependencies
 
-### Phase 4a: Analysis Cross-Reference & Ground Truth
+### Phase 4a: Variant Generation Algorithm Analysis & Ground Truth
 
-- [ ] T021 [Analysis: Section.4.1] Algorithm analysis: Review critical algorithm documentation for this feature
-- [ ] T022 [Analysis: Section.11.1] Domain knowledge review: Document business rules and domain concepts
-- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Ground Truth Test: Write test proving original behavior matches analysis documentation
-- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation Test: Create target framework test (initially failing)
-- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document current performance metrics for this feature
+- [ ] T021 [Analysis: Section.4.1] Variant generation deep dive: Document Graph, VariantSet, FrozenMultiset algorithms
+- [ ] T022 [Analysis: Section.11.1] MTG combo mechanics: Card interactions, mana costs, color identity, feature chains
+- [ ] T023 [P] [Variant Gen] [Analysis: Section.4.1] [Logic: variants/variants_generator.py::get_variants_from_graph] Ground Truth: Test current variant generation with known combo sets
+- [ ] T024 [P] [Variant Gen] [Analysis: Section.4.1] [Logic: variants/combo_graph.py::Graph] Ground Truth: Test combo dependency graph construction
+- [ ] T025 [P] [Variant Gen] [Analysis: Section.4.1] [Logic: variants/multiset.py::FrozenMultiset] Ground Truth: Test immutable card collection handling
+- [ ] T026 [Analysis: Section.8.1] Performance baseline: Document variant generation times for small/medium/large combo sets
 
-### Phase 4b: Incremental Migration & Validation
+### Phase 4b: Critical Algorithm Migration & Validation
 
-- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Algorithm preservation: Port exact business logic maintaining complexity characteristics
-- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation execution: Run new test against ported logic - MUST pass
-- [ ] T028 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis
-- [ ] T029 [F1] [Analysis: Section.3.2] API integration: Wire proven logic into endpoint structure
-- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics
-- [ ] T031 [F1] Integration test: End-to-end validation of feature functionality
+- [ ] T027 [Variant Gen] [Analysis: Section.4.1] [Logic: variants/variants_generator.py::VariantDefinition] Port variant definition data structures with hash-based IDs
+- [ ] T028 [Variant Gen] [Analysis: Section.4.1] [Logic: variants/combo_graph.py::Graph.variants] Port directed graph traversal for combo dependencies
+- [ ] T029 [Variant Gen] [Analysis: Section.4.1] [Logic: variants/multiset.py] Port immutable multiset collections for card management
+- [ ] T030 [Variant Gen] [Analysis: Section.4.1] [Logic: variants/variants_generator.py::get_variants_from_graph] Port main generation algorithm preserving exponential complexity handling
+- [ ] T031 [Variant Gen] [Analysis: Section.11.2] Edge case handling: Cyclical dependencies, missing features, timeout prevention
+- [ ] T032 [Variant Gen] Async adaptation: Convert synchronous Django ORM to async FastAPI patterns
+- [ ] T033 [Variant Gen] [Analysis: Section.8.1] Performance validation: Ensure generation times match or improve on baseline
+- [ ] T034 [Variant Gen] Integration test: End-to-end combo submission → variant generation → result storage
 
-**Checkpoint**: Critical feature migrated with documented functional and performance parity.
+**Checkpoint**: Core variant generation algorithm migrated with documented exponential complexity preservation.
 
-## Phase 5: Security & Authorization Migration (Feature 2)
+## Phase 5: MTG Search & Parsing Engine Migration
 
-**Migration Goal**: [Based on Analysis Section.3.1 and Section.9.1 findings]
+**Migration Goal**: Migrate complex MTG card search, mana parsing, and Scryfall query grammar systems
 
-**Analysis Reference**: Section.3.1 - Authentication/Authorization, Section.9.1 - Security Measures
+**Analysis Reference**: Section.4.1 - Card Search Algorithm, Section.5.1 - Scryfall Integration
 
-**Independent Test**: [Test case from Analysis Section.3.1 authorization patterns]
+**Independent Test**: Search "Infinite mana WUB commander legal" with complex mana cost filters
 
-### Phase 5a: Security Analysis Integration
+### Phase 5a: MTG Search & Parsing Analysis
 
-- [ ] T032 [Analysis: Section.3.1] Authorization pattern analysis: Document current access control implementation
-- [ ] T033 [Analysis: Section.9.1] Security measures inventory: Review all security patterns to preserve
-- [ ] T034 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Ground Truth Test: Prove current authorization behavior
-- [ ] T035 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Validation Test: Create target authorization test
+- [ ] T035 [Analysis: Section.4.1] MTG search complexity: Multi-dimensional card search with color, mana, text filters
+- [ ] T036 [Analysis: Section.5.1] Scryfall integration patterns: API client, caching, error handling strategies  
+- [ ] T037 [P] [MTG Search] [Logic: parsers/scryfall_query_grammar.py] Ground Truth: Test current search query parsing
+- [ ] T038 [P] [MTG Search] [Logic: views/filters.py] Ground Truth: Test card filtering and ranking algorithms
+- [ ] T039 [P] [MTG Search] [Logic: parsers/color_parser.py] Ground Truth: Test color identity parsing and merging
 
-### Phase 5b: Authorization Migration
+### Phase 5b: Search & Parsing Migration
 
-- [ ] T036 [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Authorization logic port: Implement exact access control patterns
-- [ ] T037 [F2] [Analysis: Section.9.1] Security validation: Ensure all security measures maintained
-- [ ] T038 [F2] [Analysis: Section.3.1] Authorization integration: Wire into API framework
-- [ ] T039 [F2] Security testing: Validate all authorization scenarios
+- [ ] T040 [MTG Search] [Analysis: Section.4.1] [Logic: parsers/scryfall_query_grammar.lark] Port Lark grammar for MTG search syntax
+- [ ] T041 [MTG Search] [Analysis: Section.4.1] [Logic: parsers/color_parser.py] Port color identity calculation and WUBRG validation
+- [ ] T042 [MTG Search] [Analysis: Section.4.1] [Logic: views/filters.py::CardFilter] Port multi-dimensional card filtering system
+- [ ] T043 [MTG Search] [Analysis: Section.5.1] [Logic: models/scryfall.py] Port Scryfall API client with async patterns
+- [ ] T044 [MTG Search] Text parsing optimization: Async card search with proper indexing for FastAPI
+- [ ] T045 [MTG Search] Search result ranking: Port relevance algorithms for combo discovery
+- [ ] T046 [MTG Search] Integration test: Full search flow from query parse → filter → rank → return
 
-**Checkpoint**: Authorization and security patterns migrated with full parity.
+**Checkpoint**: MTG-specific search and parsing systems migrated with domain expertise preserved.
 
-## Phase 6: External Integrations Migration
+## Phase 6: API Endpoints & External Integrations Migration
 
-**Migration Goal**: Preserve all third-party service integrations per Analysis Section.5
+**Migration Goal**: Migrate DRF REST API to FastAPI while preserving Scryfall, Discord OAuth, and card pricing integrations
 
-**Analysis Reference**: Section.5.1 - Third-party APIs, Section.5.2 - Auth Providers
+**Analysis Reference**: Section.3.2 - API Endpoints, Section.5.1 - Scryfall Critical Integration
 
-### Phase 6a: Integration Analysis & Testing
+### Phase 6a: API Architecture & External Dependencies
 
-- [ ] T040 [Analysis: Section.5.1] External API inventory: Document all third-party integrations
-- [ ] T041 [Analysis: Section.5.1] Integration testing: Validate current external service connections
-- [ ] T042 [P] [Analysis: Section.5.1] API client migration: Port all external API clients
-- [ ] T043 [Analysis: Section.5.1] Error handling preservation: Maintain all fallback behaviors
+- [ ] T047 [Analysis: Section.3.2] REST API inventory: Variants, Cards, Features, FindMyCombos endpoints
+- [ ] T048 [Analysis: Section.5.1] Scryfall dependency analysis: Card sync, image hosting, Oracle ID management
+- [ ] T049 [P] [API] [Logic: views/variants.py] Ground Truth: Test current variant API pagination and filtering
+- [ ] T050 [P] [API] [Logic: views/find_my_combos.py] Ground Truth: Test "find combos from my cards" algorithm
+- [ ] T051 [P] [External] [Logic: models/scryfall.py] Ground Truth: Test Scryfall API integration and caching
 
-### Phase 6b: Integration Validation
+### Phase 6b: API & Integration Migration
 
-- [ ] T044 [Analysis: Section.5.1] Service connectivity: Test all external integrations
-- [ ] T045 [Analysis: Section.5.2] Authentication provider testing: Validate OAuth/SSO flows
-- [ ] T046 [Analysis: Section.5.1] Caching strategy: Implement analysis-documented caching patterns
+- [ ] T052 [API] [Analysis: Section.3.2] [Logic: views/variants.py::VariantViewSet] Port variant API with async FastAPI patterns
+- [ ] T053 [API] [Analysis: Section.3.2] [Logic: views/cards.py::CardViewSet] Port card search API with performance optimizations
+- [ ] T054 [API] [Analysis: Section.3.2] [Logic: views/find_my_combos.py] Port "find my combos" complex matching algorithm
+- [ ] T055 [External] [Analysis: Section.5.1] [Logic: models/scryfall.py] Port Scryfall async client with proper error handling
+- [ ] T056 [External] Discord OAuth integration: Adapt authentication to FastAPI dependency injection
+- [ ] T057 [External] Card pricing API clients: Port TCGPlayer/CardKingdom async integrations
+- [ ] T058 [API] OpenAPI documentation: Generate comprehensive MTG API docs with examples
+- [ ] T059 [Integration] End-to-end API testing: Validate all endpoints with external service dependencies
 
-## Phase 7: Performance & Quality Assurance
+**Checkpoint**: REST API migrated to FastAPI with external integrations preserved and documented.
 
-**Migration Goal**: Meet or exceed baseline performance per Analysis Section.8
+## Phase 7: MTG Performance Optimization & Quality Assurance
 
-**Analysis Reference**: Section.8.1 - Performance Baselines, Section.7.1 - Test Coverage
+**Migration Goal**: Optimize exponential algorithms and achieve MTG domain performance targets (<3s response)
 
-### Phase 7a: Performance Validation
+**Analysis Reference**: Section.8.1 - Variant Generation Performance, Section.7.1 - MTG Test Coverage
 
-- [ ] T047 [Analysis: Section.8.1] Performance benchmarking: Measure new implementation against baselines
-- [ ] T048 [Analysis: Section.8.2] Bottleneck analysis: Ensure no performance regressions
-- [ ] T049 [Analysis: Section.8.3] Scalability testing: Validate scaling characteristics maintained
+### Phase 7a: MTG-Specific Performance Validation
 
-### Phase 7b: Quality Assurance
+- [ ] T060 [Analysis: Section.8.1] Variant generation benchmarking: Measure combo-to-variant generation performance
+- [ ] T061 [Analysis: Section.8.2] Combo search optimization: Ensure sub-second card search with complex filters
+- [ ] T062 [Analysis: Section.8.3] Database query optimization: Async PostgreSQL with proper indexing for MTG queries
+- [ ] T063 [Performance] Exponential algorithm scaling: Test variant generation with large card sets, implement timeouts
 
-- [ ] T050 [Analysis: Section.7.1] Test coverage parity: Achieve analysis-documented coverage levels
-- [ ] T051 [Analysis: Section.7.2] Critical test preservation: Migrate all critical test scenarios
-- [ ] T052 [P] [Analysis: Section.11.2] Edge case validation: Test all documented quirks and workarounds
+### Phase 7b: MTG Domain Quality Assurance
 
-## Phase 8: Domain Knowledge Preservation
+- [ ] T064 [Analysis: Section.7.1] MTG test coverage: Achieve comprehensive coverage for combo rules and edge cases
+- [ ] T065 [Analysis: Section.7.2] MTG rules compliance testing: Validate color identity, mana costs, Commander legality
+- [ ] T066 [P] [Analysis: Section.11.2] MTG edge cases: Test infinite combos, mana loops, complex interactions
+- [ ] T067 [Quality] Load testing: Validate system handles concurrent combo generation and card searches
 
-**Migration Goal**: Capture all tribal knowledge per Analysis Section.11
+## Phase 8: MTG Domain Knowledge & Business Rules Preservation
 
-**Analysis Reference**: Section.11.1 - Business Domain, Section.11.2 - Undocumented Knowledge
+**Migration Goal**: Preserve deep MTG knowledge and Commander format expertise embedded in the system
 
-- [ ] T053 [Analysis: Section.11.1] Domain concept validation: Ensure all business rules preserved
-- [ ] T054 [Analysis: Section.11.2] Quirk implementation: Implement all documented workarounds
-- [ ] T055 [Analysis: Section.11.3] User behavior patterns: Validate user workflow preservation
-- [ ] T056 [P] Documentation updates reflecting analysis findings
+**Analysis Reference**: Section.11.1 - MTG Business Domain, Section.11.2 - Commander Format Rules
 
-## Phase N: Cross-Cutting Concerns & Polish
+- [ ] T068 [Analysis: Section.11.1] MTG rules engine validation: Color identity calculations, mana cost parsing, legality checks
+- [ ] T069 [Analysis: Section.11.2] Commander format quirks: Singleton rules, color identity restrictions, banned list handling  
+- [ ] T070 [Analysis: Section.11.3] Combo discovery patterns: Feature matching algorithms, infinite loop detection
+- [ ] T071 [P] MTG documentation: Comprehensive domain documentation for combo mechanics and card interactions
+- [ ] T072 [Domain] User workflow preservation: Combo submission, variant browsing, card discovery patterns
 
-- [ ] TXXX [Analysis: Section.10.2] Logging and monitoring: Implement analysis-documented patterns
-- [ ] TXXX [Analysis: Section.9.2] Security hardening: Final security validation
-- [ ] TXXX [P] Code cleanup and refactoring (target framework only)
-- [ ] TXXX [Analysis: Section.13.1] Documentation updates incorporating analysis findings
+## Phase 9: Cross-Cutting Concerns & Integration Polish
 
-## Phase N+1: Migration Validation & Asset Retirement
+- [ ] T073 [Analysis: Section.10.2] MTG service logging: Implement comprehensive logging for combo generation and search
+- [ ] T074 [Analysis: Section.9.2] Security hardening: JWT validation, rate limiting, input sanitization
+- [ ] T075 [P] Code cleanup and MTG service optimization: Async patterns, dependency injection refinements
+- [ ] T076 [Analysis: Section.13.1] MTG API documentation: Complete OpenAPI docs with MTG domain examples
 
-**Purpose**: Comprehensive validation before legacy asset removal.
+## Phase 10: Commander Spellbook Migration Validation & Asset Retirement
 
-### Phase N+1a: Complete Migration Validation
+**Purpose**: Comprehensive validation of Commander Spellbook migration before legacy removal.
 
-- [ ] TXXX [Analysis: All Sections] Full analysis cross-reference: Verify all analysis findings addressed
-- [ ] TXXX [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically
-- [ ] TXXX [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds baselines
-- [ ] TXXX [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met
-- [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags have corresponding passing validation tests
-- [ ] TXXX Run Full Regression Suite: Execute complete test suite including ground truth comparisons
+### Phase 10a: Complete Commander Spellbook Migration Validation
 
-### Phase N+1b: Safe Asset Retirement
+- [ ] T077 [Analysis: All Sections] Full Commander Spellbook analysis cross-reference: All critical algorithms migrated
+- [ ] T078 [Analysis: Section.4.1] Variant generation algorithm parity: Exponential complexity performance maintained
+- [ ] T079 [Analysis: Section.8.1] MTG performance regression testing: <3s combo generation, <1s card search confirmed
+- [ ] T080 [Analysis: Section.12.3] MTG success criteria: All combo workflows, card search, variant browsing functional
+- [ ] T081 Verify Complete Migration: All 72 tasks with [Logic: ...] have passing validation tests  
+- [ ] T082 Run Commander Spellbook Regression Suite: Ground truth tests pass for all migrated features
 
-- [ ] TXXX [Analysis: Section.12.2] Risk mitigation: Address all identified migration risks
-- [ ] TXXX Legacy asset backup: Create secure archive of legacy codebase before deletion
-- [ ] TXXX Production validation: Run new system in production-like environment
-- [ ] TXXX Stakeholder approval: Obtain sign-off from all analysis-identified stakeholders
-- [ ] TXXX Delete Legacy Asset: After 100% validation, remove legacy asset directory
+### Phase 10b: Safe Commander Spellbook Asset Retirement
 
-### Phase N+1c: Post-Migration Monitoring
+- [ ] T083 [Analysis: Section.12.2] MTG migration risk mitigation: Data backup, rollback procedures documented
+- [ ] T084 Commander Spellbook legacy backup: Archive `features/commander-spellbook-backend/` to secure storage
+- [ ] T085 Production MTG validation: Deploy to staging, validate with MTG community subset
+- [ ] T086 MTG stakeholder approval: Commander community and maintainer sign-off on migration
+- [ ] T087 Delete Commander Spellbook Legacy Asset: Remove `features/commander-spellbook-backend/` directory
 
-- [ ] TXXX [Analysis: Section.10.2] Monitoring validation: Confirm monitoring systems capture same metrics
-- [ ] TXXX [Analysis: Section.8.1] Performance monitoring: Track performance against established baselines
-- [ ] TXXX [Analysis: Section.11.3] User behavior monitoring: Validate user workflow preservation
+### Phase 10c: Post-Migration MTG Service Monitoring
+
+- [ ] T088 [Analysis: Section.10.2] MTG monitoring systems: Track combo generation performance, search latency  
+- [ ] T089 [Analysis: Section.8.1] MTG performance baselines: Monitor variant generation times, alert on regressions
+- [ ] T090 [Analysis: Section.11.3] MTG user workflow monitoring: Track combo discovery, submission, browsing patterns
 
 ### Dependencies & Execution Order
 
@@ -370,37 +375,44 @@ estimated_hours: 45
 
 **Verify these conditions before marking parent task complete**:
 
-- [ ] All tasks T001-TXXX marked complete above
-- [ ] Integration tests pass: `pytest tests/mtg/test_commander_spellbook_backend_integration.py`
-- [ ] Performance baselines met (documented in `migration-validation.md`)
-- [ ] Ground truth tests confirm functional parity with legacy
-- [ ] Legacy `features/commander-spellbook-backend/` backed up to `archive/`
-- [ ] Migration completion documented in `migration-validation.md`
-- [ ] All analysis findings from project_analysis_report.md addressed
-- [ ] No regressions in existing functionality
-- [ ] Security audit passed (if applicable)
-- [ ] Accessibility compliance maintained (WCAG 2.1 AA)
+- [ ] All tasks T001-T090 marked complete above  
+- [ ] Integration tests pass: `pytest tests/mtg/test_commander_spellbook_integration.py`
+- [ ] MTG performance baselines met: <3s variant generation, <1s card search (documented in `migration-validation.md`)
+- [ ] Ground truth tests confirm MTG functional parity: combo generation, search, card parsing
+- [ ] Legacy `features/commander-spellbook-backend/` backed up to `archive/commander-spellbook-backend-YYYY-MM-DD/`
+- [ ] Commander Spellbook migration completion documented in `migration-validation.md`
+- [ ] All Commander Spellbook analysis findings from commander-spellbook-analysis.md addressed
+- [ ] No regressions in existing MTG service functionality  
+- [ ] MTG API security audit passed: input validation, rate limiting, authentication
+- [ ] MTG domain expertise preserved: combo rules, color identity, mana parsing, Commander format compliance
 
-**⚠️ If any checklist item fails**: DO NOT mark parent task complete. Fix issues and re-validate.
+**⚠️ If any checklist item fails**: DO NOT mark parent task T130 complete. Fix issues and re-validate.
 
 **Completion Action**:
 1. Mark all checkboxes above ✅
-2. Run validation command: `pytest tests/mtg/test_commander_spellbook_backend_integration.py`
-3. Document completion in `migration-validation.md`
-4. Mark parent task TXXX complete in `tasks.md`
-5. Proceed to return task (next in sequence) in `tasks.md`
+2. Run validation command: `pytest tests/mtg/test_commander_spellbook_integration.py -v`
+3. Document completion in `migration-validation.md`  
+4. Mark parent task T130 complete in `tasks.md`
+5. Proceed to return task T131 in `tasks.md`
 
 **Documentation Update Required**:
+
 ```markdown
 # In migration-validation.md
 
-### Commander Spellbook Backend Migration (TXXX)
+### Commander Spellbook Backend Migration (T130)
+
 - **Status**: ✅ Complete
-- **Completed**: [DATE]
-- **Estimated Hours**: XX
+- **Completed**: [DATE]  
+- **Estimated Hours**: 85
 - **Actual Hours**: XX
-- **Tests**: X passed, 0 failed
-- **Performance**: All baselines met/exceeded
+- **Tasks Completed**: 90/90
+- **Tests**: MTG integration tests passed, variant generation performance validated
+- **Performance**: <3s combo generation, <1s card search - baselines met/exceeded
+- **Critical Algorithms Preserved**: Variant generation (1400+ LOC), combo graph traversal, MTG parsing
+- **External Dependencies**: Scryfall API, Discord OAuth, card pricing APIs - all functional
+- **Domain Knowledge**: MTG rules, Commander format, combo mechanics - fully preserved
+```
 - **Notes**: [Any notable achievements or challenges]
 ```
 

@@ -1,18 +1,18 @@
 ---
-description: "Task list template for asset relocation and implementation"
-parent_task: "../tasks.md#TXXX"
-parent_phase: "Phase X: Security Migrations"
-return_to: "../tasks.md#TXXX"
+description: "HexStrike AI - AI-powered penetration testing framework migration"
+parent_task: "../tasks.md#T093"
+parent_phase: "Phase 6: Security Domain Migrations"
+return_to: "../tasks.md#T094"
 domain: "security"
 target_service: "apps/security-service/src/"
 legacy_path: "features/hexstrike-ai"
-estimated_hours: 35
+estimated_hours: 45
 ---
 
-# Tasks: [MIGRATION: HexStrike AI]
+# Tasks: [MIGRATION: HexStrike AI - AI-Powered Penetration Testing Framework]
 
-**⬆️ PARENT TASK**: [`tasks.md#TXXX`](../tasks.md#TXXX)  
-**⬇️ RETURN TO**: [`tasks.md#TXXX`](../tasks.md#TXXX)
+**⬆️ PARENT TASK**: [`tasks.md#T093`](../tasks.md#T093)  
+**⬇️ RETURN TO**: [`tasks.md#T094`](../tasks.md#T094)
 
 ---
 
@@ -43,21 +43,37 @@ estimated_hours: 35
 
 ---
 
-**Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
-**Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
-**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY)**, research.md, data-model.md, contracts/
+**Input (Spec)**: Analysis from `/specs/003-brownfield-integration/modular-analysis-repo-main/reports/hexstrike-ai-analysis.md`
+**Input (Legacy)**: Legacy codebase path `features/hexstrike-ai/` 
+**Prerequisites**: Security domain foundation ready (Phase 1-4 complete from parent tasks.md)
 
-**Project Analysis Integration**: This task template MUST reference specific sections from project_analysis_report.md:
-- Section 2 (Data Architecture) - for data model migration tasks
-- Section 3 (API Architecture) - for endpoint and authentication migration
-- Section 4 (Business Logic) - for critical algorithm preservation
-- Section 5 (External Integrations) - for third-party service continuity
-- Section 8 (Performance Characteristics) - for baseline preservation
-- Section 11 (Domain Knowledge) - for business rule preservation
+**Business Value**: HexStrike AI is a specialized AI-powered penetration testing framework that provides:
+- 150+ integrated security tools with intelligent selection
+- AI decision engine for optimal tool orchestration  
+- MCP (Model Context Protocol) integration for AI agents
+- Browser automation for modern web application testing
+- 22,759 lines of security-critical business logic
 
-**Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first to establish functional baselines.
+**Critical Preservation Requirements**:
+- **IntelligentDecisionEngine** (2000+ lines): Core AI tool selection and optimization logic
+- **BrowserAgent** (500+ lines): Headless browser automation for web app testing
+- **MCP Protocol Integration**: FastMCP communication with AI agents (Claude, VS Code Copilot)
+- **150+ Security Tool Integration**: Command-line tool orchestration and result parsing
+- **Caching System**: Tool result caching with 1-hour TTL for performance
 
-**Organization**: Tasks are grouped by Legacy Feature AND cross-referenced with Project Analysis sections to ensure 1:1 functional parity and comprehensive coverage.
+**Project Analysis Integration**: Based on comprehensive analysis in `hexstrike-ai-analysis.md`:
+- Section 2 (Data Architecture) - In-memory data structures and caching patterns
+- Section 3 (API Architecture) - Flask REST API with no authentication (security risk)
+- Section 4 (Business Logic) - IntelligentDecisionEngine and BrowserAgent algorithms
+- Section 5 (External Integrations) - 150+ security tools and MCP protocol
+- Section 8 (Performance Characteristics) - 45s mean response time for comprehensive analysis
+- Section 11 (Domain Knowledge) - Cybersecurity expertise and tool effectiveness ratings
+
+**Domain-Driven Design Considerations**:
+- **Security Testing Aggregate**: Core domain entity managing penetration test workflows
+- **Tool Orchestration Service**: Manages 150+ external security tools execution
+- **AI Integration Boundary**: MCP protocol interface for AI agent communication
+- **Results Analysis Value Objects**: Structured security assessment outcomes
 
 ## Format: [ID] [P?] [Feature] [Analysis: Section.#] [Logic: <legacy_file::function>] Description
 - [P]: Can run in parallel
@@ -103,191 +119,197 @@ estimated_hours: 35
 
 ## Phase 1: Analysis Validation & Legacy Environment Setup
 
-**Purpose**: Validate project analysis findings and establish baseline testing environment.
+**Purpose**: Validate HexStrike AI analysis findings and establish baseline testing environment with security tools.
 
-- [ ] T001 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections are filled
-- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate current tech stack inventory against actual codebase
-- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing tests and document current coverage metrics
-- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current performance characteristics
-- [ ] T005 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM) per Section.10.1
-- [ ] T006 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function
-- [ ] T007 [P] Create new project structure per implementation plan
-- [ ] T008 [P] Initialize target framework dependencies (per analysis Section.1.2)
+- [ ] T001 [Analysis: Section.1] Validate HexStrike AI analysis completeness: Confirm all CRITICAL sections (Business Logic, Security Tools, MCP Protocol) documented
+- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate Python 3.8+, Flask 2.3+, FastMCP 0.2+, Selenium 4.15+ against codebase
+- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Document CRITICAL ISSUE - 0% test coverage for 22,759 lines of security-critical code
+- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure 45s mean response time for comprehensive security analysis, memory usage patterns
+- [ ] T005 [Ground Truth] Setup legacy HexStrike environment: Install Python dependencies, verify Flask server starts on port 8888
+- [ ] T006 [Ground Truth] Validate core security tools availability: Test nmap, nuclei, sqlmap, gobuster execution via IntelligentDecisionEngine
+- [ ] T007 [P] Create security service structure: Initialize `apps/security-service/src/hexstrike/` domain module
+- [ ] T008 [P] Initialize target dependencies: Setup FastAPI service dependencies, MCP protocol support in security service
 
 ---
 
 ## Phase 2: Data Architecture Migration
 
-**Purpose**: Migrate data models and database schema based on analysis Section 2.
+**Purpose**: Migrate HexStrike data models from in-memory structures to structured domain models.
 
-- [ ] T009 [Analysis: Section.2.1] Inventory data models: Create comprehensive list from analysis findings
-- [ ] T010 [Analysis: Section.2.1] Database schema migration: Implement new schema preserving all relationships from Section.2.2
-- [ ] T011 [P] [Analysis: Section.2.1] Port data models: Create new framework models matching legacy field mappings exactly
-- [ ] T012 [Analysis: Section.2.3] Database performance patterns: Implement indexes and optimizations per analysis
-- [ ] T013 [Ground Truth] Data validation tests: Write tests confirming data integrity and constraints
-- [ ] T014 [Analysis: Section.2.1] Data migration scripts: Create scripts for existing data preservation
+- [ ] T009 [Analysis: Section.2.1] Inventory data models: SecurityToolResult, TargetAnalysis, VulnerabilityFinding domain entities
+- [ ] T010 [Analysis: Section.2.1] Domain model design: Create Pydantic models for TargetProfile, ToolExecution, SecurityAssessment aggregates
+- [ ] T011 [P] [Analysis: Section.2.1] Port caching patterns: Migrate in-memory pickle caching to Redis with 1-hour TTL preservation
+- [ ] T012 [Analysis: Section.2.3] Performance optimization: Implement tool result caching with `{tool_name}:{target}:{params_hash}` key pattern
+- [ ] T013 [Ground Truth] Data validation tests: Write tests for SecurityToolResult validation rules (exit_code, execution_time constraints)
+- [ ] T014 [Analysis: Section.2.1] Cache persistence: Create Redis-based cache with pickle serialization fallback for legacy compatibility
 
-**Checkpoint**: Data layer migrated with full functional parity.
+**Checkpoint**: Domain models implemented with caching system preserving 1-hour TTL performance optimization.
 
 ## Phase 3: Foundational Infrastructure
 
-**Purpose**: Core application infrastructure based on analysis findings.
+**Purpose**: Core HexStrike application infrastructure addressing CRITICAL security issues from analysis.
 
-- [ ] T015 [Analysis: Section.3.1] Authentication/authorization framework: Implement exact auth patterns from Section.3.1
-- [ ] T016 [Analysis: Section.9.1] Security measures: Implement all security patterns identified in analysis
-- [ ] T017 [P] [Analysis: Section.3.2] API routing framework: Setup endpoint structure (empty routes initially)
-- [ ] T018 [Analysis: Section.8.1] Performance monitoring: Implement baseline monitoring per Section.8.1
-- [ ] T019 [Analysis: Section.7.1] Testing framework: Setup testing infrastructure matching current patterns
-- [ ] T020 Configure error handling and logging infrastructure per Section.10.2
+- [ ] T015 [Analysis: Section.3.1] Authentication framework: Implement authentication for security tools API (addresses CRITICAL no-auth risk)
+- [ ] T016 [Analysis: Section.9.1] Security hardening: Add access control for powerful security tools execution, audit logging
+- [ ] T017 [P] [Analysis: Section.3.2] FastAPI routing: Setup `/api/security/pentest/` endpoints with authentication middleware
+- [ ] T018 [Analysis: Section.8.1] Performance monitoring: Implement tool execution time tracking, memory usage alerts
+- [ ] T019 [Analysis: Section.7.1] Testing framework: Setup pytest with security tool mocking infrastructure 
+- [ ] T020 Error handling: Configure structured logging with tool execution failure recovery, process timeout handling
 
-**Checkpoint**: Foundation ready with security and monitoring. NO business logic exists.
+**Checkpoint**: Secure foundation ready with authentication. Security tools protected by access control.
 
-## Phase 4: Critical Business Logic Migration (Feature 1) 🎯 MVP
+## Phase 4: IntelligentDecisionEngine Migration (Core Business Logic) 🎯 MVP
 
-**Migration Goal**: [Brief description based on Analysis Section.4.1 findings]
+**Migration Goal**: Migrate the 2000+ line IntelligentDecisionEngine - the core AI tool selection and optimization algorithm
 
-**Analysis Reference**: Section.4.1 - Critical Algorithms, Section.11.1 - Domain Knowledge
+**Analysis Reference**: Section.4.1 - Critical Algorithms (MUST PRESERVE), Section.11.1 - Cybersecurity Domain Knowledge  
 
-**Independent Test**: [Test case from Analysis Section.4.1 or domain requirements]
+**Independent Test**: Tool selection accuracy for web application vs network host targets
 
-### Phase 4a: Analysis Cross-Reference & Ground Truth
+### Phase 4a: IntelligentDecisionEngine Analysis & Ground Truth
 
-- [ ] T021 [Analysis: Section.4.1] Algorithm analysis: Review critical algorithm documentation for this feature
-- [ ] T022 [Analysis: Section.11.1] Domain knowledge review: Document business rules and domain concepts
-- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Ground Truth Test: Write test proving original behavior matches analysis documentation
-- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation Test: Create target framework test (initially failing)
-- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document current performance metrics for this feature
+- [ ] T021 [Analysis: Section.4.1] Algorithm preservation analysis: Review IntelligentDecisionEngine class (lines 572-900+, 2000+ lines total)
+- [ ] T022 [Analysis: Section.11.1] Security domain knowledge: Document tool effectiveness ratings, attack pattern templates, CVE intelligence
+- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: hexstrike_server.py::IntelligentDecisionEngine] Ground Truth Test: Verify web app target → nuclei+sqlmap+nikto selection
+- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: hexstrike_server.py::IntelligentDecisionEngine] Validation Test: Create FastAPI service test for tool selection accuracy
+- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document 2-5 second analysis time, O(n²) tool comparison complexity
 
-### Phase 4b: Incremental Migration & Validation
+### Phase 4b: Algorithm Migration & Validation
 
-- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Algorithm preservation: Port exact business logic maintaining complexity characteristics
-- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation execution: Run new test against ported logic - MUST pass
-- [ ] T028 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis
-- [ ] T029 [F1] [Analysis: Section.3.2] API integration: Wire proven logic into endpoint structure
-- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics
-- [ ] T031 [F1] Integration test: End-to-end validation of feature functionality
+- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: hexstrike_server.py::IntelligentDecisionEngine] Core algorithm port: Migrate tool selection logic, effectiveness scoring, attack patterns
+- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: hexstrike_server.py::IntelligentDecisionEngine._calculate_attack_surface] Attack surface calculation: Port target analysis and risk scoring (0.0-10.0)
+- [ ] T028 [F1] [Analysis: Section.11.2] Security quirks: Implement Nuclei template updates, Masscan privilege checks, SQLMap stealth mode
+- [ ] T029 [F1] [Analysis: Section.3.2] API integration: Wire IntelligentDecisionEngine into `/api/security/pentest/analyze-target` endpoint
+- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Maintain 2-5s analysis time, verify O(n²) complexity acceptable for 150 tools
+- [ ] T031 [F1] Integration test: End-to-end target analysis with tool selection and execution plan generation
 
-**Checkpoint**: Critical feature migrated with documented functional and performance parity.
+**Checkpoint**: IntelligentDecisionEngine migrated with AI tool selection accuracy preserved.
 
-## Phase 5: Security & Authorization Migration (Feature 2)
+## Phase 5: Security Tool Orchestration & Process Management (Feature 2)
 
-**Migration Goal**: [Based on Analysis Section.3.1 and Section.9.1 findings]
+**Migration Goal**: Migrate EnhancedProcessManager and 150+ security tool integrations with robust error handling
 
-**Analysis Reference**: Section.3.1 - Authentication/Authorization, Section.9.1 - Security Measures
+**Analysis Reference**: Section.4.1 - Process Management, Section.5.1 - 150+ External Security Tools
 
-**Independent Test**: [Test case from Analysis Section.3.1 authorization patterns]
+**Independent Test**: Parallel tool execution with timeout handling and result caching
 
-### Phase 5a: Security Analysis Integration
+### Phase 5a: Security Tool Integration Analysis
 
-- [ ] T032 [Analysis: Section.3.1] Authorization pattern analysis: Document current access control implementation
-- [ ] T033 [Analysis: Section.9.1] Security measures inventory: Review all security patterns to preserve
-- [ ] T034 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Ground Truth Test: Prove current authorization behavior
-- [ ] T035 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Validation Test: Create target authorization test
+- [ ] T032 [Analysis: Section.5.1] Security tools inventory: Document 150+ tools across 6 categories (Network, Web, Binary, Cloud, CTF, OSINT)
+- [ ] T033 [Analysis: Section.4.1] Process management analysis: Review EnhancedProcessManager class tool execution and caching
+- [ ] T034 [P] [F2] [Analysis: Section.5.1] [Logic: hexstrike_server.py::EnhancedProcessManager] Ground Truth Test: Verify nmap execution, timeout handling, result parsing
+- [ ] T035 [P] [F2] [Analysis: Section.5.1] [Logic: hexstrike_server.py::ToolManager] Validation Test: Create security service test for tool orchestration
 
-### Phase 5b: Authorization Migration
+### Phase 5b: Tool Orchestration Migration
 
-- [ ] T036 [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Authorization logic port: Implement exact access control patterns
-- [ ] T037 [F2] [Analysis: Section.9.1] Security validation: Ensure all security measures maintained
-- [ ] T038 [F2] [Analysis: Section.3.1] Authorization integration: Wire into API framework
-- [ ] T039 [F2] Security testing: Validate all authorization scenarios
+- [ ] T036 [F2] [Analysis: Section.5.1] [Logic: hexstrike_server.py::EnhancedProcessManager] Process management port: Migrate tool execution, timeout, caching with pickle serialization
+- [ ] T037 [F2] [Analysis: Section.11.2] Tool quirks implementation: Handle Nuclei template updates, Masscan privileges, SQLMap stealth mode
+- [ ] T038 [F2] [Analysis: Section.5.1] Tool integration: Wire 25+ critical tools (nmap, nuclei, sqlmap, gobuster) into security service
+- [ ] T039 [F2] Error handling: Implement tool failure recovery, missing tool substitution, resource management
 
-**Checkpoint**: Authorization and security patterns migrated with full parity.
+**Checkpoint**: Security tool orchestration migrated with 150+ tool support and robust error handling.
 
-## Phase 6: External Integrations Migration
+## Phase 6: BrowserAgent & MCP Protocol Integration (Feature 3)
 
-**Migration Goal**: Preserve all third-party service integrations per Analysis Section.5
+**Migration Goal**: Migrate BrowserAgent (500+ lines) and MCP protocol integration for AI agent communication
 
-**Analysis Reference**: Section.5.1 - Third-party APIs, Section.5.2 - Auth Providers
+**Analysis Reference**: Section.4.1 - BrowserAgent Algorithm, Section.5.1 - FastMCP Integration
 
-### Phase 6a: Integration Analysis & Testing
+### Phase 6a: Browser Automation & MCP Analysis
 
-- [ ] T040 [Analysis: Section.5.1] External API inventory: Document all third-party integrations
-- [ ] T041 [Analysis: Section.5.1] Integration testing: Validate current external service connections
-- [ ] T042 [P] [Analysis: Section.5.1] API client migration: Port all external API clients
-- [ ] T043 [Analysis: Section.5.1] Error handling preservation: Maintain all fallback behaviors
+- [ ] T040 [Analysis: Section.4.1] BrowserAgent analysis: Review 500+ line headless browser automation for web app testing
+- [ ] T041 [Analysis: Section.5.1] MCP protocol integration: Analyze FastMCP communication with AI agents (Claude, VS Code Copilot)
+- [ ] T042 [P] [Analysis: Section.4.1] [Logic: hexstrike_server.py::BrowserAgent] Ground Truth Test: Verify browser automation, screenshot capture, DOM analysis
+- [ ] T043 [Analysis: Section.5.1] [Logic: hexstrike_mcp.py::FastMCP] MCP client testing: Test AI agent tool orchestration via MCP protocol
 
-### Phase 6b: Integration Validation
+### Phase 6b: Browser & MCP Migration
 
-- [ ] T044 [Analysis: Section.5.1] Service connectivity: Test all external integrations
-- [ ] T045 [Analysis: Section.5.2] Authentication provider testing: Validate OAuth/SSO flows
-- [ ] T046 [Analysis: Section.5.1] Caching strategy: Implement analysis-documented caching patterns
+- [ ] T044 [Analysis: Section.4.1] [Logic: hexstrike_server.py::BrowserAgent] Browser automation port: Migrate Selenium Chrome automation with proxy support
+- [ ] T045 [Analysis: Section.5.1] [Logic: hexstrike_mcp.py::FastMCP] MCP protocol integration: Wire FastMCP into security service for AI agent communication
+- [ ] T046 [Analysis: Section.11.2] Browser resource management: Implement browser pooling, memory leak prevention (200-500MB per instance)
 
 ## Phase 7: Performance & Quality Assurance
 
-**Migration Goal**: Meet or exceed baseline performance per Analysis Section.8
+**Migration Goal**: Meet 45s mean response time baseline and implement comprehensive test coverage (currently 0%)
 
-**Analysis Reference**: Section.8.1 - Performance Baselines, Section.7.1 - Test Coverage
+**Analysis Reference**: Section.8.1 - 45s Analysis Time Baseline, Section.7.1 - CRITICAL 0% Test Coverage Issue
 
 ### Phase 7a: Performance Validation
 
-- [ ] T047 [Analysis: Section.8.1] Performance benchmarking: Measure new implementation against baselines
-- [ ] T048 [Analysis: Section.8.2] Bottleneck analysis: Ensure no performance regressions
-- [ ] T049 [Analysis: Section.8.3] Scalability testing: Validate scaling characteristics maintained
+- [ ] T047 [Analysis: Section.8.1] Performance benchmarking: Maintain 45s mean response for comprehensive analysis, 5-15s for browser automation
+- [ ] T048 [Analysis: Section.8.2] Memory optimization: Keep browser instances under 500MB, implement browser pooling (max 5 concurrent)
+- [ ] T049 [Analysis: Section.8.3] Tool execution optimization: Maintain intelligent parallelization, 1-hour cache TTL performance gains
 
-### Phase 7b: Quality Assurance
+### Phase 7b: Critical Test Coverage Implementation
 
-- [ ] T050 [Analysis: Section.7.1] Test coverage parity: Achieve analysis-documented coverage levels
-- [ ] T051 [Analysis: Section.7.2] Critical test preservation: Migrate all critical test scenarios
-- [ ] T052 [P] [Analysis: Section.11.2] Edge case validation: Test all documented quirks and workarounds
+- [ ] T050 [Analysis: Section.7.1] Test framework implementation: Address CRITICAL 0% coverage for 22,759 lines of security code
+- [ ] T051 [Analysis: Section.7.2] Security tool test suite: Create tests for IntelligentDecisionEngine tool selection accuracy
+- [ ] T052 [P] [Analysis: Section.11.2] Security quirks testing: Test Nuclei template updates, tool privilege requirements, stealth mode behaviors
 
-## Phase 8: Domain Knowledge Preservation
+## Phase 8: Security Domain Knowledge Preservation
 
-**Migration Goal**: Capture all tribal knowledge per Analysis Section.11
+**Migration Goal**: Preserve cybersecurity domain expertise and penetration testing workflows per Analysis Section.11
 
-**Analysis Reference**: Section.11.1 - Business Domain, Section.11.2 - Undocumented Knowledge
+**Analysis Reference**: Section.11.1 - Cybersecurity Domain, Section.11.2 - Security Tool Tribal Knowledge
 
-- [ ] T053 [Analysis: Section.11.1] Domain concept validation: Ensure all business rules preserved
-- [ ] T054 [Analysis: Section.11.2] Quirk implementation: Implement all documented workarounds
-- [ ] T055 [Analysis: Section.11.3] User behavior patterns: Validate user workflow preservation
-- [ ] T056 [P] Documentation updates reflecting analysis findings
+- [ ] T053 [Analysis: Section.11.1] Security domain concepts: Preserve attack surface analysis, CVE intelligence, vulnerability scoring (CVSS v3.1)
+- [ ] T054 [Analysis: Section.11.2] Security tool quirks: Document Nuclei template management, Masscan privilege requirements, SQLMap IDS evasion
+- [ ] T055 [Analysis: Section.11.3] Penetration testing workflows: Validate bug bounty (60%), CTF (25%), network pentest (15%) workflow preservation
+- [ ] T056 [P] Security documentation: Update docs with tool effectiveness ratings, attack pattern templates, compliance considerations
 
-## Phase N: Cross-Cutting Concerns & Polish
+## Phase 9: Security Hardening & Production Polish
 
-- [ ] TXXX [Analysis: Section.10.2] Logging and monitoring: Implement analysis-documented patterns
-- [ ] TXXX [Analysis: Section.9.2] Security hardening: Final security validation
-- [ ] TXXX [P] Code cleanup and refactoring (target framework only)
-- [ ] TXXX [Analysis: Section.13.1] Documentation updates incorporating analysis findings
+- [ ] T057 [Analysis: Section.9.1] Security hardening: Implement authentication for security tools access, audit logging for compliance
+- [ ] T058 [Analysis: Section.9.2] Secrets management: Secure tool API keys, credential handling for authenticated testing
+- [ ] T059 [P] Code refactoring: Optimize tool execution performance, clean up 22,759 lines of legacy code
+- [ ] T060 [Analysis: Section.13.1] Security documentation: Update with compliance requirements, responsible disclosure guidelines
 
-## Phase N+1: Migration Validation & Asset Retirement
+## Phase 10: HexStrike AI Migration Validation & Legacy Asset Retirement
 
-**Purpose**: Comprehensive validation before legacy asset removal.
+**Purpose**: Comprehensive validation of 150+ security tools integration before legacy asset removal.
 
-### Phase N+1a: Complete Migration Validation
+### Phase 10a: Complete HexStrike Migration Validation
 
-- [ ] TXXX [Analysis: All Sections] Full analysis cross-reference: Verify all analysis findings addressed
-- [ ] TXXX [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically
-- [ ] TXXX [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds baselines
-- [ ] TXXX [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met
-- [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags have corresponding passing validation tests
-- [ ] TXXX Run Full Regression Suite: Execute complete test suite including ground truth comparisons
+- [ ] T061 [Analysis: All Sections] Full analysis validation: Verify IntelligentDecisionEngine, BrowserAgent, MCP protocol, 150+ tools migrated
+- [ ] T062 [Analysis: Section.4.1] Algorithm parity validation: Confirm tool selection accuracy, attack surface calculation identical to legacy
+- [ ] T063 [Analysis: Section.8.1] Performance regression testing: Validate 45s analysis time maintained, browser memory under 500MB
+- [ ] T064 [Analysis: Section.12.3] Security success criteria: Confirm authentication added, 150+ tools operational, MCP integration working
+- [ ] T065 Verify security tool integration: Test nmap, nuclei, sqlmap, gobuster execution with proper error handling
+- [ ] T066 Run comprehensive security test suite: Execute all tool orchestration tests including ground truth comparisons
 
-### Phase N+1b: Safe Asset Retirement
+### Phase 10b: Safe Legacy Asset Retirement
 
-- [ ] TXXX [Analysis: Section.12.2] Risk mitigation: Address all identified migration risks
-- [ ] TXXX Legacy asset backup: Create secure archive of legacy codebase before deletion
-- [ ] TXXX Production validation: Run new system in production-like environment
-- [ ] TXXX Stakeholder approval: Obtain sign-off from all analysis-identified stakeholders
-- [ ] TXXX Delete Legacy Asset: After 100% validation, remove legacy asset directory
+- [ ] T067 [Analysis: Section.12.2] Security risk mitigation: Address tool access control, audit logging, compliance requirements
+- [ ] T068 Legacy HexStrike backup: Archive features/hexstrike-ai/ with all 22,759 lines of security code
+- [ ] T069 Production security validation: Test security service in staging with actual security tools
+- [ ] T070 Security stakeholder approval: Obtain sign-off from security team for penetration testing platform migration
+- [ ] T071 Delete legacy HexStrike: After 100% validation of security tools, remove features/hexstrike-ai/ directory
 
-### Phase N+1c: Post-Migration Monitoring
+### Phase 10c: Security Platform Monitoring
 
-- [ ] TXXX [Analysis: Section.10.2] Monitoring validation: Confirm monitoring systems capture same metrics
-- [ ] TXXX [Analysis: Section.8.1] Performance monitoring: Track performance against established baselines
-- [ ] TXXX [Analysis: Section.11.3] User behavior monitoring: Validate user workflow preservation
+- [ ] T072 [Analysis: Section.10.2] Security monitoring: Implement tool execution tracking, performance metrics, security audit logs
+- [ ] T073 [Analysis: Section.8.1] Performance monitoring: Track analysis times, memory usage, tool execution success rates
+- [ ] T074 [Analysis: Section.11.3] Security workflow monitoring: Validate bug bounty, CTF, pentest workflows preservation
 
 ### Dependencies & Execution Order
 
 **Sequential Dependencies (Must Complete In Order):**
-- **Phase 1 (Analysis Validation)**: Must complete first - validates analysis completeness
-- **Phase 2 (Data Architecture)**: Must complete before business logic - establishes data foundation
-- **Phase 3 (Foundational Infrastructure)**: Must complete before feature migration - establishes framework
+- **Phase 1 (Analysis Validation)**: Must complete first - validates HexStrike analysis and security tool availability
+- **Phase 2 (Data Architecture)**: Must complete before business logic - establishes domain models and caching
+- **Phase 3 (Security Infrastructure)**: Must complete before tool integration - establishes authentication for security tools
 
-**Parallel Execution Phases:**
-- **Phases 4-6 (Business Logic, Security, Integrations)**: Can proceed in parallel by feature after Phase 3
-- **Phase 7 (Performance & Quality)**: Can run in parallel with feature phases
-- **Phase 8 (Domain Knowledge)**: Can run in parallel with feature phases
+**Parallel Execution Phases (After Phase 3):**
+- **Phase 4 (IntelligentDecisionEngine)**: Core AI algorithm migration - highest priority
+- **Phase 5 (Security Tool Orchestration)**: 150+ tools integration - can run parallel to Phase 4
+- **Phase 6 (BrowserAgent & MCP)**: Browser automation and AI integration - can run parallel after Phase 4-5
+
+**Quality & Validation Phases:**
+- **Phase 7 (Performance & Testing)**: Can run in parallel with Phases 4-6 for incremental validation  
+- **Phase 8 (Security Domain Knowledge)**: Can run in parallel with feature phases
+- **Phase 9 (Security Hardening)**: Must complete after all feature phases for final security review
 
 **Final Sequential Dependencies:**
+- **Phase 10 (Migration Validation)**: Must be last - comprehensive security validation before asset retirement
 - **Phase N (Cross-Cutting Concerns)**: After all feature phases complete
 - **Phase N+1 (Asset Retirement)**: The absolute final step - only after complete validation
 
@@ -390,17 +412,42 @@ estimated_hours: 35
 4. Mark parent task TXXX complete in `tasks.md`
 5. Proceed to return task (next in sequence) in `tasks.md`
 
+---
+
+## Post-Flight Checklist ✅
+
+**Verify these completion criteria before marking parent task T093 complete**:
+
+- [ ] All 74 tasks (T001-T074) completed successfully
+- [ ] IntelligentDecisionEngine migrated with AI tool selection accuracy preserved (2000+ lines)
+- [ ] 150+ security tools integrated with proper error handling and timeout management
+- [ ] BrowserAgent browser automation working with memory usage under 500MB (500+ lines)
+- [ ] MCP protocol integration functional for AI agent communication (Claude, VS Code Copilot)
+- [ ] Authentication system implemented addressing CRITICAL security vulnerability from analysis
+- [ ] Performance baseline maintained: 45s mean response time for comprehensive analysis
+- [ ] Test coverage implemented addressing CRITICAL 0% coverage issue (22,759 lines)
+- [ ] All security domain knowledge preserved (tool effectiveness, attack patterns, security quirks)
+- [ ] `pytest tests/security/test_hexstrike_ai_integration.py` passes successfully
+- [ ] Legacy asset `features/hexstrike-ai/` safely archived and removed (22,759 lines)
+- [ ] Security service operational at `apps/security-service/src/hexstrike/`
+- [ ] Production security validation completed with actual security tools
+
+**⚠️ If any checklist item fails**: Address issue before marking T093 complete in parent `tasks.md`
+
+**✅ All items complete**: Return to [`tasks.md#T093`](../tasks.md#T093) and proceed to T094
+
 **Documentation Update Required**:
 ```markdown
 # In migration-validation.md
 
-### HexStrike AI Migration (TXXX)
-- **Status**: ✅ Complete
+### HexStrike AI Migration (T093)
+- **Status**: ✅ Complete  
 - **Completed**: [DATE]
-- **Estimated Hours**: XX
-- **Actual Hours**: XX
-- **Tests**: X passed, 0 failed
-- **Performance**: All baselines met/exceeded
-- **Notes**: [Any notable achievements or challenges]
+- **Estimated Hours**: 45
+- **Actual Hours**: [ACTUAL]
+- **Tests**: [PASSED] passed, 0 failed
+- **Performance**: 45s analysis baseline maintained, browser memory <500MB
+- **Security**: Authentication implemented, 150+ tools secured, MCP protocol working
+- **Notes**: CRITICAL security vulnerabilities addressed, 0% test coverage resolved
 ```
 

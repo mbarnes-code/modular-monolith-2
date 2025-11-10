@@ -1,27 +1,29 @@
 ---
-description: "Task list template for asset relocation and implementation"
-parent_task: "../tasks.md#TXXX"
-parent_phase: "Phase X: Infrastructure Migrations"
-return_to: "../tasks.md#TXXX"
+description: "Kong API Gateway Migration to Infrastructure Domain"
+parent_task: "../tasks.md#T100"
+parent_phase: "Phase 8: Infrastructure Domain Migration"
+return_to: "../tasks.md#T101"
 domain: "infrastructure"
 target_service: "apps/infrastructure-service/src/"
 legacy_path: "features/kong"
-estimated_hours: 40
+estimated_hours: 120
+complexity: "EXTREME - Critical Gateway Infrastructure"
+risk_level: "HIGH - Core routing and service mesh functionality"
 ---
 
-# Tasks: [MIGRATION: Kong]
+# Tasks: [MIGRATION: Kong API Gateway]
 
-**⬆️ PARENT TASK**: [`tasks.md#TXXX`](../tasks.md#TXXX)  
-**⬇️ RETURN TO**: [`tasks.md#TXXX`](../tasks.md#TXXX)
+**⬆️ PARENT TASK**: [`tasks.md#T100`](../tasks.md#T100)  
+**⬇️ RETURN TO**: [`tasks.md#T101`](../tasks.md#T101)
 
 ---
 
 ## Handoff Context
 
-**Called From**: `tasks.md` Phase X, Task TXXX  
+**Called From**: `tasks.md` Phase 8, Task T100  
 **Entry Condition**: Infrastructure service foundation ready (Phase 1-4 complete)  
 **Exit Condition**: All tasks below complete + validation tests pass  
-**Return Action**: Mark TXXX complete in parent `tasks.md`, proceed to next task
+**Return Action**: Mark T100 complete in parent `tasks.md`, proceed to T101
 
 **Handoff Protocol**: See [`HANDOFF-PROTOCOL.md`](./HANDOFF-PROTOCOL.md) for complete workflow documentation.
 
@@ -37,50 +39,73 @@ estimated_hours: 40
 - [ ] Authentication/authorization from Phase 3 working
 - [ ] Test framework from Phase 3 operational
 - [ ] Legacy environment setup: `features/kong/` accessible
-- [ ] Project analysis report completed and validated
+- [ ] Kong analysis report completed and validated (`kong_analysis.md`)
 
 **⚠️ If any checklist item fails**: STOP and return to parent `tasks.md` to complete prerequisites.
 
 ---
 
-**Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
-**Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
-**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY)**, research.md, data-model.md, contracts/
+## Kong Migration Context
 
-**Project Analysis Integration**: This task template MUST reference specific sections from project_analysis_report.md:
-- Section 2 (Data Architecture) - for data model migration tasks
-- Section 3 (API Architecture) - for endpoint and authentication migration
-- Section 4 (Business Logic) - for critical algorithm preservation
-- Section 5 (External Integrations) - for third-party service continuity
-- Section 8 (Performance Characteristics) - for baseline preservation
-- Section 11 (Domain Knowledge) - for business rule preservation
+**Input (Analysis)**: `kong_analysis.md` - Comprehensive analysis of Kong Gateway 3.10.0
+**Input (Legacy)**: Legacy codebase path `features/kong/` (Lua/OpenResty gateway)
+**Prerequisites**: Kong analysis completed, infrastructure service foundation ready
 
-**Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first to establish functional baselines.
+**Kong-Specific Migration Challenges**:
+- **Complex Lua/OpenResty Architecture**: Core logic in LuaJIT requiring careful preservation
+- **40+ Built-in Plugins**: Authentication, rate limiting, transformation, AI/LLM routing
+- **High-Performance Routing Engine**: Sub-millisecond request routing with caching
+- **Clustering & Multi-Node**: Hybrid mode control/data plane architecture
+- **Rich Plugin Ecosystem**: Plugin Development Kit (PDK) and execution pipeline
+- **Critical Infrastructure**: Must maintain high availability during migration
 
-**Organization**: Tasks are grouped by Legacy Feature AND cross-referenced with Project Analysis sections to ensure 1:1 functional parity and comprehensive coverage.
+## Kong Domain-Driven Design Architecture
 
-## Format: [ID] [P?] [Feature] [Analysis: Section.#] [Logic: <legacy_file::function>] Description
-- [P]: Can run in parallel
-- [Feature]: Which legacy feature this task belongs to (e.g., F1: Publishing)
-- [Analysis]: Reference to project_analysis_report.md section (e.g., Section.2.1, Section.4.1)
-- [Logic]: The exact legacy code being replaced. This is not optional.
+Based on `kong_analysis.md`, Kong implements several bounded contexts that must be preserved:
 
-## Path Conventions
-- **New Project**: [e.g., apps/PROJECT/src/] at repository root
-- **Legacy Project**: [e.g., features/MISP/app/Model/]
-- **Analysis Report**: project_analysis_report.md sections for validation
-- Paths shown below assume single project - adjust based on plan.md structure
+**Gateway Context**: Core request routing and proxy functionality  
+**Plugin Context**: Extensible middleware system with 40+ plugins  
+**Admin Context**: Configuration management and monitoring  
+**Clustering Context**: Multi-node coordination and synchronization  
+**Security Context**: Authentication, authorization, and traffic policies
 
-## Migration Methodology: Brownfield Asset Relocation
+## DDD Migration Strategy: Infrastructure Domain Integration
 
-**Core Principle**: Preserve 100% functional parity while modernizing architecture.
+**Target Architecture**: Integrate Kong as Infrastructure Domain service within modular monolith
 
-**Validation Strategy**: 
-1. Ground Truth Tests → Establish current behavior baseline
-2. Analysis Cross-Reference → Validate against documented behavior  
-3. Incremental Migration → Port one feature at a time with validation
-4. Integration Testing → Ensure new implementation matches baseline
-5. Performance Validation → Maintain or improve baseline metrics
+**Bounded Context Mapping**:
+
+- **Kong Gateway → Infrastructure Service Gateway Module**: Core routing and proxy
+- **Kong Plugins → Infrastructure Service Middleware**: Rate limiting, auth, transformation
+- **Kong Admin API → Infrastructure Service Management API**: Configuration and monitoring
+- **Kong Clustering → Infrastructure Service Coordination**: Multi-instance communication
+
+**Aggregate Preservation**:
+
+- **Route Aggregate**: Request matching rules and service references
+- **Service Aggregate**: Upstream configuration and load balancing
+- **Plugin Aggregate**: Middleware configuration and execution state
+- **Consumer Aggregate**: API client identity and access control
+
+## Migration Complexity Assessment
+
+**Kong Analysis Summary**:
+
+- **Lines of Code**: ~50,000 lines of Lua/C (core gateway)
+- **Critical Algorithms**: Router (2000 LOC), Plugin Pipeline (500 LOC), Load Balancer (1500 LOC)
+- **Data Models**: 12 core entities (Service, Route, Plugin, Consumer, etc.)
+- **API Endpoints**: 50+ Admin API endpoints
+- **External Integrations**: PostgreSQL, Redis, Prometheus, OpenAI, OAuth providers
+- **Performance Requirements**: <5ms latency, 20,000+ RPS, sub-millisecond routing
+
+**Migration Classification**: **CATEGORY A - Complex Algorithms + Infrastructure**
+
+Requires microservice approach due to:
+
+1. **Performance-Critical Algorithms**: Router and load balancer require LuaJIT performance
+2. **External System Dependencies**: Deep integration with Nginx/OpenResty
+3. **Operational Complexity**: Clustering, health checks, certificate management
+4. **Plugin Ecosystem**: 40+ plugins with complex execution pipeline
 
 <!-- 
   ============================================================================
@@ -101,191 +126,277 @@ estimated_hours: 40
   ============================================================================
 -->
 
-## Phase 1: Analysis Validation & Legacy Environment Setup
+## Phase 1: Kong Analysis Validation & Legacy Environment Setup
 
-**Purpose**: Validate project analysis findings and establish baseline testing environment.
+**Purpose**: Validate Kong analysis findings and establish Kong Gateway baseline testing environment.
 
-- [ ] T001 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections are filled
-- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate current tech stack inventory against actual codebase
-- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing tests and document current coverage metrics
-- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current performance characteristics
-- [ ] T005 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM) per Section.10.1
-- [ ] T006 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function
-- [ ] T007 [P] Create new project structure per implementation plan
-- [ ] T008 [P] Initialize target framework dependencies (per analysis Section.1.2)
+- [ ] T001 **[CRITICAL]** Validate Kong analysis completeness: Confirm all sections in `kong_analysis.md` are complete and accurate
+- [ ] T002 **[CRITICAL]** Kong technology stack verification: Validate Lua/OpenResty, PostgreSQL, Redis inventory against actual codebase
+- [ ] T003 **[CRITICAL]** **[Ground Truth]** Setup Kong legacy environment: Deploy Kong 3.10.0 in Docker with full plugin ecosystem
+- [ ] T004 **[CRITICAL]** **[Ground Truth]** Kong performance baseline: Measure Kong routing latency (<5ms), throughput (>20k RPS), plugin execution
+- [ ] T005 **[CRITICAL]** **[Ground Truth]** Kong functional validation: Test all 40+ plugins, Admin API, clustering, load balancing
+- [ ] T006 [P] Kong test coverage baseline: Run busted test suite (5000+ tests) and document coverage metrics
+- [ ] T007 [P] Kong configuration export: Export current Kong configuration to YAML for migration reference
+- [ ] T008 [P] Initialize infrastructure service Kong module: Create `apps/infrastructure-service/src/domains/gateway/` structure
 
 ---
 
-## Phase 2: Data Architecture Migration
+## Phase 2: Kong Data Architecture Migration
 
-**Purpose**: Migrate data models and database schema based on analysis Section 2.
+**Purpose**: Migrate Kong's 12 core entities to infrastructure service data layer.
 
-- [ ] T009 [Analysis: Section.2.1] Inventory data models: Create comprehensive list from analysis findings
-- [ ] T010 [Analysis: Section.2.1] Database schema migration: Implement new schema preserving all relationships from Section.2.2
-- [ ] T011 [P] [Analysis: Section.2.1] Port data models: Create new framework models matching legacy field mappings exactly
-- [ ] T012 [Analysis: Section.2.3] Database performance patterns: Implement indexes and optimizations per analysis
-- [ ] T013 [Ground Truth] Data validation tests: Write tests confirming data integrity and constraints
-- [ ] T014 [Analysis: Section.2.1] Data migration scripts: Create scripts for existing data preservation
+**Kong Core Entities** (per analysis Section 2.1):
+- Service, Route, Plugin, Consumer (CRITICAL)
+- Upstream, Target, Certificate, SNI (IMPORTANT)
+- Workspace, Vault, CA Certificate, Key Set (ENTERPRISE)
 
-**Checkpoint**: Data layer migrated with full functional parity.
+- [ ] T009 **[CRITICAL]** Kong entity inventory: Map all 12 Kong entities to Python SQLAlchemy models in `apps/infrastructure-service/src/data/models/gateway/`
+- [ ] T010 **[CRITICAL]** Kong database schema design: Create PostgreSQL schema preserving Kong relationships (Service→Route→Plugin hierarchy)
+- [ ] T011 **[CRITICAL]** **[Logic: kong/db/schema/entities/services.lua]** Service entity migration: Port Kong Service model with all fields (host, port, protocol, retries, timeouts)
+- [ ] T012 **[CRITICAL]** **[Logic: kong/db/schema/entities/routes.lua]** Route entity migration: Port Kong Route model with matching rules (paths, hosts, methods, headers, expression)
+- [ ] T013 **[CRITICAL]** **[Logic: kong/db/schema/entities/plugins.lua]** Plugin entity migration: Port Kong Plugin model with configuration schema validation
+- [ ] T014 **[CRITICAL]** **[Logic: kong/db/schema/entities/consumers.lua]** Consumer entity migration: Port Kong Consumer model with authentication credentials
+- [ ] T015 [P] **[Logic: kong/db/schema/entities/upstreams.lua]** Upstream/Target entities: Port Kong load balancing entities
+- [ ] T016 [P] **[Logic: kong/db/schema/entities/certificates.lua]** Certificate entities: Port Kong SSL/TLS certificate management
+- [ ] T017 **[Ground Truth]** Kong data validation tests: Create comprehensive entity validation tests matching Kong schema constraints
+- [ ] T018 Kong database migrations: Create Alembic migrations for Kong entity schema with proper indexes and foreign keys
 
-## Phase 3: Foundational Infrastructure
+**Checkpoint**: Kong entities migrated to infrastructure service with schema validation.
 
-**Purpose**: Core application infrastructure based on analysis findings.
+## Phase 3: Kong Gateway Foundation Infrastructure
 
-- [ ] T015 [Analysis: Section.3.1] Authentication/authorization framework: Implement exact auth patterns from Section.3.1
-- [ ] T016 [Analysis: Section.9.1] Security measures: Implement all security patterns identified in analysis
-- [ ] T017 [P] [Analysis: Section.3.2] API routing framework: Setup endpoint structure (empty routes initially)
-- [ ] T018 [Analysis: Section.8.1] Performance monitoring: Implement baseline monitoring per Section.8.1
-- [ ] T019 [Analysis: Section.7.1] Testing framework: Setup testing infrastructure matching current patterns
-- [ ] T020 Configure error handling and logging infrastructure per Section.10.2
+**Purpose**: Core gateway infrastructure and API framework in infrastructure service.
 
-**Checkpoint**: Foundation ready with security and monitoring. NO business logic exists.
+- [ ] T019 **[CRITICAL]** Kong Gateway API framework: Create FastAPI gateway endpoints in `apps/infrastructure-service/src/api/gateway/` (Admin API routes)
+- [ ] T020 **[CRITICAL]** Kong authentication integration: Implement Kong consumer authentication framework with JWT/OAuth support
+- [ ] T021 **[CRITICAL]** Kong configuration validation: Port Kong schema validation system for entities and plugin configurations
+- [ ] T022 **[CRITICAL]** Kong error handling framework: Implement Kong-style error responses and validation messages
+- [ ] T023 [P] Kong monitoring infrastructure: Setup Prometheus metrics collection matching Kong metrics (http_requests_total, latency_ms)
+- [ ] T024 [P] Kong logging framework: Implement structured logging for gateway operations with Kong log format compatibility
+- [ ] T025 [P] Kong testing framework: Setup pytest infrastructure with Kong-style integration tests
+- [ ] T026 Kong performance monitoring: Implement baseline monitoring for gateway latency and throughput metrics
 
-## Phase 4: Critical Business Logic Migration (Feature 1) 🎯 MVP
+**Checkpoint**: Gateway foundation ready with Kong-compatible APIs and monitoring. NO routing logic exists.
 
-**Migration Goal**: [Brief description based on Analysis Section.4.1 findings]
+## Phase 4: Kong Request Routing Engine Migration 🎯 MVP
 
-**Analysis Reference**: Section.4.1 - Critical Algorithms, Section.11.1 - Domain Knowledge
+**Migration Goal**: Port Kong's critical request routing algorithm (Analysis Section 4.1)
 
-**Independent Test**: [Test case from Analysis Section.4.1 or domain requirements]
+**Critical Algorithm**: Router Request Matching (~2000 LOC, <1ms performance requirement)  
+**Location**: `kong/router/traditional.lua`, `kong/router/expressions.lua`  
+**Performance Requirement**: <1ms route resolution, 20,000+ RPS throughput
 
-### Phase 4a: Analysis Cross-Reference & Ground Truth
+### Phase 4a: Kong Router Analysis & Ground Truth
 
-- [ ] T021 [Analysis: Section.4.1] Algorithm analysis: Review critical algorithm documentation for this feature
-- [ ] T022 [Analysis: Section.11.1] Domain knowledge review: Document business rules and domain concepts
-- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Ground Truth Test: Write test proving original behavior matches analysis documentation
-- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation Test: Create target framework test (initially failing)
-- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document current performance metrics for this feature
+- [ ] T027 **[CRITICAL]** **[Logic: kong/router/traditional.lua::match]** Kong router algorithm analysis: Document route matching logic (priority, patterns, caching)
+- [ ] T028 **[CRITICAL]** Kong routing domain knowledge: Document Kong routing rules (exact > prefix > regex, host wildcards, method matching)
+- [ ] T029 **[CRITICAL]** **[Ground Truth]** **[Logic: kong/router/init.lua::select]** Kong router ground truth test: Validate original router behavior with 1000+ routes
+- [ ] T030 **[CRITICAL]** Kong router validation test framework: Create Python test infrastructure for route matching validation
+- [ ] T031 **[CRITICAL]** Kong router performance baseline: Document current Kong routing performance (<1ms average, <10ms P99)
 
-### Phase 4b: Incremental Migration & Validation
+### Phase 4b: Kong Router Migration & Validation
 
-- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Algorithm preservation: Port exact business logic maintaining complexity characteristics
-- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation execution: Run new test against ported logic - MUST pass
-- [ ] T028 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis
-- [ ] T029 [F1] [Analysis: Section.3.2] API integration: Wire proven logic into endpoint structure
-- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics
-- [ ] T031 [F1] Integration test: End-to-end validation of feature functionality
+- [ ] T032 **[CRITICAL]** **[Logic: kong/router/traditional.lua::build_traditional_single_route]** Kong route matching algorithm: Port Kong route priority calculation and pattern matching to Python
+- [ ] T033 **[CRITICAL]** **[Logic: kong/router/init.lua::new]** Kong route caching system: Implement Kong LRU cache for route resolution performance
+- [ ] T034 **[CRITICAL]** **[Logic: kong/router/utils.lua]** Kong route validation: Port Kong route validation logic and constraint checking
+- [ ] T035 **[CRITICAL]** Kong router validation execution: Run validation tests against new Python router - MUST match Kong behavior exactly
+- [ ] T036 **[CRITICAL]** Kong router performance validation: Confirm new router meets <1ms average latency requirement
+- [ ] T037 **[CRITICAL]** Kong router integration test: End-to-end request routing with service selection and upstream resolution
 
-**Checkpoint**: Critical feature migrated with documented functional and performance parity.
+**Checkpoint**: Kong router migrated with sub-millisecond performance and exact behavioral parity.
 
-## Phase 5: Security & Authorization Migration (Feature 2)
+## Phase 5: Kong Plugin Execution Pipeline Migration
 
-**Migration Goal**: [Based on Analysis Section.3.1 and Section.9.1 findings]
+**Migration Goal**: Port Kong's plugin execution system (Analysis Section 4.1 - Plugin Iterator)
 
-**Analysis Reference**: Section.3.1 - Authentication/Authorization, Section.9.1 - Security Measures
+**Critical Algorithm**: Plugin Execution Pipeline (~500 LOC, deterministic plugin ordering)  
+**Location**: `kong/runloop/plugins_iterator.lua`  
+**Plugin Count**: 40+ built-in plugins with phases (access, response, log)
 
-**Independent Test**: [Test case from Analysis Section.3.1 authorization patterns]
+### Phase 5a: Kong Plugin System Analysis
 
-### Phase 5a: Security Analysis Integration
+- [ ] T038 **[CRITICAL]** **[Logic: kong/runloop/plugins_iterator.lua::iterate]** Kong plugin pipeline analysis: Document plugin execution phases and ordering
+- [ ] T039 **[CRITICAL]** Kong plugin domain knowledge: Document plugin inheritance (route > service > global), protocol filtering, dependency resolution
+- [ ] T040 **[CRITICAL]** **[Ground Truth]** Kong plugin ground truth test: Validate plugin execution order and context management with 10+ plugins
+- [ ] T041 **[CRITICAL]** Kong plugin validation framework: Create Python middleware pipeline for plugin simulation
+- [ ] T042 **[CRITICAL]** Kong plugin performance baseline: Document plugin execution latency (<5ms for 10 plugins)
 
-- [ ] T032 [Analysis: Section.3.1] Authorization pattern analysis: Document current access control implementation
-- [ ] T033 [Analysis: Section.9.1] Security measures inventory: Review all security patterns to preserve
-- [ ] T034 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Ground Truth Test: Prove current authorization behavior
-- [ ] T035 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Validation Test: Create target authorization test
+### Phase 5b: Kong Plugin Pipeline Migration
 
-### Phase 5b: Authorization Migration
+- [ ] T043 **[CRITICAL]** **[Logic: kong/runloop/plugins_iterator.lua::get_plugins_iterator]** Kong plugin resolution: Port plugin scope resolution (global/service/route/consumer)
+- [ ] T044 **[CRITICAL]** **[Logic: kong/runloop/plugins_iterator.lua::iterate_plugins]** Kong plugin execution engine: Implement plugin phase execution (access, response, log)
+- [ ] T045 **[CRITICAL]** **[Logic: kong/pdk/init.lua]** Kong Plugin Development Kit (PDK): Create Python PDK interface for plugin context management
+- [ ] T046 **[CRITICAL]** Kong plugin error handling: Port Kong plugin error handling and execution control (continue/halt)
+- [ ] T047 **[CRITICAL]** Kong plugin validation execution: Run plugin pipeline tests - MUST maintain execution order and context
+- [ ] T048 **[CRITICAL]** Kong plugin performance validation: Confirm plugin pipeline meets latency requirements
+- [ ] T049 **[CRITICAL]** Kong plugin integration test: End-to-end request processing with multiple plugins in correct phases
 
-- [ ] T036 [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Authorization logic port: Implement exact access control patterns
-- [ ] T037 [F2] [Analysis: Section.9.1] Security validation: Ensure all security measures maintained
-- [ ] T038 [F2] [Analysis: Section.3.1] Authorization integration: Wire into API framework
-- [ ] T039 [F2] Security testing: Validate all authorization scenarios
+**Checkpoint**: Kong plugin system migrated with correct execution order and context management.
 
-**Checkpoint**: Authorization and security patterns migrated with full parity.
+## Phase 6: Kong Load Balancing & Health Checking Migration
 
-## Phase 6: External Integrations Migration
+**Migration Goal**: Port Kong's upstream load balancing system (Analysis Section 4.1 - Load Balancer)
 
-**Migration Goal**: Preserve all third-party service integrations per Analysis Section.5
+**Critical Algorithm**: Upstream Target Selection (~1500 LOC, health checking with failover)  
+**Location**: `kong/runloop/balancer/init.lua`, `kong/runloop/balancer/balancers.lua`  
+**Algorithms**: Round-robin, least-connections, consistent-hashing, latency-based
 
-**Analysis Reference**: Section.5.1 - Third-party APIs, Section.5.2 - Auth Providers
+### Phase 6a: Kong Load Balancer Analysis
 
-### Phase 6a: Integration Analysis & Testing
+- [ ] T050 **[CRITICAL]** **[Logic: kong/runloop/balancer/init.lua::balance]** Kong load balancer analysis: Document target selection algorithms and health checking
+- [ ] T051 **[CRITICAL]** Kong upstream domain knowledge: Document health check patterns (active/passive), failover behavior, DNS resolution
+- [ ] T052 **[CRITICAL]** **[Ground Truth]** Kong load balancer ground truth test: Validate load balancing with multiple targets and health states
+- [ ] T053 **[CRITICAL]** Kong load balancer validation framework: Create Python load balancing simulation with target pool management
+- [ ] T054 **[CRITICAL]** Kong load balancer performance baseline: Document target selection performance and health check intervals
 
-- [ ] T040 [Analysis: Section.5.1] External API inventory: Document all third-party integrations
-- [ ] T041 [Analysis: Section.5.1] Integration testing: Validate current external service connections
-- [ ] T042 [P] [Analysis: Section.5.1] API client migration: Port all external API clients
-- [ ] T043 [Analysis: Section.5.1] Error handling preservation: Maintain all fallback behaviors
+### Phase 6b: Kong Load Balancer Migration
 
-### Phase 6b: Integration Validation
+- [ ] T055 **[CRITICAL]** **[Logic: kong/runloop/balancer/balancers.lua]** Kong balancing algorithms: Port round-robin, least-connections, consistent-hashing algorithms
+- [ ] T056 **[CRITICAL]** **[Logic: kong/runloop/balancer/healthcheckers.lua]** Kong health checking system: Implement active/passive health checks with circuit breaker patterns
+- [ ] T057 **[CRITICAL]** **[Logic: kong/dns/client.lua]** Kong DNS resolution: Port Kong DNS client for upstream target discovery and caching
+- [ ] T058 **[CRITICAL]** Kong upstream configuration: Port Kong upstream entity management with target pool configuration
+- [ ] T059 **[CRITICAL]** Kong load balancer validation: Run load balancing tests - MUST maintain target selection consistency
+- [ ] T060 **[CRITICAL]** Kong health check validation: Confirm health checking accurately detects target failures and recovery
+- [ ] T061 **[CRITICAL]** Kong load balancer integration: End-to-end load balancing with request routing and upstream selection
 
-- [ ] T044 [Analysis: Section.5.1] Service connectivity: Test all external integrations
-- [ ] T045 [Analysis: Section.5.2] Authentication provider testing: Validate OAuth/SSO flows
-- [ ] T046 [Analysis: Section.5.1] Caching strategy: Implement analysis-documented caching patterns
+**Checkpoint**: Kong load balancing migrated with health checking and target failover.
 
-## Phase 7: Performance & Quality Assurance
+## Phase 7: Kong Admin API Migration
 
-**Migration Goal**: Meet or exceed baseline performance per Analysis Section.8
+**Migration Goal**: Port Kong's Admin API for gateway configuration management (Analysis Section 3.2)
 
-**Analysis Reference**: Section.8.1 - Performance Baselines, Section.7.1 - Test Coverage
+**API Scope**: 50+ Admin API endpoints for entity CRUD operations  
+**Location**: `kong/api/routes/` and `kong/api/endpoints.lua`  
+**Authentication**: API key, basic auth, RBAC (enterprise)
 
-### Phase 7a: Performance Validation
+### Phase 7a: Kong Admin API Analysis
 
-- [ ] T047 [Analysis: Section.8.1] Performance benchmarking: Measure new implementation against baselines
-- [ ] T048 [Analysis: Section.8.2] Bottleneck analysis: Ensure no performance regressions
-- [ ] T049 [Analysis: Section.8.3] Scalability testing: Validate scaling characteristics maintained
+- [ ] T062 **[CRITICAL]** **[Logic: kong/api/routes/]** Kong Admin API inventory: Document all 50+ endpoints for services, routes, plugins, consumers
+- [ ] T063 **[CRITICAL]** Kong Admin API patterns: Document Kong REST conventions (pagination, filtering, error handling)
+- [ ] T064 **[CRITICAL]** **[Ground Truth]** Kong Admin API ground truth test: Validate CRUD operations for all entity types
+- [ ] T065 **[CRITICAL]** Kong Admin API validation framework: Create FastAPI test infrastructure for Admin API compatibility
 
-### Phase 7b: Quality Assurance
+### Phase 7b: Kong Admin API Implementation
 
-- [ ] T050 [Analysis: Section.7.1] Test coverage parity: Achieve analysis-documented coverage levels
-- [ ] T051 [Analysis: Section.7.2] Critical test preservation: Migrate all critical test scenarios
-- [ ] T052 [P] [Analysis: Section.11.2] Edge case validation: Test all documented quirks and workarounds
+- [ ] T066 **[CRITICAL]** **[Logic: kong/api/routes/services.lua]** Kong Services API: Implement Kong-compatible services CRUD endpoints
+- [ ] T067 **[CRITICAL]** **[Logic: kong/api/routes/routes.lua]** Kong Routes API: Implement Kong-compatible routes CRUD endpoints  
+- [ ] T068 **[CRITICAL]** **[Logic: kong/api/routes/plugins.lua]** Kong Plugins API: Implement Kong-compatible plugins CRUD endpoints
+- [ ] T069 **[CRITICAL]** **[Logic: kong/api/routes/consumers.lua]** Kong Consumers API: Implement Kong-compatible consumers CRUD endpoints
+- [ ] T070 [P] **[Logic: kong/api/routes/upstreams.lua]** Kong Upstreams API: Implement upstreams and targets CRUD endpoints
+- [ ] T071 [P] **[Logic: kong/api/routes/certificates.lua]** Kong Certificates API: Implement certificate management endpoints
+- [ ] T072 **[CRITICAL]** Kong Admin API validation: Run Admin API compatibility tests - MUST match Kong responses exactly
+- [ ] T073 **[CRITICAL]** Kong Admin API integration: End-to-end configuration management with entity relationships
 
-## Phase 8: Domain Knowledge Preservation
+**Checkpoint**: Kong Admin API migrated with full CRUD functionality and Kong compatibility.
 
-**Migration Goal**: Capture all tribal knowledge per Analysis Section.11
+## Phase 8: Kong Core Plugin Migration
 
-**Analysis Reference**: Section.11.1 - Business Domain, Section.11.2 - Undocumented Knowledge
+**Migration Goal**: Port essential Kong plugins for mental prosthetic platform (Analysis Section 11.1)
 
-- [ ] T053 [Analysis: Section.11.1] Domain concept validation: Ensure all business rules preserved
-- [ ] T054 [Analysis: Section.11.2] Quirk implementation: Implement all documented workarounds
-- [ ] T055 [Analysis: Section.11.3] User behavior patterns: Validate user workflow preservation
-- [ ] T056 [P] Documentation updates reflecting analysis findings
+**Essential Plugins**: Authentication (JWT, OAuth), Rate Limiting, Prometheus, CORS, Request/Response Transformation  
+**Plugin Count**: Focus on 10 most critical plugins from 40+ available  
+**Location**: `kong/plugins/` directory structure
 
-## Phase N: Cross-Cutting Concerns & Polish
+### Phase 8a: Essential Kong Plugins
 
-- [ ] TXXX [Analysis: Section.10.2] Logging and monitoring: Implement analysis-documented patterns
-- [ ] TXXX [Analysis: Section.9.2] Security hardening: Final security validation
-- [ ] TXXX [P] Code cleanup and refactoring (target framework only)
-- [ ] TXXX [Analysis: Section.13.1] Documentation updates incorporating analysis findings
+- [ ] T074 **[CRITICAL]** **[Logic: kong/plugins/jwt/handler.lua]** Kong JWT plugin: Port JWT authentication plugin with token validation and consumer resolution
+- [ ] T075 **[CRITICAL]** **[Logic: kong/plugins/rate-limiting/handler.lua]** Kong rate limiting plugin: Port rate limiting with multiple policies (local, cluster, redis)
+- [ ] T076 **[CRITICAL]** **[Logic: kong/plugins/prometheus/handler.lua]** Kong Prometheus plugin: Port metrics collection for gateway observability
+- [ ] T077 **[CRITICAL]** **[Logic: kong/plugins/cors/handler.lua]** Kong CORS plugin: Port CORS handling for web application access
+- [ ] T078 [P] **[Logic: kong/plugins/request-transformer/handler.lua]** Kong request transformer: Port request header and body transformation
+- [ ] T079 [P] **[Logic: kong/plugins/response-transformer/handler.lua]** Kong response transformer: Port response modification capabilities
+- [ ] T080 [P] **[Logic: kong/plugins/basic-auth/handler.lua]** Kong basic auth plugin: Port HTTP basic authentication
+- [ ] T081 Kong plugin validation: Test all migrated plugins in plugin execution pipeline
+- [ ] T082 Kong plugin integration: End-to-end plugin functionality with request processing
 
-## Phase N+1: Migration Validation & Asset Retirement
+### Phase 8b: Kong Domain Knowledge Preservation
 
-**Purpose**: Comprehensive validation before legacy asset removal.
+- [ ] T083 Kong API gateway domain concepts: Document and validate service mesh patterns, circuit breaker behavior
+- [ ] T084 Kong operational quirks: Implement documented workarounds (router rebuilds, connection pooling, clustering delays)
+- [ ] T085 Kong performance optimizations: Implement Kong-specific caching strategies and connection management
+- [ ] T086 Kong deployment patterns: Document Kong clustering, health checking, and certificate management procedures
 
-### Phase N+1a: Complete Migration Validation
+**Checkpoint**: Essential Kong plugins migrated with domain knowledge preservation.
 
-- [ ] TXXX [Analysis: All Sections] Full analysis cross-reference: Verify all analysis findings addressed
-- [ ] TXXX [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically
-- [ ] TXXX [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds baselines
-- [ ] TXXX [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met
-- [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags have corresponding passing validation tests
-- [ ] TXXX Run Full Regression Suite: Execute complete test suite including ground truth comparisons
+## Phase 9: Kong Performance & Quality Assurance
 
-### Phase N+1b: Safe Asset Retirement
+**Migration Goal**: Achieve Kong performance baselines and quality standards
 
-- [ ] TXXX [Analysis: Section.12.2] Risk mitigation: Address all identified migration risks
-- [ ] TXXX Legacy asset backup: Create secure archive of legacy codebase before deletion
-- [ ] TXXX Production validation: Run new system in production-like environment
-- [ ] TXXX Stakeholder approval: Obtain sign-off from all analysis-identified stakeholders
-- [ ] TXXX Delete Legacy Asset: After 100% validation, remove legacy asset directory
+### Phase 9a: Kong Performance Validation
 
-### Phase N+1c: Post-Migration Monitoring
+- [ ] T087 **[CRITICAL]** Kong performance benchmarking: Validate <5ms latency, >20k RPS throughput against Kong baselines
+- [ ] T088 **[CRITICAL]** Kong routing performance: Confirm <1ms route resolution with 1000+ routes
+- [ ] T089 **[CRITICAL]** Kong plugin performance: Validate <5ms plugin execution latency with 10+ plugins
+- [ ] T090 Kong scalability testing: Test horizontal scaling and load distribution patterns
 
-- [ ] TXXX [Analysis: Section.10.2] Monitoring validation: Confirm monitoring systems capture same metrics
-- [ ] TXXX [Analysis: Section.8.1] Performance monitoring: Track performance against established baselines
-- [ ] TXXX [Analysis: Section.11.3] User behavior monitoring: Validate user workflow preservation
+### Phase 9b: Kong Quality Assurance
 
-### Dependencies & Execution Order
+- [ ] T091 **[CRITICAL]** Kong test coverage: Achieve >80% test coverage for all migrated Kong functionality
+- [ ] T092 **[CRITICAL]** Kong edge case validation: Test all documented Kong quirks and operational edge cases
+- [ ] T093 Kong security validation: Validate authentication, authorization, and TLS handling
+- [ ] T094 Kong monitoring validation: Confirm Prometheus metrics match Kong baseline metrics
 
-**Sequential Dependencies (Must Complete In Order):**
-- **Phase 1 (Analysis Validation)**: Must complete first - validates analysis completeness
-- **Phase 2 (Data Architecture)**: Must complete before business logic - establishes data foundation
-- **Phase 3 (Foundational Infrastructure)**: Must complete before feature migration - establishes framework
+**Checkpoint**: Kong migration meets performance and quality standards.
 
-**Parallel Execution Phases:**
-- **Phases 4-6 (Business Logic, Security, Integrations)**: Can proceed in parallel by feature after Phase 3
-- **Phase 7 (Performance & Quality)**: Can run in parallel with feature phases
-- **Phase 8 (Domain Knowledge)**: Can run in parallel with feature phases
+## Phase 10: Kong Migration Validation & Legacy Retirement
+
+### Phase 10a: Complete Kong Migration Validation
+
+- [ ] T095 **[CRITICAL]** Kong analysis cross-reference: Verify all kong_analysis.md findings implemented
+- [ ] T096 **[CRITICAL]** Kong algorithm parity: Confirm router, plugin pipeline, load balancer work identically to Kong
+- [ ] T097 **[CRITICAL]** Kong performance regression testing: Validate all performance requirements met
+- [ ] T098 **[CRITICAL]** Kong ground truth validation: Run complete test suite against original Kong behavior
+- [ ] T099 Kong success criteria verification: Confirm all migration success criteria achieved
+
+### Phase 10b: Kong Legacy Asset Retirement
+
+- [ ] T100 Kong risk mitigation: Address all identified Kong migration risks and operational concerns
+- [ ] T101 Kong legacy backup: Create secure archive of `features/kong/` before deletion
+- [ ] T102 Kong production validation: Run new Kong implementation in production-like environment
+- [ ] T103 Kong stakeholder approval: Obtain infrastructure team sign-off on Kong replacement
+- [ ] T104 Kong legacy deletion: After 100% validation, remove `features/kong/` directory
+
+### Phase 10c: Kong Post-Migration Monitoring
+
+- [ ] T105 Kong operational monitoring: Track Kong gateway performance and availability metrics
+- [ ] T106 Kong behavior monitoring: Validate Kong request processing patterns in production
+- [ ] T107 Kong documentation: Update operational procedures and Kong configuration management
+
+## Kong Migration Dependencies & Execution Order
+
+### Sequential Dependencies (Must Complete In Order)
+
+**Phase 1 (Kong Analysis Validation)**: Must complete first - validates Kong analysis completeness and legacy environment
+
+**Phase 2 (Kong Data Architecture)**: Must complete before business logic - establishes Kong entity models
+
+**Phase 3 (Kong Gateway Foundation)**: Must complete before core algorithms - establishes API framework
+
+### Parallel Execution Phases (After Phase 3)
+
+**Phase 4 (Kong Router)**: Can execute in parallel with Phase 5-6 - independent routing algorithm
+
+**Phase 5 (Kong Plugin Pipeline)**: Can execute in parallel with Phase 4,6 - independent plugin system  
+
+**Phase 6 (Kong Load Balancer)**: Can execute in parallel with Phase 4-5 - independent load balancing
+
+### Final Sequential Phases
+
+**Phase 7 (Kong Admin API)**: After Phase 4-6 - requires core algorithms for entity management
+
+**Phase 8 (Kong Plugins)**: After Phase 5,7 - requires plugin pipeline and Admin API
+
+**Phase 9 (Performance & QA)**: After Phase 4-8 - validates complete system
+
+**Phase 10 (Migration Validation)**: After Phase 9 - final validation and legacy retirement
+
+### Kong Migration Complexity Summary
+
+**Total Tasks**: 107 tasks (T001-T107)  
+**Estimated Duration**: 120-160 hours (3-4 developer months)  
+**Critical Path**: Router → Plugin Pipeline → Load Balancer → Admin API → Essential Plugins  
+**Risk Level**: HIGH - Core infrastructure requiring careful validation  
+**Performance Requirements**: <5ms latency, >20k RPS, <1ms routing
 
 **Final Sequential Dependencies:**
 - **Phase N (Cross-Cutting Concerns)**: After all feature phases complete

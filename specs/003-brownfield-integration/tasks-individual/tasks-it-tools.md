@@ -1,27 +1,27 @@
 ---
-description: "Task list template for asset relocation and implementation"
-parent_task: "../tasks.md#TXXX"
-parent_phase: "Phase X: Productivity Migrations"
-return_to: "../tasks.md#TXXX"
+description: "IT-Tools brownfield asset migration to DDD modular monolith"
+parent_task: "../tasks.md#T111"
+parent_phase: "Phase 3d: Productivity Domain Migrations"
+return_to: "../tasks.md#T112"
 domain: "productivity"
 target_service: "apps/productivity-service/src/"
 legacy_path: "features/it-tools"
-estimated_hours: 20
+estimated_hours: 30
 ---
 
-# Tasks: [MIGRATION: IT-Tools]
+# Tasks: [MIGRATION: IT-Tools - 80+ Developer Utilities]
 
-**⬆️ PARENT TASK**: [`tasks.md#TXXX`](../tasks.md#TXXX)  
-**⬇️ RETURN TO**: [`tasks.md#TXXX`](../tasks.md#TXXX)
+**⬆️ PARENT TASK**: [`tasks.md#T111`](../tasks.md#T111)  
+**⬇️ RETURN TO**: [`tasks.md#T112`](../tasks.md#T112)
 
 ---
 
 ## Handoff Context
 
-**Called From**: `tasks.md` Phase X, Task TXXX  
-**Entry Condition**: Productivity service foundation ready (Phase 1-4 complete)  
+**Called From**: `tasks.md` Phase 3d, Task T111  
+**Entry Condition**: Productivity service foundation ready (Phase 1-2 complete), apps/productivity-service/ exists with base infrastructure  
 **Exit Condition**: All tasks below complete + validation tests pass  
-**Return Action**: Mark TXXX complete in parent `tasks.md`, proceed to next task
+**Return Action**: Mark T111 complete in parent `tasks.md`, proceed to T112
 
 **Handoff Protocol**: See [`HANDOFF-PROTOCOL.md`](./HANDOFF-PROTOCOL.md) for complete workflow documentation.
 
@@ -31,56 +31,62 @@ estimated_hours: 20
 
 **Verify these conditions before starting any tasks below**:
 
-- [ ] Parent Phase 1-4 marked complete in `tasks.md`
+- [ ] Parent Phase 1-2 marked complete in `tasks.md`
 - [ ] `apps/productivity-service/src/` exists with base infrastructure
 - [ ] Database migrations from Phase 2 applied
-- [ ] Authentication/authorization from Phase 3 working
-- [ ] Test framework from Phase 3 operational
-- [ ] Legacy environment setup: `features/it-tools/` accessible
-- [ ] Project analysis report completed and validated
+- [ ] Authentication/authorization from Phase 2 working
+- [ ] Test framework from Phase 2 operational
+- [ ] Legacy environment setup: `features/it-tools/` accessible and operational
+- [ ] Project analysis report completed and validated (`reports/it-tools-analysis.md`)
+- [ ] Ground Truth testbed setup with legacy IT-Tools running for comparison validation
+- [ ] React/TypeScript component library structure ready in `libs/shared/utilities/`
 
 **⚠️ If any checklist item fails**: STOP and return to parent `tasks.md` to complete prerequisites.
 
 ---
 
-**Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
-**Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
-**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY)**, research.md, data-model.md, contracts/
+**Input (Spec)**: Analysis report from `/specs/003-brownfield-integration/modular-analysis-repo-main/reports/it-tools-analysis.md`  
+**Input (Legacy)**: Legacy codebase path `/features/it-tools/` with 80+ developer utilities  
+**Prerequisites**: it-tools-analysis.md (MANDATORY), parent Phase 1-2 complete, Ground Truth testbed operational
 
-**Project Analysis Integration**: This task template MUST reference specific sections from project_analysis_report.md:
-- Section 2 (Data Architecture) - for data model migration tasks
-- Section 3 (API Architecture) - for endpoint and authentication migration
-- Section 4 (Business Logic) - for critical algorithm preservation
-- Section 5 (External Integrations) - for third-party service continuity
-- Section 8 (Performance Characteristics) - for baseline preservation
-- Section 11 (Domain Knowledge) - for business rule preservation
+**IT-Tools Business Context**: 80+ client-side developer utilities built with Vue 3 + TypeScript, completely stateless with no backend requirements. Critical algorithms include fuzzy search (tool discovery), JSON formatting/validation, and copy-to-clipboard workflows. Migration target is React/TypeScript component library in productivity service.
 
-**Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first to establish functional baselines.
+**DDD Domain Boundaries**: IT-Tools maps to **Infrastructure Domain** within productivity service, containing:
 
-**Organization**: Tasks are grouped by Legacy Feature AND cross-referenced with Project Analysis sections to ensure 1:1 functional parity and comprehensive coverage.
+- **Tool Discovery Subdomain**: Search, categorization, navigation (Analysis Section 4.1)
+- **Data Transformation Subdomain**: Format converters, validators, generators (Analysis Section 4.1, 4.2)  
+- **Developer Utilities Subdomain**: Crypto tools, network tools, text processors (Analysis Section 6.3)
+- **UI Infrastructure Subdomain**: Copy-to-clipboard, validation, theming (Analysis Section 6.2)
 
-## Format: [ID] [P?] [Feature] [Analysis: Section.#] [Logic: <legacy_file::function>] Description
-- [P]: Can run in parallel
-- [Feature]: Which legacy feature this task belongs to (e.g., F1: Publishing)
-- [Analysis]: Reference to project_analysis_report.md section (e.g., Section.2.1, Section.4.1)
-- [Logic]: The exact legacy code being replaced. This is not optional.
+**Tests**: Ground Truth tests MANDATORY for all critical algorithms. Legacy Vue app must remain operational during migration for validation comparison.
+
+**Migration Strategy**: Category-based migration preserving exact functional behavior of each tool while converting Vue→React and integrating into unified productivity platform.
+
+## Format: [ID] [P?] [Domain.Subdomain] [Analysis: Section.#] [Logic: <legacy_file::function>] Description
+
+- [P]: Can run in parallel  
+- [Domain.Subdomain]: DDD boundary (e.g., Infrastructure.ToolDiscovery, Infrastructure.DataTransformation)
+- [Analysis]: Reference to it-tools-analysis.md section
+- [Logic]: The exact legacy Vue component/function being migrated
 
 ## Path Conventions
-- **New Project**: [e.g., apps/PROJECT/src/] at repository root
-- **Legacy Project**: [e.g., features/MISP/app/Model/]
-- **Analysis Report**: project_analysis_report.md sections for validation
-- Paths shown below assume single project - adjust based on plan.md structure
 
-## Migration Methodology: Brownfield Asset Relocation
+- **New Components**: `apps/productivity-service/src/domains/infrastructure/tools/` (DDD structure)
+- **Shared Utilities**: `libs/shared/utilities/` (framework-agnostic business logic)  
+- **Legacy Source**: `features/it-tools/src/tools/` (80+ tool directories)
+- **Analysis Report**: `reports/it-tools-analysis.md` sections for validation
 
-**Core Principle**: Preserve 100% functional parity while modernizing architecture.
+## Migration Methodology: DDD Brownfield Asset Relocation
 
-**Validation Strategy**: 
-1. Ground Truth Tests → Establish current behavior baseline
-2. Analysis Cross-Reference → Validate against documented behavior  
-3. Incremental Migration → Port one feature at a time with validation
-4. Integration Testing → Ensure new implementation matches baseline
-5. Performance Validation → Maintain or improve baseline metrics
+**Core Principle**: Preserve 100% functional parity while establishing proper domain boundaries and React integration.
+
+**Validation Strategy**:
+
+1. Ground Truth Tests → Legacy Vue tools remain operational for comparison
+2. Analysis Cross-Reference → Validate against it-tools-analysis.md documented behavior  
+3. Domain-by-Domain Migration → Migrate by DDD subdomain maintaining cohesion
+4. Component Integration → Ensure React components match Vue behavior exactly
+5. Performance Validation → Client-side processing maintains <10ms response times
 
 <!-- 
   ============================================================================
@@ -101,191 +107,206 @@ estimated_hours: 20
   ============================================================================
 -->
 
-## Phase 1: Analysis Validation & Legacy Environment Setup
+## Phase 1: IT-Tools Analysis Validation & Legacy Environment Setup
 
-**Purpose**: Validate project analysis findings and establish baseline testing environment.
+**Purpose**: Validate IT-Tools analysis findings and establish Vue.js testbed for React migration validation.
 
-- [ ] T001 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections are filled
-- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate current tech stack inventory against actual codebase
-- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing tests and document current coverage metrics
-- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current performance characteristics
-- [ ] T005 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM) per Section.10.1
-- [ ] T006 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function
-- [ ] T007 [P] Create new project structure per implementation plan
-- [ ] T008 [P] Initialize target framework dependencies (per analysis Section.1.2)
+- [ ] T001 [Analysis: Section.1] Validate IT-Tools analysis completeness: Confirm all CRITICAL sections filled in it-tools-analysis.md
+- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate Vue 3 + TypeScript + Vite stack against actual codebase in features/it-tools/
+- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing Vitest and Playwright tests, document 60% coverage metrics
+- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current client-side processing times (<10ms for most tools)
+- [ ] T005 [Ground Truth] Setup legacy Vue environment: Ensure features/it-tools/ runs independently with npm run dev for validation comparisons
+- [ ] T006 [Ground Truth] Validate 80+ tools functionality: Test all tool categories (Crypto, Converter, Web, Images, Development, Network, Math, Measurement, Text, Data) 
+- [ ] T007 [P] Create DDD structure: Initialize apps/productivity-service/src/domains/infrastructure/tools/ for domain-driven organization
+- [ ] T008 [P] Initialize React component library: Setup libs/shared/utilities/ with TypeScript for framework-agnostic business logic
 
 ---
 
-## Phase 2: Data Architecture Migration
+## Phase 2: Tool Discovery & Navigation Subdomain (Infrastructure.ToolDiscovery)
 
-**Purpose**: Migrate data models and database schema based on analysis Section 2.
+**Purpose**: Migrate tool discovery, search, and navigation based on Analysis Section 4.1 - Critical Algorithms.
 
-- [ ] T009 [Analysis: Section.2.1] Inventory data models: Create comprehensive list from analysis findings
-- [ ] T010 [Analysis: Section.2.1] Database schema migration: Implement new schema preserving all relationships from Section.2.2
-- [ ] T011 [P] [Analysis: Section.2.1] Port data models: Create new framework models matching legacy field mappings exactly
-- [ ] T012 [Analysis: Section.2.3] Database performance patterns: Implement indexes and optimizations per analysis
-- [ ] T013 [Ground Truth] Data validation tests: Write tests confirming data integrity and constraints
-- [ ] T014 [Analysis: Section.2.1] Data migration scripts: Create scripts for existing data preservation
+- [ ] T009 [Infrastructure.ToolDiscovery] [Analysis: Section.4.1] [Logic: fuzzySearch.ts::useFuzzySearch] Migrate fuzzy search algorithm: Port Fuse.js-based tool search to React hook preserving <5ms performance
+- [ ] T010 [Infrastructure.ToolDiscovery] [Analysis: Section.2.1] [Logic: tools.types.ts::Tool,ToolCategory] Port tool metadata models: Create TypeScript interfaces for tool definitions and categories
+- [ ] T011 [P] [Infrastructure.ToolDiscovery] [Analysis: Section.6.3] [Logic: CollapsibleToolMenu.vue] Convert tool navigation: Port Vue menu component to React with identical categorization
+- [ ] T012 [Infrastructure.ToolDiscovery] [Analysis: Section.6.3] [Logic: ToolCard.vue] Convert tool card components: Port Vue tool display cards to React maintaining visual parity
+- [ ] T013 [Ground Truth] Search functionality tests: Write React tests validating search results match Vue implementation exactly
+- [ ] T014 [Infrastructure.ToolDiscovery] Tool registry migration: Convert Vue-based tool registration to React dynamic imports in productivity service
 
-**Checkpoint**: Data layer migrated with full functional parity.
+**Checkpoint**: Tool discovery and navigation fully migrated with functional and visual parity.
 
-## Phase 3: Foundational Infrastructure
+## Phase 3: UI Infrastructure Subdomain (Infrastructure.UIInfrastructure)
 
-**Purpose**: Core application infrastructure based on analysis findings.
+**Purpose**: Migrate shared UI patterns and infrastructure based on Analysis Section 6.2 - Component Architecture.
 
-- [ ] T015 [Analysis: Section.3.1] Authentication/authorization framework: Implement exact auth patterns from Section.3.1
-- [ ] T016 [Analysis: Section.9.1] Security measures: Implement all security patterns identified in analysis
-- [ ] T017 [P] [Analysis: Section.3.2] API routing framework: Setup endpoint structure (empty routes initially)
-- [ ] T018 [Analysis: Section.8.1] Performance monitoring: Implement baseline monitoring per Section.8.1
-- [ ] T019 [Analysis: Section.7.1] Testing framework: Setup testing infrastructure matching current patterns
-- [ ] T020 Configure error handling and logging infrastructure per Section.10.2
+- [ ] T015 [Infrastructure.UIInfrastructure] [Analysis: Section.4.1] [Logic: copy.ts::useCopy] Migrate copy-to-clipboard: Port unified copy composable to React hook with toast notifications
+- [ ] T016 [Infrastructure.UIInfrastructure] [Analysis: Section.4.2] [Logic: validation.ts::useValidation] Port validation framework: Migrate real-time input validation to React with identical error display
+- [ ] T017 [P] [Infrastructure.UIInfrastructure] [Analysis: Section.6.2] [Logic: TextareaCopyable.vue,InputCopyable.vue] Convert copyable components: Port Vue components to React maintaining copy button behavior
+- [ ] T018 [Infrastructure.UIInfrastructure] [Analysis: Section.6.2] [Logic: tool.layout.vue] Migrate tool layout: Port consistent tool wrapper layout from Vue to React
+- [ ] T019 [Infrastructure.UIInfrastructure] [Analysis: Section.6.1] Theme integration: Integrate dark/light theme switching with productivity service design system
+- [ ] T020 [Infrastructure.UIInfrastructure] Error handling framework: Port Vue error boundaries to React error boundaries with user-friendly messages
 
-**Checkpoint**: Foundation ready with security and monitoring. NO business logic exists.
+**Checkpoint**: UI infrastructure ready supporting copy workflows, validation, and theming. No tool logic exists yet.
 
-## Phase 4: Critical Business Logic Migration (Feature 1) 🎯 MVP
+## Phase 4: Data Transformation Subdomain - JSON & Text Tools (Infrastructure.DataTransformation)
 
-**Migration Goal**: [Brief description based on Analysis Section.4.1 findings]
+**Migration Goal**: Migrate JSON processing and text transformation tools (Analysis Section.4.1 - JSON algorithms)
 
-**Analysis Reference**: Section.4.1 - Critical Algorithms, Section.11.1 - Domain Knowledge
+**Analysis Reference**: Section.4.1 - Critical Algorithms (formatJson, sortObjectKeys), Section.11.1 - Developer Domain Knowledge
 
-**Independent Test**: [Test case from Analysis Section.4.1 or domain requirements]
+**Independent Test**: JSON formatting with nested objects, key sorting, and error handling validation
 
-### Phase 4a: Analysis Cross-Reference & Ground Truth
+### Phase 4a: JSON Processing Tools Migration
 
-- [ ] T021 [Analysis: Section.4.1] Algorithm analysis: Review critical algorithm documentation for this feature
-- [ ] T022 [Analysis: Section.11.1] Domain knowledge review: Document business rules and domain concepts
-- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Ground Truth Test: Write test proving original behavior matches analysis documentation
-- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation Test: Create target framework test (initially failing)
-- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document current performance metrics for this feature
+- [ ] T021 [Infrastructure.DataTransformation] [Analysis: Section.4.1] [Logic: json.models.ts::formatJson] Port JSON formatter: Migrate exact algorithm preserving indentation, sorting, and JSON5 support
+- [ ] T022 [Infrastructure.DataTransformation] [Analysis: Section.4.1] [Logic: json.models.ts::sortObjectKeys] Port recursive key sorting: Maintain exact sorting behavior for nested objects and arrays
+- [ ] T023 [P] [Infrastructure.DataTransformation] [Analysis: Section.4.1] [Logic: json-viewer.vue] Ground Truth Test: Validate Vue JSON formatter output matches React implementation
+- [ ] T024 [P] [Infrastructure.DataTransformation] [Logic: json-viewer.vue] Convert JSON viewer UI: Port Vue component to React maintaining settings (sort keys, indent size)
+- [ ] T025 [Infrastructure.DataTransformation] [Analysis: Section.8.1] Performance validation: Ensure JSON processing maintains <10ms for 1MB documents
 
-### Phase 4b: Incremental Migration & Validation
+### Phase 4b: Text Processing Tools Migration  
 
-- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Algorithm preservation: Port exact business logic maintaining complexity characteristics
-- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation execution: Run new test against ported logic - MUST pass
-- [ ] T028 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis
-- [ ] T029 [F1] [Analysis: Section.3.2] API integration: Wire proven logic into endpoint structure
-- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics
-- [ ] T031 [F1] Integration test: End-to-end validation of feature functionality
+- [ ] T026 [Infrastructure.DataTransformation] [Logic: case-converter/] Port case converter: Migrate camelCase, snake_case, kebab-case transformations preserving edge cases
+- [ ] T027 [Infrastructure.DataTransformation] [Logic: text-diff/] Port text diff tool: Migrate diff algorithm maintaining visual diff display and performance
+- [ ] T028 [Infrastructure.DataTransformation] [Logic: text-statistics/] Migrate text statistics: Port word count, character count, reading time calculations
+- [ ] T029 [Infrastructure.DataTransformation] [Logic: slugify-string/] Port URL slugify: Migrate string-to-URL slug conversion with special character handling
+- [ ] T030 [Infrastructure.DataTransformation] [Logic: text-to-binary/,text-to-unicode/] Port text encoding: Migrate binary, Unicode, NATO alphabet conversions
+- [ ] T031 [Infrastructure.DataTransformation] Integration validation: Test all text tools against Vue originals for functional parity
 
-**Checkpoint**: Critical feature migrated with documented functional and performance parity.
+**Checkpoint**: JSON and text processing tools migrated maintaining exact algorithmic behavior and performance.
 
-## Phase 5: Security & Authorization Migration (Feature 2)
+## Phase 5: Developer Utilities Subdomain - Crypto & Network Tools (Infrastructure.DeveloperUtilities)  
 
-**Migration Goal**: [Based on Analysis Section.3.1 and Section.9.1 findings]
+**Migration Goal**: Migrate crypto, network, and security tools (Analysis Section.11.1 - Developer Domain)
 
-**Analysis Reference**: Section.3.1 - Authentication/Authorization, Section.9.1 - Security Measures
+**Analysis Reference**: Section.6.3 - Tool Pattern Architecture, Section.9.1 - Client-side Security
 
-**Independent Test**: [Test case from Analysis Section.3.1 authorization patterns]
+**Independent Test**: Crypto operations, network utilities, and UUID generation validation
 
-### Phase 5a: Security Analysis Integration
+### Phase 5a: Crypto & Hashing Tools Migration
 
-- [ ] T032 [Analysis: Section.3.1] Authorization pattern analysis: Document current access control implementation
-- [ ] T033 [Analysis: Section.9.1] Security measures inventory: Review all security patterns to preserve
-- [ ] T034 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Ground Truth Test: Prove current authorization behavior
-- [ ] T035 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Validation Test: Create target authorization test
+- [ ] T032 [Infrastructure.DeveloperUtilities] [Logic: bcrypt/] Port bcrypt tool: Migrate password hashing with salt generation preserving security parameters  
+- [ ] T033 [Infrastructure.DeveloperUtilities] [Logic: hash-text/] Port hashing utilities: Migrate MD5, SHA family, HMAC generation maintaining algorithm accuracy
+- [ ] T034 [P] [Infrastructure.DeveloperUtilities] [Logic: hmac-generator/] Port HMAC generator: Migrate keyed-hash message authentication preserving key handling
+- [ ] T035 [P] [Infrastructure.DeveloperUtilities] [Logic: rsa-key-pair-generator/] Port RSA key generation: Migrate public/private key pair creation with format options
 
-### Phase 5b: Authorization Migration
+### Phase 5b: Network & Identity Tools Migration
 
-- [ ] T036 [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Authorization logic port: Implement exact access control patterns
-- [ ] T037 [F2] [Analysis: Section.9.1] Security validation: Ensure all security measures maintained
-- [ ] T038 [F2] [Analysis: Section.3.1] Authorization integration: Wire into API framework
-- [ ] T039 [F2] Security testing: Validate all authorization scenarios
+- [ ] T036 [Infrastructure.DeveloperUtilities] [Logic: uuid-generator/] Port UUID generator: Migrate v1, v3, v4, v5 UUID generation maintaining uniqueness guarantees
+- [ ] T037 [Infrastructure.DeveloperUtilities] [Logic: ipv4-subnet-calculator/,ipv4-address-converter/] Port IPv4 tools: Migrate subnet calculations and address conversions
+- [ ] T038 [Infrastructure.DeveloperUtilities] [Logic: ipv6-ula-generator/] Port IPv6 utilities: Migrate IPv6 address generation and validation
+- [ ] T039 [Infrastructure.DeveloperUtilities] [Logic: mac-address-generator/,mac-address-lookup/] Port MAC address tools: Migrate generation and vendor lookup
+- [ ] T040 [Infrastructure.DeveloperUtilities] [Logic: jwt-parser/] Port JWT parser: Migrate JSON Web Token decoding and validation 
+- [ ] T041 [Infrastructure.DeveloperUtilities] Security validation: Test all crypto tools against Vue originals ensuring identical outputs
 
-**Checkpoint**: Authorization and security patterns migrated with full parity.
+**Checkpoint**: All crypto, network, and identity tools migrated with cryptographic accuracy preserved.
 
-## Phase 6: External Integrations Migration
+## Phase 6: Converter & Generator Tools Migration (Infrastructure.DataTransformation Extended)
 
-**Migration Goal**: Preserve all third-party service integrations per Analysis Section.5
+**Migration Goal**: Migrate remaining format converters and generators (Analysis Section.11.1 - Tool Categories)
 
-**Analysis Reference**: Section.5.1 - Third-party APIs, Section.5.2 - Auth Providers
+**Analysis Reference**: Section.6.3 - Input/Output Tool Pattern, Section.8.1 - Performance Baselines
 
-### Phase 6a: Integration Analysis & Testing
+### Phase 6a: Format Conversion Tools Migration
 
-- [ ] T040 [Analysis: Section.5.1] External API inventory: Document all third-party integrations
-- [ ] T041 [Analysis: Section.5.1] Integration testing: Validate current external service connections
-- [ ] T042 [P] [Analysis: Section.5.1] API client migration: Port all external API clients
-- [ ] T043 [Analysis: Section.5.1] Error handling preservation: Maintain all fallback behaviors
+- [ ] T042 [Infrastructure.DataTransformation] [Logic: base64-string-converter/,base64-file-converter/] Port Base64 tools: Migrate string/file Base64 encoding/decoding with error handling
+- [ ] T043 [Infrastructure.DataTransformation] [Logic: json-to-csv/,json-to-xml/,json-to-yaml-converter/] Port JSON converters: Migrate multi-format output maintaining data fidelity
+- [ ] T044 [P] [Infrastructure.DataTransformation] [Logic: yaml-to-json-converter/,toml-to-json/,xml-to-json/] Port format-to-JSON: Migrate YAML, TOML, XML parsing to JSON
+- [ ] T045 [P] [Infrastructure.DataTransformation] [Logic: url-encoder/,html-entities/] Port encoding tools: Migrate URL encoding and HTML entity conversion
 
-### Phase 6b: Integration Validation
+### Phase 6b: Generator & Utility Tools Migration
 
-- [ ] T044 [Analysis: Section.5.1] Service connectivity: Test all external integrations
-- [ ] T045 [Analysis: Section.5.2] Authentication provider testing: Validate OAuth/SSO flows
-- [ ] T046 [Analysis: Section.5.1] Caching strategy: Implement analysis-documented caching patterns
+- [ ] T046 [Infrastructure.DataTransformation] [Logic: qr-code-generator/,wifi-qr-code-generator/] Port QR generators: Migrate QR code creation with customization options
+- [ ] T047 [Infrastructure.DataTransformation] [Logic: lorem-ipsum-generator/,password-strength-analyser/] Port text generators: Migrate placeholder text and password analysis
+- [ ] T048 [Infrastructure.DataTransformation] [Logic: crontab-generator/,meta-tag-generator/] Port specialized generators: Migrate cron expression and HTML meta tag tools
+- [ ] T049 [Infrastructure.DataTransformation] [Logic: color-converter/,temperature-converter/] Port unit converters: Migrate color space and temperature conversions
+- [ ] T050 [Infrastructure.DataTransformation] Performance validation: Ensure all converters maintain client-side processing performance baselines
 
-## Phase 7: Performance & Quality Assurance
+## Phase 7: Remaining Specialized Tools Migration (Infrastructure.DeveloperUtilities Extended)
 
-**Migration Goal**: Meet or exceed baseline performance per Analysis Section.8
+**Migration Goal**: Complete migration of specialized development and utility tools
 
-**Analysis Reference**: Section.8.1 - Performance Baselines, Section.7.1 - Test Coverage
+**Analysis Reference**: Section.8.1 - Performance Baselines, Section.7.1 - Test Coverage, Section.11.2 - Edge Cases
 
-### Phase 7a: Performance Validation
+### Phase 7a: Development & Code Tools Migration
 
-- [ ] T047 [Analysis: Section.8.1] Performance benchmarking: Measure new implementation against baselines
-- [ ] T048 [Analysis: Section.8.2] Bottleneck analysis: Ensure no performance regressions
-- [ ] T049 [Analysis: Section.8.3] Scalability testing: Validate scaling characteristics maintained
+- [ ] T051 [Infrastructure.DeveloperUtilities] [Logic: regex-tester/,regex-memo/] Port regex tools: Migrate regular expression testing and reference maintaining pattern validation
+- [ ] T052 [Infrastructure.DeveloperUtilities] [Logic: sql-prettify/,html-wysiwyg-editor/] Port code formatting: Migrate SQL formatter and HTML editor preserving syntax highlighting
+- [ ] T053 [P] [Infrastructure.DeveloperUtilities] [Logic: docker-run-to-docker-compose-converter/] Port Docker converter: Migrate command-to-compose conversion logic
+- [ ] T054 [P] [Infrastructure.DeveloperUtilities] [Logic: markdown-to-html/,xml-formatter/] Port markup tools: Migrate markdown rendering and XML formatting
 
-### Phase 7b: Quality Assurance
+### Phase 7b: System & Math Tools Migration  
 
-- [ ] T050 [Analysis: Section.7.1] Test coverage parity: Achieve analysis-documented coverage levels
-- [ ] T051 [Analysis: Section.7.2] Critical test preservation: Migrate all critical test scenarios
-- [ ] T052 [P] [Analysis: Section.11.2] Edge case validation: Test all documented quirks and workarounds
+- [ ] T055 [Infrastructure.DeveloperUtilities] [Logic: chmod-calculator/,device-information/] Port system tools: Migrate file permissions calculator and device info display
+- [ ] T056 [Infrastructure.DeveloperUtilities] [Logic: math-evaluator/,percentage-calculator/] Port math tools: Migrate expression evaluator and percentage calculator
+- [ ] T057 [Infrastructure.DeveloperUtilities] [Logic: date-time-converter/,chronometer/] Port time tools: Migrate date/time utilities and stopwatch functionality
+- [ ] T058 [Infrastructure.DeveloperUtilities] [Logic: keycode-info/,user-agent-parser/] Port info tools: Migrate keyboard code reference and user agent parsing
+- [ ] T059 [Infrastructure.DeveloperUtilities] Complete tool inventory: Verify all 80+ tools migrated with functional validation against Vue originals
 
-## Phase 8: Domain Knowledge Preservation
+## Phase 8: Integration & Performance Validation
 
-**Migration Goal**: Capture all tribal knowledge per Analysis Section.11
+**Migration Goal**: Complete React integration and validate performance parity per Analysis Section.8
 
-**Analysis Reference**: Section.11.1 - Business Domain, Section.11.2 - Undocumented Knowledge
+**Analysis Reference**: Section.8.1 - Performance Baselines, Section.11.3 - User Behavior Patterns
 
-- [ ] T053 [Analysis: Section.11.1] Domain concept validation: Ensure all business rules preserved
-- [ ] T054 [Analysis: Section.11.2] Quirk implementation: Implement all documented workarounds
-- [ ] T055 [Analysis: Section.11.3] User behavior patterns: Validate user workflow preservation
-- [ ] T056 [P] Documentation updates reflecting analysis findings
+- [ ] T060 [Infrastructure.Integration] Productivity service integration: Wire all IT-Tools into apps/productivity-service/ with unified navigation
+- [ ] T061 [Infrastructure.Integration] [Analysis: Section.8.1] Performance benchmarking: Validate all tools maintain client-side processing <10ms baseline
+- [ ] T062 [Infrastructure.Integration] [Analysis: Section.11.3] User workflow validation: Test common user workflows (search→tool→copy) maintain identical UX
+- [ ] T063 [P] [Infrastructure.Integration] Mobile responsiveness: Ensure React components maintain mobile compatibility from Vue originals
+- [ ] T064 [Infrastructure.Integration] [Analysis: Section.11.2] Edge case preservation: Validate all documented quirks and workarounds function identically
+- [ ] T065 [Infrastructure.Integration] [Analysis: Section.7.1] Test coverage validation: Achieve 60%+ coverage matching Vue baseline with React implementation
 
-## Phase N: Cross-Cutting Concerns & Polish
+## Phase 9: Documentation & Polish
 
-- [ ] TXXX [Analysis: Section.10.2] Logging and monitoring: Implement analysis-documented patterns
-- [ ] TXXX [Analysis: Section.9.2] Security hardening: Final security validation
-- [ ] TXXX [P] Code cleanup and refactoring (target framework only)
-- [ ] TXXX [Analysis: Section.13.1] Documentation updates incorporating analysis findings
+- [ ] T066 [Infrastructure.Documentation] API documentation: Document all migrated IT-Tools React components for productivity service integration
+- [ ] T067 [Infrastructure.Documentation] [Analysis: Section.11.1] Developer guide: Create tool creation guide for extending IT-Tools in React ecosystem
+- [ ] T068 [P] [Infrastructure.Documentation] Migration validation: Document functional parity verification between Vue and React implementations
+- [ ] T069 [Infrastructure.Documentation] Performance documentation: Document client-side processing benchmarks and optimization guidelines
 
-## Phase N+1: Migration Validation & Asset Retirement
+## Phase 10: Migration Validation & Legacy Asset Retirement
 
-**Purpose**: Comprehensive validation before legacy asset removal.
+**Purpose**: Comprehensive validation before Vue legacy asset removal from features/it-tools/.
 
-### Phase N+1a: Complete Migration Validation
+### Phase 10a: Complete Migration Validation
 
-- [ ] TXXX [Analysis: All Sections] Full analysis cross-reference: Verify all analysis findings addressed
-- [ ] TXXX [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically
-- [ ] TXXX [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds baselines
-- [ ] TXXX [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met
-- [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags have corresponding passing validation tests
-- [ ] TXXX Run Full Regression Suite: Execute complete test suite including ground truth comparisons
+- [ ] T070 [Analysis: All Sections] Full analysis cross-reference: Verify all it-tools-analysis.md findings addressed in React implementation
+- [ ] T071 [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms (fuzzy search, JSON formatting, copy workflows) function identically
+- [ ] T072 [Analysis: Section.8.1] Performance regression testing: Validate React tools maintain Vue baseline performance (<10ms processing, <200ms UI response)
+- [ ] T073 [Analysis: Section.12.3] Success criteria verification: Confirm all 80+ tools migrated with 100% functional parity
+- [ ] T074 Verify Full Migration: Confirm all [Logic: ...] tags have corresponding passing validation tests comparing React vs Vue outputs
+- [ ] T075 Run Full Regression Suite: Execute complete test suite including ground truth comparisons across all tool categories
 
-### Phase N+1b: Safe Asset Retirement
+### Phase 10b: Safe Asset Retirement
 
-- [ ] TXXX [Analysis: Section.12.2] Risk mitigation: Address all identified migration risks
-- [ ] TXXX Legacy asset backup: Create secure archive of legacy codebase before deletion
-- [ ] TXXX Production validation: Run new system in production-like environment
-- [ ] TXXX Stakeholder approval: Obtain sign-off from all analysis-identified stakeholders
-- [ ] TXXX Delete Legacy Asset: After 100% validation, remove legacy asset directory
+- [ ] T076 [Analysis: Section.12.2] Risk mitigation: Address all identified Vue→React migration risks (bundle size, mobile compatibility, performance)
+- [ ] T077 Legacy asset backup: Create secure archive of features/it-tools/ Vue codebase before deletion
+- [ ] T078 Production validation: Run React IT-Tools in productivity service production-like environment
+- [ ] T079 Stakeholder approval: Obtain sign-off from productivity service team and IT-Tools stakeholders
+- [ ] T080 Delete Legacy Asset: After 100% validation, remove features/it-tools/ directory
 
-### Phase N+1c: Post-Migration Monitoring
+### Phase 10c: Post-Migration Monitoring  
 
-- [ ] TXXX [Analysis: Section.10.2] Monitoring validation: Confirm monitoring systems capture same metrics
-- [ ] TXXX [Analysis: Section.8.1] Performance monitoring: Track performance against established baselines
-- [ ] TXXX [Analysis: Section.11.3] User behavior monitoring: Validate user workflow preservation
+- [ ] T081 [Analysis: Section.10.2] Monitoring validation: Confirm React components integrate with productivity service monitoring
+- [ ] T082 [Analysis: Section.8.1] Performance monitoring: Track React tool performance against Vue baselines in production
+- [ ] T083 [Analysis: Section.11.3] User behavior monitoring: Validate developer workflows maintain efficiency with React integration
 
 ### Dependencies & Execution Order
 
 **Sequential Dependencies (Must Complete In Order):**
-- **Phase 1 (Analysis Validation)**: Must complete first - validates analysis completeness
-- **Phase 2 (Data Architecture)**: Must complete before business logic - establishes data foundation
-- **Phase 3 (Foundational Infrastructure)**: Must complete before feature migration - establishes framework
+
+- **Phase 1 (Analysis Validation & Legacy Setup)**: Must complete first - validates Vue testbed and analysis findings
+- **Phase 2 (Tool Discovery Subdomain)**: Must complete before tool migration - establishes search and navigation infrastructure
+- **Phase 3 (UI Infrastructure Subdomain)**: Must complete before tool migration - establishes copy, validation, and theming patterns
 
 **Parallel Execution Phases:**
-- **Phases 4-6 (Business Logic, Security, Integrations)**: Can proceed in parallel by feature after Phase 3
-- **Phase 7 (Performance & Quality)**: Can run in parallel with feature phases
-- **Phase 8 (Domain Knowledge)**: Can run in parallel with feature phases
+
+- **Phases 4-7 (Domain Tool Migrations)**: Can proceed in parallel by tool category after Phase 3 infrastructure complete
+  - Phase 4: JSON & Text Tools (Data Transformation core)
+  - Phase 5: Crypto & Network Tools (Developer Utilities core) 
+  - Phase 6: Converter & Generator Tools (Data Transformation extended)
+  - Phase 7: Specialized Tools (Developer Utilities extended)
+- **Phase 8 (Integration & Performance)**: After all tool migrations complete - validates unified behavior
+- **Phases 9-10 (Documentation & Retirement)**: Final phases - document and retire Vue assets
 
 **Final Sequential Dependencies:**
 - **Phase N (Cross-Cutting Concerns)**: After all feature phases complete
@@ -368,39 +389,46 @@ estimated_hours: 20
 
 ## Post-Flight Checklist ✅
 
-**Verify these conditions before marking parent task complete**:
+**Verify these conditions before marking T111 complete in parent tasks.md**:
 
-- [ ] All tasks T001-TXXX marked complete above
+- [ ] All tasks T001-T083 marked complete above
 - [ ] Integration tests pass: `pytest tests/productivity/test_it_tools_integration.py`
-- [ ] Performance baselines met (documented in `migration-validation.md`)
-- [ ] Ground truth tests confirm functional parity with legacy
-- [ ] Legacy `features/it-tools/` backed up to `archive/`
-- [ ] Migration completion documented in `migration-validation.md`
-- [ ] All analysis findings from project_analysis_report.md addressed
-- [ ] No regressions in existing functionality
-- [ ] Security audit passed (if applicable)
-- [ ] Accessibility compliance maintained (WCAG 2.1 AA)
+- [ ] All 80+ tools functional parity validated: React outputs match Vue originals exactly
+- [ ] Performance baselines met: Client-side processing <10ms, UI interactions <200ms (documented in `migration-validation.md`)
+- [ ] Ground truth tests confirm functional parity: Vue testbed comparisons pass
+- [ ] Legacy `features/it-tools/` backed up to `features/it-tools-archive/`
+- [ ] IT-Tools migration completion documented in `migration-validation.md`
+- [ ] All analysis findings from `it-tools-analysis.md` addressed
+- [ ] React components integrated into `apps/productivity-service/src/domains/infrastructure/tools/`
+- [ ] Tool discovery and search functionality maintains Vue performance baselines
+- [ ] Copy-to-clipboard workflows function identically across all tools
+- [ ] Mobile compatibility preserved from Vue implementation
+- [ ] No regressions in productivity service functionality
 
-**⚠️ If any checklist item fails**: DO NOT mark parent task complete. Fix issues and re-validate.
+**⚠️ If any checklist item fails**: DO NOT mark T111 complete. Fix issues and re-validate.
 
 **Completion Action**:
+
 1. Mark all checkboxes above ✅
 2. Run validation command: `pytest tests/productivity/test_it_tools_integration.py`
 3. Document completion in `migration-validation.md`
-4. Mark parent task TXXX complete in `tasks.md`
-5. Proceed to return task (next in sequence) in `tasks.md`
+4. Return to `tasks.md` and mark T111 complete
+5. Proceed to T112 (next task in parent task list)
 
 **Documentation Update Required**:
+
 ```markdown
 # In migration-validation.md
 
-### IT-Tools Migration (TXXX)
+### IT-Tools Migration (T111)
 - **Status**: ✅ Complete
 - **Completed**: [DATE]
-- **Estimated Hours**: XX
-- **Actual Hours**: XX
-- **Tests**: X passed, 0 failed
-- **Performance**: All baselines met/exceeded
-- **Notes**: [Any notable achievements or challenges]
+- **Estimated Hours**: 30
+- **Actual Hours**: [ACTUAL]
+- **Tools Migrated**: 80+ developer utilities
+- **Tests**: All passed, 0 failed
+- **Performance**: All client-side processing <10ms baselines met
+- **DDD Integration**: React components successfully integrated into Infrastructure domain
+- **Notes**: Vue→React migration with 100% functional parity achieved
 ```
 

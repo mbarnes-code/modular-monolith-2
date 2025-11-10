@@ -1,27 +1,27 @@
 ---
-description: "Task list template for asset relocation and implementation"
-parent_task: "../tasks.md#TXXX"
-parent_phase: "Phase X: Mtg Migrations"
-return_to: "../tasks.md#TXXX"
+description: "MTG Commander Map data science pipeline migration to modular monolith"
+parent_task: "../tasks.md#T115"
+parent_phase: "Phase 5: MTG Domain Migrations" 
+return_to: "../tasks.md#T116"
 domain: "mtg"
 target_service: "apps/mtg-service/src/"
 legacy_path: "features/mtg-commander-map"
-estimated_hours: 30
+estimated_hours: 40
 ---
 
 # Tasks: [MIGRATION: MTG Commander Map]
 
-**⬆️ PARENT TASK**: [`tasks.md#TXXX`](../tasks.md#TXXX)  
-**⬇️ RETURN TO**: [`tasks.md#TXXX`](../tasks.md#TXXX)
+**⬆️ PARENT TASK**: [`tasks.md#T115`](../tasks.md#T115)  
+**⬇️ RETURN TO**: [`tasks.md#T116`](../tasks.md#T116)
 
 ---
 
 ## Handoff Context
 
-**Called From**: `tasks.md` Phase X, Task TXXX  
-**Entry Condition**: Mtg service foundation ready (Phase 1-4 complete)  
+**Called From**: `tasks.md` Phase 5, Task T115  
+**Entry Condition**: Phase 1-2 complete, apps/mtg-service/ foundation ready  
 **Exit Condition**: All tasks below complete + validation tests pass  
-**Return Action**: Mark TXXX complete in parent `tasks.md`, proceed to next task
+**Return Action**: Mark T115 complete in parent `tasks.md`, proceed to T116
 
 **Handoff Protocol**: See [`HANDOFF-PROTOCOL.md`](./HANDOFF-PROTOCOL.md) for complete workflow documentation.
 
@@ -39,25 +39,59 @@ estimated_hours: 30
 - [ ] Legacy environment setup: `features/mtg-commander-map/` accessible
 - [ ] Project analysis report completed and validated
 
-**⚠️ If any checklist item fails**: STOP and return to parent `tasks.md` to complete prerequisites.
+4. Confirm all child task completion criteria met
+5. Update migration-validation.md with completion status and any notes
+
+**⚠️ Do not return to parent until ALL items above are complete.**
 
 ---
 
-**Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
-**Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
-**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY)**, research.md, data-model.md, contracts/
+## Post-Flight Checklist ✅
 
-**Project Analysis Integration**: This task template MUST reference specific sections from project_analysis_report.md:
-- Section 2 (Data Architecture) - for data model migration tasks
-- Section 3 (API Architecture) - for endpoint and authentication migration
-- Section 4 (Business Logic) - for critical algorithm preservation
-- Section 5 (External Integrations) - for third-party service continuity
-- Section 8 (Performance Characteristics) - for baseline preservation
-- Section 11 (Domain Knowledge) - for business rule preservation
+**Verify these conditions before marking parent T115 complete**:
 
-**Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first to establish functional baselines.
+- [ ] All T001-T074 tasks marked complete with passing tests
+- [ ] UMAP algorithm generates coordinates matching legacy output (within 0.000001 tolerance)
+- [ ] HDBSCAN clustering produces identical cluster assignments and defining cards
+- [ ] External data integration (Scryfall API + EDHREC) functions correctly with error handling
+- [ ] Submap generation produces all archetype-specific maps matching legacy format
+- [ ] Full pipeline execution completes within 24-48 hour baseline timeframe
+- [ ] Memory usage monitored and stays within 32GB+ cloud deployment requirements
+- [ ] Ground truth validation tests pass for all critical algorithms
+- [ ] Output CSV/JSON files maintain Lucky Paper website compatibility
+- [ ] Production dataset processing validation completed successfully
+- [ ] Legacy `features/mtg-commander-map/` safely archived before removal
+- [ ] MTG domain knowledge and algorithmic parameter wisdom documented
+- [ ] Validation test: `pytest tests/mtg/test_mtg_commander_map_integration.py` passes
 
-**Organization**: Tasks are grouped by Legacy Feature AND cross-referenced with Project Analysis sections to ensure 1:1 functional parity and comprehensive coverage.
+**Algorithm Fidelity Validation**:
+- [ ] UMAP embedding preserves deck similarity relationships (Jaccard metric)
+- [ ] HDBSCAN clustering discovers same number and quality of archetypes
+- [ ] Defining cards statistical significance matches legacy binomial calculations
+- [ ] Adaptive parameter selection maintains clustering quality across dataset sizes
+- [ ] Edge case handling (disconnected decks, memory overflow, too-few-decks) functions identically
+
+**⚠️ If any checklist item fails**: Fix implementation before marking T115 complete in parent `tasks.md`.
+
+---
+
+**Input (Spec)**: Analysis from `modular-analysis-repo-main/reports/mtg-commander-map-analysis.md`  
+**Input (Legacy)**: Legacy codebase path `features/mtg-commander-map/`  
+**Prerequisites**: `mtg-commander-map-analysis.md` (MANDATORY), plan.md, spec.md
+
+**Project Analysis Integration**: This migration MUST reference specific sections from `mtg-commander-map-analysis.md`:
+- Section 2 (Data Architecture) - Commander Deck, Magic Card, and Cluster models
+- Section 4 (Business Logic) - CRITICAL UMAP/HDBSCAN algorithms that MUST be preserved exactly
+- Section 5 (External Integrations) - Scryfall API and EDHREC data dependencies
+- Section 8 (Performance Characteristics) - Memory requirements (32GB+) and runtime baselines
+- Section 11 (Domain Knowledge) - MTG Commander format rules and algorithm parameters
+
+**Migration Architecture**: Data Science Processing Service (Category A - Complex Algorithms)
+- **Deployment Strategy**: Separate microservice for memory-intensive ML operations
+- **Integration Pattern**: Job queue + result storage for async processing
+- **Preservation Priority**: 100% algorithmic fidelity - UMAP/HDBSCAN parameters and logic must be identical
+
+**Tests**: Ground Truth validation against existing generated maps is MANDATORY for algorithm preservation.
 
 ## Format: [ID] [P?] [Feature] [Analysis: Section.#] [Logic: <legacy_file::function>] Description
 - [P]: Can run in parallel
@@ -103,191 +137,198 @@ estimated_hours: 30
 
 ## Phase 1: Analysis Validation & Legacy Environment Setup
 
-**Purpose**: Validate project analysis findings and establish baseline testing environment.
+**Purpose**: Validate MTG Commander Map analysis and establish data science processing baseline.
 
-- [ ] T001 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections are filled
-- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate current tech stack inventory against actual codebase
-- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing tests and document current coverage metrics
-- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current performance characteristics
-- [ ] T005 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM) per Section.10.1
-- [ ] T006 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function
-- [ ] T007 [P] Create new project structure per implementation plan
-- [ ] T008 [P] Initialize target framework dependencies (per analysis Section.1.2)
+- [ ] T001 [Analysis: Section.1] Validate MTG Commander Map analysis completeness: Confirm CRITICAL algorithms (UMAP, HDBSCAN) and data models documented
+- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Python data science pipeline (UMAP, HDBSCAN, pandas, numpy, scikit-learn)
+- [ ] T003 [P] [Analysis: Section.7.1] Test baseline: Run existing `scripts/test.py` and document algorithm validation coverage
+- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure UMAP embedding (4-8hrs), HDBSCAN clustering (1-3hrs), memory usage (32GB+)
+- [ ] T005 [Ground Truth] Setup legacy Docker environment: Build `jcrowdis/commander-map` container for algorithm validation per Section.10.1
+- [ ] T006 [Ground Truth] Validate legacy pipeline: Execute full `make-map.sh` workflow and confirm map generation functionality
+- [ ] T007 [P] Create `apps/mtg-service/src/commander_map/` module structure for data science pipeline
+- [ ] T008 [P] Initialize Python ML dependencies: `umap-learn`, `hdbscan`, `pandas`, `numpy`, `scikit-learn` per analysis Section.1.2
 
 ---
 
 ## Phase 2: Data Architecture Migration
 
-**Purpose**: Migrate data models and database schema based on analysis Section 2.
+**Purpose**: Migrate MTG data models for Commander deck analysis pipeline based on Section 2.
 
-- [ ] T009 [Analysis: Section.2.1] Inventory data models: Create comprehensive list from analysis findings
-- [ ] T010 [Analysis: Section.2.1] Database schema migration: Implement new schema preserving all relationships from Section.2.2
-- [ ] T011 [P] [Analysis: Section.2.1] Port data models: Create new framework models matching legacy field mappings exactly
-- [ ] T012 [Analysis: Section.2.3] Database performance patterns: Implement indexes and optimizations per analysis
-- [ ] T013 [Ground Truth] Data validation tests: Write tests confirming data integrity and constraints
-- [ ] T014 [Analysis: Section.2.1] Data migration scripts: Create scripts for existing data preservation
+- [ ] T009 [Analysis: Section.2.1] Commander Deck model: Implement CommanderDeck class with colorIdentity, commander, partner, tribe, theme, cards, url fields
+- [ ] T010 [Analysis: Section.2.1] Magic Card model: Implement MagicCard class with name, mana_cost, cmc, color_identity, type_line, price_usd, earliest_release
+- [ ] T011 [P] [Analysis: Section.2.1] Cluster model: Implement DeckCluster with cluster_id, defining_cards, defining_traits, coordinates per ML algorithm needs
+- [ ] T012 [Analysis: Section.2.3] In-memory processing: Implement pandas DataFrame patterns and sparse matrix representation for 1.2M+ decks
+- [ ] T013 [Ground Truth] Data validation tests: Write tests validating Commander format legality, color identity consistency, card existence
+- [ ] T014 [Analysis: Section.2.1] Trait mapping system: Implement `replace_traits_with_ints` function for ML algorithm compatibility per `scripts/calculate.py`
 
-**Checkpoint**: Data layer migrated with full functional parity.
+**Checkpoint**: MTG data models support machine learning pipeline processing with 32GB+ memory optimization.
 
-## Phase 3: Foundational Infrastructure
+## Phase 3: Data Science Processing Infrastructure
 
-**Purpose**: Core application infrastructure based on analysis findings.
+**Purpose**: Core data science pipeline infrastructure for Commander Map generation.
 
-- [ ] T015 [Analysis: Section.3.1] Authentication/authorization framework: Implement exact auth patterns from Section.3.1
-- [ ] T016 [Analysis: Section.9.1] Security measures: Implement all security patterns identified in analysis
-- [ ] T017 [P] [Analysis: Section.3.2] API routing framework: Setup endpoint structure (empty routes initially)
-- [ ] T018 [Analysis: Section.8.1] Performance monitoring: Implement baseline monitoring per Section.8.1
-- [ ] T019 [Analysis: Section.7.1] Testing framework: Setup testing infrastructure matching current patterns
-- [ ] T020 Configure error handling and logging infrastructure per Section.10.2
+- [ ] T015 [Analysis: Section.3.2] Async job processing: Setup Celery/RQ job queue for memory-intensive UMAP/HDBSCAN operations (no auth needed - batch processing)
+- [ ] T016 [Analysis: Section.9.1] Data security: Implement input validation for EDHREC JSON and Scryfall API responses (minimal security - public data)
+- [ ] T017 [P] [Analysis: Section.3.2] Processing endpoints: Create job submission and status endpoints for map generation pipeline
+- [ ] T018 [Analysis: Section.8.1] Memory monitoring: Implement RAM usage tracking for 32GB+ embedding operations and cloud deployment detection
+- [ ] T019 [Analysis: Section.7.1] Ground truth framework: Setup algorithm validation infrastructure comparing generated maps with legacy outputs
+- [ ] T020 Configure error handling for memory exhaustion, card validation failures, and clustering edge cases per Section.10.2
 
-**Checkpoint**: Foundation ready with security and monitoring. NO business logic exists.
+**Checkpoint**: Processing infrastructure ready for ML algorithm implementation. NO algorithms implemented yet.
 
-## Phase 4: Critical Business Logic Migration (Feature 1) 🎯 MVP
+## Phase 4: UMAP Dimensionality Reduction Algorithm 🎯 CRITICAL
 
-**Migration Goal**: [Brief description based on Analysis Section.4.1 findings]
+**Migration Goal**: Preserve exact UMAP embedding algorithm that reduces 1.2M+ Commander decks from ~20K dimensions to 2D coordinates
 
-**Analysis Reference**: Section.4.1 - Critical Algorithms, Section.11.1 - Domain Knowledge
+**Analysis Reference**: Section.4.1 - UMAP Algorithm (MUST PRESERVE), Section.11.1 - Jaccard Similarity Domain Knowledge
 
-**Independent Test**: [Test case from Analysis Section.4.1 or domain requirements]
+**Independent Test**: Generated 2D coordinates must match legacy output within numerical precision tolerance
 
-### Phase 4a: Analysis Cross-Reference & Ground Truth
+### Phase 4a: UMAP Algorithm Analysis & Ground Truth
 
-- [ ] T021 [Analysis: Section.4.1] Algorithm analysis: Review critical algorithm documentation for this feature
-- [ ] T022 [Analysis: Section.11.1] Domain knowledge review: Document business rules and domain concepts
-- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Ground Truth Test: Write test proving original behavior matches analysis documentation
-- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation Test: Create target framework test (initially failing)
-- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document current performance metrics for this feature
+- [ ] T021 [Analysis: Section.4.1] UMAP algorithm analysis: Review `map_classes.py::CommanderMap.reduce_dimensionality()` implementation details
+- [ ] T022 [Analysis: Section.11.1] Domain knowledge: Document Jaccard metric necessity for MTG deck similarity and sparse binary vector optimization  
+- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: map_classes.py::reduce_dimensionality] Ground Truth Test: Generate known dataset embedding with legacy algorithm
+- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: map_classes.py::reduce_dimensionality] Validation Test: Create coordinate comparison test (initially failing)
+- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document UMAP 4-8 hour runtime and 32GB+ memory requirements for 1.2M decks
 
-### Phase 4b: Incremental Migration & Validation
+### Phase 4b: UMAP Implementation & Validation
 
-- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Algorithm preservation: Port exact business logic maintaining complexity characteristics
-- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation execution: Run new test against ported logic - MUST pass
-- [ ] T028 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis
-- [ ] T029 [F1] [Analysis: Section.3.2] API integration: Wire proven logic into endpoint structure
-- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics
-- [ ] T031 [F1] Integration test: End-to-end validation of feature functionality
+- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: map_classes.py::reduce_dimensionality] Algorithm preservation: Port exact UMAP parameters (jaccard metric, random_state=0, n_components=2)
+- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: map_classes.py::reduce_dimensionality] NaN handling: Implement disconnected deck assignment to nearest commander neighbor + noise
+- [ ] T028 [F1] [Analysis: Section.11.2] Edge cases: Handle memory overflow, too-few-decks (<threshold), and sparse matrix optimization
+- [ ] T029 [F1] [Analysis: Section.3.2] Processing integration: Wire UMAP algorithm into async job processing pipeline
+- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm 2D embedding generation meets memory and runtime baselines
+- [ ] T031 [F1] Ground truth validation: End-to-end coordinate comparison test - MUST match legacy within 0.000001 tolerance
 
-**Checkpoint**: Critical feature migrated with documented functional and performance parity.
+**Checkpoint**: UMAP dimensionality reduction algorithm migrated with identical mathematical output and performance characteristics.
 
-## Phase 5: Security & Authorization Migration (Feature 2)
+## Phase 5: HDBSCAN Density-Based Clustering Algorithm 🎯 CRITICAL  
 
-**Migration Goal**: [Based on Analysis Section.3.1 and Section.9.1 findings]
+**Migration Goal**: Preserve exact HDBSCAN clustering that identifies natural Commander deck archetypes without predefined categories
 
-**Analysis Reference**: Section.3.1 - Authentication/Authorization, Section.9.1 - Security Measures
+**Analysis Reference**: Section.4.1 - HDBSCAN Algorithm (MUST PRESERVE), Section.11.1 - Density-Based Meta Discovery
 
-**Independent Test**: [Test case from Analysis Section.3.1 authorization patterns]
+**Independent Test**: Cluster assignments and defining cards must match legacy output for statistical significance validation
 
-### Phase 5a: Security Analysis Integration
+### Phase 5a: HDBSCAN Algorithm Analysis & Ground Truth
 
-- [ ] T032 [Analysis: Section.3.1] Authorization pattern analysis: Document current access control implementation
-- [ ] T033 [Analysis: Section.9.1] Security measures inventory: Review all security patterns to preserve
-- [ ] T034 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Ground Truth Test: Prove current authorization behavior
-- [ ] T035 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Validation Test: Create target authorization test
+- [ ] T032 [Analysis: Section.4.1] HDBSCAN algorithm analysis: Review `map_classes.py::CommanderMap.cluster_decks()` density-based clustering implementation
+- [ ] T033 [Analysis: Section.11.1] Clustering domain knowledge: Document min_cluster_size=15, adaptive parameters, and archetype discovery principles
+- [ ] T034 [P] [F2] [Analysis: Section.4.1] [Logic: map_classes.py::cluster_decks] Ground Truth Test: Generate known dataset clustering with legacy algorithm
+- [ ] T035 [P] [F2] [Analysis: Section.4.1] [Logic: map_classes.py::cluster_decks] Validation Test: Create cluster assignment comparison test
 
-### Phase 5b: Authorization Migration
+### Phase 5b: HDBSCAN Implementation & Validation
 
-- [ ] T036 [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Authorization logic port: Implement exact access control patterns
-- [ ] T037 [F2] [Analysis: Section.9.1] Security validation: Ensure all security measures maintained
-- [ ] T038 [F2] [Analysis: Section.3.1] Authorization integration: Wire into API framework
-- [ ] T039 [F2] Security testing: Validate all authorization scenarios
+- [ ] T036 [F2] [Analysis: Section.4.1] [Logic: map_classes.py::cluster_decks] Algorithm preservation: Port exact HDBSCAN parameters and min_cluster_size logic
+- [ ] T037 [F2] [Analysis: Section.4.1] [Logic: calculate.py::get_parameters] Adaptive parameters: Implement dataset-size-based parameter selection (4-25 neighbors, 4-12 min cluster size)
+- [ ] T038 [F2] [Analysis: Section.4.1] Edge case handling: Implement too-few-decks assignment and noise deck nearest-cluster assignment
+- [ ] T039 [F2] [Analysis: Section.4.1] Statistical significance: Port defining cards algorithm using binomial distribution for cluster characterization
 
-**Checkpoint**: Authorization and security patterns migrated with full parity.
+**Checkpoint**: HDBSCAN clustering algorithm migrated with identical archetype discovery and statistical characterization.
 
-## Phase 6: External Integrations Migration
+## Phase 6: External Data Integration (Scryfall API + EDHREC Data)
 
-**Migration Goal**: Preserve all third-party service integrations per Analysis Section.5
+**Migration Goal**: Preserve critical external data dependencies for MTG card validation and deck datasets per Section 5
 
-**Analysis Reference**: Section.5.1 - Third-party APIs, Section.5.2 - Auth Providers
+**Analysis Reference**: Section.5.1 - Scryfall API (CRITICAL), EDHREC Data (CRITICAL)
 
-### Phase 6a: Integration Analysis & Testing
+### Phase 6a: External Data Source Analysis & Testing
 
-- [ ] T040 [Analysis: Section.5.1] External API inventory: Document all third-party integrations
-- [ ] T041 [Analysis: Section.5.1] Integration testing: Validate current external service connections
-- [ ] T042 [P] [Analysis: Section.5.1] API client migration: Port all external API clients
-- [ ] T043 [Analysis: Section.5.1] Error handling preservation: Maintain all fallback behaviors
+- [ ] T040 [Analysis: Section.5.1] Scryfall API integration: Document oracle-cards + default-cards endpoints for card reference data
+- [ ] T041 [Analysis: Section.5.1] EDHREC data integration: Document 1.2M+ deck dataset access and preprocessing requirements  
+- [ ] T042 [P] [Analysis: Section.5.1] [Logic: card.py::fetch_cards] Scryfall client migration: Port card fetching with double-faced card handling
+- [ ] T043 [Analysis: Section.5.1] [Logic: load.py::load_magic_cards] Error handling: Implement network failure and card validation fallbacks
 
-### Phase 6b: Integration Validation
+### Phase 6b: Data Pipeline Integration Validation
 
-- [ ] T044 [Analysis: Section.5.1] Service connectivity: Test all external integrations
-- [ ] T045 [Analysis: Section.5.2] Authentication provider testing: Validate OAuth/SSO flows
-- [ ] T046 [Analysis: Section.5.1] Caching strategy: Implement analysis-documented caching patterns
+- [ ] T044 [Analysis: Section.5.1] [Logic: card.py::find_price_and_release] Price/date aggregation: Test card pricing and release date processing across all printings
+- [ ] T045 [Analysis: Section.5.1] [Logic: preprocess_data.py] EDHREC preprocessing: Validate deck parsing, card validation, and trait mapping pipeline 
+- [ ] T046 [Analysis: Section.5.1] Mapping files: Implement `edhrec-to-scryfall.json` and `duplicates.txt` correction systems for data quality
 
-## Phase 7: Performance & Quality Assurance
+## Phase 7: Submap Generation & Output Pipeline
 
-**Migration Goal**: Meet or exceed baseline performance per Analysis Section.8
+**Migration Goal**: Implement per-archetype submap generation and CSV/JSON output matching Lucky Paper website requirements per Section 8
 
-**Analysis Reference**: Section.8.1 - Performance Baselines, Section.7.1 - Test Coverage
+**Analysis Reference**: Section.8.1 - Performance Baselines (12-24hr submap generation), Section 4.1 - Submap Algorithm
 
-### Phase 7a: Performance Validation
+### Phase 7a: Submap Algorithm Implementation
 
-- [ ] T047 [Analysis: Section.8.1] Performance benchmarking: Measure new implementation against baselines
-- [ ] T048 [Analysis: Section.8.2] Bottleneck analysis: Ensure no performance regressions
-- [ ] T049 [Analysis: Section.8.3] Scalability testing: Validate scaling characteristics maintained
+- [ ] T047 [Analysis: Section.4.1] [Logic: generate_submaps.py] Submap generation: Port individual archetype map creation with cluster-specific UMAP parameters
+- [ ] T048 [Analysis: Section.8.2] Parallelization optimization: Implement multiprocessing for thousands of independent submaps (current bottleneck)
+- [ ] T049 [Analysis: Section.4.1] Adaptive parameters: Apply `get_parameters()` scaling for different submap sizes (300-20K+ decks)
 
-### Phase 7b: Quality Assurance
+### Phase 7b: Output Format & Quality Validation
 
-- [ ] T050 [Analysis: Section.7.1] Test coverage parity: Achieve analysis-documented coverage levels
-- [ ] T051 [Analysis: Section.7.2] Critical test preservation: Migrate all critical test scenarios
-- [ ] T052 [P] [Analysis: Section.11.2] Edge case validation: Test all documented quirks and workarounds
+- [ ] T050 [Analysis: Section.7.1] CSV/JSON export: Generate `commander-map-coordinates.csv`, `trait-mapping.csv`, and cluster definition files
+- [ ] T051 [Analysis: Section.7.2] Lucky Paper compatibility: Validate output format matches website consumption requirements  
+- [ ] T052 [P] [Analysis: Section.11.2] Edge case handling: Test statistical significance thresholds and cluster quality metrics validation
 
-## Phase 8: Domain Knowledge Preservation
+## Phase 8: MTG Domain Knowledge & Algorithmic Wisdom Preservation  
 
-**Migration Goal**: Capture all tribal knowledge per Analysis Section.11
+**Migration Goal**: Capture all MTG Commander format expertise and data science algorithm parameter wisdom per Section 11
 
-**Analysis Reference**: Section.11.1 - Business Domain, Section.11.2 - Undocumented Knowledge
+**Analysis Reference**: Section.11.1 - MTG Domain Rules, Section.11.2 - Algorithm Parameter Selection Tribal Knowledge
 
-- [ ] T053 [Analysis: Section.11.1] Domain concept validation: Ensure all business rules preserved
-- [ ] T054 [Analysis: Section.11.2] Quirk implementation: Implement all documented workarounds
-- [ ] T055 [Analysis: Section.11.3] User behavior patterns: Validate user workflow preservation
-- [ ] T056 [P] Documentation updates reflecting analysis findings
+- [ ] T053 [Analysis: Section.11.1] MTG Commander rules: Preserve color identity constraints, legendary commander requirements, and format legality validation
+- [ ] T054 [Analysis: Section.11.2] Algorithm quirks: Implement double-faced card name splitting, Scryfall token classification overrides, and parameter sensitivity handling
+- [ ] T055 [Analysis: Section.11.3] User workflow preservation: Validate deck similarity browsing, archetype discovery, and meta trend analysis patterns match community expectations  
+- [ ] T056 [P] [Analysis: Section.11.2] Parameter documentation: Document why Jaccard > Euclidean, UMAP > t-SNE, HDBSCAN > k-means for Commander deck analysis
 
-## Phase N: Cross-Cutting Concerns & Polish
+## Phase 9: Production Processing Pipeline & Deployment
 
-- [ ] TXXX [Analysis: Section.10.2] Logging and monitoring: Implement analysis-documented patterns
-- [ ] TXXX [Analysis: Section.9.2] Security hardening: Final security validation
-- [ ] TXXX [P] Code cleanup and refactoring (target framework only)
-- [ ] TXXX [Analysis: Section.13.1] Documentation updates incorporating analysis findings
+- [ ] T057 [Analysis: Section.10.2] Cloud processing setup: Configure high-memory (32GB+) instances for UMAP embedding operations
+- [ ] T058 [Analysis: Section.10.1] Docker deployment: Implement containerized pipeline matching `jcrowdis/commander-map` production requirements
+- [ ] T059 [P] Processing monitoring: Add memory usage tracking, algorithm progress logging, and error notification for 24-48 hour pipeline runs
+- [ ] T060 [Analysis: Section.13.1] Algorithm documentation: Document UMAP/HDBSCAN parameter selection wisdom and MTG domain knowledge for future maintenance
 
-## Phase N+1: Migration Validation & Asset Retirement
+## Phase 10: Algorithm Validation & Production Readiness
 
-**Purpose**: Comprehensive validation before legacy asset removal.
+**Purpose**: Comprehensive validation of data science algorithms before Lucky Paper deployment.
 
-### Phase N+1a: Complete Migration Validation
+### Phase 10a: Complete Algorithm Validation
 
-- [ ] TXXX [Analysis: All Sections] Full analysis cross-reference: Verify all analysis findings addressed
-- [ ] TXXX [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically
-- [ ] TXXX [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds baselines
-- [ ] TXXX [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met
-- [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags have corresponding passing validation tests
-- [ ] TXXX Run Full Regression Suite: Execute complete test suite including ground truth comparisons
+- [ ] T061 [Analysis: All Sections] Full algorithm cross-reference: Verify UMAP, HDBSCAN, and submap generation match legacy mathematical outputs
+- [ ] T062 [Analysis: Section.4.1] Ground truth parity validation: Confirm generated maps are visually and numerically identical to legacy versions
+- [ ] T063 [Analysis: Section.8.1] Performance regression testing: Validate 24-48 hour pipeline runtime and 32GB memory usage within acceptable bounds
+- [ ] T064 [Analysis: Section.12.3] Success criteria verification: Confirm clustering quality metrics and defining card statistical significance maintained
+- [ ] T065 Verify all algorithmic Logic preservation: Confirm all [Logic: map_classes.py::*, calculate.py::*, etc.] have passing validation tests
+- [ ] T066 Run full dataset regression: Execute complete pipeline on production EDHREC data and compare outputs with legacy system
 
-### Phase N+1b: Safe Asset Retirement
+### Phase 10b: Lucky Paper Production Integration
 
-- [ ] TXXX [Analysis: Section.12.2] Risk mitigation: Address all identified migration risks
-- [ ] TXXX Legacy asset backup: Create secure archive of legacy codebase before deletion
-- [ ] TXXX Production validation: Run new system in production-like environment
-- [ ] TXXX Stakeholder approval: Obtain sign-off from all analysis-identified stakeholders
-- [ ] TXXX Delete Legacy Asset: After 100% validation, remove legacy asset directory
+- [ ] T067 [Analysis: Section.12.2] Output format validation: Ensure CSV/JSON files maintain exact compatibility with Lucky Paper website consumption
+- [ ] T068 Legacy pipeline backup: Archive `features/mtg-commander-map/` with working Docker environment before removal  
+- [ ] T069 Production dataset validation: Run new pipeline on latest EDHREC data and validate map quality with MTG domain experts
+- [ ] T070 Lucky Paper team approval: Obtain sign-off on map quality and website integration compatibility
+- [ ] T071 Safe legacy retirement: After 100% validation and stakeholder approval, remove `features/mtg-commander-map/` directory
 
-### Phase N+1c: Post-Migration Monitoring
+### Phase 10c: Post-Migration Algorithm Monitoring
 
-- [ ] TXXX [Analysis: Section.10.2] Monitoring validation: Confirm monitoring systems capture same metrics
-- [ ] TXXX [Analysis: Section.8.1] Performance monitoring: Track performance against established baselines
-- [ ] TXXX [Analysis: Section.11.3] User behavior monitoring: Validate user workflow preservation
+- [ ] T072 [Analysis: Section.10.2] Processing monitoring: Implement algorithm runtime tracking and memory usage alerts for cloud deployments
+- [ ] T073 [Analysis: Section.8.1] Quality baseline tracking: Monitor clustering metrics and defining card statistical significance over time
+- [ ] T074 [Analysis: Section.11.3] Community feedback monitoring: Track MTG community reception of map quality and archetype discovery accuracy
 
 ### Dependencies & Execution Order
 
 **Sequential Dependencies (Must Complete In Order):**
-- **Phase 1 (Analysis Validation)**: Must complete first - validates analysis completeness
-- **Phase 2 (Data Architecture)**: Must complete before business logic - establishes data foundation
-- **Phase 3 (Foundational Infrastructure)**: Must complete before feature migration - establishes framework
+- **Phase 1 (Analysis Validation)**: Must complete first - validates MTG Commander Map analysis and sets up ground truth environment
+- **Phase 2 (Data Architecture)**: Must complete before algorithms - establishes MTG data models and in-memory processing patterns  
+- **Phase 3 (Processing Infrastructure)**: Must complete before algorithms - establishes async job processing for memory-intensive operations
+
+**Critical Algorithm Dependencies:**
+- **Phase 4 (UMAP Algorithm)**: Must complete before Phase 5 - clustering requires dimensionality-reduced embeddings
+- **Phase 5 (HDBSCAN Algorithm)**: Must complete before Phase 7 - submap generation requires cluster assignments
+- **Phase 6 (External Data)**: Can run in parallel with Phase 4-5 - data sources needed for full pipeline testing
 
 **Parallel Execution Phases:**
-- **Phases 4-6 (Business Logic, Security, Integrations)**: Can proceed in parallel by feature after Phase 3
-- **Phase 7 (Performance & Quality)**: Can run in parallel with feature phases
-- **Phase 8 (Domain Knowledge)**: Can run in parallel with feature phases
+- **Phases 4-6 (UMAP, HDBSCAN, Data Integration)**: Core algorithms can be developed in parallel after Phase 3
+- **Phase 7 (Submap Generation)**: Requires Phases 4-5 complete for cluster-based processing
+- **Phase 8 (Domain Knowledge)**: Can document throughout all phases  
 
 **Final Sequential Dependencies:**
+- **Phase 9 (Production Pipeline)**: Requires all algorithms (Phases 4-7) complete
+- **Phase 10 (Validation & Retirement)**: Must be final phase - validates complete system before legacy removal
 - **Phase N (Cross-Cutting Concerns)**: After all feature phases complete
 - **Phase N+1 (Asset Retirement)**: The absolute final step - only after complete validation
 

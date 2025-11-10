@@ -1,27 +1,27 @@
 ---
-description: "Task list template for asset relocation and implementation"
-parent_task: "../tasks.md#TXXX"
-parent_phase: "Phase X: Mtg Migrations"
-return_to: "../tasks.md#TXXX"
-domain: "mtg"
+description: "DDD-based migration: Commander Spellbook Site frontend to unified Jane UI"
+parent_task: "../tasks.md#T114"
+parent_phase: "Phase 8: TCG Migrations"
+return_to: "../tasks.md#T115"
+domain: "tcg"
 target_service: "apps/jane-ui/src/"
 legacy_path: "features/commander-spellbook-site"
-estimated_hours: 35
+estimated_hours: 42
 ---
 
 # Tasks: [MIGRATION: Commander Spellbook Site]
 
-**⬆️ PARENT TASK**: [`tasks.md#TXXX`](../tasks.md#TXXX)  
-**⬇️ RETURN TO**: [`tasks.md#TXXX`](../tasks.md#TXXX)
+**⬆️ PARENT TASK**: [`tasks.md#T114`](../tasks.md#T114)  
+**⬇️ RETURN TO**: [`tasks.md#T115`](../tasks.md#T115)
 
 ---
 
 ## Handoff Context
 
-**Called From**: `tasks.md` Phase X, Task TXXX  
-**Entry Condition**: Mtg service foundation ready (Phase 1-4 complete)  
+**Called From**: `tasks.md` Phase 8, Task T114  
+**Entry Condition**: TCG service foundation ready (Phase 1-4 complete), Commander Spellbook Backend migrated (T113)  
 **Exit Condition**: All tasks below complete + validation tests pass  
-**Return Action**: Mark TXXX complete in parent `tasks.md`, proceed to next task
+**Return Action**: Mark T114 complete in parent `tasks.md`, proceed to T115
 
 **Handoff Protocol**: See [`HANDOFF-PROTOCOL.md`](./HANDOFF-PROTOCOL.md) for complete workflow documentation.
 
@@ -43,44 +43,46 @@ estimated_hours: 35
 
 ---
 
-**Input (Spec)**: Design documents from `/specs/[###-feature-name]/` 
-**Input (Legacy)**: Legacy codebase path [e.g., /features/MISP/] 
-**Prerequisites**: plan.md (required), spec.md (required), **project_analysis_report.md (MANDATORY)**, research.md, data-model.md, contracts/
+**Input (Spec)**: Design documents from `/specs/003-brownfield-integration/` 
+**Input (Legacy)**: Legacy codebase path `/features/commander-spellbook-site/` 
+**Prerequisites**: plan.md (required), spec.md (required), **commander-spellbook-analysis.md (MANDATORY)**, migration-strategy.md
 
-**Project Analysis Integration**: This task template MUST reference specific sections from project_analysis_report.md:
-- Section 2 (Data Architecture) - for data model migration tasks
-- Section 3 (API Architecture) - for endpoint and authentication migration
-- Section 4 (Business Logic) - for critical algorithm preservation
-- Section 5 (External Integrations) - for third-party service continuity
-- Section 8 (Performance Characteristics) - for baseline preservation
-- Section 11 (Domain Knowledge) - for business rule preservation
+**Project Analysis Integration**: This task references commander-spellbook-analysis.md sections:
+- Section 6 (Frontend Architecture) - Next.js/React component migration to unified Jane UI
+- Section 3 (API Architecture) - API service layer integration with jane-orchestrator  
+- Section 11 (Domain Knowledge) - MTG business rules and UI/UX patterns preservation
+- Section 8 (Performance Characteristics) - <3s TCG domain response requirements
+- Section 5 (External Integrations) - Scryfall API, Discord OAuth integration
 
-**Tests**: Tests are MANDATORY for all migration tasks. The "Ground Truth" test (testing the original code) must be written first to establish functional baselines.
+**Tests**: Ground Truth testing is MANDATORY - Next.js app must be running for component validation.
 
-**Organization**: Tasks are grouped by Legacy Feature AND cross-referenced with Project Analysis sections to ensure 1:1 functional parity and comprehensive coverage.
+**Organization**: Tasks organized by DDD bounded contexts within TCG domain, following modular monolith patterns.
 
-## Format: [ID] [P?] [Feature] [Analysis: Section.#] [Logic: <legacy_file::function>] Description
+## Format: [ID] [P?] [Domain Context] [Analysis: Section.#] [Logic: <component_file::component>] Description
+
 - [P]: Can run in parallel
-- [Feature]: Which legacy feature this task belongs to (e.g., F1: Publishing)
-- [Analysis]: Reference to project_analysis_report.md section (e.g., Section.2.1, Section.4.1)
-- [Logic]: The exact legacy code being replaced. This is not optional.
+- [Domain Context]: TCG bounded context (F1: Search, F2: Combo Display, F3: User Management)  
+- [Analysis]: Reference to commander-spellbook-analysis.md section
+- [Logic]: The exact React component/service being migrated
 
 ## Path Conventions
-- **New Project**: [e.g., apps/PROJECT/src/] at repository root
-- **Legacy Project**: [e.g., features/MISP/app/Model/]
-- **Analysis Report**: project_analysis_report.md sections for validation
-- Paths shown below assume single project - adjust based on plan.md structure
 
-## Migration Methodology: Brownfield Asset Relocation
+- **Target UI**: `apps/jane-ui/src/domains/tcg/` (TCG domain within unified UI)
+- **Legacy Frontend**: `features/commander-spellbook-site/src/`
+- **Analysis Reference**: `commander-spellbook-analysis.md` sections for UI/UX validation
+- **Shared Components**: `libs/ui/` for cross-domain reusable components
 
-**Core Principle**: Preserve 100% functional parity while modernizing architecture.
+## Migration Methodology: Frontend DDD Integration
 
-**Validation Strategy**: 
-1. Ground Truth Tests → Establish current behavior baseline
-2. Analysis Cross-Reference → Validate against documented behavior  
-3. Incremental Migration → Port one feature at a time with validation
-4. Integration Testing → Ensure new implementation matches baseline
-5. Performance Validation → Maintain or improve baseline metrics
+**Core Principle**: Integrate Next.js frontend components into unified Jane UI while preserving MTG user experience.
+
+**Validation Strategy:**
+
+1. **Component Ground Truth** → Capture current behavior via Cypress tests
+2. **Domain Boundary Analysis** → Identify TCG-specific vs shared UI components  
+3. **Incremental Integration** → Migrate components by bounded context
+4. **API Integration** → Connect to unified jane-orchestrator backend
+5. **Performance Validation** → Maintain <3s TCG domain response requirements
 
 <!-- 
   ============================================================================
@@ -101,193 +103,215 @@ estimated_hours: 35
   ============================================================================
 -->
 
-## Phase 1: Analysis Validation & Legacy Environment Setup
+## Phase 1: Analysis Validation & Frontend Architecture Assessment
 
-**Purpose**: Validate project analysis findings and establish baseline testing environment.
+**Purpose**: Validate Commander Spellbook Site analysis and establish frontend migration baseline.
 
-- [ ] T001 [Analysis: Section.1] Validate project analysis completeness: Confirm all CRITICAL and IMPORTANT sections are filled
-- [ ] T002 [Analysis: Section.1.2] Technology stack verification: Validate current tech stack inventory against actual codebase
-- [ ] T003 [P] [Analysis: Section.7.1] Test coverage baseline: Run existing tests and document current coverage metrics
-- [ ] T004 [Analysis: Section.8.1] Performance baseline: Measure and document current performance characteristics
-- [ ] T005 [Ground Truth] Setup legacy test environment: Create isolated environment for legacy system (Docker/VM) per Section.10.1
-- [ ] T006 [Ground Truth] Validate legacy functionality: Run legacy system and confirm all critical workflows function
-- [ ] T007 [P] Create new project structure per implementation plan
-- [ ] T008 [P] Initialize target framework dependencies (per analysis Section.1.2)
+- [ ] T001 [Analysis: Section.6.1] Validate Next.js architecture: Confirm Pages Router, SSG/SSR patterns match analysis findings
+- [ ] T002 [Analysis: Section.6.2] Component architecture review: Validate feature-based organization and design system findings  
+- [ ] T003 [P] [Analysis: Section.7.1] Frontend test coverage baseline: Run Cypress tests and document current E2E coverage
+- [ ] T004 [Analysis: Section.8.1] Frontend performance baseline: Measure FCP, LCP, CLS for combo pages per analysis
+- [ ] T005 [Ground Truth] Setup Commander Spellbook Site: Run Next.js dev server and validate all routes functional
+- [ ] T006 [Ground Truth] Validate MTG user workflows: Test search, combo display, submissions end-to-end
+- [ ] T007 [P] Initialize TCG domain structure: Create `apps/jane-ui/src/domains/tcg/` directory structure
+- [ ] T008 [P] Setup shared UI components: Initialize `libs/ui/mtg/` for MTG-specific reusable components
 
 ---
 
-## Phase 2: Data Architecture Migration
+## Phase 2: API Service Layer Integration
 
-**Purpose**: Migrate data models and database schema based on analysis Section 2.
+**Purpose**: Integrate frontend API services with unified jane-orchestrator backend.
 
-- [ ] T009 [Analysis: Section.2.1] Inventory data models: Create comprehensive list from analysis findings
-- [ ] T010 [Analysis: Section.2.1] Database schema migration: Implement new schema preserving all relationships from Section.2.2
-- [ ] T011 [P] [Analysis: Section.2.1] Port data models: Create new framework models matching legacy field mappings exactly
-- [ ] T012 [Analysis: Section.2.3] Database performance patterns: Implement indexes and optimizations per analysis
-- [ ] T013 [Ground Truth] Data validation tests: Write tests confirming data integrity and constraints
-- [ ] T014 [Analysis: Section.2.1] Data migration scripts: Create scripts for existing data preservation
+- [ ] T009 [Analysis: Section.3.2] API endpoints inventory: Document all frontend API calls to commander-spellbook backend
+- [ ] T010 [Analysis: Section.3.2] Create TCG API service: Implement `apps/jane-ui/src/domains/tcg/services/tcg-api.service.ts`
+- [ ] T011 [P] [Analysis: Section.3.1] [Logic: src/services/api.service.ts::apiConfiguration] Migrate API configuration: Port authentication and base URL configuration
+- [ ] T012 [Analysis: Section.5.1] External integrations: Preserve Scryfall API integration patterns in unified service layer
+- [ ] T013 [Ground Truth] API service tests: Create tests validating API service parity with legacy @space-cow-media/spellbook-client
+- [ ] T014 [Analysis: Section.3.3] Error handling patterns: Implement DRF-compatible error handling in jane-orchestrator integration
 
-**Checkpoint**: Data layer migrated with full functional parity.
+**Checkpoint**: API service layer provides identical functionality to legacy spellbook-client.
 
-## Phase 3: Foundational Infrastructure
+## Phase 3: Shared UI Component Migration
 
-**Purpose**: Core application infrastructure based on analysis findings.
+**Purpose**: Migrate reusable UI components to shared library for cross-domain use.
 
-- [ ] T015 [Analysis: Section.3.1] Authentication/authorization framework: Implement exact auth patterns from Section.3.1
-- [ ] T016 [Analysis: Section.9.1] Security measures: Implement all security patterns identified in analysis
-- [ ] T017 [P] [Analysis: Section.3.2] API routing framework: Setup endpoint structure (empty routes initially)
-- [ ] T018 [Analysis: Section.8.1] Performance monitoring: Implement baseline monitoring per Section.8.1
-- [ ] T019 [Analysis: Section.7.1] Testing framework: Setup testing infrastructure matching current patterns
-- [ ] T020 Configure error handling and logging infrastructure per Section.10.2
+- [ ] T015 [Analysis: Section.6.2] [Logic: src/components/layout/TextWithMagicSymbol/::TextWithMagicSymbol] MTG Symbol Parser: Migrate to `libs/ui/mtg/TextWithMagicSymbol/`
+- [ ] T016 [Analysis: Section.6.2] [Logic: src/components/ui/::ThemeSelector] Theme Management: Migrate theme selector to `libs/ui/theme/`
+- [ ] T017 [P] [Analysis: Section.6.3] [Logic: src/components/SearchBar/::SearchBar] Search Components: Extract search patterns to `libs/ui/search/`
+- [ ] T018 [Analysis: Section.11.1] MTG Design Tokens: Create design system tokens for WUBRG colors, mana symbols, card layouts
+- [ ] T019 [Analysis: Section.6.2] Layout Components: Migrate header, footer, navigation to `libs/ui/layout/`
+- [ ] T020 Component Documentation: Create Storybook stories for all migrated shared components
 
-**Checkpoint**: Foundation ready with security and monitoring. NO business logic exists.
+**Checkpoint**: Shared UI library contains reusable MTG and general components.
 
-## Phase 4: Critical Business Logic Migration (Feature 1) 🎯 MVP
+## Phase 4: Search Domain Components Migration 🎯 CORE
 
-**Migration Goal**: [Brief description based on Analysis Section.4.1 findings]
+**Migration Goal**: Migrate combo search functionality - the primary user workflow (60% of traffic per analysis)
 
-**Analysis Reference**: Section.4.1 - Critical Algorithms, Section.11.1 - Domain Knowledge
+**Analysis Reference**: Section.6.3 - SearchBar Component, Section.11.3 - User Behavior Patterns
 
-**Independent Test**: [Test case from Analysis Section.4.1 or domain requirements]
+**Independent Test**: Combo search with filters returns expected results in <3s
 
-### Phase 4a: Analysis Cross-Reference & Ground Truth
+### Phase 4a: Search Interface Components
 
-- [ ] T021 [Analysis: Section.4.1] Algorithm analysis: Review critical algorithm documentation for this feature
-- [ ] T022 [Analysis: Section.11.1] Domain knowledge review: Document business rules and domain concepts
-- [ ] T023 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Ground Truth Test: Write test proving original behavior matches analysis documentation
-- [ ] T024 [P] [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation Test: Create target framework test (initially failing)
-- [ ] T025 [Analysis: Section.8.1] Performance baseline: Document current performance metrics for this feature
+- [ ] T021 [Analysis: Section.6.3] [Logic: src/components/SearchBar/SearchBar.tsx::SearchBar] Search Bar Migration: Port to `apps/jane-ui/src/domains/tcg/components/SearchBar/`
+- [ ] T022 [Analysis: Section.11.1] MTG Search Grammar: Preserve color identity, mana cost, legality search syntax
+- [ ] T023 [P] [F1: Search] [Analysis: Section.6.3] [Logic: src/components/advancedSearch/::AdvancedSearchForm] Advanced Search: Migrate form components with MTG-specific filters
+- [ ] T024 [P] [F1: Search] [Analysis: Section.6.3] [Logic: src/pages/search.tsx::SearchPage] Search Results: Port search results page with pagination and sorting
+- [ ] T025 [Analysis: Section.8.1] Search Performance: Document current search response times for baseline
 
-### Phase 4b: Incremental Migration & Validation
+### Phase 4b: Search Integration & Validation  
 
-- [ ] T026 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Algorithm preservation: Port exact business logic maintaining complexity characteristics
-- [ ] T027 [F1] [Analysis: Section.4.1] [Logic: <legacy_file::function>] Validation execution: Run new test against ported logic - MUST pass
-- [ ] T028 [F1] [Analysis: Section.11.2] Edge case handling: Implement all quirks and workarounds documented in analysis
-- [ ] T029 [F1] [Analysis: Section.3.2] API integration: Wire proven logic into endpoint structure
-- [ ] T030 [F1] [Analysis: Section.8.1] Performance validation: Confirm new implementation meets baseline metrics
-- [ ] T031 [F1] Integration test: End-to-end validation of feature functionality
+- [ ] T026 [F1: Search] [Analysis: Section.11.3] Search Behavior: Implement user workflow patterns (card name → filter → browse)
+- [ ] T027 [F1: Search] [Analysis: Section.3.2] API Integration: Connect search components to unified TCG API service
+- [ ] T028 [F1: Search] [Analysis: Section.11.2] Search Quirks: Implement EDHREC integration and search result ranking
+- [ ] T029 [F1: Search] [Analysis: Section.6.4] Routing: Setup Next.js routing for search pages in jane-ui
+- [ ] T030 [F1: Search] [Analysis: Section.8.1] Performance Validation: Ensure search results load <1.5s per TCG domain requirements
+- [ ] T031 [F1: Search] [Ground Truth] End-to-End Search: Validate complete search workflow matches legacy behavior
 
-**Checkpoint**: Critical feature migrated with documented functional and performance parity.
+**Checkpoint**: Search functionality provides identical user experience with improved performance.
 
-## Phase 5: Security & Authorization Migration (Feature 2)
+## Phase 5: Combo Display Domain Migration
 
-**Migration Goal**: [Based on Analysis Section.3.1 and Section.9.1 findings]
+**Migration Goal**: Migrate combo detail pages and variant display - core content presentation
 
-**Analysis Reference**: Section.3.1 - Authentication/Authorization, Section.9.1 - Security Measures
+**Analysis Reference**: Section.6.3 - Variant Display Components, Section.11.1 - MTG Domain Knowledge
 
-**Independent Test**: [Test case from Analysis Section.3.1 authorization patterns]
+**Independent Test**: Combo page displays complete variant information with MTG symbols and pricing
 
-### Phase 5a: Security Analysis Integration
+### Phase 5a: Combo Display Components
 
-- [ ] T032 [Analysis: Section.3.1] Authorization pattern analysis: Document current access control implementation
-- [ ] T033 [Analysis: Section.9.1] Security measures inventory: Review all security patterns to preserve
-- [ ] T034 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Ground Truth Test: Prove current authorization behavior
-- [ ] T035 [P] [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Validation Test: Create target authorization test
+- [ ] T032 [Analysis: Section.6.3] [Logic: src/components/combo/ComboList/ComboList.tsx::ComboList] Combo Instructions: Migrate step-by-step combo display with MTG symbol parsing
+- [ ] T033 [Analysis: Section.6.3] [Logic: src/components/combo/::VariantDisplay] Variant Cards: Port card list display with quantity, mana cost, color identity
+- [ ] T034 [P] [F2: Display] [Logic: src/pages/combo/[id].tsx::ComboDetailPage] Combo Detail Page: Migrate dynamic combo page with SSG/ISR
+- [ ] T035 [P] [F2: Display] [Analysis: Section.11.1] MTG Formatting: Preserve mana symbol rendering, color identity calculation
 
-### Phase 5b: Authorization Migration
+### Phase 5b: Content Integration & Performance
 
-- [ ] T036 [F2] [Analysis: Section.3.1] [Logic: <legacy_file::function>] Authorization logic port: Implement exact access control patterns
-- [ ] T037 [F2] [Analysis: Section.9.1] Security validation: Ensure all security measures maintained
-- [ ] T038 [F2] [Analysis: Section.3.1] Authorization integration: Wire into API framework
-- [ ] T039 [F2] Security testing: Validate all authorization scenarios
+- [ ] T036 [F2: Display] [Analysis: Section.6.4] Dynamic Routing: Setup combo/[id] routes in unified jane-ui structure
+- [ ] T037 [F2: Display] [Analysis: Section.5.1] Scryfall Integration: Connect card images and data to unified external services
+- [ ] T038 [F2: Display] [Analysis: Section.8.1] Page Performance: Implement ISR with 3600s revalidation for combo pages
+- [ ] T039 [F2: Display] [Ground Truth] Combo Display: Validate all MTG-specific formatting and data display matches legacy
 
-**Checkpoint**: Authorization and security patterns migrated with full parity.
+**Checkpoint**: Combo pages display identical information with maintained performance characteristics.
 
-## Phase 6: External Integrations Migration
+## Phase 6: User Management & Authentication Migration
 
-**Migration Goal**: Preserve all third-party service integrations per Analysis Section.5
+**Migration Goal**: Integrate Discord OAuth and user submission workflows
 
-**Analysis Reference**: Section.5.1 - Third-party APIs, Section.5.2 - Auth Providers
+**Analysis Reference**: Section.5.2 - Discord OAuth, Section.3.1 - JWT Authentication
 
-### Phase 6a: Integration Analysis & Testing
+### Phase 6a: Authentication Integration
 
-- [ ] T040 [Analysis: Section.5.1] External API inventory: Document all third-party integrations
-- [ ] T041 [Analysis: Section.5.1] Integration testing: Validate current external service connections
-- [ ] T042 [P] [Analysis: Section.5.1] API client migration: Port all external API clients
-- [ ] T043 [Analysis: Section.5.1] Error handling preservation: Maintain all fallback behaviors
+- [ ] T040 [Analysis: Section.5.2] [Logic: src/services/token.service.ts::tokenService] Token Management: Migrate JWT token service to unified authentication
+- [ ] T041 [Analysis: Section.5.2] Discord OAuth Flow: Integrate Discord authentication with jane-orchestrator auth system
+- [ ] T042 [P] [Analysis: Section.3.1] [Logic: src/components/layout/UserDropdown/::UserDropdown] User Interface: Port user dropdown and profile management
+- [ ] T043 [Analysis: Section.9.1] Session Management: Implement secure session handling with 5-minute access tokens
 
-### Phase 6b: Integration Validation
+### Phase 6b: User Workflows & Submissions
 
-- [ ] T044 [Analysis: Section.5.1] Service connectivity: Test all external integrations
-- [ ] T045 [Analysis: Section.5.2] Authentication provider testing: Validate OAuth/SSO flows
-- [ ] T046 [Analysis: Section.5.1] Caching strategy: Implement analysis-documented caching patterns
+- [ ] T044 [Analysis: Section.11.3] [Logic: src/pages/submit-a-combo.tsx::SubmitComboPage] Combo Submission: Migrate combo submission form and workflow
+- [ ] T045 [Analysis: Section.11.3] [Logic: src/pages/my-submissions/::UserSubmissionsPage] User Dashboard: Port user submission management interface
+- [ ] T046 [Analysis: Section.3.1] Authorization Guards: Implement editor permissions for combo review workflows
 
-## Phase 7: Performance & Quality Assurance
+## Phase 7: Specialized Tools & Features Migration
 
-**Migration Goal**: Meet or exceed baseline performance per Analysis Section.8
+**Migration Goal**: Migrate specialized MTG tools like "Find My Combos" and random combo features
 
-**Analysis Reference**: Section.8.1 - Performance Baselines, Section.7.1 - Test Coverage
+**Analysis Reference**: Section.11.3 - User Workflows, Section.4.1 - Find My Combos Algorithm
 
-### Phase 7a: Performance Validation
+### Phase 7a: Find My Combos Feature
 
-- [ ] T047 [Analysis: Section.8.1] Performance benchmarking: Measure new implementation against baselines
-- [ ] T048 [Analysis: Section.8.2] Bottleneck analysis: Ensure no performance regressions
-- [ ] T049 [Analysis: Section.8.3] Scalability testing: Validate scaling characteristics maintained
+- [ ] T047 [Analysis: Section.4.1] [Logic: src/pages/find-my-combos.tsx::FindMyCombosPage] Find My Combos: Port deck analysis tool to TCG domain
+- [ ] T048 [Analysis: Section.11.3] Deck Import Logic: Migrate commander color identity validation and deck parsing
+- [ ] T049 [Analysis: Section.8.1] Combo Matching: Ensure <2s response time for deck analysis queries
 
-### Phase 7b: Quality Assurance
+### Phase 7b: Additional MTG Features
 
-- [ ] T050 [Analysis: Section.7.1] Test coverage parity: Achieve analysis-documented coverage levels
-- [ ] T051 [Analysis: Section.7.2] Critical test preservation: Migrate all critical test scenarios
-- [ ] T052 [P] [Analysis: Section.11.2] Edge case validation: Test all documented quirks and workarounds
+- [ ] T050 [Analysis: Section.6.3] [Logic: src/components/RandomButton/::RandomButton] Random Combo: Migrate random combo discovery feature
+- [ ] T051 [Analysis: Section.11.1] [Logic: src/pages/syntax-guide.tsx::SyntaxGuidePage] Search Syntax: Port MTG search syntax documentation
+- [ ] T052 [P] [Analysis: Section.6.1] Static Pages: Migrate about, privacy policy, style guide pages with SSG
 
-## Phase 8: Domain Knowledge Preservation
+## Phase 8: Testing & Quality Assurance
 
-**Migration Goal**: Capture all tribal knowledge per Analysis Section.11
+**Migration Goal**: Comprehensive E2E testing and performance validation for TCG domain
 
-**Analysis Reference**: Section.11.1 - Business Domain, Section.11.2 - Undocumented Knowledge
+**Analysis Reference**: Section.7.1 - Cypress Tests, Section.8.1 - Performance Baselines
 
-- [ ] T053 [Analysis: Section.11.1] Domain concept validation: Ensure all business rules preserved
-- [ ] T054 [Analysis: Section.11.2] Quirk implementation: Implement all documented workarounds
-- [ ] T055 [Analysis: Section.11.3] User behavior patterns: Validate user workflow preservation
-- [ ] T056 [P] Documentation updates reflecting analysis findings
+### Phase 8a: Test Migration & Enhancement
 
-## Phase N: Cross-Cutting Concerns & Polish
+- [ ] T053 [Analysis: Section.7.1] [Logic: cypress/e2e/::CypressTests] E2E Test Migration: Port Cypress tests to unified jane-ui structure
+- [ ] T054 [Analysis: Section.7.2] MTG-Specific Testing: Create tests for mana symbol parsing, color identity, combo validation
+- [ ] T055 [Analysis: Section.8.1] Performance Testing: Implement automated testing for <3s TCG domain requirements
 
-- [ ] TXXX [Analysis: Section.10.2] Logging and monitoring: Implement analysis-documented patterns
-- [ ] TXXX [Analysis: Section.9.2] Security hardening: Final security validation
-- [ ] TXXX [P] Code cleanup and refactoring (target framework only)
-- [ ] TXXX [Analysis: Section.13.1] Documentation updates incorporating analysis findings
+### Phase 8b: Integration Validation
 
-## Phase N+1: Migration Validation & Asset Retirement
+- [ ] T056 [Analysis: Section.11.3] User Workflow Validation: Test complete user journeys (search → view → submit)
+- [ ] T057 [P] [Analysis: Section.11.2] Edge Case Testing: Validate all documented MTG rules quirks and workarounds
+- [ ] T058 Cross-Domain Testing: Ensure TCG domain integrates properly with security, productivity domains
 
-**Purpose**: Comprehensive validation before legacy asset removal.
+## Phase 9: Production Optimization & Polish
 
-### Phase N+1a: Complete Migration Validation
+**Migration Goal**: Production-ready TCG domain with optimized performance and monitoring
 
-- [ ] TXXX [Analysis: All Sections] Full analysis cross-reference: Verify all analysis findings addressed
-- [ ] TXXX [Analysis: Section.4.1] Algorithm parity validation: Confirm all critical algorithms function identically
-- [ ] TXXX [Analysis: Section.8.1] Performance regression testing: Validate performance meets or exceeds baselines
-- [ ] TXXX [Analysis: Section.12.3] Success criteria verification: Confirm all analysis success criteria met
-- [ ] TXXX Verify Full Migration: Confirm all [Logic: ...] tags have corresponding passing validation tests
-- [ ] TXXX Run Full Regression Suite: Execute complete test suite including ground truth comparisons
+### Phase 9a: Performance Optimization
 
-### Phase N+1b: Safe Asset Retirement
+- [ ] T059 [Analysis: Section.8.1] Bundle Optimization: Implement code splitting for TCG domain components
+- [ ] T060 [Analysis: Section.8.1] Image Optimization: Setup Scryfall image caching and Next.js Image optimization
+- [ ] T061 [Analysis: Section.6.1] SSG/ISR Optimization: Optimize static generation for frequently accessed combo pages
 
-- [ ] TXXX [Analysis: Section.12.2] Risk mitigation: Address all identified migration risks
-- [ ] TXXX Legacy asset backup: Create secure archive of legacy codebase before deletion
-- [ ] TXXX Production validation: Run new system in production-like environment
-- [ ] TXXX Stakeholder approval: Obtain sign-off from all analysis-identified stakeholders
-- [ ] TXXX Delete Legacy Asset: After 100% validation, remove legacy asset directory
+### Phase 9b: Production Polish  
 
-### Phase N+1c: Post-Migration Monitoring
+- [ ] T062 [Analysis: Section.10.2] Monitoring Integration: Add TCG domain metrics to unified monitoring system
+- [ ] T063 [Analysis: Section.9.2] Security Validation: Final security review for Discord OAuth and user submissions
+- [ ] T064 [P] Code cleanup and documentation: TypeScript strict mode compliance, component documentation
+- [ ] T065 [Analysis: Section.13.1] Migration documentation: Update architecture docs reflecting TCG domain integration
 
-- [ ] TXXX [Analysis: Section.10.2] Monitoring validation: Confirm monitoring systems capture same metrics
-- [ ] TXXX [Analysis: Section.8.1] Performance monitoring: Track performance against established baselines
-- [ ] TXXX [Analysis: Section.11.3] User behavior monitoring: Validate user workflow preservation
+## Phase 10: Migration Validation & Legacy Asset Retirement
+
+**Purpose**: Final validation and safe removal of Commander Spellbook Site legacy assets.
+
+### Phase 10a: Complete Migration Validation
+
+- [ ] T066 [Analysis: All Sections] Full analysis cross-reference: Verify all commander-spellbook-analysis.md findings addressed in TCG domain
+- [ ] T067 [Analysis: Section.6.1] Frontend parity validation: Confirm all Next.js pages and components function identically in jane-ui
+- [ ] T068 [Analysis: Section.8.1] Performance regression testing: Validate TCG domain meets <3s response requirements
+- [ ] T069 [Analysis: Section.12.3] Success criteria verification: Confirm 100% functional parity with 50K+ user base support
+- [ ] T070 Verify Complete Migration: Confirm all [Logic: ...] component migrations have passing validation tests
+- [ ] T071 Run Full E2E Regression Suite: Execute complete Cypress test suite against unified jane-ui
+
+### Phase 10b: Safe Asset Retirement
+
+- [ ] T072 [Analysis: Section.12.2] Risk mitigation: Address MTG community user experience risks during transition
+- [ ] T073 Legacy asset backup: Archive `features/commander-spellbook-site/` before deletion with git tag
+- [ ] T074 Production validation: Deploy TCG domain to staging environment and validate with test users
+- [ ] T075 Community communication: Notify MTG community of migration completion and new URLs
+- [ ] T076 Delete Legacy Asset: After 100% validation and community notification, remove legacy directory
+
+### Phase 10c: Post-Migration Monitoring
+
+- [ ] T077 [Analysis: Section.10.2] TCG domain monitoring: Confirm unified monitoring captures MTG-specific metrics
+- [ ] T078 [Analysis: Section.8.1] Performance monitoring: Track combo search, display performance against baselines
+- [ ] T079 [Analysis: Section.11.3] User behavior tracking: Monitor search patterns, combo submissions, community engagement
 
 ### Dependencies & Execution Order
 
 **Sequential Dependencies (Must Complete In Order):**
-- **Phase 1 (Analysis Validation)**: Must complete first - validates analysis completeness
-- **Phase 2 (Data Architecture)**: Must complete before business logic - establishes data foundation
-- **Phase 3 (Foundational Infrastructure)**: Must complete before feature migration - establishes framework
+
+- **Phase 1 (Frontend Architecture Assessment)**: Must complete first - validates analysis and establishes baseline
+- **Phase 2 (API Service Layer)**: Must complete before component migration - establishes backend connectivity  
+- **Phase 3 (Shared UI Components)**: Must complete before domain components - establishes reusable component library
 
 **Parallel Execution Phases:**
-- **Phases 4-6 (Business Logic, Security, Integrations)**: Can proceed in parallel by feature after Phase 3
-- **Phase 7 (Performance & Quality)**: Can run in parallel with feature phases
-- **Phase 8 (Domain Knowledge)**: Can run in parallel with feature phases
+
+- **Phases 4-6 (Domain Components)**: Can proceed in parallel by feature after Phase 3 (Search, Display, User Management)
+- **Phase 7 (Specialized Tools)**: Can run in parallel with Phases 4-6 after shared components ready
+- **Phase 8 (Testing & QA)**: Can run incrementally with each feature phase completion
 
 **Final Sequential Dependencies:**
+
+- **Phase 9 (Production Optimization)**: After all feature phases complete
+- **Phase 10 (Migration Validation)**: Must be final phase before asset retirement
 - **Phase N (Cross-Cutting Concerns)**: After all feature phases complete
 - **Phase N+1 (Asset Retirement)**: The absolute final step - only after complete validation
 
@@ -318,20 +342,23 @@ estimated_hours: 35
 ### Risk-Minimized Parallel Strategy
 
 **Sequential Foundation** (Team Together):
-1. Analysis validation (Phase 1) - entire team validates findings
-2. Data migration (Phase 2) - critical shared foundation
-3. Infrastructure setup (Phase 3) - framework foundation
 
-**Parallel Feature Migration** (After Foundation):
-- Developer A: Critical Feature 1 (Analysis Section 4.1 priority)
-- Developer B: Critical Feature 2 (Analysis Section 4.1 priority) 
-- Developer C: Security/Integration (Analysis Sections 5 & 9)
-- All developers: Continuous validation against analysis baselines
+1. **Analysis validation** (Phase 1) - Frontend architect validates Next.js patterns and performance baselines
+2. **API integration** (Phase 2) - Connect to jane-orchestrator backend services  
+3. **Shared components** (Phase 3) - Establish reusable MTG UI component library
+
+**Parallel Domain Migration** (After Foundation):
+
+- **Frontend Developer A**: Search Domain (Phases 4) - Core user workflows
+- **Frontend Developer B**: Display Domain (Phase 5) - Combo presentation  
+- **Frontend Developer C**: User Management (Phase 6) - Authentication flows
+- **Frontend Developer D**: Testing & Performance (Phase 8) - Validation
 
 **Validation Requirements**:
-- Each feature must pass ground truth tests before integration
-- Performance must meet Analysis Section 8.1 baselines
-- All Analysis Section 11 domain knowledge must be preserved
+
+- Each React component must render identically to legacy versions
+- Performance must meet <3s TCG domain requirements  
+- All MTG domain knowledge (mana symbols, color identity) preserved
 
 ---
 
@@ -384,23 +411,26 @@ estimated_hours: 35
 **⚠️ If any checklist item fails**: DO NOT mark parent task complete. Fix issues and re-validate.
 
 **Completion Action**:
-1. Mark all checkboxes above ✅
-2. Run validation command: `pytest tests/mtg/test_commander_spellbook_site_integration.py`
+
+1. Mark all checkboxes T001-T079 complete ✅
+2. Run validation command: `npm run test:integration` (TCG domain Cypress tests)
 3. Document completion in `migration-validation.md`
-4. Mark parent task TXXX complete in `tasks.md`
-5. Proceed to return task (next in sequence) in `tasks.md`
+4. Mark parent task T114 complete in `tasks.md`
+5. Proceed to T115 in `tasks.md`
 
 **Documentation Update Required**:
+
 ```markdown
 # In migration-validation.md
 
-### Commander Spellbook Site Migration (TXXX)
-- **Status**: ✅ Complete
+### Commander Spellbook Site Migration (T114)
+- **Status**: ✅ Complete  
 - **Completed**: [DATE]
-- **Estimated Hours**: XX
-- **Actual Hours**: XX
-- **Tests**: X passed, 0 failed
-- **Performance**: All baselines met/exceeded
-- **Notes**: [Any notable achievements or challenges]
+- **Estimated Hours**: 42
+- **Actual Hours**: [ACTUAL]
+- **Tests**: Cypress E2E tests passed
+- **Performance**: <3s TCG domain requirements met
+- **Components Migrated**: 15+ React components to jane-ui/domains/tcg/
+- **Notes**: MTG community workflows preserved, Discord OAuth integrated
 ```
 
