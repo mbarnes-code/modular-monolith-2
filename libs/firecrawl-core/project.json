@@ -1,0 +1,32 @@
+{
+  "name": "firecrawl-core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/firecrawl-core/src",
+  "projectType": "library",
+  "tags": ["type:library", "domain:firecrawl", "scope:core"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/firecrawl-core",
+        "main": "libs/firecrawl-core/src/index.ts",
+        "tsConfig": "libs/firecrawl-core/tsconfig.lib.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/firecrawl-core/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/firecrawl-core/jest.config.ts"
+      }
+    }
+  }
+}

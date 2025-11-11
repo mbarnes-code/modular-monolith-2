@@ -1,0 +1,238 @@
+{
+  "name": "ghostwriter-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/ghostwriter-service/src",
+  "projectType": "application",
+  "tags": [
+    "type:app",
+    "framework:django",
+    "language:python",
+    "domain:security",
+    "scope:ghostwriter"
+  ],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "development",
+      "options": {
+        "command": "python3 manage.py runserver 0.0.0.0:8080",
+        "cwd": "apps/ghostwriter-service",
+        "env": {
+          "DJANGO_SETTINGS_MODULE": "config.settings.local",
+          "PYTHONPATH": "src"
+        }
+      },
+      "configurations": {
+        "development": {
+          "env": {
+            "DJANGO_SETTINGS_MODULE": "config.settings.local",
+            "DJANGO_DEBUG": "True"
+          }
+        },
+        "production": {
+          "env": {
+            "DJANGO_SETTINGS_MODULE": "config.settings.production",
+            "DJANGO_DEBUG": "False"
+          }
+        }
+      }
+    },
+    "serve:docker": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "local",
+      "options": {
+        "command": "docker-compose -f {args.compose} up --build",
+        "cwd": "apps/ghostwriter-service"
+      },
+      "configurations": {
+        "local": {
+          "command": "docker-compose -f local.yml up --build"
+        },
+        "production": {
+          "command": "docker-compose -f production.yml up --build"
+        }
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/ghostwriter-service"],
+      "options": {
+        "commands": [
+          "mkdir -p ../../dist/apps/ghostwriter-service",
+          "python3 manage.py collectstatic --noinput --clear",
+          "cp -r src ../../dist/apps/ghostwriter-service/",
+          "cp manage.py ../../dist/apps/ghostwriter-service/",
+          "cp requirements ../../dist/apps/ghostwriter-service/ -r",
+          "cp pyproject.toml ../../dist/apps/ghostwriter-service/"
+        ],
+        "cwd": "apps/ghostwriter-service",
+        "parallel": false
+      },
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/ghostwriter-service",
+        "{projectRoot}/htmlcov"
+      ],
+      "options": {
+        "command": "python3 -m pytest src/ --cov=src --cov-report=term-missing --cov-report=html --cov-report=xml --junit-xml=../../coverage/apps/ghostwriter-service/junit.xml",
+        "cwd": "apps/ghostwriter-service",
+        "env": {
+          "DJANGO_SETTINGS_MODULE": "config.settings.test",
+          "PYTHONPATH": "src"
+        }
+      },
+      "inputs": [
+        "{projectRoot}/src/**/*.py",
+        "{projectRoot}/pyproject.toml",
+        "{projectRoot}/pytest.ini"
+      ]
+    },
+    "test:unit": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m pytest src/ -m 'not integration' --tb=short",
+        "cwd": "apps/ghostwriter-service",
+        "env": {
+          "DJANGO_SETTINGS_MODULE": "config.settings.test",
+          "PYTHONPATH": "src"
+        }
+      }
+    },
+    "test:integration": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 -m pytest src/ -m 'integration' --tb=short",
+        "cwd": "apps/ghostwriter-service",
+        "env": {
+          "DJANGO_SETTINGS_MODULE": "config.settings.test",
+          "PYTHONPATH": "src"
+        }
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.pylint-report.txt"],
+      "options": {
+        "commands": [
+          "python3 -m flake8 src/ --output-file=.flake8-report.txt",
+          "python3 -m pylint src/ghostwriter/ --output-format=text --reports=yes > .pylint-report.txt || true",
+          "python3 -m mypy src/ghostwriter/ --no-error-summary"
+        ],
+        "cwd": "apps/ghostwriter-service",
+        "parallel": false
+      },
+      "inputs": [
+        "{projectRoot}/src/**/*.py",
+        "{projectRoot}/pyproject.toml",
+        "{projectRoot}/setup.cfg"
+      ]
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "python3 -m black src/ manage.py",
+          "python3 -m isort src/ manage.py"
+        ],
+        "cwd": "apps/ghostwriter-service",
+        "parallel": false
+      }
+    },
+    "format:check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "python3 -m black --check src/ manage.py",
+          "python3 -m isort --check-only src/ manage.py"
+        ],
+        "cwd": "apps/ghostwriter-service",
+        "parallel": false
+      }
+    },
+    "migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 manage.py migrate",
+        "cwd": "apps/ghostwriter-service",
+        "env": {
+          "PYTHONPATH": "src"
+        }
+      }
+    },
+    "makemigrations": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 manage.py makemigrations",
+        "cwd": "apps/ghostwriter-service",
+        "env": {
+          "PYTHONPATH": "src"
+        }
+      }
+    },
+    "collectstatic": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/staticfiles"],
+      "options": {
+        "command": "python3 manage.py collectstatic --noinput --clear",
+        "cwd": "apps/ghostwriter-service",
+        "env": {
+          "PYTHONPATH": "src"
+        }
+      }
+    },
+    "shell": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 manage.py shell",
+        "cwd": "apps/ghostwriter-service",
+        "env": {
+          "PYTHONPATH": "src"
+        }
+      }
+    },
+    "createsuperuser": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 manage.py createsuperuser",
+        "cwd": "apps/ghostwriter-service",
+        "env": {
+          "PYTHONPATH": "src"
+        }
+      }
+    },
+    "check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "python3 manage.py check",
+          "python3 manage.py check --deploy"
+        ],
+        "cwd": "apps/ghostwriter-service",
+        "parallel": false,
+        "env": {
+          "PYTHONPATH": "src"
+        }
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "docker build -t ghostwriter-service:latest .",
+        "cwd": "apps/ghostwriter-service"
+      }
+    },
+    "docker:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker run -p 8080:8000 ghostwriter-service:latest",
+        "cwd": "apps/ghostwriter-service"
+      },
+      "dependsOn": ["docker:build"]
+    }
+  },
+  "implicitDependencies": ["jane-orchestrator"]
+}

@@ -1,0 +1,99 @@
+{
+  "name": "goose-docs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/goose-docs/src",
+  "projectType": "application",
+  "tags": [
+    "type:app",
+    "framework:docusaurus",
+    "language:typescript",
+    "domain:documentation",
+    "scope:goose"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/build"],
+      "inputs": [
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/docs/**/*",
+        "{projectRoot}/blog/**/*",
+        "{projectRoot}/static/**/*",
+        "{projectRoot}/*.ts",
+        "{projectRoot}/*.js",
+        "{projectRoot}/package.json",
+        "!{projectRoot}/node_modules/**/*"
+      ],
+      "options": {
+        "commands": [
+          "npm install",
+          "npm run build"
+        ],
+        "cwd": "apps/goose-docs",
+        "parallel": false
+      },
+      "configurations": {
+        "production": {
+          "commands": [
+            "npm ci",
+            "npm run build"
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "development",
+      "options": {
+        "command": "npm run start",
+        "cwd": "apps/goose-docs"
+      },
+      "configurations": {
+        "development": {
+          "command": "npm run start"
+        }
+      },
+      "dependsOn": ["install"]
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm install",
+        "cwd": "apps/goose-docs"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/src/**/*.{ts,tsx,js,jsx,md,mdx}",
+        "{projectRoot}/docs/**/*.{md,mdx}",
+        "{projectRoot}/blog/**/*.{md,mdx}"
+      ],
+      "options": {
+        "commands": [
+          "npm run lint"
+        ],
+        "cwd": "apps/goose-docs"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run format",
+        "cwd": "apps/goose-docs"
+      }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "rm -rf build",
+          "rm -rf node_modules"
+        ],
+        "cwd": "apps/goose-docs",
+        "parallel": false
+      }
+    }
+  },
+  "implicitDependencies": ["goose-service"]
+}

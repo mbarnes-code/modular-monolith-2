@@ -1,0 +1,90 @@
+{
+  "name": "goose-temporal-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/goose-temporal-service",
+  "projectType": "application",
+  "tags": [
+    "type:service",
+    "framework:go",
+    "language:go",
+    "domain:productivity",
+    "scope:goose"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/bin"],
+      "inputs": [
+        "{projectRoot}/**/*.go",
+        "{projectRoot}/go.mod",
+        "{projectRoot}/go.sum",
+        "!{projectRoot}/bin/**/*"
+      ],
+      "options": {
+        "command": "go build -o bin/goose-temporal .",
+        "cwd": "apps/goose-temporal-service"
+      },
+      "configurations": {
+        "production": {
+          "command": "CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o bin/goose-temporal ."
+        }
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "development",
+      "options": {
+        "command": "go run .",
+        "cwd": "apps/goose-temporal-service"
+      },
+      "configurations": {
+        "development": {
+          "command": "go run ."
+        }
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/coverage/apps/goose-temporal-service"],
+      "inputs": [
+        "{projectRoot}/**/*.go",
+        "{projectRoot}/go.mod"
+      ],
+      "options": {
+        "command": "go test -v -coverprofile=coverage.out ./...",
+        "cwd": "apps/goose-temporal-service"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/**/*.go"
+      ],
+      "options": {
+        "commands": [
+          "go fmt ./...",
+          "go vet ./..."
+        ],
+        "cwd": "apps/goose-temporal-service",
+        "parallel": false
+      }
+    },
+    "tidy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "go mod tidy",
+        "cwd": "apps/goose-temporal-service"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "docker build -t goose-temporal-service:latest .",
+        "cwd": "apps/goose-temporal-service"
+      },
+      "dependsOn": ["build"]
+    }
+  },
+  "implicitDependencies": ["goose-service"]
+}

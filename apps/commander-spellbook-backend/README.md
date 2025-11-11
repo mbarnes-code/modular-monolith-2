@@ -1,60 +1,19 @@
-# Commander Spellbook - NX Integration
+# [Commander Spellbook](https://commanderspellbook.com/)
 
-This directory contains the Commander Spellbook backend integrated into the NX monorepo.
-
-## Original Project
-
-[Commander Spellbook](https://commanderspellbook.com/) is a combo database, wiki and engine for [Magic: The Gathering](https://magic.wizards.com/en).
+Commander Spellbook is a combo database, wiki and engine for [Magic: The Gathering](https://magic.wizards.com/en).
 It's designed to be a one-stop shop for all the information you might want about a combo, whether it's a deck you're
 building or one you're playing against.
 
-This is an Open Source project, and we welcome contributions from the community.
-
-## NX Integration
-
-### Project Configuration
-- **Name**: commander-spellbook-backend
-- **Type**: Django Backend Application  
-- **Port**: 8081
-- **Tags**: `scope:mtg`, `type:backend`, `framework:django`
-
-### Available NX Targets
-
-```bash
-# Start development server
-npx nx serve commander-spellbook-backend
-
-# Run migrations
-npx nx migrate commander-spellbook-backend
-
-# Create migrations  
-npx nx makemigrations commander-spellbook-backend
-
-# Run tests
-npx nx test commander-spellbook-backend
-
-# Lint code
-npx nx lint commander-spellbook-backend
-
-# Collect static files
-npx nx collectstatic commander-spellbook-backend
-```
-
-### Manual Development
-
-```bash
-cd apps/commander-spellbook-backend/backend
-python manage.py migrate
-python manage.py runserver 0.0.0.0:8081
-```
+This is an Open Source project, and we welcome contributions from the community. If you'd like to contribute, please
+read the [Contributing](#contributing) section below.
 
 ## Architecture
 
 Commander Spellbook consists of three main components:
 
 - A [PostgreSQL](https://www.postgresql.org/) database containing all the combo data
-- A [Django](https://www.djangoproject.com/) backend that exposes the data via a REST API
-- A [Next.js](https://nextjs.org/) frontend (located at `apps/commander-spellbook-site`) that consumes the API
+- A [Django](https://www.djangoproject.com/) [backend](/backend/) that exposes the data via a REST API
+- A [React](https://reactjs.org/) [frontend](https://github.com/SpaceCowMedia/commander-spellbook-site) that consumes the API and displays the content in a user-friendly way
   - A TS/JS generated client can be found on [npm](https://www.npmjs.com/package/@space-cow-media/spellbook-client)
 
 ## Contributing

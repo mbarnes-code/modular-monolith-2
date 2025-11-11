@@ -1,0 +1,135 @@
+{
+  "name": "helk-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/helk-service/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/helk-service",
+        "tsConfig": "apps/helk-service/tsconfig.json",
+        "packageJson": "apps/helk-service/package.json",
+        "main": "apps/helk-service/src/main.ts",
+        "assets": ["apps/helk-service/src/assets"]
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node src/main.ts start",
+        "cwd": "apps/helk-service"
+      }
+    },
+    "serve:full": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node src/main.ts start:full",
+        "cwd": "apps/helk-service"
+      }
+    },
+    "docker:start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f infrastructure/docker/helk-kibana-notebook-analysis-basic.yml up -d",
+        "cwd": "apps/helk-service"
+      }
+    },
+    "docker:start:full": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f infrastructure/docker/helk-kibana-notebook-analysis-alert-basic.yml up -d",
+        "cwd": "apps/helk-service"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f infrastructure/docker/helk-kibana-notebook-analysis-basic.yml build",
+        "cwd": "apps/helk-service"
+      }
+    },
+    "docker:stop": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "infrastructure/docker/helk_remove_containers.sh",
+        "cwd": "apps/helk-service"
+      }
+    },
+    "docker:install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "infrastructure/docker/helk_docker_install.sh",
+        "cwd": "apps/helk-service"
+      }
+    },
+    "docker:update": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "infrastructure/docker/helk_update.sh",
+        "cwd": "apps/helk-service"
+      }
+    },
+    "setup-firewall": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "infrastructure/docker/helk_setup_firewall.sh",
+        "cwd": "apps/helk-service"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/helk-service"],
+      "options": {
+        "jestConfig": "apps/helk-service/jest.config.ts"
+      }
+    },
+    "test:watch": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "apps/helk-service/jest.config.ts",
+        "watch": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/helk-service/**/*.ts"]
+      }
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "apps/helk-service"
+      }
+    },
+    "logs": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node src/main.ts logs",
+        "cwd": "apps/helk-service"
+      }
+    },
+    "status": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node src/main.ts status",
+        "cwd": "apps/helk-service"
+      }
+    }
+  },
+  "tags": [
+    "type:application", 
+    "domain:security", 
+    "scope:backend",
+    "technology:docker", 
+    "technology:elasticsearch", 
+    "technology:kibana", 
+    "technology:logstash",
+    "technology:typescript",
+    "technology:nodejs"
+  ]
+}

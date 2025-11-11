@@ -1,0 +1,55 @@
+{
+  "name": "helk-service",
+  "version": "1.0.0",
+  "description": "HELK (Hunting ELK) Security Analysis Platform Service",
+  "main": "src/main.ts",
+  "type": "module",
+  "bin": {
+    "helk-service": "./dist/main.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "ts-node src/main.ts",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts",
+    "docker:start": "npm run dev start",
+    "docker:stop": "npm run dev stop",
+    "docker:build": "npm run dev build",
+    "docker:install": "npm run dev install"
+  },
+  "dependencies": {
+    "commander": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.0.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "prettier": "^3.0.0"
+  },
+  "keywords": [
+    "security",
+    "elk",
+    "elasticsearch",
+    "kibana",
+    "logstash",
+    "threat-hunting",
+    "analytics",
+    "docker"
+  ],
+  "author": "Mental Prosthetic Platform",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mbarnes-code/modular-monolith-2"
+  },
+  "bugs": {
+    "url": "https://github.com/mbarnes-code/modular-monolith-2/issues"
+  }
+}

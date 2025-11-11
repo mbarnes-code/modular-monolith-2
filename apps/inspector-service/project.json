@@ -1,0 +1,154 @@
+{
+  "name": "inspector-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/inspector-service",
+  "projectType": "application",
+  "tags": [
+    "type:app",
+    "domain:productivity",
+    "framework:node",
+    "platform:mcp",
+    "scope:inspector"
+  ],
+  "implicitDependencies": [],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/cli/build",
+        "{projectRoot}/server/build",
+        "{projectRoot}/client/dist"
+      ],
+      "dependsOn": ["build-server", "build-client", "build-cli"],
+      "options": {
+        "command": "echo 'All components built successfully'"
+      }
+    },
+    "build-server": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/server/build"],
+      "options": {
+        "command": "cd server && npm run build",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "build-client": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/client/dist"],
+      "options": {
+        "command": "cd client && npm run build",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "build-cli": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/cli/build"],
+      "options": {
+        "command": "cd cli && npm run build",
+        "cwd": "apps/inspector-service"
+      }
+    },
+
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run dev",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "serve:legacy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run dev",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "serve:prod": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-all"],
+      "options": {
+        "command": "npm run start",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "serve-server": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run start-server",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "serve-client": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run start-client",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "commands": ["npm run test"],
+        "cwd": "apps/inspector-service",
+        "parallel": false
+      }
+    },
+    "test:legacy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run test",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "test-cli": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run test-cli",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "test:e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run test:e2e",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run lint",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "lint:legacy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run lint",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run prettier-fix",
+        "cwd": "apps/inspector-service"
+      }
+    },
+    "docker-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -f apps/inspector-service/Dockerfile . -t inspector-service",
+        "cwd": "."
+      }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run clean",
+        "cwd": "apps/inspector-service"
+      }
+    }
+  }
+}

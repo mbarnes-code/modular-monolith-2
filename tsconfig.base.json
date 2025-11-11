@@ -41,6 +41,15 @@
       ],
       "@mealie/shared": [
         "apps/mealie-service/libs/mealie-shared/src/index.ts"
+      ],
+      "@firecrawl/core": [
+        "libs/firecrawl-core/src/index.ts"
+      ],
+      "@firecrawl/types": [
+        "libs/firecrawl-types/src/index.ts"
+      ],
+      "@firecrawl/ui": [
+        "libs/firecrawl-ui/src/index.ts"
       ]
     }
   },

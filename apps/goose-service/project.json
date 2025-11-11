@@ -1,0 +1,140 @@
+{
+  "name": "goose-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/goose-service/src",
+  "projectType": "application",
+  "tags": [
+    "type:app",
+    "framework:rust",
+    "language:rust", 
+    "domain:productivity",
+    "scope:goose"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/target/release",
+        "{workspaceRoot}/target/debug"
+      ],
+      "inputs": [
+        "{projectRoot}/src/**/*.rs",
+        "{projectRoot}/Cargo.toml",
+        "{projectRoot}/Cargo.lock",
+        "!{projectRoot}/target/**/*"
+      ],
+      "options": {
+        "command": "cargo build",
+        "cwd": "apps/goose-service"
+      },
+      "configurations": {
+        "production": {
+          "command": "cargo build --release"
+        },
+        "development": {
+          "command": "cargo build"
+        }
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "development",
+      "options": {
+        "command": "cargo run",
+        "cwd": "apps/goose-service"
+      },
+      "configurations": {
+        "development": {
+          "command": "cargo run"
+        },
+        "production": {
+          "command": "cargo run --release"
+        }
+      },
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/target/debug/deps"],
+      "inputs": [
+        "{projectRoot}/src/**/*.rs", 
+        "{projectRoot}/Cargo.toml",
+        "!{projectRoot}/target/**/*"
+      ],
+      "options": {
+        "command": "cargo test",
+        "cwd": "apps/goose-service"
+      },
+      "configurations": {
+        "unit": {
+          "command": "cargo test --lib"
+        },
+        "integration": {
+          "command": "cargo test --test '*'"
+        },
+        "coverage": {
+          "command": "cargo tarpaulin --out xml --output-dir ../../coverage/apps/goose-service"
+        }
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "inputs": [
+        "{projectRoot}/src/**/*.rs",
+        "{projectRoot}/Cargo.toml"
+      ],
+      "options": {
+        "commands": [
+          "cargo clippy --all-targets --all-features -- -D warnings",
+          "cargo check --all-targets --all-features"
+        ],
+        "cwd": "apps/goose-service",
+        "parallel": false
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/src/**/*.rs"
+      ],
+      "options": {
+        "command": "cargo fmt -- --check",
+        "cwd": "apps/goose-service"
+      }
+    },
+    "format:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cargo fmt",
+        "cwd": "apps/goose-service"
+      }
+    },
+
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "docker build -t goose-service:latest .",
+        "cwd": "apps/goose-service"
+      },
+      "dependsOn": ["build"]
+    },
+    "docker:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker run -p 8080:8080 goose-service:latest",
+        "cwd": "apps/goose-service"
+      },
+      "dependsOn": ["docker:build"]
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cargo clean",
+        "cwd": "apps/goose-service"
+      }
+    }
+  },
+  "implicitDependencies": ["jane-orchestrator"]
+}

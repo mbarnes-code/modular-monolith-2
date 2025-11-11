@@ -79,10 +79,17 @@
     "dispatch-service": "apps/dispatch-service",
     "mealie-service": "apps/mealie-service",
     "hexstrike-service": "apps/hexstrike-service",
+    "cyberchef-service": "apps/cyberchef-service",
     "commander-spellbook-site": "apps/commander-spellbook-site",
     "commander-spellbook-backend": "apps/commander-spellbook-backend",
+    "firecrawl-service": "apps/firecrawl-service",
+    "ghostwriter-service": "apps/ghostwriter-service",
+    "helk-service": "apps/helk-service",
     "dispatch-core": "libs/dispatch-core",
-    "dispatch-database": "libs/dispatch-database"
+    "dispatch-database": "libs/dispatch-database",
+    "firecrawl-ui": "libs/firecrawl-ui",
+    "firecrawl-core": "libs/firecrawl-core",
+    "firecrawl-types": "libs/firecrawl-types"
   },
   "plugins": [
     {

@@ -1,0 +1,79 @@
+{
+  "name": "firecrawl-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/firecrawl-service/src",
+  "projectType": "application",
+  "tags": ["type:app", "domain:firecrawl", "framework:express"],
+  "implicitDependencies": ["firecrawl-core", "firecrawl-types"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["^build"],
+      "options": {
+        "outputPath": "dist/apps/firecrawl-service",
+        "main": "apps/firecrawl-service/src/main.ts",
+        "tsConfig": "apps/firecrawl-service/tsconfig.app.json",
+        "assets": [
+          "apps/firecrawl-service/src/assets",
+          "apps/firecrawl-service/openapi*.json"
+        ],
+        "generatePackageJson": true
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "sourceMap": false
+        },
+        "development": {
+          "optimization": false,
+          "sourceMap": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "firecrawl-service:build",
+        "runBuildTargetDependencies": true,
+        "watch": true,
+        "inspect": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "firecrawl-service:build:development",
+          "inspect": "inspect"
+        },
+        "production": {
+          "buildTarget": "firecrawl-service:build:production",
+          "inspect": false
+        }
+      }
+    },
+    "docker-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -f apps/firecrawl-service/Dockerfile . -t firecrawl-service",
+        "cwd": "."
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/firecrawl-service/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/firecrawl-service/jest.config.ts"
+      }
+    }
+  }
+}

@@ -138,6 +138,117 @@
       "isBackground": true
     },
     {
+      "label": "Serve CyberChef Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["grunt", "dev"],
+      "options": {
+        "cwd": "${workspaceFolder}/apps/cyberchef-service"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "webpack is watching the files",
+          "endsPattern": "CyberChef.*started.*http://localhost:8080"
+        }
+      }
+    },
+    {
+      "label": "Serve Firecrawl Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "firecrawl-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Firecrawl Service starting",
+          "endsPattern": "Firecrawl Service is running on"
+        }
+      }
+    },
+    {
+      "label": "Serve Goose Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "goose-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Compiling.*",
+          "endsPattern": "Finished.*target"
+        }
+      }
+    },
+    {
+      "label": "Serve Inspector Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "inspector-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Starting MCP inspector in development mode",
+          "endsPattern": "MCP Inspector is up and running at"
+        }
+      }
+    },
+    {
       "label": "Build Actual Browser",
       "type": "shell",
       "command": "npx",
@@ -183,6 +294,164 @@
       },
       "problemMatcher": ["$tsc", "$eslint-stylish"]
     },
+    {
+      "label": "Build CyberChef Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["grunt", "prod"],
+      "options": {
+        "cwd": "${workspaceFolder}/apps/cyberchef-service"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Firecrawl Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "firecrawl-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc", "$eslint-stylish"]
+    },
+    {
+      "label": "Build Goose Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "goose-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Inspector Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "inspector-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc", "$eslint-stylish"]
+    },
+    {
+      "label": "Build Goose Docs",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "goose-docs"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Goose Docs",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "goose-docs"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*Starting.*",
+          "endsPattern": ".*Local:.*"
+        }
+      }
+    },
+    {
+      "label": "Serve Goose UI",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "goose-ui"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Goose UI",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "goose-ui"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Goose Temporal Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "goose-temporal-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Goose Temporal Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "goose-temporal-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
 
     // Test Tasks
     {
@@ -215,6 +484,163 @@
         "panel": "shared"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Test CyberChef Service",
+      "type": "shell",
+      "command": "npm",
+      "args": ["test"],
+      "options": {
+        "cwd": "${workspaceFolder}/apps/cyberchef-service"
+      },
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Firecrawl Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test", "firecrawl-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Goose Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test", "goose-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Inspector Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test", "inspector-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Inspector CLI",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test-cli", "inspector-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Inspector E2E",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test:e2e", "inspector-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint Goose Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "lint", "goose-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Format Goose Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "format:fix", "goose-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Firecrawl Core",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "firecrawl-core"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc", "$eslint-stylish"]
+    },
+    {
+      "label": "Build Firecrawl Types",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "firecrawl-types"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc", "$eslint-stylish"]
+    },
+    {
+      "label": "Build Firecrawl UI",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "firecrawl-ui"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc", "$eslint-stylish"]
     },
 
     // Lint Tasks
@@ -438,6 +864,301 @@
         "cwd": "${workspaceFolder}/apps/commander-spellbook-backend"
       },
       "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+
+    // Ghostwriter Tasks (NX Best Practices)
+    {
+      "label": "Serve Ghostwriter Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "ghostwriter-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Watching for file changes with StatReloader",
+          "endsPattern": "Starting development server at http"
+        }
+      }
+    },
+    {
+      "label": "Serve Ghostwriter Service (Docker)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve:docker", "ghostwriter-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Ghostwriter Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "ghostwriter-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Ghostwriter Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test", "ghostwriter-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint Ghostwriter Service", 
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "lint", "ghostwriter-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Format Ghostwriter Service",
+      "type": "shell", 
+      "command": "npx",
+      "args": ["nx", "format", "ghostwriter-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Ghostwriter: Migrate Database",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "migrate", "ghostwriter-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Ghostwriter: Collect Static Files",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "collectstatic", "ghostwriter-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+
+    // HELK Service Tasks (NX Best Practices)
+    {
+      "label": "Serve HELK Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "helk-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve HELK Service (Full)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve:full", "helk-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build HELK Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "helk-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Test HELK Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test", "helk-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint HELK Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "lint", "helk-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "label": "HELK: Docker Start",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docker:start", "helk-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "HELK: Docker Stop",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docker:stop", "helk-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "HELK: Docker Build",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docker:build", "helk-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "HELK: Docker Install",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docker:install", "helk-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "HELK: Status",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "status", "helk-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "HELK: Logs",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "logs", "helk-service"],
+      "group": "build",
       "presentation": {
         "echo": true,
         "reveal": "always",
