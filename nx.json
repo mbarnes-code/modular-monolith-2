@@ -85,6 +85,8 @@
     "firecrawl-service": "apps/firecrawl-service",
     "ghostwriter-service": "apps/ghostwriter-service",
     "helk-service": "apps/helk-service",
+    "maltrail-service": "apps/maltrail-service",
+    "meterpreter-service": "apps/meterpreter-service",
     "dispatch-core": "libs/dispatch-core",
     "dispatch-database": "libs/dispatch-database",
     "firecrawl-ui": "libs/firecrawl-ui",

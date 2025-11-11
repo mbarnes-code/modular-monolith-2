@@ -1,0 +1,88 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "maltrail-service"
+version = "0.1.0"
+description = "Malicious traffic detection system integrated into the modular monolith platform"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Maltrail Development Team", email = "dev@maltrail.github.io"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Security",
+    "Topic :: System :: Networking :: Monitoring",
+]
+requires-python = ">=3.8"
+dependencies = [
+    # Dependencies will be loaded from requirements.txt
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "flake8>=4.0",
+    "black>=22.0",
+    "isort>=5.0",
+    "mypy>=0.900",
+]
+
+[project.scripts]
+maltrail-server = "maltrail.server:main"
+maltrail-sensor = "maltrail.sensor:main"
+
+[project.urls]
+Homepage = "https://github.com/stamparm/maltrail"
+Repository = "https://github.com/stamparm/maltrail"
+Issues = "https://github.com/stamparm/maltrail/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["maltrail*"]
+
+[tool.setuptools.package-data]
+maltrail = ["*.txt", "*.conf", "*.service"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --tb=short"

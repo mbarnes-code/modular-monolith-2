@@ -1166,6 +1166,316 @@
         "panel": "shared"
       },
       "problemMatcher": []
+    },
+
+    // KasmVNC Service Tasks
+    {
+      "label": "Serve KasmVNC Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "kasmvnc-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve KasmVNC Service (Dev)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve:dev", "kasmvnc-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build KasmVNC Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "kasmvnc-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build KasmVNC Service (Docker)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build:docker", "kasmvnc-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build KasmVNC Service (DEB)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build:deb", "kasmvnc-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build KasmVNC Service (RPM)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build:rpm", "kasmvnc-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test KasmVNC Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test", "kasmvnc-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Setup KasmVNC Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "setup", "kasmvnc-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "KasmVNC: Web Install",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "web:install", "kasmvnc-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "KasmVNC: Web Build",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "web:build", "kasmvnc-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "KasmVNC: Web Serve",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "web:serve", "kasmvnc-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+
+    // Maltrail Service Tasks
+    {
+      "label": "Serve Maltrail Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "maltrail-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Starting.*",
+          "endsPattern": ".*[INFO].*HTTP server.*started"
+        }
+      }
+    },
+    {
+      "label": "Serve Maltrail Sensor",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve:sensor", "maltrail-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Maltrail Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "maltrail-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Maltrail Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test", "maltrail-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint Maltrail Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "lint", "maltrail-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Install Maltrail Dependencies",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "install", "maltrail-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Maltrail: Docker Build",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docker:build", "maltrail-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Maltrail: Docker Run",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docker:run", "maltrail-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Maltrail: Docker Stop",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docker:stop", "maltrail-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
     }
   ]
 }

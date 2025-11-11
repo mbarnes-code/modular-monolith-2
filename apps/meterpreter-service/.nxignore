@@ -1,0 +1,47 @@
+# Build outputs and artifacts
+output/
+dist/
+data/
+analysis/
+test-results/
+
+# Build logs and temporary files
+build.log
+*.log
+posix-meterp-build-tmp/
+
+# Dependencies (downloaded during build)
+deps/
+ReflectiveDLLInjection/
+
+# Generated documentation
+docs/generated/
+
+# Environment files (but keep examples)
+.env
+!.env.example
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# IDE and editor files
+*.swp
+*.swo
+*~
+.clangd/
+compile_commands.json
+
+# Compiled object files and libraries
+*.o
+*.a
+*.so
+*.dll
+*.lib
+*.obj
+
+# Git submodule artifacts (auto-downloaded)
+src/openssl/
+workspace/*/openssl/

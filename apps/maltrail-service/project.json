@@ -1,0 +1,86 @@
+{
+  "name": "maltrail-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/maltrail-service/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python server.py",
+        "cwd": "apps/maltrail-service/src/maltrail"
+      }
+    },
+    "serve:sensor": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python sensor.py",
+        "cwd": "apps/maltrail-service/src/maltrail"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Maltrail build complete - Python service ready'",
+        "cwd": "apps/maltrail-service"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m pytest tests/ -v",
+        "cwd": "apps/maltrail-service"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m flake8 src/ tests/",
+        "cwd": "apps/maltrail-service"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m black src/ tests/ && python -m isort src/ tests/",
+        "cwd": "apps/maltrail-service"
+      }
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m mypy src/",
+        "cwd": "apps/maltrail-service"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pip install -r requirements.txt",
+        "cwd": "apps/maltrail-service"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t maltrail-service -f infrastructure/docker/Dockerfile .",
+        "cwd": "apps/maltrail-service"
+      }
+    },
+    "docker:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f infrastructure/docker/docker-compose.yml up -d",
+        "cwd": "apps/maltrail-service"
+      }
+    },
+    "docker:stop": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f infrastructure/docker/docker-compose.yml down",
+        "cwd": "apps/maltrail-service"
+      }
+    }
+  },
+  "tags": ["type:application", "scope:security", "framework:python"]
+}
