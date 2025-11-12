@@ -1,6 +1,153 @@
 {
   "root": true,
-  "ignorePatterns": ["**/*"],
-  "plugins": [],
-  "overrides": []
+  "ignorePatterns": [
+    "**/*",
+    "node_modules",
+    "dist",
+    "build",
+    ".next",
+    ".turbo",
+    "coverage",
+    "*.d.ts"
+  ],
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2022": true,
+    "jest": true
+  },
+
+  "rules": {
+    // TypeScript rules
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-use-before-define": [
+      "error",
+      {
+        "functions": false,
+        "classes": true,
+        "variables": true,
+        "allowNamedExports": true
+      }
+    ],
+
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    
+    // General JavaScript/ES6+ rules
+    "no-unused-vars": "off", // Handled by @typescript-eslint/no-unused-vars
+    "no-console": "warn",
+    "no-debugger": "error",
+    "no-alert": "warn",
+    "prefer-const": "error",
+    "no-var": "error",
+    "object-shorthand": "error",
+    "prefer-arrow-callback": "error",
+    "curly": ["error", "all"],
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
+    "no-duplicate-imports": "error"
+    
+
+  },
+  "overrides": [
+    // TypeScript files
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-explicit-any": "warn"
+      }
+    },
+    // JavaScript files
+    {
+      "files": ["*.js", "*.jsx"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off"
+      }
+    },
+
+    // Test files
+    {
+      "files": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.test.js",
+        "**/*.test.jsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx",
+        "**/*.spec.js",
+        "**/*.spec.jsx",
+        "**/test/**/*",
+        "**/tests/**/*",
+        "**/__tests__/**/*"
+      ],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "no-console": "off"
+      }
+    },
+    // Configuration files
+    {
+      "files": [
+        "*.config.js",
+        "*.config.ts",
+        ".eslintrc.js",
+        "jest.config.js",
+        "webpack.config.js",
+        "vite.config.ts",
+        "tailwind.config.js"
+      ],
+      "env": {
+        "node": true
+      },
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    },
+
+    // Node.js specific files (backend services)
+    {
+      "files": [
+        "**/server/**/*",
+        "**/api/**/*",
+        "**/backend/**/*",
+        "**/src/services/**/*"
+      ],
+      "env": {
+        "node": true,
+        "browser": false
+      },
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
 }

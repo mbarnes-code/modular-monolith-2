@@ -1,7 +1,8 @@
 {
-  "extends": ["next"],
+  "extends": ["../../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*"],
   "rules": {
-    "no-unused-vars": "error",
+    // Override root config for this Next.js app
     "no-console": "warn"
   }
 }
