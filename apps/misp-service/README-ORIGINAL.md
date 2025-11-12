@@ -1,5 +1,6 @@
-MISP - Threat Intelligence Sharing Platform
--------------------------------------------
+# MISP Service
+
+A threat intelligence sharing platform integrated into the NX monorepo architecture.
 <img align="right" alt="MISP logo" src="./INSTALL/logos/misp-logo.png"/> 
 
 MISP is an open source software solution for collecting, storing, distributing and sharing cyber security indicators and threats about cyber security incidents analysis and malware analysis. MISP is designed by and for incident analysts, security and ICT professionals or malware reversers to support their day-to-day operations to share structured information efficiently.

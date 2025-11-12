@@ -1,0 +1,313 @@
+{
+  "name": "nemesis-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/nemesis-service",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "nemesis-web-api:docker:build",
+        "nemesis-file-enrichment:docker:build", 
+        "nemesis-frontend:docker:build",
+        "nemesis-document-conversion:docker:build"
+      ],
+      "inputs": [
+        "{projectRoot}/infra/**/*",
+        "{projectRoot}/compose.*"
+      ],
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "commands": [
+          "echo 'Building Nemesis platform...'",
+          "docker-compose -f compose.yaml build"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      },
+      "configurations": {
+        "production": {
+          "commands": [
+            "echo 'Building Nemesis production platform...'",
+            "docker-compose -f compose.prod.build.yaml build"
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "docker-compose -f compose.yaml up",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "serve:dev": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["install"],
+      "options": {
+        "command": "docker-compose -f compose.override.yaml up",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "serve:background": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "docker-compose -f compose.yaml up -d",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "stop": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f compose.yaml down",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "nemesis-web-api:test",
+        "nemesis-file-enrichment:test",
+        "nemesis-frontend:test",
+        "nemesis-document-conversion:test",
+        "nemesis-common:test",
+        "nemesis-file-enrichment-lib:test"
+      ],
+      "inputs": [
+        "{projectRoot}/infra/**/*"
+      ],
+      "outputs": ["{projectRoot}/coverage"],
+      "options": {
+        "command": "echo 'All Nemesis service tests completed via NX dependencies'",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:integration": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["docker:up"],
+      "options": {
+        "commands": [
+          "echo 'Running integration tests...'",
+          "sleep 30",
+          "curl -f http://localhost:8000/healthz || exit 1",
+          "curl -f http://localhost:8001/healthz || exit 1",
+          "echo 'Integration tests passed'"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/projects/**/*.py", "{projectRoot}/libs/**/*.py"],
+      "options": {
+        "commands": [
+          "echo 'Linting Nemesis Python code...'",
+          "for project in projects/*/; do if [ -f \"$project/pyproject.toml\" ]; then echo \"Linting $project\"; cd \"$project\" && poetry run ruff check . || echo \"No ruff config in $project\"; cd ../..; fi; done"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/projects/**/*.py", "{projectRoot}/libs/**/*.py"],
+      "outputs": ["{projectRoot}/projects", "{projectRoot}/libs"],
+      "options": {
+        "commands": [
+          "echo 'Auto-fixing Nemesis Python code...'",
+          "for project in projects/*/; do if [ -f \"$project/pyproject.toml\" ]; then echo \"Fixing $project\"; cd \"$project\" && poetry run ruff check --fix . && poetry run ruff format . || echo \"No ruff config in $project\"; cd ../..; fi; done"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/projects/**/*.py", "{projectRoot}/libs/**/*.py"],
+      "options": {
+        "commands": [
+          "echo 'Type checking Nemesis Python code...'",
+          "for project in projects/*/; do if [ -f \"$project/pyproject.toml\" ]; then echo \"Type checking $project\"; cd \"$project\" && poetry run mypy . || echo \"No mypy config in $project\"; cd ../..; fi; done"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/projects/*/pyproject.toml",
+        "{projectRoot}/libs/*/pyproject.toml"
+      ],
+      "outputs": [
+        "{projectRoot}/projects/*/poetry.lock",
+        "{projectRoot}/libs/*/poetry.lock"
+      ],
+      "options": {
+        "commands": [
+          "echo 'Installing Nemesis dependencies...'",
+          "for project in projects/*/; do if [ -f \"$project/pyproject.toml\" ]; then echo \"Installing dependencies for $project\"; cd \"$project\" && poetry install || echo \"Poetry install failed for $project\"; cd ../..; fi; done",
+          "for lib in libs/*/; do if [ -f \"$lib/pyproject.toml\" ]; then echo \"Installing dependencies for $lib\"; cd \"$lib\" && poetry install || echo \"Poetry install failed for $lib\"; cd ../..; fi; done"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "install:dev": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/projects/*/pyproject.toml",
+        "{projectRoot}/libs/*/pyproject.toml"
+      ],
+      "options": {
+        "commands": [
+          "echo 'Installing Nemesis dev dependencies...'",
+          "for project in projects/*/; do if [ -f \"$project/pyproject.toml\" ]; then echo \"Installing dev dependencies for $project\"; cd \"$project\" && poetry install --with dev || echo \"Poetry dev install failed for $project\"; cd ../..; fi; done"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "setup": {
+      "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/env.example"],
+      "outputs": ["{projectRoot}/.env"],
+      "options": {
+        "commands": [
+          "echo 'Setting up Nemesis environment...'",
+          "if [ ! -f .env ]; then cp env.example .env && echo 'Please configure .env file with your settings'; fi",
+          "echo 'Nemesis setup complete. Please review and update .env file before running.'"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "docs:build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["install"],
+      "inputs": [
+        "{projectRoot}/docs/**/*",
+        "{projectRoot}/mkdocs.yml",
+        "{projectRoot}/**/README.md"
+      ],
+      "outputs": ["{projectRoot}/site"],
+      "options": {
+        "command": "mkdocs build",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "docs:serve": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["install"],
+      "options": {
+        "command": "mkdocs serve",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/projects/**/*",
+        "{projectRoot}/libs/**/*",
+        "{projectRoot}/infra/**/*",
+        "{projectRoot}/compose.*"
+      ],
+      "outputs": ["{projectRoot}/.docker-build"],
+      "options": {
+        "command": "docker-compose -f compose.yaml build && touch .docker-build",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "docker:up": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["docker:build"],
+      "options": {
+        "command": "docker-compose -f compose.yaml up -d",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "docker:down": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f compose.yaml down",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "docker:logs": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f compose.yaml logs -f",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "docker:clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker-compose -f compose.yaml down -v",
+          "docker system prune -f",
+          "docker volume prune -f"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "monitoring:up": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["docker:build"],
+      "options": {
+        "command": "docker-compose -f compose.yaml --profile monitoring up -d",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "monitoring:down": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f compose.yaml --profile monitoring down",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "jupyter:up": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["docker:build"],
+      "options": {
+        "command": "docker-compose -f compose.yaml --profile jupyter up -d",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "status": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f compose.yaml ps",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "logs": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f compose.yaml logs -f",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": [
+    "type:app",
+    "scope:nemesis",
+    "framework:docker",
+    "platform:file-enrichment",
+    "platform:threat-intelligence",
+    "tier:orchestration",
+    "architecture:microservices"
+  ],
+  "implicitDependencies": [
+    "nemesis-web-api",
+    "nemesis-file-enrichment", 
+    "nemesis-frontend",
+    "nemesis-document-conversion",
+    "nemesis-common",
+    "nemesis-file-enrichment-lib"
+  ]
+}

@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  misp-web:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+    container_name: misp-web
+    ports:
+      - "8080:80"
+      - "8443:443"
+    environment:
+      - MISP_DATABASE_HOST=misp-db
+      - MISP_DATABASE_NAME=misp
+      - MISP_DATABASE_USER=misp
+      - MISP_DATABASE_PASSWORD=misp_password
+      - MISP_REDIS_HOST=misp-redis
+      - MISP_REDIS_PORT=6379
+    volumes:
+      - misp_files:/var/www/html/app/files
+      - misp_logs:/var/www/html/app/tmp/logs
+    depends_on:
+      - misp-db
+      - misp-redis
+    networks:
+      - misp-network
+    restart: unless-stopped
+
+  misp-db:
+    image: mysql:8.0
+    container_name: misp-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=misp
+      - MYSQL_USER=misp
+      - MYSQL_PASSWORD=misp_password
+    volumes:
+      - misp_db_data:/var/lib/mysql
+      - ../../INSTALL/MYSQL.sql:/docker-entrypoint-initdb.d/misp_schema.sql:ro
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - misp-network
+    restart: unless-stopped
+
+  misp-redis:
+    image: redis:7-alpine
+    container_name: misp-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - misp_redis_data:/data
+    networks:
+      - misp-network
+    restart: unless-stopped
+
+  misp-worker:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+    container_name: misp-worker
+    environment:
+      - MISP_DATABASE_HOST=misp-db
+      - MISP_DATABASE_NAME=misp
+      - MISP_DATABASE_USER=misp
+      - MISP_DATABASE_PASSWORD=misp_password
+      - MISP_REDIS_HOST=misp-redis
+      - MISP_REDIS_PORT=6379
+    volumes:
+      - misp_files:/var/www/html/app/files
+      - misp_logs:/var/www/html/app/tmp/logs
+    depends_on:
+      - misp-db
+      - misp-redis
+    command: php app/Console/cake CakeResque.CakeResque start --interval 5 --queue default
+    networks:
+      - misp-network
+    restart: unless-stopped
+
+volumes:
+  misp_db_data:
+    driver: local
+  misp_redis_data:
+    driver: local
+  misp_files:
+    driver: local
+  misp_logs:
+    driver: local
+
+networks:
+  misp-network:
+    driver: bridge

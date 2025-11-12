@@ -91,7 +91,15 @@
     "dispatch-database": "libs/dispatch-database",
     "firecrawl-ui": "libs/firecrawl-ui",
     "firecrawl-core": "libs/firecrawl-core",
-    "firecrawl-types": "libs/firecrawl-types"
+    "firecrawl-types": "libs/firecrawl-types",
+    "misp-service": "apps/misp-service",
+    "nemesis-service": "apps/nemesis-service",
+    "nemesis-web-api": "apps/nemesis-web-api",
+    "nemesis-file-enrichment": "apps/nemesis-file-enrichment",
+    "nemesis-frontend": "apps/nemesis-frontend",
+    "nemesis-document-conversion": "apps/nemesis-document-conversion",
+    "nemesis-common": "libs/nemesis-common",
+    "nemesis-file-enrichment-lib": "libs/nemesis-file-enrichment"
   },
   "plugins": [
     {

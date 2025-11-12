@@ -1476,6 +1476,300 @@
         "panel": "shared"
       },
       "problemMatcher": []
+    },
+    
+    // Nemesis Service Tasks
+    {
+      "label": "Serve Nemesis Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Nemesis Service (Background)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve:background", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Nemesis Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Nemesis Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test", "nemesis-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint Nemesis Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "lint", "nemesis-service"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Setup Nemesis Service",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "setup", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Nemesis: Docker Build",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docker:build", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Nemesis: Docker Up",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docker:up", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Nemesis: Docker Down",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docker:down", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Nemesis: Docker Logs",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docker:logs", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Nemesis: Status",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "status", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Nemesis: Start Monitoring",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "monitoring:up", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Nemesis: Start Jupyter",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "jupyter:up", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Nemesis: Docs Serve",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "docs:serve", "nemesis-service"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    
+    // Individual Nemesis Service Tasks
+    {
+      "label": "Serve Nemesis Web API",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "nemesis-web-api"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Nemesis File Enrichment",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "nemesis-file-enrichment"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Nemesis Frontend",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "nemesis-frontend"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Test All Nemesis Services",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "run-many", "--target=test", "--projects=nemesis-*"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build All Nemesis Services",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "run-many", "--target=build", "--projects=nemesis-*"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint All Nemesis Services",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "run-many", "--target=lint", "--projects=nemesis-*"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
     }
   ]
 }

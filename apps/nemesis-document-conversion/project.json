@@ -1,0 +1,119 @@
+{
+  "name": "nemesis-document-conversion",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/nemesis-document-conversion/document_conversion",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build", "install"],
+      "inputs": [
+        "{projectRoot}/**/*",
+        "!{projectRoot}/**/*.pyc",
+        "!{projectRoot}/**/__pycache__"
+      ],
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "command": "poetry build",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["install"],
+      "options": {
+        "command": "poetry run uvicorn document_conversion.main:app --reload --host 0.0.0.0 --port 8002",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "serve:prod": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "poetry run uvicorn document_conversion.main:app --host 0.0.0.0 --port 8002",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["install"],
+      "inputs": [
+        "{projectRoot}/**/*.py",
+        "!{projectRoot}/dist/**/*"
+      ],
+      "outputs": ["{projectRoot}/coverage"],
+      "options": {
+        "command": "poetry run pytest --cov=document_conversion --cov-report=xml --cov-report=html",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:watch": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["install"],
+      "options": {
+        "command": "poetry run pytest-watch",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/**/*.py"],
+      "options": {
+        "command": "poetry run ruff check .",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/**/*.py"],
+      "outputs": ["{projectRoot}/**/*.py"],
+      "options": {
+        "commands": [
+          "poetry run ruff check --fix .",
+          "poetry run ruff format ."
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/**/*.py"],
+      "options": {
+        "command": "poetry run mypy document_conversion",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/pyproject.toml"],
+      "outputs": ["{projectRoot}/poetry.lock"],
+      "options": {
+        "command": "poetry install",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "inputs": [
+        "{projectRoot}/**/*",
+        "{projectRoot}/Dockerfile"
+      ],
+      "outputs": ["{projectRoot}/.docker-build"],
+      "options": {
+        "command": "docker build -t nemesis-document-conversion:latest . && touch .docker-build",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": [
+    "type:app",
+    "scope:nemesis",
+    "framework:python",
+    "framework:fastapi",
+    "tier:worker",
+    "domain:security"
+  ],
+  "implicitDependencies": ["nemesis-common"]
+}
