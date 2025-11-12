@@ -7,24 +7,29 @@
   "targetDefaults": {
     "build": {
       "cache": true,
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     },
     "package": {
       "cache": true,
-      "dependsOn": ["build", "^build"]
+      "dependsOn": ["build", "^build"],
+      "inputs": ["production", "^production"]
     },
     "test": {
       "cache": true,
-      "dependsOn": ["build", "^build"]
+      "dependsOn": ["build", "^build"],
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
     },
     "lint": {
-      "cache": true
+      "cache": true,
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json", "{workspaceRoot}/.eslintignore"]
     },
     "format": {
       "cache": false
     },
     "format:check": {
-      "cache": true
+      "cache": true,
+      "inputs": ["default", "{workspaceRoot}/.prettierrc", "{workspaceRoot}/.prettierignore"]
     },
     "deploy": {
       "cache": false,
@@ -46,18 +51,42 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
+    },
+    "@nx/webpack:webpack": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    },
+    "@nx/next:build": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     }
   },
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*", 
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/.eslintrc.json"
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/src/test-setup.[jt]s",
+      "!{projectRoot}/test-setup.[jt]s",
+      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": [
+      "{workspaceRoot}/.github/workflows/*.{yml,yaml}",
+      "{workspaceRoot}/.eslintrc.json",
+      "{workspaceRoot}/.prettierrc",
+      "{workspaceRoot}/.prettierignore",
+      "{workspaceRoot}/jest.preset.js",
+      "{workspaceRoot}/jest.config.ts",
+      "{workspaceRoot}/babel.config.json"
+    ]
   },
   "generators": {
     "@nx/react": {
@@ -76,7 +105,23 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "affected:build", "affected:test", "affected:lint"]
+        "cacheableOperations": [
+          "build", 
+          "lint", 
+          "test", 
+          "affected:build", 
+          "affected:test", 
+          "affected:lint",
+          "package",
+          "format:check",
+          "@nx/esbuild:esbuild",
+          "@nx/webpack:webpack",
+          "@nx/next:build"
+        ],
+        "parallel": 3,
+        "maxParallel": 5,
+        "useDaemonProcess": true,
+        "cacheDirectory": ".nx/cache"
       }
     }
   },
@@ -152,5 +197,16 @@
         "serveStaticTargetName": "serve-static"
       }
     }
-  ]
+  ],
+  "cli": {
+    "cache": {
+      "enabled": true,
+      "environment": "all"
+    },
+    "analytics": false
+  },
+  "release": {
+    "projects": ["*"]
+  },
+  "defaultBase": "main"
 }
