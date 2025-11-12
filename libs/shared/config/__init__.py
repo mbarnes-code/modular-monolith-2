@@ -1,14 +1,29 @@
 """
-Environment configuration management for the Mental Prosthetic Platform.
+Enhanced configuration management for Mental Prosthetic Platform.
 
-Provides unified configuration across all 37 integrated tools with
-executive function accommodations and constitutional compliance settings.
+Provides unified configuration patterns across all 37 integrated tools with:
+- Environment-based configuration with clear hierarchy
+- Type validation and sanitization
+- Executive function accommodations (clear error messages)
+- Domain-specific defaults and validation
+- Configuration hot-reloading and change detection
 """
 
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseSettings, Field, validator
+
+
+class ConfigurationError(Exception):
+    """Configuration validation error with clear messaging."""
+
+    def __init__(self, field: str, message: str,
+                 user_message: Optional[str] = None):
+        self.field = field
+        self.message = message
+        self.user_message = user_message or message
+        super().__init__(self.user_message)
 
 
 class Environment(str, Enum):
@@ -224,9 +239,18 @@ class MentalProstheticConfig(BaseSettings):
 
     @validator("environment", pre=True)
     def validate_environment(cls, v):
-        """Validate environment setting."""
+        """Validate environment setting with clear error messages."""
         if isinstance(v, str):
-            return Environment(v.lower())
+            try:
+                return Environment(v.lower())
+            except ValueError:
+                valid_envs = [e.value for e in Environment]
+                raise ConfigurationError(
+                    "environment",
+                    f"Invalid environment: {v}",
+                    f"Environment must be one of: {', '.join(valid_envs)}. "
+                    f"Check your ENVIRONMENT variable."
+                )
         return v
 
     @property
