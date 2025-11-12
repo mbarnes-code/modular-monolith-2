@@ -26,7 +26,8 @@
       "@firecrawl/core": ["libs/firecrawl-core/src/index.ts"],
       "@firecrawl/types": ["libs/firecrawl-types/src/index.ts"],
       "@firecrawl/ui": ["libs/firecrawl-ui/src/index.ts"],
-      "@jane-monorepo/mtg-scripting-toolkit": ["libs/mtg-scripting-toolkit/src/index.ts"]
+      "@jane-monorepo/mtg-scripting-toolkit": ["libs/mtg-scripting-toolkit/src/index.ts"],
+      "blackarch": ["libs/blackarch/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -1,0 +1,129 @@
+{
+  "name": "blackarch-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/blackarch-service/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/blackarch-service",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/blackarch-service/src/main.ts",
+        "tsConfig": "apps/blackarch-service/tsconfig.app.json",
+        "assets": [
+          "apps/blackarch-service/src/assets",
+          {
+            "input": "apps/blackarch-service/blackarch",
+            "glob": "**/*",
+            "output": "blackarch"
+          }
+        ],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/blackarch-service/package.json",
+        "{workspaceRoot}/dist/blackarch-service/package-lock.json"
+      ],
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "copy-workspace-modules": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "outputs": ["{workspaceRoot}/dist/blackarch-service/workspace_modules"],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "prune": {
+      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
+      "executor": "nx:noop"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "blackarch-service:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "blackarch-service:build:development"
+        },
+        "production": {
+          "buildTarget": "blackarch-service:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/blackarch-service/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/blackarch-service/**/*.{ts,js}"]
+      }
+    },
+    "validate-packages": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/blackarch-service/blackarch && ./run-tests.sh",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "stats": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node -e \"const {BlackArchManager} = require('./dist/blackarch-service/apps/blackarch-service/src/blackarch-manager.js'); const manager = new BlackArchManager(); console.log(JSON.stringify(manager.getStats(), null, 2));\"",
+        "cwd": "{workspaceRoot}"
+      },
+      "dependsOn": ["build"]
+    },
+    "list-groups": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node -e \"const {BlackArchManager} = require('./dist/blackarch-service/apps/blackarch-service/src/blackarch-manager.js'); const manager = new BlackArchManager(); console.log(manager.getToolGroups().join('\\n'));\"",
+        "cwd": "{workspaceRoot}"
+      },
+      "dependsOn": ["build"]
+    }
+  }
+}
