@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+"""
+APIScout CLI - Main interface for Windows API analysis
+Wrapper script for the main scout.py CLI tool following NX best practices
+"""
+
+import os
+import sys
+import subprocess
+
+if __name__ == "__main__":
+    # Get the directory containing this script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    scout_path = os.path.join(script_dir, "src", "apiscout-cli", "scout.py")
+    
+    # Run the actual scout.py with all arguments passed through
+    cmd = [sys.executable, scout_path] + sys.argv[1:]
+    sys.exit(subprocess.call(cmd))

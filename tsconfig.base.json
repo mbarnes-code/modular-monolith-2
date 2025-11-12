@@ -50,6 +50,9 @@
       ],
       "@firecrawl/ui": [
         "libs/firecrawl-ui/src/index.ts"
+      ],
+      "@jane-monorepo/onex-core": [
+        "libs/onex-core/src/index.ts"
       ]
     }
   },

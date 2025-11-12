@@ -101,15 +101,58 @@ java -javaagent:software-forensic-kit.jar="Class1;method1~Class2;method2" \\
 
 ### NX Workspace Integration
 
+This project follows NX best practices for optimal developer experience and performance.
+
 ```bash
-# Show help
-npx nx analyze:help software-forensic-kit-service
+# Development workflow
+npx nx build software-forensic-kit-service:development
+npx nx test software-forensic-kit-service
+npx nx serve software-forensic-kit-service:development
 
-# Local analysis (requires searchFunction and jarFilter environment variables)
-npx nx analyze:local software-forensic-kit-service
+# Code quality checks
+npx nx lint software-forensic-kit-service
+npx nx format software-forensic-kit-service
+npx nx format:check software-forensic-kit-service
 
-# Custom analysis
-npx nx analyze software-forensic-kit-service
+# Testing with coverage
+npx nx test software-forensic-kit-service:coverage
+npx nx test software-forensic-kit-service:integration
+
+# Analysis operations (multiple configurations)
+npx nx analyze software-forensic-kit-service:help
+npx nx analyze software-forensic-kit-service:local
+npx nx analyze software-forensic-kit-service:remote  
+npx nx analyze software-forensic-kit-service:agent
+
+# Production build and packaging
+npx nx build software-forensic-kit-service:production
+npx nx package software-forensic-kit-service
+
+# Docker operations (multiple configurations)
+npx nx docker:build software-forensic-kit-service:production
+npx nx docker:build software-forensic-kit-service:development
+npx nx docker:run software-forensic-kit-service:interactive
+npx nx docker:run software-forensic-kit-service:analysis
+```
+
+#### Environment Variables for NX Commands
+
+**Local Analysis:**
+```bash
+searchFunction="*vulnerable*" jarFilter="./samples" npx nx analyze software-forensic-kit-service:local
+```
+
+**Remote Analysis:**
+```bash
+sshUser="analyst" sshHost="target.server.com" sshPass="password" \
+searchFunction="*security*" jarFilter="/opt/app/lib" \
+npx nx analyze software-forensic-kit-service:remote
+```
+
+**Java Agent Mode:**
+```bash
+targetClass="com.example.Service" targetMethod="processData" targetJar="./app.jar" \
+npx nx analyze software-forensic-kit-service:agent
 ```
 
 ## Command Line Options
@@ -225,18 +268,32 @@ apps/software-forensic-kit-service/
 ### Building and Testing
 
 ```bash
-# Build
-npx nx build software-forensic-kit-service
-
-# Test
-npx nx test software-forensic-kit-service
-
-# Lint
+# Development workflow
+npx nx build software-forensic-kit-service:development
+npx nx test software-forensic-kit-service:coverage  
 npx nx lint software-forensic-kit-service
+npx nx format software-forensic-kit-service
 
-# Docker build
-npx nx docker:build software-forensic-kit-service
+# Production build
+npx nx build software-forensic-kit-service:production
+npx nx package software-forensic-kit-service
+npx nx docker:build software-forensic-kit-service:production
+
+# Testing
+npx nx test software-forensic-kit-service:coverage
+npx nx test software-forensic-kit-service:integration
 ```
+
+### NX Best Practices Applied
+
+This project implements comprehensive NX best practices:
+
+- **Multiple Configurations**: Development/production builds, various analysis modes
+- **Proper Caching**: Build, test, and lint results cached for performance
+- **Environment Management**: Separate `.env.development` and `.env.production` files  
+- **Shared Libraries**: Common forensic utilities in `libs/forensic-core`
+- **Dependency Management**: Proper implicit dependencies and build ordering
+- **Standardized Scripts**: Consistent command patterns across the workspace
 
 ### Contributing
 1. Fork the repository

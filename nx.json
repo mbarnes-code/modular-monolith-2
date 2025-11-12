@@ -9,11 +9,21 @@
       "cache": true,
       "dependsOn": ["^build"]
     },
+    "package": {
+      "cache": true,
+      "dependsOn": ["build", "^build"]
+    },
     "test": {
       "cache": true,
-      "dependsOn": ["^build"]
+      "dependsOn": ["build", "^build"]
     },
     "lint": {
+      "cache": true
+    },
+    "format": {
+      "cache": false
+    },
+    "format:check": {
       "cache": true
     },
     "deploy": {
@@ -31,6 +41,11 @@
     },
     "affected:deploy": {
       "cache": false
+    },
+    "@nx/esbuild:esbuild": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     }
   },
   "namedInputs": {
@@ -102,7 +117,10 @@
     "nemesis-document-conversion": "apps/nemesis-document-conversion",
     "nemesis-common": "libs/nemesis-common",
     "nemesis-file-enrichment-lib": "libs/nemesis-file-enrichment",
-    "software-forensic-kit-service": "apps/software-forensic-kit-service"
+    "software-forensic-kit-service": "apps/software-forensic-kit-service",
+    "forensic-core": "libs/forensic-core",
+    "mtg-commander-map-service": "apps/mtg-commander-map-service",
+    "apiscout-service": "apps/apiscout-service"
   },
   "plugins": [
     {

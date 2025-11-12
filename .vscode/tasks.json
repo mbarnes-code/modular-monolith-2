@@ -1772,4 +1772,62 @@
       "problemMatcher": []
     }
   ]
+},
+{
+    "label": "Serve MTG Commander Map Service",
+    "type": "shell",
+    "command": "npx",
+    "args": [
+        "nx",
+        "serve",
+        "mtg-commander-map-service"
+    ],
+    "group": "build",
+    "isBackground": true
+},
+{
+    "label": "Build MTG Commander Map Service",
+    "type": "shell",
+    "command": "npx",
+    "args": [
+        "nx",
+        "build",
+        "mtg-commander-map-service"
+    ],
+    "group": "build"
+},
+{
+    "label": "Test MTG Commander Map Service",
+    "type": "shell",
+    "command": "npx",
+    "args": [
+        "nx",
+        "test",
+        "mtg-commander-map-service"
+    ],
+    "group": "test"
+},
+{
+    "label": "Install MTG Commander Map Dependencies",
+    "type": "shell",
+    "command": "npx",
+    "args": [
+        "nx",
+        "install",
+        "mtg-commander-map-service"
+    ],
+    "group": "build"
+},
+{
+    "label": "MTG Commander Map: Jupyter Notebook",
+    "type": "shell",
+    "command": "npx",
+    "args": [
+        "nx",
+        "jupyter",
+        "mtg-commander-map-service"
+    ],
+    "group": "build",
+    "isBackground": true
+}]
 }

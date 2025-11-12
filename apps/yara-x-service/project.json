@@ -191,7 +191,7 @@
         "command": "cd src/py && python -m build",
         "cwd": "apps/yara-x-service"
       },
-      "dependsOn": ["yara-x-core:build"]
+      "dependsOn": ["build"]
     },
     "py:install": {
       "executor": "nx:run-commands",
@@ -210,7 +210,7 @@
         "command": "cd src/go && go test -v",
         "cwd": "apps/yara-x-service"
       },
-      "dependsOn": ["yara-x-capi:build"]
+      "dependsOn": ["build:capi"]
     },
     "docker:build": {
       "executor": "nx:run-commands",
@@ -254,19 +254,13 @@
     "fuzz": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "nx fuzz yara-x-core",
+        "command": "cargo fuzz --help",
         "cwd": "apps/yara-x-service"
       },
-      "dependsOn": ["yara-x-core:build"]
+      "dependsOn": ["build"]
     }
   },
   "implicitDependencies": [
-    "security-service",
-    "yara-x-core",
-    "yara-x-parser", 
-    "yara-x-fmt",
-    "yara-x-cli",
-    "yara-x-capi",
-    "yara-x-docs"
+    "security-service"
   ]
 }

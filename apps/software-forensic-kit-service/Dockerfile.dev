@@ -1,0 +1,57 @@
+# Development Docker Image for Software Forensic Kit
+FROM openjdk:8-jdk-alpine
+
+# Metadata
+LABEL maintainer="Software Forensic Kit Team"
+LABEL description="Binary analysis toolkit for Java applications (Development)"
+LABEL version="1.0.0-dev"
+
+# Install development packages
+RUN apk add --no-cache \
+    bash \
+    openssh-client \
+    ca-certificates \
+    maven \
+    git \
+    && rm -rf /var/cache/apk/*
+
+# Create application directory
+WORKDIR /app
+
+# Create data directory for analysis input/output
+RUN mkdir -p /data /src
+
+# Create non-root user for development
+RUN addgroup -g 1001 forensics && \
+    adduser -D -u 1001 -G forensics forensics
+
+# Copy source code for development builds
+COPY apps/software-forensic-kit-service /src
+WORKDIR /src
+
+# Change ownership
+RUN chown -R forensics:forensics /app /data /src
+
+# Switch to non-root user
+USER forensics
+
+# Set development Java options
+ENV JAVA_OPTS="-Xmx2g -XX:+UseG1GC -Djava.io.tmpdir=/tmp -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+ENV MAVEN_OPTS="-Xmx1g"
+
+# Development build
+RUN mvn clean package -Pdev
+
+# Default command for development
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar target/software-forensic-kit-*-jar-with-dependencies.jar \"$@\"", "--"]
+CMD ["--help"]
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD java $JAVA_OPTS -jar target/software-forensic-kit-*-jar-with-dependencies.jar --version || exit 1
+
+# Expose debug port for development
+EXPOSE 5005
+
+# Volume for data input/output
+VOLUME ["/data"]

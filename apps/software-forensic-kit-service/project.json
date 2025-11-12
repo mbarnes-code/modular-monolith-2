@@ -3,79 +3,170 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/software-forensic-kit-service/src",
   "projectType": "application",
-  "tags": ["scope:apps", "type:service", "domain:security", "language:java"],
+  "tags": [
+    "scope:security", 
+    "type:service", 
+    "framework:maven", 
+    "language:java",
+    "runtime:jvm",
+    "domain:forensics"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
-      "options": {
-        "command": "mvn clean package -f apps/software-forensic-kit-service/pom.xml",
-        "cwd": "."
-      },
       "outputs": [
         "{projectRoot}/target"
-      ]
+      ],
+      "options": {
+        "command": "mvn clean compile -f {projectRoot}/pom.xml"
+      },
+      "configurations": {
+        "production": {
+          "command": "mvn clean package -Pprod -f {projectRoot}/pom.xml"
+        },
+        "development": {
+          "command": "mvn clean package -Pdev -f {projectRoot}/pom.xml"
+        }
+      },
+      "cache": true
+    },
+    "package": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/target/*.jar"
+      ],
+      "options": {
+        "command": "mvn package -f {projectRoot}/pom.xml"
+      },
+      "dependsOn": ["build"],
+      "cache": true
     },
     "serve": {
       "executor": "nx:run-commands",
+      "defaultConfiguration": "development",
       "options": {
-        "command": "java -jar target/software-forensic-kit-*-jar-with-dependencies.jar -h",
-        "cwd": "apps/software-forensic-kit-service"
+        "command": "java -Xmx2g -jar target/software-forensic-kit-*-jar-with-dependencies.jar --help"
       },
-      "dependsOn": ["build"]
+      "configurations": {
+        "development": {
+          "command": "java -Xmx2g -Dspring.profiles.active=dev -jar target/software-forensic-kit-*-jar-with-dependencies.jar --help"
+        },
+        "production": {
+          "command": "java -Xmx4g -server -jar target/software-forensic-kit-*-jar-with-dependencies.jar --help"
+        }
+      },
+      "dependsOn": ["package"]
     },
     "test": {
       "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/target/surefire-reports",
+        "{projectRoot}/target/site/jacoco"
+      ],
       "options": {
-        "command": "mvn test -f apps/software-forensic-kit-service/pom.xml",
-        "cwd": "."
-      }
+        "command": "mvn test -f {projectRoot}/pom.xml"
+      },
+      "configurations": {
+        "coverage": {
+          "command": "mvn clean test jacoco:report -f {projectRoot}/pom.xml"
+        },
+        "integration": {
+          "command": "mvn clean test -Dtest=*IT -f {projectRoot}/pom.xml"
+        }
+      },
+      "cache": true
     },
     "lint": {
       "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/target/checkstyle-result.xml"
+      ],
       "options": {
-        "command": "mvn checkstyle:check -f apps/software-forensic-kit-service/pom.xml",
-        "cwd": "."
+        "command": "mvn checkstyle:check -f {projectRoot}/pom.xml"
+      },
+      "cache": true
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn spotless:apply -f {projectRoot}/pom.xml"
       }
+    },
+    "format:check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn spotless:check -f {projectRoot}/pom.xml"
+      },
+      "cache": true
     },
     "analyze": {
       "executor": "nx:run-commands",
+      "defaultConfiguration": "help",
       "options": {
-        "command": "java -jar target/software-forensic-kit-*-jar-with-dependencies.jar",
-        "cwd": "apps/software-forensic-kit-service"
+        "command": "java -Xmx4g -jar target/software-forensic-kit-*-jar-with-dependencies.jar"
       },
-      "dependsOn": ["build"]
-    },
-    "analyze:help": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "java -jar target/software-forensic-kit-*-jar-with-dependencies.jar -h",
-        "cwd": "apps/software-forensic-kit-service"
+      "configurations": {
+        "help": {
+          "command": "java -jar target/software-forensic-kit-*-jar-with-dependencies.jar --help"
+        },
+        "local": {
+          "command": "java -Xmx4g -jar target/software-forensic-kit-*-jar-with-dependencies.jar -s \"${searchFunction:-*vulnerable*}\" -f \"${jarFilter:-./sample}\" -pp"
+        },
+        "remote": {
+          "command": "java -Xmx4g -jar target/software-forensic-kit-*-jar-with-dependencies.jar -u \"${sshUser}\" -d \"${sshHost}\" -p \"${sshPass}\" -s \"${searchFunction}\" -f \"${jarFilter}\" -hi"
+        },
+        "agent": {
+          "command": "java -javaagent:target/software-forensic-kit-*-jar-with-dependencies.jar=\"${targetClass:-com.example.Main};${targetMethod:-main}\" -jar \"${targetJar}\""
+        }
       },
-      "dependsOn": ["build"]
-    },
-    "analyze:local": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "java -jar target/software-forensic-kit-*-jar-with-dependencies.jar -s \"${searchFunction}\" -f \"${jarFilter}\" -pp",
-        "cwd": "apps/software-forensic-kit-service"
-      },
-      "dependsOn": ["build"]
+      "dependsOn": ["package"]
     },
     "docker:build": {
       "executor": "nx:run-commands",
+      "outputs": [],
       "options": {
-        "command": "docker build -t software-forensic-kit-service -f apps/software-forensic-kit-service/Dockerfile .",
-        "cwd": "."
+        "command": "docker build -t software-forensic-kit-service:latest -f {projectRoot}/Dockerfile {projectRoot}"
       },
-      "dependsOn": ["build"]
+      "configurations": {
+        "production": {
+          "command": "docker build -t software-forensic-kit-service:prod -f {projectRoot}/Dockerfile {projectRoot}"
+        },
+        "development": {
+          "command": "docker build -t software-forensic-kit-service:dev -f {projectRoot}/Dockerfile.dev {projectRoot}"
+        }
+      },
+      "dependsOn": ["package"]
     },
     "docker:run": {
       "executor": "nx:run-commands",
+      "defaultConfiguration": "interactive",
       "options": {
-        "command": "docker run --rm -it -v $(pwd)/data:/data software-forensic-kit-service",
-        "cwd": "."
+        "command": "docker run --rm software-forensic-kit-service:latest --help"
+      },
+      "configurations": {
+        "interactive": {
+          "command": "docker run --rm -it -v ./data:/data software-forensic-kit-service:latest"
+        },
+        "daemon": {
+          "command": "docker run -d --name forensic-kit -v ./data:/data software-forensic-kit-service:latest"
+        },
+        "analysis": {
+          "command": "docker run --rm -v ./data:/data -v ./results:/results software-forensic-kit-service:latest -f /data -o /results"
+        }
       },
       "dependsOn": ["docker:build"]
+    },
+    "docker:stop": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker stop forensic-kit && docker rm forensic-kit"
+      }
+    },
+    "docker:logs": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker logs forensic-kit"
+      }
     }
   }
 }

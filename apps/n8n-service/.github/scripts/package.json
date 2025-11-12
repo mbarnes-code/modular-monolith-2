@@ -1,4 +1,6 @@
 {
+  "name": "n8n-scripts",
+  "private": true,
   "dependencies": {
     "cacheable-lookup": "6.1.0",
     "conventional-changelog": "^4.0.0",

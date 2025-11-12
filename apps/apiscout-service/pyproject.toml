@@ -1,0 +1,90 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apiscout-service"
+version = "2.0.2"
+description = "A library for Windows API usage recovery and similarity assessment with focus on memory dumps."
+readme = "README.md"
+authors = [
+    {name = "Daniel Plohmann", email = "daniel.plohmann@mailbox.org"}
+]
+license = {text = "BSD 2-Clause"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Security",
+    "Topic :: Software Development :: Disassemblers",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy",
+    "Pillow",
+    "wheel",
+    "lief",
+    "requests"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=6.0",
+    "pytest-cov",
+    "nose"
+]
+dev = [
+    "black",
+    "isort",
+    "flake8",
+    "mypy"
+]
+
+[project.urls]
+Homepage = "https://github.com/danielplohmann/apiscout"
+Repository = "https://github.com/danielplohmann/apiscout"
+Issues = "https://github.com/danielplohmann/apiscout/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+apiscout = ["data/winapi1024v1.txt", "data/winapi_contexts.csv", "data/html_frame.html"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+# A regex preceded by ^/ will apply only to files and directories
+# in the root of the project.
+^/(
+  (
+      \.eggs
+    | \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+)
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true

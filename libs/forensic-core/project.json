@@ -1,0 +1,58 @@
+{
+  "name": "forensic-core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/forensic-core/src",
+  "projectType": "library",
+  "tags": [
+    "scope:shared",
+    "type:lib", 
+    "domain:forensics",
+    "language:java",
+    "framework:maven"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/target"
+      ],
+      "options": {
+        "command": "mvn clean compile -f {projectRoot}/pom.xml"
+      },
+      "cache": true
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/target/surefire-reports"
+      ],
+      "options": {
+        "command": "mvn test -f {projectRoot}/pom.xml"
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn checkstyle:check -f {projectRoot}/pom.xml"
+      },
+      "cache": true
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn spotless:apply -f {projectRoot}/pom.xml"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/target"
+      ],
+      "options": {
+        "command": "mvn clean install -DskipTests -f {projectRoot}/pom.xml"
+      },
+      "cache": false
+    }
+  }
+}

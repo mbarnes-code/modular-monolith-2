@@ -1,0 +1,31 @@
+# NX Configuration for Software Forensic Kit
+
+## Implicit Dependencies
+
+The software-forensic-kit-service has the following implicit dependencies:
+- `forensic-core` (shared utilities)
+- `shared/security` (security utilities)
+- `shared/logging` (logging configuration)
+
+## Target Dependencies
+
+- `build` → `^build` (build dependent libraries first)
+- `test` → `build` (tests require compiled code)
+- `package` → `build` (packaging requires compiled code)
+- `docker:build` → `package` (Docker build requires packaged JAR)
+- `analyze` → `package` (analysis requires packaged JAR)
+
+## Cache Configuration
+
+The following targets are cached:
+- `build` - Maven compilation is deterministic
+- `test` - Test results are deterministic for same inputs
+- `lint` - Linting results are deterministic
+- `format:check` - Format checking is deterministic
+
+## Environment Variables
+
+For consistent builds across environments:
+- `JAVA_HOME` - Java installation path
+- `MAVEN_OPTS` - Maven JVM options
+- `FORENSIC_KIT_TEMP_DIR` - Temporary directory for analysis

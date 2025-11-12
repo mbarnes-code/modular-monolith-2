@@ -30,13 +30,7 @@
       "type": "debugpy",
       "request": "launch",
       "module": "uvicorn",
-      "args": [
-        "src.api.main:app",
-        "--reload",
-        "--host", "0.0.0.0",
-        "--port", "8000",
-        "--log-level", "debug"
-      ],
+      "args": ["src.api.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000", "--log-level", "debug"],
       "cwd": "${workspaceFolder}/apps/jane-orchestrator",
       "env": {
         "PYTHONPATH": "${workspaceFolder}/apps/jane-orchestrator",
@@ -52,13 +46,7 @@
       "type": "debugpy",
       "request": "launch",
       "module": "uvicorn",
-      "args": [
-        "src.api.main:app",
-        "--reload",
-        "--host", "0.0.0.0",
-        "--port", "8001",
-        "--log-level", "debug"
-      ],
+      "args": ["src.api.main:app", "--reload", "--host", "0.0.0.0", "--port", "8001", "--log-level", "debug"],
       "cwd": "${workspaceFolder}/apps/cyber-llm-server",
       "env": {
         "PYTHONPATH": "${workspaceFolder}/apps/cyber-llm-server",
@@ -73,13 +61,7 @@
       "type": "debugpy",
       "request": "launch",
       "module": "uvicorn",
-      "args": [
-        "src.api.main:app",
-        "--reload",
-        "--host", "0.0.0.0",
-        "--port", "8002",
-        "--log-level", "debug"
-      ],
+      "args": ["src.api.main:app", "--reload", "--host", "0.0.0.0", "--port", "8002", "--log-level", "debug"],
       "cwd": "${workspaceFolder}/apps/mtg-llm-server",
       "env": {
         "PYTHONPATH": "${workspaceFolder}/apps/mtg-llm-server",
@@ -94,13 +76,7 @@
       "type": "debugpy",
       "request": "launch",
       "module": "uvicorn",
-      "args": [
-        "src.api.main:app",
-        "--reload",
-        "--host", "0.0.0.0",
-        "--port", "8003",
-        "--log-level", "debug"
-      ],
+      "args": ["src.api.main:app", "--reload", "--host", "0.0.0.0", "--port", "8003", "--log-level", "debug"],
       "cwd": "${workspaceFolder}/apps/code-llm-server",
       "env": {
         "PYTHONPATH": "${workspaceFolder}/apps/code-llm-server",
@@ -115,11 +91,7 @@
       "type": "debugpy",
       "request": "launch",
       "module": "pytest",
-      "args": [
-        "-v",
-        "--tb=short",
-        "${workspaceFolder}/apps/jane-orchestrator/tests"
-      ],
+      "args": ["-v", "--tb=short", "${workspaceFolder}/apps/jane-orchestrator/tests"],
       "console": "integratedTerminal",
       "justMyCode": false,
       "env": {
@@ -196,6 +168,21 @@
         }
       ],
       "justMyCode": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug onex-service with Nx",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["nx", "serve", "onex-service"],
+      "env": {
+        "NODE_OPTIONS": "--inspect=9229"
+      },
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/onex-service/dist/**/*.(m|c|)js", "!**/node_modules/**"]
     }
   ],
   "compounds": [
@@ -216,10 +203,7 @@
     },
     {
       "name": "🌐 Debug Full Stack",
-      "configurations": [
-        "Debug Jane UI (Next.js)",
-        "Debug Jane Orchestrator"
-      ],
+      "configurations": ["Debug Jane UI (Next.js)", "Debug Jane Orchestrator"],
       "stopAll": true,
       "presentation": {
         "hidden": false,
@@ -229,10 +213,7 @@
     },
     {
       "name": "🧪 Debug Backend + Tests",
-      "configurations": [
-        "Debug Jane Orchestrator",
-        "Debug Python Tests"
-      ],
+      "configurations": ["Debug Jane Orchestrator", "Debug Python Tests"],
       "stopAll": true,
       "presentation": {
         "hidden": false,

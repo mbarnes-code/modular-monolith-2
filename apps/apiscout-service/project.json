@@ -1,0 +1,142 @@
+{
+  "name": "apiscout-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/apiscout-service/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python src/apiscout-cli/scout.py",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "serve:collect": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python src/apiscout-cli/collect.py",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "serve:match": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python src/apiscout-cli/match.py",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "serve:export": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python src/apiscout-cli/export.py",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "serve:update": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python src/apiscout-cli/update.py",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "serve:ida": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'IDA Scout plugin available at ida_scout.py'",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m build",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "build:wheel": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python setup.py bdist_wheel",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m pytest tests/ -v",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "test:coverage": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m pytest tests/ -v --cov=apiscout --cov-report=html",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m flake8 src/ tests/",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m black src/ tests/ && python -m isort src/ tests/",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m black --check src/ tests/",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m mypy src/",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pip install -e .",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "install:requirements": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pip install -r requirements.txt",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t apiscout-service -f infrastructure/docker/Dockerfile .",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "docker:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f infrastructure/docker/docker-compose.yml up -d",
+        "cwd": "apps/apiscout-service"
+      }
+    },
+    "docker:stop": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f infrastructure/docker/docker-compose.yml down",
+        "cwd": "apps/apiscout-service"
+      }
+    }
+  },
+  "tags": ["type:application", "scope:security", "framework:python", "tool:apiscout"]
+}

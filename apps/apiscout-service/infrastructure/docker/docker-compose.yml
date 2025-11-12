@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  apiscout-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+    container_name: apiscout-service
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../../:/app
+      - apiscout-data:/app/data
+      - apiscout-results:/app/results
+    environment:
+      - PYTHONPATH=/app
+      - APISCOUT_DATA_DIR=/app/data
+      - APISCOUT_RESULTS_DIR=/app/results
+    command: python scout.py --help
+    networks:
+      - apiscout-network
+    restart: unless-stopped
+
+  apiscout-db-builder:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+    container_name: apiscout-db-builder
+    volumes:
+      - ../../:/app
+      - apiscout-data:/app/data
+      - apiscout-dbs:/app/dbs
+    environment:
+      - PYTHONPATH=/app
+      - APISCOUT_DATA_DIR=/app/data
+      - APISCOUT_DB_DIR=/app/dbs
+    command: python collect.py --help
+    networks:
+      - apiscout-network
+    profiles:
+      - tools
+
+volumes:
+  apiscout-data:
+  apiscout-results:
+  apiscout-dbs:
+
+networks:
+  apiscout-network:
+    driver: bridge

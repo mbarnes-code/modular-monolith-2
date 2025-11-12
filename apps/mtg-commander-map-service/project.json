@@ -1,0 +1,65 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "mtg-commander-map-service",
+  "projectType": "application",
+  "sourceRoot": "apps/mtg-commander-map-service/src",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Build complete for mtg-commander-map-service'"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/mtg-commander-map-service && python -m http.server 8080",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/mtg-commander-map-service && python -m pytest tests/ -v",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/mtg-commander-map-service && python -m flake8 src/",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/mtg-commander-map-service && pip install -r requirements.txt",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "generate-map": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/mtg-commander-map-service && bash make-map.sh {args.edhrec_data} {args.date}",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/mtg-commander-map-service && docker build -t mtg-commander-map-service .",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "jupyter": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/mtg-commander-map-service && jupyter notebook commander-map.ipynb",
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  },
+  "tags": ["mtg", "python", "data-science", "visualization"],
+  "implicitDependencies": []
+}
