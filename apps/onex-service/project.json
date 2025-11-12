@@ -1,10 +1,9 @@
 {
   "name": "onex-service",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/onex-service/src",
   "projectType": "application",
-  "tags": ["scope:onex", "type:app"],
-  "implicitDependencies": ["onex-core"],
+  "tags": ["scope:app", "type:app", "domain:security", "platform:node"],
   "targets": {
     "build": {
       "executor": "@nx/esbuild:esbuild",
@@ -119,6 +118,13 @@
       "options": {
         "jestConfig": "apps/onex-service/jest.config.ts",
         "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/onex-service/**/*.{ts,tsx,js,jsx}"]
       }
     }
   }

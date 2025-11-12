@@ -1,16 +1,17 @@
-import { OnexService } from '@jane-monorepo/onex-core';
 import { Router } from 'express';
-import { CategoriesController } from '../controllers/categories.controller';
+import { OnexService } from '../../lib';
+import { CategoriesController } from '../controllers';
 
-export function createCategoriesRoutes(onexService: OnexService): Router {
+export function createCategoriesRoutes(): Router {
   const router = Router();
+  const onexService = new OnexService();
   const categoriesController = new CategoriesController(onexService);
 
   // GET /categories - Get all categories
-  router.get('/', (req, res) => categoriesController.getAllCategories(req, res));
-  
+  router.get('/', categoriesController.getAllCategories.bind(categoriesController));
+
   // GET /categories/:key/tools - Get tools by category
-  router.get('/:key/tools', (req, res) => categoriesController.getToolsByCategory(req, res));
+  router.get('/:key/tools', categoriesController.getToolsByCategory.bind(categoriesController));
 
   return router;
 }

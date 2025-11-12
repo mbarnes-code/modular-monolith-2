@@ -1,8 +1,8 @@
-import { OnexService } from '@jane-monorepo/onex-core';
 import { Request, Response } from 'express';
+import { OnexService } from '../../lib';
 
 export class ToolsController {
-  constructor(private readonly onexService: OnexService) {}
+  constructor(private onexService: OnexService) {}
 
   async getAllTools(req: Request, res: Response): Promise<void> {
     try {

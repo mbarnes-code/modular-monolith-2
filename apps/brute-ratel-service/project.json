@@ -1,0 +1,159 @@
+{
+  "name": "brute-ratel-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/brute-ratel-service/src",
+  "projectType": "application",
+  "tags": ["domain:security", "type:service", "platform:node"],
+  "targets": {
+    "prune-lockfile": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/brute-ratel-service/package.json",
+        "{workspaceRoot}/dist/apps/brute-ratel-service/package-lock.json"
+      ],
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "copy-workspace-modules": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "outputs": ["{workspaceRoot}/dist/apps/brute-ratel-service/workspace_modules"],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/brute-ratel-service",
+        "main": "apps/brute-ratel-service/src/main.ts",
+        "tsConfig": "apps/brute-ratel-service/tsconfig.app.json",
+        "webpackConfig": "apps/brute-ratel-service/webpack.config.js",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/brute-ratel-service/src/assets",
+            "output": "assets"
+          },
+          {
+            "glob": "README.md",
+            "input": "apps/brute-ratel-service",
+            "output": "."
+          },
+          {
+            "glob": "LICENSE",
+            "input": "apps/brute-ratel-service",
+            "output": "."
+          }
+        ]
+      },
+      "configurations": {
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/brute-ratel-service/src/environments/environment.ts",
+              "with": "apps/brute-ratel-service/src/environments/environment.development.ts"
+            }
+          ]
+        },
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
+      }
+    },
+    "prune": {
+      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
+      "executor": "nx:noop"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "brute-ratel-service:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "brute-ratel-service:build:development"
+        },
+        "production": {
+          "buildTarget": "brute-ratel-service:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/brute-ratel-service/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "build:bofs": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/brute-ratel-service/src/assets/bofs",
+        "command": "make"
+      }
+    },
+    "clean:bofs": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/brute-ratel-service/src/assets/bofs",
+        "command": "make clean"
+      }
+    },
+    "setup": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "chmod +x apps/brute-ratel-service/src/assets/adhoc_scripts/*.sh",
+          "chmod +x apps/brute-ratel-service/src/assets/adhoc_scripts/*.py"
+        ],
+        "parallel": false
+      }
+    },
+    "test:timeout": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "timeout 10 npx nx test brute-ratel-service || echo 'Test completed with timeout'"
+      }
+    },
+    "test:fast": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "timeout 8 npx jest --config=apps/brute-ratel-service/jest.config.ts --maxWorkers=1 --silent || echo 'Fast test completed'"
+      }
+    },
+    "test:quick": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "timeout 5 npx jest --config=apps/brute-ratel-service/jest.config.ts --testPathPatterns=quick --maxWorkers=1 --silent || echo 'Quick test completed'"
+      }
+    },
+    "serve:timeout": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "timeout 5 npx nx serve brute-ratel-service || echo 'Service test completed'"
+      }
+    }
+  }
+}

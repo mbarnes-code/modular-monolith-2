@@ -10,54 +10,24 @@
     "importHelpers": true,
     "target": "es2022",
     "module": "esnext",
-    "lib": [
-      "es2022",
-      "dom"
-    ],
+    "lib": ["es2022", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@jane-monorepo/service-adapters": [
-        "libs/service-adapters/index.ts"
-      ],
-      "@jane-monorepo/shared/types": [
-        "libs/shared/types/index.ts"
-      ],
-      "@jane-monorepo/shared/utils": [
-        "libs/shared/utils/index.ts"
-      ],
-      "@jane-monorepo/ui/core": [
-        "libs/ui/core/index.ts"
-      ],
-      "@jane-monorepo/ui/domain-mtg": [
-        "libs/ui/domain-mtg/index.ts"
-      ],
-      "@jane-monorepo/ui/domain-productivity": [
-        "libs/ui/domain-productivity/index.ts"
-      ],
-      "@jane-monorepo/ui/domain-security": [
-        "libs/ui/domain-security/index.ts"
-      ],
-      "@mealie/shared": [
-        "apps/mealie-service/libs/mealie-shared/src/index.ts"
-      ],
-      "@firecrawl/core": [
-        "libs/firecrawl-core/src/index.ts"
-      ],
-      "@firecrawl/types": [
-        "libs/firecrawl-types/src/index.ts"
-      ],
-      "@firecrawl/ui": [
-        "libs/firecrawl-ui/src/index.ts"
-      ],
-      "@jane-monorepo/onex-core": [
-        "libs/onex-core/src/index.ts"
-      ]
+      "@jane-monorepo/service-adapters": ["libs/service-adapters/index.ts"],
+      "@jane-monorepo/shared/types": ["libs/shared/types/index.ts"],
+      "@jane-monorepo/shared/utils": ["libs/shared/utils/index.ts"],
+      "@jane-monorepo/ui/core": ["libs/ui/core/index.ts"],
+      "@jane-monorepo/ui/domain-mtg": ["libs/ui/domain-mtg/index.ts"],
+      "@jane-monorepo/ui/domain-productivity": ["libs/ui/domain-productivity/index.ts"],
+      "@jane-monorepo/ui/domain-security": ["libs/ui/domain-security/index.ts"],
+      "@mealie/shared": ["apps/mealie-service/libs/mealie-shared/src/index.ts"],
+      "@firecrawl/core": ["libs/firecrawl-core/src/index.ts"],
+      "@firecrawl/types": ["libs/firecrawl-types/src/index.ts"],
+      "@firecrawl/ui": ["libs/firecrawl-ui/src/index.ts"],
+      "@jane-monorepo/mtg-scripting-toolkit": ["libs/mtg-scripting-toolkit/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

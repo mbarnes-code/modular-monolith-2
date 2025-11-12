@@ -1,4 +1,4 @@
-import { DataService, OnexService, SystemService } from '@jane-monorepo/onex-core';
+import { DataService, OnexService, SystemService } from './lib';
 
 describe('OnexService', () => {
   let onexService: OnexService;

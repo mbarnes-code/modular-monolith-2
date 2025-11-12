@@ -1,4 +1,3 @@
-import { OnexService } from '@jane-monorepo/onex-core';
 import cors from 'cors';
 import express from 'express';
 import { errorHandler, notFoundHandler, requestLogger } from './middleware';
@@ -6,37 +5,39 @@ import { createApiRoutes } from './routes';
 
 export function createApp(): express.Application {
   const app = express();
-  const onexService = new OnexService();
 
-  // Basic middleware
+  // Core middleware
   app.use(cors());
   app.use(express.json());
   app.use(requestLogger);
 
-  // API routes
-  app.use('/', createApiRoutes(onexService));
+  // Root endpoint
+  app.get('/', (req, res) => {
+    res.json({ 
+      message: 'Onex Hacking Tools Library API',
+      version: '1.0.0',
+      description: 'API for managing and installing hacking tools',
+      endpoints: {
+        'GET /': 'This help message',
+        'GET /tools': 'Get all tools',
+        'GET /tools/search?q={query}': 'Search tools by name',
+        'GET /tools/{name}': 'Get specific tool by name',
+        'POST /tools/{name}/install': 'Install a tool',
+        'GET /categories': 'Get all categories',
+        'GET /categories/{key}/tools': 'Get tools by category',
+        'GET /system/stats': 'Get statistics',
+        'GET /system': 'Get system information',
+        'GET /system/health': 'Health check'
+      }
+    });
+  });
 
-  // Error handling
-  app.use('*', notFoundHandler);
+  // API routes
+  app.use('/api', createApiRoutes());
+
+  // Error handling middleware (must be last)
+  app.use(notFoundHandler);
   app.use(errorHandler);
 
   return app;
-}
-
-export function getOnexServiceInfo(): {
-  toolsCount: number;
-  categoriesCount: number;
-  system: string;
-  packageManager: string;
-} {
-  const onexService = new OnexService();
-  const stats = onexService.getStats();
-  const systemInfo = onexService.getSystemInfo();
-  
-  return {
-    toolsCount: stats.toolsCount,
-    categoriesCount: stats.categoriesCount,
-    system: systemInfo.system,
-    packageManager: systemInfo.packageManager
-  };
 }

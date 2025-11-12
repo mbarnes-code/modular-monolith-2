@@ -1,8 +1,8 @@
-import { OnexService } from '@jane-monorepo/onex-core';
 import { Request, Response } from 'express';
+import { OnexService } from '../../lib';
 
 export class SystemController {
-  constructor(private readonly onexService: OnexService) {}
+  constructor(private onexService: OnexService) {}
 
   async getSystemInfo(req: Request, res: Response): Promise<void> {
     try {
@@ -36,7 +36,7 @@ export class SystemController {
     }
   }
 
-  async getHealth(req: Request, res: Response): Promise<void> {
+  async healthCheck(req: Request, res: Response): Promise<void> {
     try {
       const isOnline = await this.onexService.isOnline();
       const stats = this.onexService.getStats();

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { OnexService } from '@jane-monorepo/onex-core';
 import chalk from 'chalk';
 import { Command } from 'commander';
+import { OnexService } from './lib';
 
 const program = new Command();
 const onexService = new OnexService();

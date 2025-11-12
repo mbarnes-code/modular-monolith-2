@@ -1,22 +1,23 @@
-import { OnexService } from '@jane-monorepo/onex-core';
 import { Router } from 'express';
-import { ToolsController } from '../controllers/tools.controller';
+import { OnexService } from '../../lib';
+import { ToolsController } from '../controllers';
 
-export function createToolsRoutes(onexService: OnexService): Router {
+export function createToolsRoutes(): Router {
   const router = Router();
+  const onexService = new OnexService();
   const toolsController = new ToolsController(onexService);
 
   // GET /tools - Get all tools
-  router.get('/', (req, res) => toolsController.getAllTools(req, res));
-  
-  // GET /tools/search - Search tools
-  router.get('/search', (req, res) => toolsController.searchTools(req, res));
-  
+  router.get('/', toolsController.getAllTools.bind(toolsController));
+
+  // GET /tools/search?q={query} - Search tools
+  router.get('/search', toolsController.searchTools.bind(toolsController));
+
   // GET /tools/:name - Get specific tool
-  router.get('/:name', (req, res) => toolsController.getToolByName(req, res));
-  
+  router.get('/:name', toolsController.getToolByName.bind(toolsController));
+
   // POST /tools/:name/install - Install tool
-  router.post('/:name/install', (req, res) => toolsController.installTool(req, res));
+  router.post('/:name/install', toolsController.installTool.bind(toolsController));
 
   return router;
 }

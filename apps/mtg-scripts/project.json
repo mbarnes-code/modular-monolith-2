@@ -1,0 +1,113 @@
+{
+  "name": "mtg-scripts",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/mtg-scripts/src",
+  "implicitDependencies": ["mtg-scripting-toolkit"],
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/mtg-scripts",
+        "format": ["cjs"],
+        "bundle": true,
+        "main": "apps/mtg-scripts/src/search.ts",
+        "additionalEntryPoints": [
+          "apps/mtg-scripts/src/template.ts",
+          "apps/mtg-scripts/src/examples/commander-popularity.ts"
+        ],
+        "tsConfig": "apps/mtg-scripts/tsconfig.app.json",
+        "assets": ["apps/mtg-scripts/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/mtg-scripts/package.json",
+        "{workspaceRoot}/dist/mtg-scripts/package-lock.json"
+      ],
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "copy-workspace-modules": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "outputs": ["{workspaceRoot}/dist/mtg-scripts/workspace_modules"],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "prune": {
+      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
+      "executor": "nx:noop"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "mtg-scripts:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "mtg-scripts:build:development"
+        },
+        "production": {
+          "buildTarget": "mtg-scripts:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/mtg-scripts/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "search": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "node dist/mtg-scripts/search.js",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "template": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "node dist/mtg-scripts/template.js",
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  }
+}
