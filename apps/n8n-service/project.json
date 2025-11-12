@@ -1,0 +1,258 @@
+{
+  "name": "n8n-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/n8n-service/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run dev",
+        "cwd": "apps/n8n-service"
+      },
+      "configurations": {
+        "development": {
+          "command": "pnpm run dev"
+        },
+        "production": {
+          "command": "pnpm run start"
+        }
+      }
+    },
+    "serve:backend": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run dev:be",
+        "cwd": "apps/n8n-service"
+      },
+      "configurations": {
+        "development": {
+          "command": "pnpm run dev:be"
+        }
+      }
+    },
+    "serve:frontend": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run dev:fe",
+        "cwd": "apps/n8n-service"
+      },
+      "configurations": {
+        "development": {
+          "command": "pnpm run dev:fe"
+        }
+      }
+    },
+    "serve:ai": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run dev:ai",
+        "cwd": "apps/n8n-service"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "outputs": [
+        "{projectRoot}/packages/*/dist",
+        "{projectRoot}/packages/frontend/*/dist"
+      ],
+      "options": {
+        "command": "pnpm run build",
+        "cwd": "apps/n8n-service"
+      },
+      "configurations": {
+        "production": {
+          "command": "pnpm run build:n8n"
+        },
+        "development": {
+          "command": "pnpm run build"
+        }
+      }
+    },
+    "build:docker": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "pnpm run build:docker",
+        "cwd": "apps/n8n-service"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/jest.preset.js"
+      ],
+      "outputs": [
+        "{projectRoot}/coverage",
+        "{projectRoot}/junit.xml"
+      ],
+      "options": {
+        "command": "pnpm run test",
+        "cwd": "apps/n8n-service"
+      },
+      "configurations": {
+        "ci": {
+          "command": "pnpm run test:ci",
+          "ci": true
+        },
+        "watch": {
+          "command": "pnpm run test:watch"
+        }
+      }
+    },
+    "test:e2e": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "pnpm run dev:e2e",
+        "cwd": "apps/n8n-service"
+      }
+    },
+    "test:docker": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build:docker"],
+      "options": {
+        "command": "pnpm run test:with:docker",
+        "cwd": "apps/n8n-service"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/tools/eslint-rules/**/*"
+      ],
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "command": "pnpm run lint",
+        "cwd": "apps/n8n-service"
+      },
+      "configurations": {
+        "fix": {
+          "command": "pnpm run lint:fix"
+        }
+      }
+    },
+    "lint:styles": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run lint:styles",
+        "cwd": "apps/n8n-service"
+      },
+      "configurations": {
+        "fix": {
+          "command": "pnpm run lint:styles:fix"
+        }
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run format",
+        "cwd": "apps/n8n-service"
+      },
+      "configurations": {
+        "check": {
+          "command": "pnpm run format:check"
+        }
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "inputs": [
+        "default",
+        "{projectRoot}/tsconfig*.json",
+        "{workspaceRoot}/tsconfig.base.json"
+      ],
+      "options": {
+        "command": "pnpm run typecheck",
+        "cwd": "apps/n8n-service"
+      }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run clean",
+        "cwd": "apps/n8n-service"
+      }
+    },
+    "reset": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run reset",
+        "cwd": "apps/n8n-service"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "pnpm run start",
+        "cwd": "apps/n8n-service"
+      },
+      "configurations": {
+        "production": {
+          "command": "pnpm run start:default"
+        },
+        "tunnel": {
+          "command": "pnpm run start:tunnel"
+        }
+      }
+    },
+    "webhook": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "pnpm run webhook",
+        "cwd": "apps/n8n-service"
+      }
+    },
+    "worker": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "pnpm run worker",
+        "cwd": "apps/n8n-service"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "commands": [
+          "pnpm run build:docker"
+        ],
+        "cwd": "apps/n8n-service"
+      }
+    },
+    "docker:scan": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["docker:build"],
+      "options": {
+        "command": "pnpm run build:docker:scan",
+        "cwd": "apps/n8n-service"
+      }
+    }
+  },
+  "tags": [
+    "type:app",
+    "domain:automation",
+    "scope:workflow",
+    "platform:node",
+    "framework:n8n"
+  ],
+  "implicitDependencies": [],
+  "metadata": {
+    "description": "N8N workflow automation platform - self-hosted workflow automation service",
+    "technologies": ["Node.js", "TypeScript", "Vue.js", "PostgreSQL", "Redis"],
+    "owner": "workflow-team"
+  }
+}

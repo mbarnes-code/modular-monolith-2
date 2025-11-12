@@ -1,0 +1,81 @@
+{
+  "name": "software-forensic-kit-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/software-forensic-kit-service/src",
+  "projectType": "application",
+  "tags": ["scope:apps", "type:service", "domain:security", "language:java"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn clean package -f apps/software-forensic-kit-service/pom.xml",
+        "cwd": "."
+      },
+      "outputs": [
+        "{projectRoot}/target"
+      ]
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "java -jar target/software-forensic-kit-*-jar-with-dependencies.jar -h",
+        "cwd": "apps/software-forensic-kit-service"
+      },
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn test -f apps/software-forensic-kit-service/pom.xml",
+        "cwd": "."
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn checkstyle:check -f apps/software-forensic-kit-service/pom.xml",
+        "cwd": "."
+      }
+    },
+    "analyze": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "java -jar target/software-forensic-kit-*-jar-with-dependencies.jar",
+        "cwd": "apps/software-forensic-kit-service"
+      },
+      "dependsOn": ["build"]
+    },
+    "analyze:help": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "java -jar target/software-forensic-kit-*-jar-with-dependencies.jar -h",
+        "cwd": "apps/software-forensic-kit-service"
+      },
+      "dependsOn": ["build"]
+    },
+    "analyze:local": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "java -jar target/software-forensic-kit-*-jar-with-dependencies.jar -s \"${searchFunction}\" -f \"${jarFilter}\" -pp",
+        "cwd": "apps/software-forensic-kit-service"
+      },
+      "dependsOn": ["build"]
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t software-forensic-kit-service -f apps/software-forensic-kit-service/Dockerfile .",
+        "cwd": "."
+      },
+      "dependsOn": ["build"]
+    },
+    "docker:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker run --rm -it -v $(pwd)/data:/data software-forensic-kit-service",
+        "cwd": "."
+      },
+      "dependsOn": ["docker:build"]
+    }
+  }
+}

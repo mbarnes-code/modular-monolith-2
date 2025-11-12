@@ -72,6 +72,7 @@
     "mtg-llm-server": "apps/mtg-llm-server",
     "infrastructure-llm-server": "apps/infrastructure-llm-server",
     "n8n-workflow-service": "apps/n8n-workflow-service",
+    "n8n-service": "apps/n8n-service",
     "security-service": "apps/security-service",
     "productivity-service": "apps/productivity-service",
     "mtg-service": "apps/mtg-service",
@@ -93,13 +94,15 @@
     "firecrawl-core": "libs/firecrawl-core",
     "firecrawl-types": "libs/firecrawl-types",
     "misp-service": "apps/misp-service",
+    "yara-x-service": "apps/yara-x-service",
     "nemesis-service": "apps/nemesis-service",
     "nemesis-web-api": "apps/nemesis-web-api",
     "nemesis-file-enrichment": "apps/nemesis-file-enrichment",
     "nemesis-frontend": "apps/nemesis-frontend",
     "nemesis-document-conversion": "apps/nemesis-document-conversion",
     "nemesis-common": "libs/nemesis-common",
-    "nemesis-file-enrichment-lib": "libs/nemesis-file-enrichment"
+    "nemesis-file-enrichment-lib": "libs/nemesis-file-enrichment",
+    "software-forensic-kit-service": "apps/software-forensic-kit-service"
   },
   "plugins": [
     {

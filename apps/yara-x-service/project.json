@@ -1,0 +1,272 @@
+{
+  "name": "yara-x-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/yara-x-service/src",
+  "projectType": "application",
+  "tags": [
+    "type:app",
+    "framework:rust",
+    "language:rust",
+    "domain:security",
+    "scope:yara-x"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/target/release",
+        "{workspaceRoot}/target/debug"
+      ],
+      "inputs": [
+        "{projectRoot}/Cargo.toml",
+        "{projectRoot}/src/**/*.rs",
+        "{projectRoot}/src-*/Cargo.toml", 
+        "{projectRoot}/src-*/**/*.rs",
+        "{projectRoot}/src/*/Cargo.toml",
+        "{projectRoot}/src/*/**/*.rs",
+        "{projectRoot}/*.toml",
+        "!{projectRoot}/target/**/*",
+        "!{projectRoot}/**/target/**/*"
+      ],
+      "options": {
+        "command": "cargo build --workspace",
+        "cwd": "apps/yara-x-service"
+      },
+      "configurations": {
+        "production": {
+          "command": "cargo build --workspace --release"
+        },
+        "cli": {
+          "command": "cargo build -p yr"
+        },
+        "capi": {
+          "command": "cargo build -p yara-x-capi"
+        },
+        "lib": {
+          "command": "cargo build -p yara-x"
+        }
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "cli",
+      "options": {
+        "command": "cargo run --bin yr -- --help",
+        "cwd": "apps/yara-x-service"
+      },
+      "configurations": {
+        "cli": {
+          "command": "cargo run --bin yr -- --help"
+        },
+        "docs": {
+          "command": "hugo server --port 3333 --bind 0.0.0.0",
+          "cwd": "apps/yara-x-service/src-site"
+        }
+      },
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/target/debug/deps"],
+      "inputs": [
+        "{projectRoot}/src/**/*.rs",
+        "{projectRoot}/src-*/**/*.rs", 
+        "{projectRoot}/src/*/Cargo.toml",
+        "{projectRoot}/src-*/Cargo.toml",
+        "{projectRoot}/Cargo.toml",
+        "!{projectRoot}/**/target/**/*"
+      ],
+      "options": {
+        "command": "cargo test --workspace",
+        "cwd": "apps/yara-x-service"
+      },
+      "configurations": {
+        "unit": {
+          "command": "cargo test --workspace --lib"
+        },
+        "integration": {
+          "command": "cargo test --workspace --test '*'"
+        },
+        "cli": {
+          "command": "cargo test -p yr"
+        },
+        "lib": {
+          "command": "cargo test -p yara-x"
+        },
+        "coverage": {
+          "command": "cargo tarpaulin --workspace --out xml --output-dir ../../coverage/apps/yara-x-service"
+        }
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "inputs": [
+        "{projectRoot}/src/**/*.rs",
+        "{projectRoot}/src-*/**/*.rs",
+        "{projectRoot}/src/*/Cargo.toml",
+        "{projectRoot}/src-*/Cargo.toml",
+        "{projectRoot}/Cargo.toml"
+      ],
+      "options": {
+        "commands": [
+          "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+          "cargo check --workspace --all-targets --all-features"
+        ],
+        "cwd": "apps/yara-x-service",
+        "parallel": false
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/src/**/*.rs",
+        "{projectRoot}/src-*/**/*.rs"
+      ],
+      "options": {
+        "command": "cargo fmt --all",
+        "cwd": "apps/yara-x-service"
+      }
+    },
+    "format:check": {
+      "executor": "nx:run-commands", 
+      "inputs": [
+        "{projectRoot}/src/**/*.rs",
+        "{projectRoot}/src-*/**/*.rs"
+      ],
+      "options": {
+        "command": "cargo fmt --all -- --check",
+        "cwd": "apps/yara-x-service"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/src/**/*.rs",
+        "{projectRoot}/src-cli/**/*.rs",
+        "{projectRoot}/Cargo.toml",
+        "{projectRoot}/Cargo.lock"
+      ],
+      "options": {
+        "command": "cargo install --path .",
+        "cwd": "apps/yara-x-service"
+      }
+    },
+    "install:cli": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/src-cli/**/*.rs",
+        "{projectRoot}/src/**/*.rs",
+        "{projectRoot}/Cargo.toml"
+      ],
+      "options": {
+        "command": "cargo install --path src-cli",
+        "cwd": "apps/yara-x-service"
+      }
+    },
+    "docs:serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx serve yara-x-docs",
+        "cwd": "apps/yara-x-service"
+      }
+    },
+    "docs:build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/../yara-x-docs/public"],
+      "options": {
+        "command": "nx build yara-x-docs",
+        "cwd": "apps/yara-x-service"
+      }
+    },
+    "py:build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/src/py/target"],
+      "inputs": [
+        "{projectRoot}/src/py/**/*.rs",
+        "{projectRoot}/src/py/Cargo.toml",
+        "{projectRoot}/src/py/pyproject.toml"
+      ],
+      "options": {
+        "command": "cd src/py && python -m build",
+        "cwd": "apps/yara-x-service"
+      },
+      "dependsOn": ["yara-x-core:build"]
+    },
+    "py:install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd src/py && pip install -e .",
+        "cwd": "apps/yara-x-service"
+      },
+      "dependsOn": ["py:build"]
+    },
+    "go:test": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/src/go/**/*.go"
+      ],
+      "options": {
+        "command": "cd src/go && go test -v",
+        "cwd": "apps/yara-x-service"
+      },
+      "dependsOn": ["yara-x-capi:build"]
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/**/*.rs",
+        "{projectRoot}/Cargo.toml",
+        "{projectRoot}/Cargo.lock",
+        "{projectRoot}/Dockerfile",
+        "!{projectRoot}/**/target/**/*"
+      ],
+      "outputs": [],
+      "options": {
+        "command": "docker build -t yara-x-service:latest .",
+        "cwd": "apps/yara-x-service"
+      },
+      "dependsOn": ["build"]
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/Cargo.toml"
+      ],
+      "outputs": [
+        "!{projectRoot}/**/target"
+      ],
+      "options": {
+        "command": "cargo clean",
+        "cwd": "apps/yara-x-service"
+      }
+    },
+    "version": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/Cargo.toml"
+      ],
+      "options": {
+        "command": "cargo --version && rustc --version",
+        "cwd": "apps/yara-x-service"
+      }
+    },
+    "fuzz": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx fuzz yara-x-core",
+        "cwd": "apps/yara-x-service"
+      },
+      "dependsOn": ["yara-x-core:build"]
+    }
+  },
+  "implicitDependencies": [
+    "security-service",
+    "yara-x-core",
+    "yara-x-parser", 
+    "yara-x-fmt",
+    "yara-x-cli",
+    "yara-x-capi",
+    "yara-x-docs"
+  ]
+}

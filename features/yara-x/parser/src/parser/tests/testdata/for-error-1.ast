@@ -1,2 +1,0 @@
-ERRORS:
-- SyntaxError { message: "expecting expression, found `of`", span: Span(77..79) }
