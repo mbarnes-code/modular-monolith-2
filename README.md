@@ -182,7 +182,7 @@ If you prefer manual installation:
 1. Install Node.js dependencies:
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 2. Install Python dependencies using the Makefile:
