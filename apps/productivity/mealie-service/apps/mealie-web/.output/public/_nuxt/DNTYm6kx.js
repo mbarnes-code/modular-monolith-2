@@ -1,0 +1,1 @@
+import{h as n,U as s}from"./D94u8Au2.js";import{u as e}from"./DADsPaIV.js";function r(){const t=n(),{$axios:a}=s();a.defaults.headers.common["Accept-Language"]=t.locale.value;const{data:o}=e("app-info",async()=>(await a.get("/api/app/about")).data);return o}export{r as u};

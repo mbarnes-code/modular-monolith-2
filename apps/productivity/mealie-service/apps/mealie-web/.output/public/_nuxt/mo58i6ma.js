@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./DO7pgL3T.js","./D94u8Au2.js","./entry.DBHY5DSU.css"])))=>i.map(i=>d[i]);
+import{cc as a}from"./D94u8Au2.js";const i=async()=>{const{pl:r}=await a(async()=>{const{pl:t}=await import("./DO7pgL3T.js");return{pl:t}},__vite__mapDeps([0,1,2]),import.meta.url),{default:e}=await a(async()=>{const{default:t}=await import("./BHRwmCuG.js");return{default:t}},[],import.meta.url);return{...e,$vuetify:r}};export{i as default};

@@ -10,6 +10,10 @@ packages:
   # Libraries - shared code and utilities
   - 'libs/*'
   
+  # Special nested packages (converted from yarn)
+  - 'apps/productivity/mealie-service/apps/mealie-web'
+  - 'apps/productivity/mealie-service/apps/mealie-api/tests/e2e'
+  
   # Exclude nested workspaces to avoid conflicts
   - '!apps/productivity/actual-service/actual-budget'
   - '!apps/productivity/n8n-service'

@@ -1,0 +1,1 @@
+import{d as n}from"./DADsPaIV.js";import{C as a,_ as r,c,o as _}from"./D94u8Au2.js";const u=n({setup(o,e){const t=a().user.value?.advanced||!1;return()=>t?e.slots.default?.():null}},"$ZadDwHQAhn"),p={"scoped-slot":""};function d(o,e,s,t,l,f){return _(),c("div",p)}const $=r(u,[["render",d]]);export{$ as _};

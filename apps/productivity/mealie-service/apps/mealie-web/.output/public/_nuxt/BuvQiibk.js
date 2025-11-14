@@ -1,0 +1,1 @@
+import{a as r,u as n,b as u}from"./CtZPxPWc.js";import{E as t}from"./D94u8Au2.js";import{u as i,c}from"./Oz1w9x5Z.js";const o=t([]),p=t(!1),g=t(!1),b=function(){return r({id:"",name:"",slug:""})},d=function(s){const a=i(s);return n("tag",o,p,a.tags)},S=function(s,a){const e=c(s,a).explore;return u("tag",o,g,e.tags)};export{d as a,S as b,b as u};

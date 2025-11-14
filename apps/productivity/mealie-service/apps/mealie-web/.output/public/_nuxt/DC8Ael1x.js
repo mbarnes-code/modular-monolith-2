@@ -1,0 +1,1 @@
+import{C as s,O as a,i as t}from"./D94u8Au2.js";const g=function(){const e=s(),o=a(),u=t(()=>e.loggedIn.value),r=t(()=>o.params.groupSlug?u.value&&e.user.value?.groupSlug===o.params.groupSlug:u.value);return{loggedIn:u,isOwnGroup:r}};export{g as u};

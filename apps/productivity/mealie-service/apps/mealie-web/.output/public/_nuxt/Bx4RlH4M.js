@@ -1,0 +1,1 @@
+import{u as e,t as o,k as r}from"./P_j0pGsM.js";import{j as n,p as c,z as i,b as m,a8 as l,n as p}from"./D94u8Au2.js";const d=c({...r(),...o()},"VCardActions"),u=n()({name:"VCardActions",props:d(),setup(s,a){let{slots:t}=a;return i({VBtn:{slim:!0,variant:"text"}}),e(()=>m(s.tag,{class:p(["v-card-actions",s.class]),style:l(s.style)},t)),{}}});export{u as V};

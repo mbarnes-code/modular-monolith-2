@@ -1,0 +1,1 @@
+import{d as t}from"./DADsPaIV.js";import{D as o,Q as r,_ as n,c as s,o as c}from"./D94u8Au2.js";const a=t({setup(){const e=o();return r(()=>{e.replace("/r/create/url")}),{}}},"$jtDbxNyjRX");function p(e,u,d,_,f,i){return c(),s("div")}const x=n(a,[["render",p]]);export{x as default};

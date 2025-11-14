@@ -1,0 +1,1 @@
+import{d as o}from"./DADsPaIV.js";import{D as t,Q as r,_ as s,c as n,o as a}from"./D94u8Au2.js";const c=o({setup(){const e=t();return r(()=>{e.push("/group/data/foods")}),{}}},"$WhHiHiY3eC");function p(e,u,d,i,f,_){return a(),n("div")}const $=s(c,[["render",p]]);export{$ as default};
