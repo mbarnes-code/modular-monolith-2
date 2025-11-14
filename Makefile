@@ -56,7 +56,7 @@ help:
 
 # Install dependencies
 install:
-	npm install
+	pnpm install
 	@echo "Installing Python dependencies for apps..."
 	pip install -r apps/core/jane-orchestrator/requirements.txt
 	pip install -r apps/ai/cyber-llm-server/requirements.txt
@@ -64,20 +64,19 @@ install:
 	pip install -r apps/ai/infrastructure-llm-server/requirements.txt
 	@echo "Installing additional service dependencies..."
 	find apps/ -name "requirements.txt" -not -path "*/node_modules/*" -exec pip install -r {} \;
-	@echo "Installing Node.js service dependencies..."
-	find apps/ -name "package.json" -not -path "*/node_modules/*" -execdir npm install \;
+	@echo "Node.js dependencies managed by pnpm workspace"
 
 # Build all applications
 build:
-	npx nx run-many --target=build --all
+	pnpm nx run-many --target=build --all
 
 # Run all tests
 test:
-	npx nx run-many --target=test --all
+	pnpm nx run-many --target=test --all
 
 # Lint all code
 lint:
-	npx nx run-many --target=lint --all
+	pnpm nx run-many --target=lint --all
 
 # Clean build artifacts
 clean: clean-services
@@ -90,7 +89,7 @@ clean: clean-services
 
 # Deploy applications
 deploy:
-	npx nx run-many --target=deploy --all
+	pnpm nx run-many --target=deploy --all
 
 # Build Docker images
 docker-build:
@@ -114,61 +113,61 @@ staging:
 
 # Affected commands
 affected-build:
-	npx nx affected --target=build
+	pnpm nx affected --target=build
 
 affected-test:
-	npx nx affected --target=test
+	pnpm nx affected --target=test
 
 affected-lint:
-	npx nx affected --target=lint
+	pnpm nx affected --target=lint
 
 affected-deploy:
-	npx nx affected --target=deploy
+	pnpm nx affected --target=deploy
 
 # Service-specific commands
 serve-jane:
-	npx nx serve jane-ui & npx nx serve jane-orchestrator
+	pnpm nx serve jane-ui & pnpm nx serve jane-orchestrator
 
 serve-security:
 	@echo "Starting security services..."
-	npx nx serve misp-service &
-	npx nx serve nemesis-service &
-	npx nx serve helk-service &
-	npx nx serve maltrail-service &
-	npx nx serve ghostwriter-service
+	pnpm nx serve misp-service &
+	pnpm nx serve nemesis-service &
+	pnpm nx serve helk-service &
+	pnpm nx serve maltrail-service &
+	pnpm nx serve ghostwriter-service
 
 serve-productivity:
 	@echo "Starting productivity services..."
-	npx nx serve actual-service &
-	npx nx serve mealie-service &
-	npx nx serve firecrawl-service &
-	npx nx serve goose-service &
-	npx nx serve inspector-service
+	pnpm nx serve actual-service &
+	pnpm nx serve mealie-service &
+	pnpm nx serve firecrawl-service &
+	pnpm nx serve goose-service &
+	pnpm nx serve inspector-service
 
 serve-tcg:
 	@echo "Starting TCG services..."
-	npx nx serve commander-spellbook-site &
-	npx nx serve commander-spellbook-backend
+	pnpm nx serve commander-spellbook-site &
+	pnpm nx serve commander-spellbook-backend
 
 # Docker service management
 docker-serve-nemesis:
 	docker-compose -f apps/security/nemesis-service/compose.yaml up -d
 
 docker-serve-helk:
-	npx nx docker:start helk-service
+	pnpm nx docker:start helk-service
 
 docker-serve-misp:
 	docker-compose -f apps/security/misp-service/infrastructure/docker/docker-compose.yml up -d
 
 # Service testing
 test-security:
-	npx nx run-many --target=test --projects=nemesis-*,helk-service,misp-service,maltrail-service,ghostwriter-service
+	pnpm nx run-many --target=test --projects=nemesis-*,helk-service,misp-service,maltrail-service,ghostwriter-service
 
 test-productivity:
-	npx nx run-many --target=test --projects=actual-service,mealie-service,firecrawl-service,goose-service,inspector-service
+	pnpm nx run-many --target=test --projects=actual-service,mealie-service,firecrawl-service,goose-service,inspector-service
 
 test-tcg:
-	npx nx run-many --target=test --projects=commander-spellbook-*
+	pnpm nx run-many --target=test --projects=commander-spellbook-*
 
 test-python:
 	@echo "Running Python service tests..."
@@ -183,7 +182,7 @@ lint-python:
 
 lint-typescript:
 	@echo "Linting TypeScript services..."
-	npx nx run-many --target=lint --projects=jane-ui,actual-service,firecrawl-service,goose-service,inspector-service
+	pnpm nx run-many --target=lint --projects=jane-ui,actual-service,firecrawl-service,goose-service,inspector-service
 
 # Documentation generation
 docs-build:
@@ -202,7 +201,7 @@ health-check:
 status:
 	@echo "Service Status:"
 	@echo "==============="
-	npx nx run-many --target=status --all 2>/dev/null || echo "Status commands not available for all services"
+	pnpm nx run-many --target=status --all 2>/dev/null || echo "Status commands not available for all services"
 	docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep -E "(jane|nemesis|helk|misp|actual|mealie)" || echo "No containerized services running"
 
 # Kubernetes commands
@@ -227,7 +226,7 @@ terraform-apply:
 
 # Format code
 format:
-	npx prettier --write .
+	pnpm prettier --write .
 	find . -name "*.py" -not -path "./node_modules/*" -not -path "./.venv/*" -exec black {} +
 
 # Development environment setup

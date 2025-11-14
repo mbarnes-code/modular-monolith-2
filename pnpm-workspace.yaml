@@ -1,0 +1,18 @@
+packages:
+  # Apps - all application services
+  - 'apps/*'
+  - 'apps/ai/*'
+  - 'apps/core/*'
+  - 'apps/productivity/*'
+  - 'apps/security/*'
+  - 'apps/tcg/*'
+  
+  # Libraries - shared code and utilities
+  - 'libs/*'
+  
+  # Exclude nested workspaces to avoid conflicts
+  - '!apps/productivity/actual-service/actual-budget'
+  - '!apps/productivity/n8n-service'
+  - '!**/node_modules'
+  - '!**/dist'
+  - '!**/build'
