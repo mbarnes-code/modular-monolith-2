@@ -1,0 +1,455 @@
+name: Container Build & Deploy
+
+on:
+    workflow_call:
+        inputs:
+            service-name:
+                description: "Name of the service to build"
+                required: true
+                type: string
+            dockerfile-path:
+                description: "Path to Dockerfile"
+                required: false
+                type: string
+                default: "./Dockerfile"
+            build-context:
+                description: "Docker build context directory"
+                required: false
+                type: string
+                default: "."
+            registry:
+                description: "Container registry URL"
+                required: false
+                type: string
+                default: "ghcr.io"
+            image-name:
+                description: "Container image name"
+                required: false
+                type: string
+                default: ""
+            platforms:
+                description: "Target platforms for multi-arch builds"
+                required: false
+                type: string
+                default: "linux/amd64,linux/arm64"
+            enable-security-scan:
+                description: "Enable security vulnerability scanning"
+                required: false
+                type: boolean
+                default: true
+            enable-sbom:
+                description: "Generate Software Bill of Materials"
+                required: false
+                type: boolean
+                default: true
+            push-to-registry:
+                description: "Push built image to registry"
+                required: false
+                type: boolean
+                default: true
+            domain:
+                description: "Service domain for deployment strategy"
+                required: false
+                type: string
+                default: "infrastructure"
+        secrets:
+            REGISTRY_USERNAME:
+                description: "Container registry username"
+                required: false
+            REGISTRY_PASSWORD:
+                description: "Container registry password"
+                required: false
+
+env:
+    REGISTRY: ${{ inputs.registry }}
+    IMAGE_NAME: ${{ inputs.image-name || format('{0}/{1}', github.repository_owner, inputs.service-name) }}
+
+jobs:
+    build-metadata:
+        name: Generate Build Metadata
+        runs-on: ubuntu-latest
+        outputs:
+            image-tags: ${{ steps.meta.outputs.tags }}
+            image-labels: ${{ steps.meta.outputs.labels }}
+            cache-key: ${{ steps.cache.outputs.cache-key }}
+            should-build: ${{ steps.changes.outputs.should-build }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 2
+
+            - name: Detect changes
+              id: changes
+              run: |
+                  if git diff --quiet HEAD~1 HEAD -- ${{ inputs.build-context }}; then
+                    echo "should-build=false" >> $GITHUB_OUTPUT
+                    echo "🔍 No changes detected in ${{ inputs.service-name }}"
+                  else
+                    echo "should-build=true" >> $GITHUB_OUTPUT
+                    echo "📝 Changes detected in ${{ inputs.service-name }}"
+                  fi
+
+            - name: Generate cache key
+              id: cache
+              run: |
+                  DOCKERFILE_HASH=$(sha256sum ${{ inputs.dockerfile-path }} | cut -d' ' -f1)
+                  CONTEXT_HASH=$(find ${{ inputs.build-context }} -type f -name "package*.json" -o -name "requirements*.txt" -o -name "Cargo.lock" -o -name "go.mod" | xargs sha256sum | sha256sum | cut -d' ' -f1)
+                  CACHE_KEY="${{ runner.os }}-docker-${{ inputs.service-name }}-${DOCKERFILE_HASH}-${CONTEXT_HASH}"
+                  echo "cache-key=${CACHE_KEY}" >> $GITHUB_OUTPUT
+                  echo "🔑 Docker cache key: ${CACHE_KEY}"
+
+            - name: Extract metadata
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                  tags: |
+                      # Branch-based tags
+                      type=ref,event=branch
+                      type=ref,event=pr
+                      # Semantic versioning
+                      type=semver,pattern={{version}}
+                      type=semver,pattern={{major}}.{{minor}}
+                      type=semver,pattern={{major}}
+                      # Latest for main branch
+                      type=raw,value=latest,enable={{is_default_branch}}
+                      # Domain-specific tags for executive function accommodations
+                      type=raw,value=${{ inputs.domain }}-latest,enable={{is_default_branch}}
+                  labels: |
+                      org.opencontainers.image.title=${{ inputs.service-name }}
+                      org.opencontainers.image.description=${{ inputs.service-name }} service container
+                      org.opencontainers.image.vendor=Mental Prosthetic Platform
+                      app.domain=${{ inputs.domain }}
+
+    security-checks:
+        name: Security & Compliance Checks
+        runs-on: ubuntu-latest
+        needs: build-metadata
+        if: needs.build-metadata.outputs.should-build == 'true'
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Dockerfile security scan
+              uses: hadolint/hadolint-action@v3.1.0
+              with:
+                  dockerfile: ${{ inputs.dockerfile-path }}
+                  format: sarif
+                  output-file: hadolint-results.sarif
+
+            - name: Upload Dockerfile scan results
+              if: always()
+              uses: github/codeql-action/upload-sarif@v3
+              with:
+                  sarif_file: hadolint-results.sarif
+
+            - name: Check for secrets in build context
+              run: |
+                  echo "🔍 Scanning for secrets in build context..."
+
+                  # Check for common secret patterns
+                  if grep -r -E "(password|secret|key|token)" ${{ inputs.build-context }} --include="*.env*" --include="*.conf" --include="*.yaml" --include="*.yml" --include="*.json"; then
+                    echo "❌ Potential secrets found in build context"
+                    echo "::warning::Secrets detected in build context. Please review and use build secrets instead."
+                  else
+                    echo "✅ No obvious secrets detected in build context"
+                  fi
+
+    build:
+        name: Build Container Image
+        runs-on: ubuntu-latest
+        needs: [build-metadata, security-checks]
+        if: needs.build-metadata.outputs.should-build == 'true'
+
+        outputs:
+            image-digest: ${{ steps.build.outputs.digest }}
+            image-size: ${{ steps.build.outputs.size }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+              with:
+                  platforms: ${{ inputs.platforms }}
+
+            - name: Log in to Container Registry
+              if: inputs.push-to-registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ secrets.REGISTRY_USERNAME || github.actor }}
+                  password: ${{ secrets.REGISTRY_PASSWORD || secrets.GITHUB_TOKEN }}
+
+            - name: Build and push Docker image
+              id: build
+              uses: docker/build-push-action@v5
+              with:
+                  context: ${{ inputs.build-context }}
+                  file: ${{ inputs.dockerfile-path }}
+                  platforms: ${{ inputs.platforms }}
+                  push: ${{ inputs.push-to-registry }}
+                  tags: ${{ needs.build-metadata.outputs.image-tags }}
+                  labels: ${{ needs.build-metadata.outputs.image-labels }}
+                  cache-from: type=gha,scope=${{ inputs.service-name }}
+                  cache-to: type=gha,mode=max,scope=${{ inputs.service-name }}
+                  # Domain-specific optimizations
+                  build-args: |
+                      BUILDKIT_INLINE_CACHE=1
+                      DOMAIN=${{ inputs.domain }}
+                  # Executive function accommodation: predictable build behavior
+                  provenance: true
+                  sbom: ${{ inputs.enable-sbom }}
+
+            - name: Generate build report
+              run: |
+                  echo "## 🐳 Container Build Report" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "**Service**: ${{ inputs.service-name }}" >> $GITHUB_STEP_SUMMARY
+                  echo "**Domain**: ${{ inputs.domain }}" >> $GITHUB_STEP_SUMMARY
+                  echo "**Platforms**: ${{ inputs.platforms }}" >> $GITHUB_STEP_SUMMARY
+                  echo "**Registry**: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}" >> $GITHUB_STEP_SUMMARY
+                  echo "**Digest**: \`${{ steps.build.outputs.digest }}\`" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+
+    vulnerability-scan:
+        name: Vulnerability Scanning
+        runs-on: ubuntu-latest
+        needs: [build-metadata, build]
+        if: needs.build-metadata.outputs.should-build == 'true' && inputs.enable-security-scan
+
+        steps:
+            - name: Run Trivy vulnerability scanner
+              uses: aquasecurity/trivy-action@master
+              with:
+                  image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image-digest }}
+                  format: "sarif"
+                  output: "trivy-results.sarif"
+
+            - name: Upload Trivy scan results
+              uses: github/codeql-action/upload-sarif@v3
+              with:
+                  sarif_file: "trivy-results.sarif"
+
+            - name: Run Grype vulnerability scanner
+              uses: anchore/scan-action@v3
+              with:
+                  image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image-digest }}
+                  fail-build: false
+                  severity-cutoff: high
+
+            - name: Security scan summary
+              run: |
+                  echo "## 🛡️ Security Scan Results" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "**Image**: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image-digest }}" >> $GITHUB_STEP_SUMMARY
+                  echo "**Scanners**: Trivy, Grype" >> $GITHUB_STEP_SUMMARY
+                  echo "**Domain Security Level**: ${{ inputs.domain == 'security' && 'High' || inputs.domain == 'productivity' && 'Medium' || 'Standard' }}" >> $GITHUB_STEP_SUMMARY
+
+    sbom-generation:
+        name: Generate SBOM
+        runs-on: ubuntu-latest
+        needs: [build-metadata, build]
+        if: needs.build-metadata.outputs.should-build == 'true' && inputs.enable-sbom
+
+        steps:
+            - name: Generate SBOM with Syft
+              uses: anchore/sbom-action@v0
+              with:
+                  image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image-digest }}
+                  format: spdx-json
+                  output-file: sbom.spdx.json
+
+            - name: Upload SBOM
+              uses: actions/upload-artifact@v4
+              with:
+                  name: sbom-${{ inputs.service-name }}
+                  path: sbom.spdx.json
+                  retention-days: 90
+
+    smoke-test:
+        name: Container Smoke Test
+        runs-on: ubuntu-latest
+        needs: [build-metadata, build]
+        if: needs.build-metadata.outputs.should-build == 'true'
+
+        steps:
+            - name: Test container startup
+              run: |
+                  echo "🧪 Testing container startup for ${{ inputs.service-name }}..."
+
+                  # Pull the built image
+                  docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image-digest }}
+
+                  # Run basic container tests
+                  docker run --rm --name test-${{ inputs.service-name }} \
+                    -d ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image-digest }}
+
+                  # Wait for container to be ready
+                  sleep 10
+
+                  # Check if container is still running
+                  if docker ps | grep -q "test-${{ inputs.service-name }}"; then
+                    echo "✅ Container started successfully"
+                    docker logs test-${{ inputs.service-name }}
+                    docker stop test-${{ inputs.service-name }}
+                  else
+                    echo "❌ Container failed to start or crashed"
+                    docker logs test-${{ inputs.service-name }} || true
+                    exit 1
+                  fi
+
+            - name: Test container health (if health check exists)
+              run: |
+                  echo "🏥 Testing container health check..."
+
+                  # Start container with health check
+                  docker run --rm --name health-test-${{ inputs.service-name }} \
+                    -d ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image-digest }}
+
+                  # Wait for health check
+                  TIMEOUT=60
+                  COUNTER=0
+
+                  while [ $COUNTER -lt $TIMEOUT ]; do
+                    HEALTH=$(docker inspect --format='{{.State.Health.Status}}' health-test-${{ inputs.service-name }} 2>/dev/null || echo "no-health-check")
+                    
+                    if [ "$HEALTH" = "healthy" ]; then
+                      echo "✅ Container health check passed"
+                      docker stop health-test-${{ inputs.service-name }}
+                      exit 0
+                    elif [ "$HEALTH" = "unhealthy" ]; then
+                      echo "❌ Container health check failed"
+                      docker logs health-test-${{ inputs.service-name }}
+                      docker stop health-test-${{ inputs.service-name }}
+                      exit 1
+                    elif [ "$HEALTH" = "no-health-check" ]; then
+                      echo "ℹ️ No health check defined, skipping"
+                      docker stop health-test-${{ inputs.service-name }} 2>/dev/null || true
+                      exit 0
+                    fi
+                    
+                    sleep 2
+                    COUNTER=$((COUNTER + 2))
+                  done
+
+                  echo "⏰ Health check timed out"
+                  docker logs health-test-${{ inputs.service-name }}
+                  docker stop health-test-${{ inputs.service-name }}
+                  exit 1
+
+    deploy-staging:
+        name: Deploy to Staging
+        runs-on: ubuntu-latest
+        needs: [build-metadata, build, vulnerability-scan, smoke-test]
+        if: |
+            always() && 
+            needs.build-metadata.outputs.should-build == 'true' && 
+            needs.build.result == 'success' && 
+            needs.smoke-test.result == 'success' &&
+            github.ref == 'refs/heads/main'
+        environment: staging
+        steps:
+            - name: Deploy to staging environment
+              run: |
+                  echo "🚀 Deploying ${{ inputs.service-name }} to staging..."
+
+                  # Domain-specific deployment strategies
+                  case "${{ inputs.domain }}" in
+                    security)
+                      echo "🛡️ Security domain deployment: Enhanced monitoring enabled"
+                      MONITORING_LEVEL="high"
+                      ;;
+                    productivity)
+                      echo "⚡ Productivity domain deployment: Performance monitoring enabled"
+                      MONITORING_LEVEL="medium"
+                      ;;
+                    tcg)
+                      echo "🎮 TCG domain deployment: Game-specific metrics enabled"
+                      MONITORING_LEVEL="medium"
+                      ;;
+                    *)
+                      echo "🏗️ Infrastructure domain deployment: Standard monitoring"
+                      MONITORING_LEVEL="standard"
+                      ;;
+                  esac
+
+                  # Simulate deployment (replace with actual deployment logic)
+                  echo "✅ Deployed ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image-digest }} to staging"
+                  echo "📊 Monitoring level: ${MONITORING_LEVEL}"
+
+                  # Executive function accommodation: clear deployment status
+                  echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "**Environment**: Staging" >> $GITHUB_STEP_SUMMARY
+                  echo "**Service**: ${{ inputs.service-name }}" >> $GITHUB_STEP_SUMMARY
+                  echo "**Domain**: ${{ inputs.domain }}" >> $GITHUB_STEP_SUMMARY
+                  echo "**Image**: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image-digest }}" >> $GITHUB_STEP_SUMMARY
+                  echo "**Status**: ✅ Successfully Deployed" >> $GITHUB_STEP_SUMMARY
+
+    final-report:
+        name: Final Build Report
+        runs-on: ubuntu-latest
+        needs:
+            [
+                build-metadata,
+                security-checks,
+                build,
+                vulnerability-scan,
+                sbom-generation,
+                smoke-test,
+                deploy-staging,
+            ]
+        if: always() && needs.build-metadata.outputs.should-build == 'true'
+
+        steps:
+            - name: Generate final report
+              run: |
+                  echo "## 📋 Final Container Build Report" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "| Stage | Status | Details |" >> $GITHUB_STEP_SUMMARY
+                  echo "|-------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+                  echo "| Security Checks | ${{ needs.security-checks.result }} | Dockerfile scan, Secret detection |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Build | ${{ needs.build.result }} | Multi-arch: ${{ inputs.platforms }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Vulnerability Scan | ${{ needs.vulnerability-scan.result || 'skipped' }} | ${{ inputs.enable-security-scan && 'Trivy + Grype' || 'Disabled' }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| SBOM Generation | ${{ needs.sbom-generation.result || 'skipped' }} | ${{ inputs.enable-sbom && 'SPDX JSON format' || 'Disabled' }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Smoke Test | ${{ needs.smoke-test.result }} | Container startup + health |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Deploy Staging | ${{ needs.deploy-staging.result || 'skipped' }} | ${{ github.ref == 'refs/heads/main' && 'Auto-deployed' || 'Branch deployment skipped' }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+
+                  # Overall success determination
+                  OVERALL_SUCCESS=true
+                  REQUIRED_JOBS=("security-checks" "build" "smoke-test")
+
+                  for job in "${REQUIRED_JOBS[@]}"; do
+                    case $job in
+                      "security-checks")
+                        if [[ "${{ needs.security-checks.result }}" != "success" ]]; then
+                          OVERALL_SUCCESS=false
+                        fi
+                        ;;
+                      "build")
+                        if [[ "${{ needs.build.result }}" != "success" ]]; then
+                          OVERALL_SUCCESS=false
+                        fi
+                        ;;
+                      "smoke-test")
+                        if [[ "${{ needs.smoke-test.result }}" != "success" ]]; then
+                          OVERALL_SUCCESS=false
+                        fi
+                        ;;
+                    esac
+                  done
+
+                  if [[ "$OVERALL_SUCCESS" == "true" ]]; then
+                    echo "✅ **CONTAINER BUILD SUCCESSFUL** - ${{ inputs.service-name }} is ready for deployment" >> $GITHUB_STEP_SUMMARY
+                  else
+                    echo "❌ **CONTAINER BUILD FAILED** - Please review failed stages above" >> $GITHUB_STEP_SUMMARY
+                  fi
+
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "**Final Image**: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image-digest }}" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,529 @@
+name: Standardized Testing Framework
+
+on:
+    workflow_call:
+        inputs:
+            service-name:
+                description: "Name of the service being tested"
+                required: true
+                type: string
+            working-directory:
+                description: "Working directory for the service"
+                required: false
+                type: string
+                default: "."
+            test-types:
+                description: "Comma-separated list of test types to run"
+                required: false
+                type: string
+                default: "unit,integration"
+            enable-e2e:
+                description: "Enable end-to-end testing"
+                required: false
+                type: boolean
+                default: false
+            enable-performance:
+                description: "Enable performance testing"
+                required: false
+                type: boolean
+                default: false
+            coverage-threshold:
+                description: "Minimum code coverage percentage"
+                required: false
+                type: number
+                default: 80
+            domain:
+                description: "Service domain for performance requirements"
+                required: false
+                type: string
+                default: "infrastructure"
+            matrix-node-versions:
+                description: "JSON array of Node.js versions to test"
+                required: false
+                type: string
+                default: '["20.x"]'
+            matrix-python-versions:
+                description: "JSON array of Python versions to test"
+                required: false
+                type: string
+                default: '["3.12"]'
+
+env:
+    # Executive function accommodation: predictable test execution times
+    TEST_TIMEOUT_UNIT: 5
+    TEST_TIMEOUT_INTEGRATION: 15
+    TEST_TIMEOUT_E2E: 30
+    TEST_TIMEOUT_PERFORMANCE: 60
+
+jobs:
+    test-matrix:
+        name: Test Matrix Setup
+        runs-on: ubuntu-latest
+        outputs:
+            node-matrix: ${{ steps.setup.outputs.node-matrix }}
+            python-matrix: ${{ steps.setup.outputs.python-matrix }}
+            test-types: ${{ steps.setup.outputs.test-types }}
+
+        steps:
+            - name: Setup test matrix
+              id: setup
+              run: |
+                  # Parse test types
+                  echo "test-types=$(echo '${{ inputs.test-types }}' | tr ',' '\n' | jq -R . | jq -s .)" >> $GITHUB_OUTPUT
+
+                  # Setup version matrices  
+                  echo "node-matrix=${{ inputs.matrix-node-versions }}" >> $GITHUB_OUTPUT
+                  echo "python-matrix=${{ inputs.matrix-python-versions }}" >> $GITHUB_OUTPUT
+
+    unit-tests:
+        name: Unit Tests
+        runs-on: ubuntu-latest
+        needs: test-matrix
+        if: contains(inputs.test-types, 'unit')
+        timeout-minutes: ${{ env.TEST_TIMEOUT_UNIT }}
+
+        strategy:
+            fail-fast: false
+            matrix:
+                node-version: ${{ fromJSON(needs.test-matrix.outputs.node-matrix) }}
+                python-version: ${{ fromJSON(needs.test-matrix.outputs.python-matrix) }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js ${{ matrix.node-version }}
+              if: hashFiles(format('{0}/**/package*.json', inputs.working-directory)) != ''
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "npm"
+                  cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+            - name: Setup Python ${{ matrix.python-version }}
+              if: hashFiles(format('{0}/**/requirements*.txt', inputs.working-directory)) != ''
+              uses: actions/setup-python@v5
+              with:
+                  python-version: ${{ matrix.python-version }}
+                  cache: "pip"
+
+            - name: Install dependencies
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  # Node.js dependencies
+                  if [ -f package.json ]; then
+                    npm ci --prefer-offline
+                  fi
+
+                  # Python dependencies  
+                  if [ -f requirements.txt ]; then
+                    python -m venv .venv
+                    source .venv/bin/activate
+                    pip install -r requirements.txt
+                    if [ -f requirements-dev.txt ]; then
+                      pip install -r requirements-dev.txt
+                    fi
+                  fi
+
+            - name: Run unit tests
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  echo "🧪 Running unit tests for ${{ inputs.service-name }}..."
+
+                  if [ -f package.json ]; then
+                    # Jest configuration detection
+                    if [ -f jest.config.js ] || [ -f jest.config.ts ] || grep -q '"jest"' package.json; then
+                      echo "📦 Using Jest test runner"
+                      if npm run | grep -q "test:unit"; then
+                        npm run test:unit -- --coverage --watchAll=false
+                      else
+                        npm test -- --coverage --watchAll=false
+                      fi
+                    # Vitest configuration detection  
+                    elif [ -f vitest.config.js ] || [ -f vitest.config.ts ] || grep -q '"vitest"' package.json; then
+                      echo "⚡ Using Vitest test runner"
+                      npx vitest run --coverage
+                    else
+                      echo "🔍 Using generic test command"
+                      npm test
+                    fi
+                  elif [ -f requirements.txt ] || [ -f pyproject.toml ]; then
+                    source .venv/bin/activate
+                    
+                    # pytest configuration detection
+                    if [ -f pytest.ini ] || [ -f pyproject.toml ] || pip list pytest &>/dev/null; then
+                      echo "🐍 Using pytest test runner"
+                      pytest --cov=. --cov-report=xml --cov-report=html --cov-fail-under=${{ inputs.coverage-threshold }} -v
+                    else
+                      echo "🔍 Using unittest discovery"
+                      python -m unittest discover -v
+                    fi
+                  fi
+
+            - name: Upload coverage reports
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: coverage-unit-${{ inputs.service-name }}-node${{ matrix.node-version }}-py${{ matrix.python-version }}
+                  path: |
+                      ${{ inputs.working-directory }}/coverage/
+                      ${{ inputs.working-directory }}/htmlcov/
+                      ${{ inputs.working-directory }}/coverage.xml
+                  retention-days: 30
+
+            - name: Comment coverage on PR
+              if: github.event_name == 'pull_request'
+              uses: codecov/codecov-action@v4
+              with:
+                  file: ${{ inputs.working-directory }}/coverage.xml
+                  flags: unittests
+                  name: ${{ inputs.service-name }}-unit-tests
+
+    integration-tests:
+        name: Integration Tests
+        runs-on: ubuntu-latest
+        needs: test-matrix
+        if: contains(inputs.test-types, 'integration')
+        timeout-minutes: ${{ env.TEST_TIMEOUT_INTEGRATION }}
+
+        services:
+            # Common service dependencies for integration testing
+            postgres:
+                image: postgres:15
+                env:
+                    POSTGRES_USER: testuser
+                    POSTGRES_PASSWORD: testpass
+                    POSTGRES_DB: testdb
+                options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+                ports:
+                    - 5432:5432
+
+            redis:
+                image: redis:7
+                options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+                ports:
+                    - 6379:6379
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              if: hashFiles(format('{0}/**/package*.json', inputs.working-directory)) != ''
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20.x"
+                  cache: "npm"
+                  cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+            - name: Setup Python
+              if: hashFiles(format('{0}/**/requirements*.txt', inputs.working-directory)) != ''
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+                  cache: "pip"
+
+            - name: Install dependencies
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  if [ -f package.json ]; then
+                    npm ci --prefer-offline
+                  fi
+
+                  if [ -f requirements.txt ]; then
+                    python -m venv .venv
+                    source .venv/bin/activate
+                    pip install -r requirements.txt
+                    if [ -f requirements-dev.txt ]; then
+                      pip install -r requirements-dev.txt
+                    fi
+                  fi
+
+            - name: Wait for services
+              run: |
+                  echo "⏳ Waiting for database services..."
+                  timeout 30 bash -c 'until pg_isready -h localhost -p 5432; do sleep 1; done'
+                  timeout 30 bash -c 'until redis-cli -h localhost -p 6379 ping; do sleep 1; done'
+                  echo "✅ Services are ready"
+
+            - name: Run integration tests
+              working-directory: ${{ inputs.working-directory }}
+              env:
+                  DATABASE_URL: postgresql://testuser:testpass@localhost:5432/testdb
+                  REDIS_URL: redis://localhost:6379
+                  TEST_ENV: integration
+              run: |
+                  echo "🔗 Running integration tests for ${{ inputs.service-name }}..."
+
+                  if [ -f package.json ]; then
+                    if npm run | grep -q "test:integration"; then
+                      npm run test:integration
+                    elif npm run | grep -q "test:int"; then
+                      npm run test:int
+                    else
+                      # Run tests with integration pattern
+                      if command -v jest &> /dev/null; then
+                        npx jest --testPathPattern=integration --coverage
+                      elif command -v vitest &> /dev/null; then
+                        npx vitest run --run --reporter=verbose integration
+                      fi
+                    fi
+                  elif [ -f requirements.txt ] || [ -f pyproject.toml ]; then
+                    source .venv/bin/activate
+                    if [ -d tests/integration ]; then
+                      pytest tests/integration/ -v --cov=. --cov-report=xml
+                    elif [ -d test/integration ]; then
+                      pytest test/integration/ -v --cov=. --cov-report=xml  
+                    else
+                      pytest -k "integration" -v --cov=. --cov-report=xml
+                    fi
+                  fi
+
+            - name: Upload integration test results
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: integration-test-results-${{ inputs.service-name }}
+                  path: |
+                      ${{ inputs.working-directory }}/coverage/
+                      ${{ inputs.working-directory }}/test-results/
+                  retention-days: 30
+
+    e2e-tests:
+        name: End-to-End Tests
+        runs-on: ubuntu-latest
+        needs: test-matrix
+        if: inputs.enable-e2e
+        timeout-minutes: ${{ env.TEST_TIMEOUT_E2E }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20.x"
+                  cache: "npm"
+                  cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+            - name: Install dependencies
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  npm ci --prefer-offline
+
+                  # Install E2E testing dependencies
+                  if npm list playwright &>/dev/null; then
+                    npx playwright install --with-deps
+                  elif npm list cypress &>/dev/null; then
+                    echo "🌲 Cypress detected, dependencies should be handled by npm ci"
+                  fi
+
+            - name: Build application
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  if npm run | grep -q "build"; then
+                    npm run build
+                  fi
+
+            - name: Start application
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  echo "🚀 Starting application for E2E tests..."
+
+                  if npm run | grep -q "start:e2e"; then
+                    npm run start:e2e &
+                  elif npm run | grep -q "preview"; then
+                    npm run preview &
+                  elif npm run | grep -q "serve"; then
+                    npm run serve &
+                  else
+                    npm start &
+                  fi
+
+                  # Wait for application to be ready
+                  timeout 60 bash -c 'until curl -f http://localhost:3000 || curl -f http://localhost:4000 || curl -f http://localhost:5000; do sleep 2; done'
+
+            - name: Run E2E tests
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  echo "🎭 Running E2E tests for ${{ inputs.service-name }}..."
+
+                  if npm list playwright &>/dev/null; then
+                    echo "🎭 Using Playwright"
+                    npx playwright test --reporter=html
+                  elif npm list cypress &>/dev/null; then
+                    echo "🌲 Using Cypress"
+                    if npm run | grep -q "cy:run"; then
+                      npm run cy:run
+                    else
+                      npx cypress run
+                    fi
+                  else
+                    echo "⚠️ No E2E testing framework detected"
+                    exit 1
+                  fi
+
+            - name: Upload E2E test results
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: e2e-test-results-${{ inputs.service-name }}
+                  path: |
+                      ${{ inputs.working-directory }}/playwright-report/
+                      ${{ inputs.working-directory }}/cypress/videos/
+                      ${{ inputs.working-directory }}/cypress/screenshots/
+                  retention-days: 30
+
+    performance-tests:
+        name: Performance Tests
+        runs-on: ubuntu-latest
+        needs: test-matrix
+        if: inputs.enable-performance
+        timeout-minutes: ${{ env.TEST_TIMEOUT_PERFORMANCE }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20.x"
+                  cache: "npm"
+                  cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+            - name: Install dependencies
+              working-directory: ${{ inputs.working-directory }}
+              run: npm ci --prefer-offline
+
+            - name: Build application
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  if npm run | grep -q "build"; then
+                    npm run build
+                  fi
+
+            - name: Start application
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  if npm run | grep -q "start:prod"; then
+                    npm run start:prod &
+                  else
+                    npm start &
+                  fi
+
+                  # Wait for application
+                  timeout 60 bash -c 'until curl -f http://localhost:3000; do sleep 2; done'
+
+            - name: Run performance tests
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  echo "⚡ Running performance tests for ${{ inputs.service-name }}..."
+
+                  # Domain-specific performance thresholds
+                  case "${{ inputs.domain }}" in
+                    security)
+                      RESPONSE_TIME_THRESHOLD=1000  # <1s
+                      ;;
+                    productivity)
+                      RESPONSE_TIME_THRESHOLD=2000  # <2s
+                      ;;
+                    tcg)
+                      RESPONSE_TIME_THRESHOLD=3000  # <3s
+                      ;;
+                    *)
+                      RESPONSE_TIME_THRESHOLD=5000  # <5s
+                      ;;
+                  esac
+
+                  echo "📊 Performance threshold for ${{ inputs.domain }} domain: ${RESPONSE_TIME_THRESHOLD}ms"
+
+                  # Use available performance testing tools
+                  if npm list lighthouse &>/dev/null; then
+                    echo "🏠 Running Lighthouse audit"
+                    npx lighthouse http://localhost:3000 --output=json --output-path=lighthouse-results.json --chrome-flags="--headless"
+                  fi
+
+                  if npm list autocannon &>/dev/null; then
+                    echo "🔫 Running load tests with autocannon"
+                    npx autocannon -c 10 -d 30 http://localhost:3000
+                  fi
+
+                  # Simple curl-based performance check
+                  echo "🕒 Testing response times..."
+                  for i in {1..10}; do
+                    RESPONSE_TIME=$(curl -o /dev/null -s -w "%{time_total}" http://localhost:3000)
+                    RESPONSE_MS=$(echo "$RESPONSE_TIME * 1000" | bc)
+                    echo "Request $i: ${RESPONSE_MS}ms"
+                    
+                    if (( $(echo "$RESPONSE_MS > $RESPONSE_TIME_THRESHOLD" | bc -l) )); then
+                      echo "❌ Response time ${RESPONSE_MS}ms exceeds ${RESPONSE_TIME_THRESHOLD}ms threshold"
+                      exit 1
+                    fi
+                  done
+
+                  echo "✅ All performance tests passed for ${{ inputs.domain }} domain"
+
+            - name: Upload performance results
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: performance-test-results-${{ inputs.service-name }}
+                  path: |
+                      ${{ inputs.working-directory }}/lighthouse-results.json
+                      ${{ inputs.working-directory }}/performance-report.html
+                  retention-days: 30
+
+    test-summary:
+        name: Test Results Summary
+        runs-on: ubuntu-latest
+        needs: [unit-tests, integration-tests, e2e-tests, performance-tests]
+        if: always()
+
+        steps:
+            - name: Generate test summary
+              run: |
+                  echo "## 🧪 Test Results Summary for ${{ inputs.service-name }}" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "| Test Type | Status | Coverage | Domain Compliance |" >> $GITHUB_STEP_SUMMARY
+                  echo "|-----------|--------|----------|-------------------|" >> $GITHUB_STEP_SUMMARY
+
+                  # Unit Tests
+                  if [[ "${{ contains(inputs.test-types, 'unit') }}" == "true" ]]; then
+                    echo "| Unit | ${{ needs.unit-tests.result }} | Threshold: ${{ inputs.coverage-threshold }}% | ${{ inputs.domain }} |" >> $GITHUB_STEP_SUMMARY
+                  fi
+
+                  # Integration Tests  
+                  if [[ "${{ contains(inputs.test-types, 'integration') }}" == "true" ]]; then
+                    echo "| Integration | ${{ needs.integration-tests.result }} | - | ${{ inputs.domain }} |" >> $GITHUB_STEP_SUMMARY
+                  fi
+
+                  # E2E Tests
+                  if [[ "${{ inputs.enable-e2e }}" == "true" ]]; then
+                    echo "| E2E | ${{ needs.e2e-tests.result }} | - | ${{ inputs.domain }} |" >> $GITHUB_STEP_SUMMARY
+                  fi
+
+                  # Performance Tests
+                  if [[ "${{ inputs.enable-performance }}" == "true" ]]; then
+                    PERF_THRESHOLD=${{ inputs.domain == 'security' && '<1s' || inputs.domain == 'productivity' && '<2s' || inputs.domain == 'tcg' && '<3s' || '<5s' }}
+                    echo "| Performance | ${{ needs.performance-tests.result }} | ${PERF_THRESHOLD} | ${{ inputs.domain }} |" >> $GITHUB_STEP_SUMMARY
+                  fi
+
+                  echo "" >> $GITHUB_STEP_SUMMARY
+
+                  # Executive function accommodation: clear pass/fail indication
+                  ALL_PASSED=true
+                  if [[ "${{ needs.unit-tests.result }}" == "failure" || "${{ needs.integration-tests.result }}" == "failure" || "${{ needs.e2e-tests.result }}" == "failure" || "${{ needs.performance-tests.result }}" == "failure" ]]; then
+                    ALL_PASSED=false
+                  fi
+
+                  if [[ "$ALL_PASSED" == "true" ]]; then
+                    echo "✅ **ALL TESTS PASSED** - ${{ inputs.service-name }} meets quality standards" >> $GITHUB_STEP_SUMMARY
+                  else
+                    echo "❌ **TESTS FAILED** - Please review failed tests and fix issues" >> $GITHUB_STEP_SUMMARY
+                  fi
+
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "**Domain**: ${{ inputs.domain }}" >> $GITHUB_STEP_SUMMARY
+                  echo "**Test Configuration**: ${{ inputs.test-types }}" >> $GITHUB_STEP_SUMMARY

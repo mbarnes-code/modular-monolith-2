@@ -1,0 +1,2552 @@
+{
+  "report": {
+    "total_workflows": 258,
+    "top_triggers": {},
+    "top_jobs": {
+      "build": 44,
+      "test": 29,
+      "tests": 13,
+      "publish": 9,
+      "make": 9,
+      "release": 8,
+      "_": 8,
+      "lint": 7,
+      "analyze": 7,
+      "bundle-desktop": 6
+    },
+    "top_actions": {
+      "actions/checkout": 265,
+      "actions/setup-node": 109,
+      "actions/upload-artifact": 40,
+      "actions/cache": 38,
+      "docker/login-action": 29,
+      "actions/download-artifact": 22,
+      "docker/setup-buildx-action": 17,
+      "docker/build-push-action": 16,
+      "docker/metadata-action": 16,
+      "n8n-io/n8n/.github/actions/setup-nodejs-blacksmith": 14,
+      "actions/setup-python": 12,
+      "actions/github-script": 9,
+      "docker/setup-qemu-action": 7,
+      "github/codeql-action/init": 7,
+      "github/codeql-action/analyze": 7
+    },
+    "patterns": {
+      "releases": 22,
+      "ci_cd": 35,
+      "testing": 57,
+      "docker_builds": 14,
+      "security": 9
+    },
+    "domain_breakdown": {
+      "infrastructure": 47,
+      "ai": 2,
+      "security": 50,
+      "productivity": 159
+    }
+  },
+  "workflows": [
+    {
+      "path": "features/spec-kit/.github/workflows/release.yml",
+      "name": "Create Release",
+      "triggers": [],
+      "jobs": [
+        "release"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/spec-kit/.github/workflows/lint.yml",
+      "name": "Lint",
+      "triggers": [],
+      "jobs": [
+        "markdownlint"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/spec-kit/.github/workflows/docs.yml",
+      "name": "Deploy Documentation to Pages",
+      "triggers": [],
+      "jobs": [
+        "build",
+        "deploy"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "features/it-tools/.github/workflows/releases.yml",
+      "name": "Release new versions",
+      "triggers": [],
+      "jobs": [
+        "docker-release",
+        "github-release"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "features/it-tools/.github/workflows/ci.yml",
+      "name": "ci",
+      "triggers": [],
+      "jobs": [
+        "ci"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/it-tools/.github/workflows/e2e-tests.yml",
+      "name": "E2E tests",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/it-tools/.github/workflows/docker-nightly-release.yml",
+      "name": "Docker nightly release",
+      "triggers": [],
+      "jobs": [
+        "check_date",
+        "ci",
+        "build"
+      ],
+      "job_count": 3
+    },
+    {
+      "path": "features/securityonion/.github/workflows/lock-threads.yml",
+      "name": "Lock Threads",
+      "triggers": [],
+      "jobs": [
+        "lock-threads"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/securityonion/.github/workflows/contrib.yml",
+      "name": "contrib",
+      "triggers": [],
+      "jobs": [
+        "CLAssistant"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/securityonion/.github/workflows/leaktest.yml",
+      "name": "leak-test",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/securityonion/.github/workflows/close-threads.yml",
+      "name": "Close Threads",
+      "triggers": [],
+      "jobs": [
+        "close-threads"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/securityonion/.github/workflows/pythontest.yml",
+      "name": "python-test",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/n8n-mcp-server/.github/workflows/claude.yml",
+      "name": "Claude Code",
+      "triggers": [],
+      "jobs": [
+        "claude"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/n8n-mcp-server/.github/workflows/release-package.yml",
+      "name": "Node.js Package",
+      "triggers": [],
+      "jobs": [
+        "build-and-publish"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/n8n-mcp-server/.github/workflows/docker-publish.yml",
+      "name": "Build & Publish Docker image",
+      "triggers": [],
+      "jobs": [
+        "build-and-push"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/n8n-mcp-server/.github/workflows/claude-code-review.yml",
+      "name": "Claude Code Review",
+      "triggers": [],
+      "jobs": [
+        "claude-review"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/update-test-runtime-statistics.yml",
+      "name": "Update test runtime statistics file for test scheduling",
+      "triggers": [],
+      "jobs": [
+        "process-statistics"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/deck-integration.yml",
+      "name": "Gateway decK Integration Tests",
+      "triggers": [],
+      "jobs": [
+        "build",
+        "deck-integration"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "features/kong/.github/workflows/upgrade-tests.yml",
+      "name": "Upgrade Tests",
+      "triggers": [],
+      "jobs": [
+        "build",
+        "upgrade-test"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "features/kong/.github/workflows/update-ngx-wasm-module.yml",
+      "name": "Update ngx_wasm_module dependency",
+      "triggers": [],
+      "jobs": [
+        "update"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/labeler-v2.yml",
+      "name": "Pull Request Labeler v2",
+      "triggers": [],
+      "jobs": [
+        "labeler"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/backport-v2.yml",
+      "name": "Backport v2",
+      "triggers": [],
+      "jobs": [
+        "backport"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/copyright-check.yml",
+      "name": "Detect Unexpected EE Changes",
+      "triggers": [],
+      "jobs": [
+        "check-copyright-and-ee-files"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/label-check.yml",
+      "name": "Pull Request Label Checker",
+      "triggers": [],
+      "jobs": [
+        "check-labels"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/perf.yml",
+      "name": "Performance Test",
+      "triggers": [],
+      "jobs": [
+        "build-packages",
+        "perf"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "features/kong/.github/workflows/label-community-pr.yml",
+      "name": "Label community PRs",
+      "triggers": [],
+      "jobs": [
+        "check_author"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/autodocs.yml",
+      "name": "Autodocs",
+      "triggers": [],
+      "jobs": [
+        "build",
+        "autodoc"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "features/kong/.github/workflows/add-release-pongo.yml",
+      "name": "Add New Release to Pongo",
+      "triggers": [],
+      "jobs": [
+        "set_vars",
+        "add_release_to_pongo"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "features/kong/.github/workflows/buildifier.yml",
+      "name": "Buildifier",
+      "triggers": [],
+      "jobs": [
+        "autoformat"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/ast-grep.yml",
+      "name": "ast-grep lint",
+      "triggers": [],
+      "jobs": [
+        "lint"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/openresty-patches-companion.yml",
+      "name": "Openresty patches review companion",
+      "triggers": [],
+      "jobs": [
+        "create-pr"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/label-schema.yml",
+      "name": "Pull Request Schema Labeler",
+      "triggers": [],
+      "jobs": [
+        "schema-change-labels"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/changelog-validation.yml",
+      "name": "Changelog Validation",
+      "triggers": [],
+      "jobs": [
+        "validate-changelog"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/release.yml",
+      "name": "Package & Release",
+      "triggers": [],
+      "jobs": [
+        "metadata",
+        "build-packages",
+        "verify-manifest-packages",
+        "build-images",
+        "verify-manifest-images",
+        "scan-images",
+        "release-packages",
+        "release-images"
+      ],
+      "job_count": 8
+    },
+    {
+      "path": "features/kong/.github/workflows/build.yml",
+      "name": "Build",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/changelog-requirement.yml",
+      "name": "Changelog Requirement",
+      "triggers": [],
+      "jobs": [
+        "require-changelog"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/auto-assignee.yml",
+      "name": "Add assignee to PRs",
+      "triggers": [],
+      "jobs": [
+        "assign-author"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/cherry-picks-v2.yml",
+      "name": "Cherry Pick to remote repository v2",
+      "triggers": [],
+      "jobs": [
+        "cross-repo-cherrypick"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/backport-fail-bot.yml",
+      "name": "Forward failed backport alert to Slack",
+      "triggers": [],
+      "jobs": [
+        "check_comment"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/community-stale.yml",
+      "name": "Close inactive issues",
+      "triggers": [],
+      "jobs": [
+        "close-issues"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/kong/.github/workflows/build_and_test.yml",
+      "name": "Build & Test",
+      "triggers": [],
+      "jobs": [
+        "metadata",
+        "build",
+        "lint-and-doc-tests",
+        "schedule",
+        "busted-tests",
+        "pdk-tests",
+        "cleanup-and-aggregate-stats"
+      ],
+      "job_count": 7
+    },
+    {
+      "path": "features/mcp-virustotal/.github/workflows/npm-publish.yml",
+      "name": "Publish to NPM",
+      "triggers": [],
+      "jobs": [
+        "build-and-publish"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/FileScopeMCP/.github/workflows/build.yml",
+      "name": "Windows Node.js CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/firecrawl-mcp-server/.github/workflows/image-staging.yml",
+      "name": "Deploy Images to GHCR staging",
+      "triggers": [],
+      "jobs": [
+        "push-image"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/firecrawl-mcp-server/.github/workflows/ci.yml",
+      "name": "CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/firecrawl-mcp-server/.github/workflows/publish.yml",
+      "name": "Publish Package",
+      "triggers": [],
+      "jobs": [
+        "publish"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/firecrawl-mcp-server/.github/workflows/image.yml",
+      "name": "Deploy Images to GHCR",
+      "triggers": [],
+      "jobs": [
+        "push-image"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/chroma-mcp/.github/workflows/container.yml",
+      "name": "Container Next",
+      "triggers": [],
+      "jobs": [
+        "build-and-push"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "features/chroma-mcp/.github/workflows/test.yml",
+      "name": "Test",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/misp-service/.github/workflows/codeql-analysis.yml",
+      "name": "CodeQL",
+      "triggers": [],
+      "jobs": [
+        "analyze"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/misp-service/.github/workflows/main.yml",
+      "name": "misp",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/yara-x-service/.github/workflows/codeql.yml",
+      "name": "CodeQL",
+      "triggers": [],
+      "jobs": [
+        "analyze"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/nemesis-service/.github/workflows/vuln-scan.yml",
+      "name": "Vulnerability Scan",
+      "triggers": [],
+      "jobs": [
+        "run-analysis"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/nemesis-service/.github/workflows/docker-build-noseyparker.yml",
+      "name": "Build and Publish the noseyparker-scanner Docker Image",
+      "triggers": [],
+      "jobs": [
+        "build-noseyparker-scanner",
+        "create-manifest"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/security/nemesis-service/.github/workflows/docker-build-base.yml",
+      "name": "Build and Publish Base Docker Images",
+      "triggers": [],
+      "jobs": [
+        "build-base-images",
+        "create-manifests"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/security/nemesis-service/.github/workflows/docker-build.yml",
+      "name": "Build and Publish Service Docker Images",
+      "triggers": [],
+      "jobs": [
+        "build-service-images",
+        "create-manifest"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/security/nemesis-service/.github/workflows/docs.yml",
+      "name": "Build documentation",
+      "triggers": [],
+      "jobs": [
+        "docs"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/kasmvnc-service/src/kasmweb/.github/workflows/deploy.yml",
+      "name": "Publish",
+      "triggers": [],
+      "jobs": [
+        "npm",
+        "snap"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/security/kasmvnc-service/src/kasmweb/.github/workflows/lint.yml",
+      "name": "Lint",
+      "triggers": [],
+      "jobs": [
+        "eslint",
+        "html"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/security/kasmvnc-service/src/kasmweb/.github/workflows/test.yml",
+      "name": "Test",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/node-aught.yml",
+      "name": "Tests: node.js < 10",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/require-allow-edits.yml",
+      "name": "Require \u201cAllow Edits\u201d",
+      "triggers": [],
+      "jobs": [
+        "_"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/node-test.js.yml",
+      "name": "Node.js CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/node-pretest.yml",
+      "name": "Tests: pretest/posttest",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/ci.yml",
+      "name": "CI",
+      "triggers": [],
+      "jobs": [
+        "test-regression-check-node10",
+        "test-browser",
+        "test"
+      ],
+      "job_count": 3
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/publish.yml",
+      "name": "publish",
+      "triggers": [],
+      "jobs": [
+        "publish-npm"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/rebase.yml",
+      "name": "Automatic Rebase",
+      "triggers": [],
+      "jobs": [
+        "_"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/node-tens.yml",
+      "name": "Tests: node.js >= 10",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/deploy.yml",
+      "name": "Publish",
+      "triggers": [],
+      "jobs": [
+        "npm",
+        "snap"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/package-manager-ci.yml",
+      "name": "package-manager-ci",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/build.yml",
+      "name": "build",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/lint.yml",
+      "name": "Lint",
+      "triggers": [],
+      "jobs": [
+        "eslint",
+        "html"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/security/kasmvnc-service/.github/workflows/test.yml",
+      "name": "Test",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/nemesis-frontend/.github/workflows/codeql-analysis.yml",
+      "name": "CodeQL",
+      "triggers": [],
+      "jobs": [
+        "analyze"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/nemesis-frontend/.github/workflows/ci.yml",
+      "name": "ci",
+      "triggers": [],
+      "jobs": [
+        "legacy",
+        "test",
+        "types",
+        "lint"
+      ],
+      "job_count": 4
+    },
+    {
+      "path": "apps/security/nemesis-frontend/.github/workflows/node.js.yml",
+      "name": "build",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/nemesis-frontend/.github/workflows/nodejs.yml",
+      "name": "Node CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/node-aught.yml",
+      "name": "Tests: node.js < 10",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/releases.yml",
+      "name": "Releases",
+      "triggers": [],
+      "jobs": [
+        "main"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/require-allow-edits.yml",
+      "name": "Require \u201cAllow Edits\u201d",
+      "triggers": [],
+      "jobs": [
+        "_"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/pull_requests.yml",
+      "name": "Pull Requests",
+      "triggers": [],
+      "jobs": [
+        "main"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/node-pretest.yml",
+      "name": "Tests: pretest/posttest",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/codeql.yml",
+      "name": "CodeQL Analysis",
+      "triggers": [],
+      "jobs": [
+        "analyze"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/npm-publish.yml",
+      "name": "Publish to NPM",
+      "triggers": [],
+      "jobs": [
+        "publish"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/ci.yml",
+      "name": "Tests",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/publish.yml",
+      "name": "publish",
+      "triggers": [],
+      "jobs": [
+        "publish-npm"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/run-tests.yml",
+      "name": "Tests",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/rebase.yml",
+      "name": "Automatic Rebase",
+      "triggers": [],
+      "jobs": [
+        "_"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/node-tens.yml",
+      "name": "Tests: node.js >= 10",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/package-manager-ci.yml",
+      "name": "package-manager-ci",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/build.yml",
+      "name": "build",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/publish-npm-package.yml",
+      "name": "publish-npm-package",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/main.yml",
+      "name": "CI",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/test.yml",
+      "name": "Tests",
+      "triggers": [],
+      "jobs": [
+        "run"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/ubuntu-test.yml",
+      "name": "Node.js CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/master.yml",
+      "name": "Master Build, Test & Deploy",
+      "triggers": [],
+      "jobs": [
+        "main"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/cyberchef-service/.github/workflows/dispatch.yml",
+      "name": "Trigger CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/security/blackarch-service/blackarch/.github/workflows/tests.yml",
+      "name": "CI",
+      "triggers": [],
+      "jobs": [
+        "pkgcheck",
+        "build"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/security/blackarch-service/.github/workflows/tests.yml",
+      "name": "CI",
+      "triggers": [],
+      "jobs": [
+        "pkgcheck",
+        "build"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/inspector-service/.github/workflows/claude.yml",
+      "name": "Claude Code",
+      "triggers": [],
+      "jobs": [
+        "claude"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/inspector-service/.github/workflows/ci.yml",
+      "name": "ci",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/inspector-service/.github/workflows/release.yml",
+      "name": "release",
+      "triggers": [],
+      "jobs": [
+        "publish"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/inspector-service/.github/workflows/main.yml",
+      "name": "main.yml",
+      "triggers": [],
+      "jobs": [
+        "build",
+        "publish",
+        "publish-github-container-registry"
+      ],
+      "job_count": 3
+    },
+    {
+      "path": "apps/productivity/inspector-service/.github/workflows/cli_tests.yml",
+      "name": "CLI Tests",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/inspector-service/.github/workflows/nodejs.yml",
+      "name": "Node.js CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/inspector-service/.github/workflows/e2e_tests.yml",
+      "name": "Playwright Tests",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/test-finder.yml",
+      "name": "Daily Test Coverage Finder",
+      "triggers": [],
+      "jobs": [
+        "find-untested-code"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/update-hacktoberfest-leaderboard.yml",
+      "name": "Update Hacktoberfest Leaderboard",
+      "triggers": [],
+      "jobs": [
+        "update-leaderboard"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/quarantine.yml",
+      "name": "Quarantine check",
+      "triggers": [],
+      "jobs": [
+        "check-quarantined"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/bundle-desktop-intel.yml",
+      "name": "Reusable workflow to bundle desktop app for Intel Mac",
+      "triggers": [],
+      "jobs": [
+        "bundle-desktop-intel"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/recipe-security-scanner.yml",
+      "name": "Recipe Security Scan",
+      "triggers": [],
+      "jobs": [
+        "security-scan"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/canary.yml",
+      "name": "Canary",
+      "triggers": [],
+      "jobs": [
+        "prepare-version",
+        "build-cli",
+        "install-script",
+        "bundle-desktop",
+        "bundle-desktop-linux",
+        "bundle-desktop-windows",
+        "release"
+      ],
+      "job_count": 7
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/pr-comment-bundle-intel.yml",
+      "name": "Bundle Intel Desktop App",
+      "triggers": [],
+      "jobs": [
+        "trigger-on-command",
+        "bundle-desktop-intel",
+        "pr-comment-intel"
+      ],
+      "job_count": 3
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/ci.yml",
+      "name": "CI",
+      "triggers": [],
+      "jobs": [
+        "changes",
+        "rust-format",
+        "rust-build-and-test",
+        "desktop-lint",
+        "bundle-desktop-unsigned"
+      ],
+      "job_count": 5
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/build-cli.yml",
+      "name": "Reusable workflow to build CLI",
+      "triggers": [],
+      "jobs": [
+        "build-cli"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/bundle-desktop-linux.yml",
+      "name": "Bundle Desktop (Linux)",
+      "triggers": [],
+      "jobs": [
+        "build-desktop-linux"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/pr-comment-bundle-windows.yml",
+      "name": "Bundle Windows Desktop App",
+      "triggers": [],
+      "jobs": [
+        "trigger-on-command",
+        "bundle-desktop-windows",
+        "pr-comment-windows"
+      ],
+      "job_count": 3
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/publish-docker.yml",
+      "name": "Publish Docker Image",
+      "triggers": [],
+      "jobs": [
+        "docker"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/nightly.yml",
+      "name": "Nightly Build",
+      "triggers": [],
+      "jobs": [
+        "prepare-version",
+        "build-cli",
+        "install-script",
+        "bundle-desktop",
+        "bundle-desktop-linux",
+        "bundle-desktop-windows",
+        "release"
+      ],
+      "job_count": 7
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/stale.yml",
+      "name": "Close Stale PRs",
+      "triggers": [],
+      "jobs": [
+        "stale"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/release.yml",
+      "name": "Release",
+      "triggers": [],
+      "jobs": [
+        "build-cli",
+        "install-script",
+        "bundle-desktop",
+        "bundle-desktop-intel",
+        "bundle-desktop-linux",
+        "bundle-desktop-windows",
+        "release"
+      ],
+      "job_count": 7
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/take.yml",
+      "name": "Auto-assign issue to contributor",
+      "triggers": [],
+      "jobs": [
+        "assign"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/validate-recipe-pr.yml",
+      "name": "Validate Recipe PR",
+      "triggers": [],
+      "jobs": [
+        "validate-recipe"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/bundle-desktop-windows.yml",
+      "name": "Bundle Desktop (Windows)",
+      "triggers": [],
+      "jobs": [
+        "build-desktop-windows"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/pr-comment-build-cli.yml",
+      "name": "Build CLI",
+      "triggers": [],
+      "jobs": [
+        "trigger-on-command",
+        "build-cli",
+        "pr-comment-cli"
+      ],
+      "job_count": 3
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/send-api-key.yml",
+      "name": "Send API Key on PR Merge",
+      "triggers": [],
+      "jobs": [
+        "send-api-key"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/release-branches.yml",
+      "name": "Build goose release candidate",
+      "triggers": [],
+      "jobs": [
+        "bundle-desktop",
+        "comment-on-pr"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/pr-website-preview.yml",
+      "name": "Documentation Site Preview",
+      "triggers": [],
+      "jobs": [
+        "deploy"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/bundle-desktop.yml",
+      "name": "Reusable workflow to bundle desktop app",
+      "triggers": [],
+      "jobs": [
+        "bundle-desktop"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/deploy-docs-and-extensions.yml",
+      "name": "Deploy Documentation",
+      "triggers": [],
+      "jobs": [
+        "deploy"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/goose-service/.github/workflows/pr-comment-bundle.yml",
+      "name": "Bundle ARM64 Desktop App",
+      "triggers": [],
+      "jobs": [
+        "trigger-on-command",
+        "bundle-desktop",
+        "pr-comment-arm64"
+      ],
+      "job_count": 3
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/node-aught.yml",
+      "name": "Tests: node.js < 10",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/deno.yml",
+      "name": "deno",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/build-pack-publish.yml",
+      "name": "Prebuildify, package, publish",
+      "triggers": [],
+      "jobs": [
+        "build-linux",
+        "build-windows",
+        "build-macos",
+        "pack",
+        "test-package"
+      ],
+      "job_count": 5
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/require-allow-edits.yml",
+      "name": "Require \u201cAllow Edits\u201d",
+      "triggers": [],
+      "jobs": [
+        "_"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/node-pretest.yml",
+      "name": "Tests: pretest/posttest",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/publish-on-tag.yml",
+      "name": "publish-on-tag",
+      "triggers": [],
+      "jobs": [
+        "publish"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/ci.yml",
+      "name": "ci",
+      "triggers": [],
+      "jobs": [
+        "legacy",
+        "test",
+        "types",
+        "lint"
+      ],
+      "job_count": 4
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/renovatebot.yml",
+      "name": "RenovateBot Updater",
+      "triggers": [],
+      "jobs": [
+        "update"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/publish.yml",
+      "name": "publish",
+      "triggers": [],
+      "jobs": [
+        "publish-npm"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/rebase.yml",
+      "name": "Automatic Rebase",
+      "triggers": [],
+      "jobs": [
+        "_"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/test-node.yml",
+      "name": "Build Status",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/run-npm-tests.yml",
+      "name": "Run npm Tests",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/release.yml",
+      "name": "Release",
+      "triggers": [],
+      "jobs": [
+        "release"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/node-tens.yml",
+      "name": "Tests: node.js >= 10",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/test-and-release.yml",
+      "name": "Test & Maybe Release",
+      "triggers": [],
+      "jobs": [
+        "test",
+        "release"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/package-manager-ci.yml",
+      "name": "package-manager-ci",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/build.yml",
+      "name": "build",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/node.yml",
+      "name": "node",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/node.js.yml",
+      "name": "build",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/test.yml",
+      "name": "Test",
+      "triggers": [],
+      "jobs": [
+        "test-deno",
+        "test-bun",
+        "test-node",
+        "test-types"
+      ],
+      "job_count": 4
+    },
+    {
+      "path": "apps/productivity/actual-service/.github/workflows/update-prettier.yml",
+      "name": "Update Prettier",
+      "triggers": [],
+      "jobs": [
+        "update_prettier"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/test-frontend.yml",
+      "name": "Frontend Lint and Test",
+      "triggers": [],
+      "jobs": [
+        "lint"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/scheduled-checks.yml",
+      "name": "Scheduled Checks",
+      "triggers": [],
+      "jobs": [
+        "update"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/test-backend.yml",
+      "name": "Backend Lint and Test",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/codeql.yml",
+      "name": "CodeQL",
+      "triggers": [],
+      "jobs": [
+        "analyze"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/publish.yml",
+      "name": "Build Containers",
+      "triggers": [],
+      "jobs": [
+        "publish"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/locale-sync.yml",
+      "name": "Automatic Locale Sync",
+      "triggers": [],
+      "jobs": [
+        "sync-locales"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/build-package.yml",
+      "name": "Build Package",
+      "triggers": [],
+      "jobs": [
+        "build-frontend",
+        "build-package"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/pull-requests.yml",
+      "name": "PR CI",
+      "triggers": [],
+      "jobs": [
+        "pull-request-lint",
+        "backend-tests",
+        "frontend-tests",
+        "container-scanning",
+        "code-ql",
+        "build-package",
+        "end-to-end",
+        "publish-image"
+      ],
+      "job_count": 8
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/e2e.yml",
+      "name": "E2E Tests",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/nightly.yml",
+      "name": "Docker Nightly Production",
+      "triggers": [],
+      "jobs": [
+        "backend-tests",
+        "frontend-tests",
+        "build-package",
+        "publish",
+        "notify-discord"
+      ],
+      "job_count": 5
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/stale.yml",
+      "name": "Stale: Flag and close stale issues and PRs",
+      "triggers": [],
+      "jobs": [
+        "stale"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/release.yml",
+      "name": "Docker Build Production",
+      "triggers": [],
+      "jobs": [
+        "backend-tests",
+        "frontend-tests",
+        "build-package",
+        "publish",
+        "notify-discord",
+        "update-image-tags"
+      ],
+      "job_count": 6
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/release-drafter.yml",
+      "name": "Release Drafter",
+      "triggers": [],
+      "jobs": [
+        "update_release_draft"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/pull-request-lint.yml",
+      "name": "Pull Request Linter",
+      "triggers": [],
+      "jobs": [
+        "validate-title"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/mealie-service/.github/workflows/partial-trivy-container-scanning.yml",
+      "name": "Trivy Container Scanning",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/src/packages/@n8n/node-cli/src/template/templates/shared/default/.github/workflows/ci.yml",
+      "name": "CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/rollingversions-canary.yml",
+      "name": "Publish Canary",
+      "triggers": [],
+      "jobs": [
+        "test",
+        "publish-canary"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/ci-postgres-mysql.yml",
+      "name": "Test Postgres and MySQL schemas",
+      "triggers": [],
+      "jobs": [
+        "build",
+        "sqlite-pooled",
+        "mariadb",
+        "mysql",
+        "postgres",
+        "notify-on-failure"
+      ],
+      "job_count": 6
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/lock-threads.yml",
+      "name": "Lock Threads",
+      "triggers": [],
+      "jobs": [
+        "action"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/codeql-analysis.yml",
+      "name": "CodeQL",
+      "triggers": [],
+      "jobs": [
+        "analyze"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/node-aught.yml",
+      "name": "Tests: node.js < 10",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/linting-reusable.yml",
+      "name": "Reusable linting workflow",
+      "triggers": [],
+      "jobs": [
+        "lint"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/test-workflows-pr-comment.yml",
+      "name": "Test Workflows on PR Comment",
+      "triggers": [],
+      "jobs": [
+        "handle_comment_command",
+        "trigger_reusable_tests"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/playwright-test-performance.yml",
+      "name": "Run Playwright Performance Tests",
+      "triggers": [],
+      "jobs": [
+        "build-and-test-performance"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/mips_linux_cmake.yml",
+      "name": "MIPS Linux CMake",
+      "triggers": [],
+      "jobs": [
+        "make"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/require-allow-edits.yml",
+      "name": "Require \u201cAllow Edits\u201d",
+      "triggers": [],
+      "jobs": [
+        "_"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/sync-public-api-docs.yml",
+      "name": "Sync Public API Schema to Docs Repo",
+      "triggers": [],
+      "jobs": [
+        "sync-public-api"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/node-pretest.yml",
+      "name": "Tests: pretest/posttest",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/codeql.yml",
+      "name": "CodeQL",
+      "triggers": [],
+      "jobs": [
+        "analyze"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/claude.yml",
+      "name": "Claude PR Assistant",
+      "triggers": [],
+      "jobs": [
+        "claude-code-action"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/nodejs-windows.yml",
+      "name": "Node.js Windows integration",
+      "triggers": [],
+      "jobs": [
+        "build-windows"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/playwright-test-docker-pull.yml",
+      "name": "Run Playwright Tests (Docker Pull)",
+      "triggers": [],
+      "jobs": [
+        "build-and-test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/security-trivy-scan-callable.yml",
+      "name": "Security - Scan Docker Image With Trivy",
+      "triggers": [],
+      "jobs": [
+        "security_scan"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/triage_closed_issue_comment.yml",
+      "name": "Handle Comment Workflow",
+      "triggers": [],
+      "jobs": [
+        "closed-issue-comment"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/playwright-test-coverage.yml",
+      "name": "Weekly Coverage Tests",
+      "triggers": [],
+      "jobs": [
+        "coverage"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/ci.yml",
+      "name": "build",
+      "triggers": [],
+      "jobs": [
+        "verify"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/amd64_windows_cmake.yml",
+      "name": "amd64 Windows CMake",
+      "triggers": [],
+      "jobs": [
+        "msvc"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/amd64_linux_bazel.yml",
+      "name": "amd64 Linux Bazel",
+      "triggers": [],
+      "jobs": [
+        "bazel"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/notify-pr-status.yml",
+      "name": "Notify PR status changed",
+      "triggers": [],
+      "jobs": [
+        "notify"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/amd64_linux_cmake.yml",
+      "name": "amd64 Linux CMake",
+      "triggers": [],
+      "jobs": [
+        "make"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/Python_tests.yml",
+      "name": "Python_tests",
+      "triggers": [],
+      "jobs": [
+        "Python_tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/publish.yml",
+      "name": "Release",
+      "triggers": [],
+      "jobs": [
+        "release"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/docker-base-image.yml",
+      "name": "Docker Base Image CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/playwright-nightly.yml",
+      "name": "Playwright Tests - Nightly",
+      "triggers": [],
+      "jobs": [
+        "test-configurations"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/storybook.yml",
+      "name": "Storybook",
+      "triggers": [],
+      "jobs": [
+        "cloudflare"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/e2e-reusable.yml",
+      "name": "Reusable e2e workflow",
+      "triggers": [],
+      "jobs": [
+        "testing",
+        "upload-to-currents"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/check-run-eligibility.yml",
+      "name": "PR Eligibility Check",
+      "triggers": [],
+      "jobs": [
+        "evaluate_conditions"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/e2e-tests.yml",
+      "name": "End-to-End tests",
+      "triggers": [],
+      "jobs": [
+        "calls-start-url",
+        "run-e2e-tests",
+        "run-playwright-tests",
+        "calls-success-url-notify"
+      ],
+      "job_count": 4
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/playwright-test-docker-build.yml",
+      "name": "Run Playwright Tests (Docker Build)",
+      "triggers": [],
+      "jobs": [
+        "build-and-test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/riscv_linux_cmake.yml",
+      "name": "RISCV Linux CMake",
+      "triggers": [],
+      "jobs": [
+        "make"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/data-tooling.yml",
+      "name": "Data tooling, test exports and imports of data to various db types",
+      "triggers": [],
+      "jobs": [
+        "sqlite-export-sqlite-import",
+        "postgres-export-postgres-import"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/rebase.yml",
+      "name": "Automatic Rebase",
+      "triggers": [],
+      "jobs": [
+        "_"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/node-js-ci.yml",
+      "name": "Node.js CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/chromatic.yml",
+      "name": "Chromatic",
+      "triggers": [],
+      "jobs": [
+        "changeset",
+        "chromatic"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/run-npm-tests.yml",
+      "name": "Run npm Tests",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/release-push-to-channel.yml",
+      "name": "Release: Push to Channel",
+      "triggers": [],
+      "jobs": [
+        "validate-inputs",
+        "release-to-npm",
+        "release-to-docker-hub",
+        "release-to-github-container-registry",
+        "update-docs"
+      ],
+      "job_count": 5
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/sbom-generation-callable.yml",
+      "name": "Release: Attach SBOM",
+      "triggers": [],
+      "jobs": [
+        "generate-sbom"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/amd64_macos_cmake.yml",
+      "name": "amd64 MacOS CMake",
+      "triggers": [],
+      "jobs": [
+        "xcode",
+        "make"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/release-standalone-package.yml",
+      "name": "Release: Standalone Package",
+      "triggers": [],
+      "jobs": [
+        "publish-to-npm"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/release.yml",
+      "name": "npm-bump",
+      "triggers": [],
+      "jobs": [
+        "version_and_release"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/docker-images-benchmark.yml",
+      "name": "Benchmark Docker Image CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/node-js-publish.yml",
+      "name": "Node.js Publish",
+      "triggers": [],
+      "jobs": [
+        "build",
+        "publish-npm"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/node-tens.yml",
+      "name": "Tests: node.js >= 10",
+      "triggers": [],
+      "jobs": [
+        "tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/release-create-pr.yml",
+      "name": "Release: Create Pull Request",
+      "triggers": [],
+      "jobs": [
+        "create-release-pr"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/target-main.yml",
+      "name": "PR Target Check",
+      "triggers": [],
+      "jobs": [
+        "comment"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/power_linux_cmake.yml",
+      "name": "POWER Linux CMake",
+      "triggers": [],
+      "jobs": [
+        "make"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/rollingversions.yml",
+      "name": "Release",
+      "triggers": [],
+      "jobs": [
+        "test",
+        "publish"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/ci-evals.yml",
+      "name": "Run Workflow Builder Evals",
+      "triggers": [],
+      "jobs": [
+        "evals"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/amd64_freebsd_cmake.yml",
+      "name": "amd64 FreeBSD CMake",
+      "triggers": [],
+      "jobs": [
+        "make"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/test-and-release.yml",
+      "name": "Test & Maybe Release",
+      "triggers": [],
+      "jobs": [
+        "test",
+        "release"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/changelog.yml",
+      "name": "Release Changelog",
+      "triggers": [],
+      "jobs": [
+        "changelog"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/package-manager-ci.yml",
+      "name": "package-manager-ci",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/test-workflows-nightly.yml",
+      "name": "Test Workflows Nightly and Manual",
+      "triggers": [],
+      "jobs": [
+        "run_workflow_tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/websocket-tests.yml",
+      "name": "websocket-tests",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/build.yml",
+      "name": "Node CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/benchmark-nightly.yml",
+      "name": "Run Nightly Benchmark",
+      "triggers": [],
+      "jobs": [
+        "build",
+        "notify-on-failure"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/add-issue-triage-board.yml",
+      "name": "Add issue/PR to Triage Board",
+      "triggers": [],
+      "jobs": [
+        "add-to-triage-project-board"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/clang_format.yml",
+      "name": "clang-format Check",
+      "triggers": [],
+      "jobs": [
+        "clang-format"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/benchmark-destroy-nightly.yml",
+      "name": "Destroy Benchmark Env",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/release-please.yml",
+      "name": "release-please",
+      "triggers": [],
+      "jobs": [
+        "release-please"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/bench.yml",
+      "name": "Benchmarks",
+      "triggers": [],
+      "jobs": [
+        "benchmark_current",
+        "benchmark_branch"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/npmpublish.yml",
+      "name": "Node.js Package",
+      "triggers": [],
+      "jobs": [
+        "build",
+        "publish-npm"
+      ],
+      "job_count": 2
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/visual-studio.yml",
+      "name": "Tests on Windows",
+      "triggers": [],
+      "jobs": [
+        "Tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/lint.yml",
+      "name": "lint",
+      "triggers": [],
+      "jobs": [
+        "lint-js"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/main.yml",
+      "name": "CI",
+      "triggers": [],
+      "jobs": [
+        "build_nodejs"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/units-tests-reusable.yml",
+      "name": "Reusable units test workflow",
+      "triggers": [],
+      "jobs": [
+        "unit-test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/docker-build-push.yml",
+      "name": "Docker: Build and Push",
+      "triggers": [],
+      "jobs": [
+        "determine-build-context",
+        "build-and-push-docker",
+        "create_multi_arch_manifest",
+        "call-success-url",
+        "security-scan",
+        "security-scan-runners",
+        "notify-on-failure"
+      ],
+      "job_count": 7
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/tests.yml",
+      "name": "Tests",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/s390x_linux_cmake.yml",
+      "name": "s390x Linux CMake",
+      "triggers": [],
+      "jobs": [
+        "make"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/node.js.yml",
+      "name": "Node.js CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/playwright-test-reusable.yml",
+      "name": "Playwright Tests - Reusable",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/nodejs.yml",
+      "name": "number-allocator CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/check-pr-title.yml",
+      "name": "Check PR title",
+      "triggers": [],
+      "jobs": [
+        "check-pr-title"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/test.yml",
+      "name": "Node CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/release-publish.yml",
+      "name": "Release: Publish",
+      "triggers": [],
+      "jobs": [
+        "build-arm64",
+        "publish-to-npm",
+        "publish-to-docker-hub",
+        "create-github-release",
+        "create-sentry-release",
+        "generate-and-attach-sbom",
+        "trigger-release-note"
+      ],
+      "job_count": 7
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/node-gyp.yml",
+      "name": "node-gyp integration",
+      "triggers": [],
+      "jobs": [
+        "test"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/check-documentation-urls.yml",
+      "name": "Check Documentation URLs",
+      "triggers": [],
+      "jobs": [
+        "check-docs-urls"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/arm_linux_cmake.yml",
+      "name": "ARM Linux CMake",
+      "triggers": [],
+      "jobs": [
+        "make"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/ci-master.yml",
+      "name": "Test Master",
+      "triggers": [],
+      "jobs": [
+        "build-github",
+        "unit-test",
+        "lint",
+        "notify-on-failure"
+      ],
+      "job_count": 4
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/build-windows.yml",
+      "name": "Windows CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/test-workflows-callable.yml",
+      "name": "Test Workflows - Reusable",
+      "triggers": [],
+      "jobs": [
+        "run_workflow_tests"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/e2e-tests-pr.yml",
+      "name": "PR E2E",
+      "triggers": [],
+      "jobs": [
+        "eligibility_check",
+        "run-e2e-tests",
+        "run-playwright-tests",
+        "post-e2e-tests"
+      ],
+      "job_count": 4
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/ci-pull-requests.yml",
+      "name": "Build, unit test and lint branch",
+      "triggers": [],
+      "jobs": [
+        "install-and-build",
+        "bundle-size-check",
+        "unit-test",
+        "lint"
+      ],
+      "job_count": 4
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/aarch64_linux_cmake.yml",
+      "name": "AArch64 Linux CMake",
+      "triggers": [],
+      "jobs": [
+        "make"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/ci-python.yml",
+      "name": "Python CI",
+      "triggers": [],
+      "jobs": [
+        "checks"
+      ],
+      "job_count": 1
+    },
+    {
+      "path": "apps/productivity/n8n-service/.github/workflows/dispatch.yml",
+      "name": "Trigger CI",
+      "triggers": [],
+      "jobs": [
+        "build"
+      ],
+      "job_count": 1
+    }
+  ],
+  "recommendations": [
+    {
+      "type": "consolidation",
+      "title": "Standardize CI/CD Pipeline",
+      "description": "Found 35 CI workflows that could use a common template",
+      "files": [
+        "ci.yml",
+        "build.yml",
+        "ci.yml",
+        "node-test.js.yml",
+        "ci.yml"
+      ]
+    },
+    {
+      "type": "optimization",
+      "title": "Unified Testing Framework",
+      "description": "Found 57 test workflows that could share common patterns",
+      "files": [
+        "e2e-tests.yml",
+        "leaktest.yml",
+        "pythontest.yml",
+        "update-test-runtime-statistics.yml",
+        "deck-integration.yml"
+      ]
+    },
+    {
+      "type": "efficiency",
+      "title": "Container Build Optimization",
+      "description": "Found 14 Docker workflows that could use shared build templates",
+      "files": [
+        "docker-nightly-release.yml",
+        "docker-publish.yml",
+        "docker-build-noseyparker.yml",
+        "docker-build-base.yml",
+        "docker-build.yml"
+      ]
+    }
+  ]
+}

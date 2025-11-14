@@ -1,0 +1,419 @@
+# ts-morph: TypeScript AST Manipulation Analysis
+
+## Overview
+ts-morph is a TypeScript Abstract Syntax Tree (AST) manipulation library that provides a high-level API for programmatically reading, analyzing, and modifying TypeScript/JavaScript code.
+
+## Current Usage in apps/productivity/n8n-service
+
+### 📁 Location: `apps/productivity/n8n-service/src/packages/@n8n/node-cli/`
+
+### 🎯 Primary Purpose: n8n Node Code Generation
+The n8n CLI uses ts-morph for **automated scaffolding and customization** of workflow nodes:
+
+```typescript
+// From apps/productivity/n8n-service/src/packages/@n8n/node-cli/src/utils/ast.ts
+import {
+	Project,           // 🏗️  Main entry point - manages source files
+	SyntaxKind,        // 🔍 Enum of all TypeScript syntax types
+	type ClassDeclaration,      // 🏛️ Represents class definitions
+	type ObjectLiteralExpression, // 📦 Represents object literals
+	type PropertyAssignment,     // ⚡ Property assignments in objects
+	type PropertyDeclaration,    // 📝 Class property declarations
+} from 'ts-morph';
+```
+
+### 🛠️ Core AST Utilities
+
+#### 1. **Source File Loading**
+```typescript
+export const loadSingleSourceFile = (path: string) => {
+	const project = new Project({
+		skipFileDependencyResolution: true,  // 🚀 Performance optimization
+	});
+	return project.addSourceFileAtPath(path);
+};
+```
+**Purpose**: Creates an AST representation of TypeScript files for manipulation
+
+#### 2. **Property Value Updates**
+```typescript
+export const updateStringProperty = ({
+	obj, key, value
+}: { 
+	obj: ObjectLiteralExpression | ClassDeclaration; 
+	key: string; 
+	value: string 
+}) => {
+	const prop = obj.getPropertyOrThrow(key);
+	
+	if (prop.isKind(SyntaxKind.PropertyAssignment)) {
+		// 📝 Handle object property assignments: { name: "value" }
+		setStringInitializer(prop.asKindOrThrow(SyntaxKind.PropertyAssignment), value);
+	} else if (prop.isKind(SyntaxKind.PropertyDeclaration)) {
+		// 🏛️ Handle class property declarations: class { name = "value" }
+		setStringInitializer(prop.asKindOrThrow(SyntaxKind.PropertyDeclaration), value);
+	}
+};
+```
+**Purpose**: Updates string literals in both object properties and class properties
+
+#### 3. **Nested Object Navigation**
+```typescript
+export const getChildObjectLiteral = ({
+	obj, key
+}: { obj: ObjectLiteralExpression; key: string }) => {
+	return obj
+		.getPropertyOrThrow(key)
+		.asKindOrThrow(SyntaxKind.PropertyAssignment)
+		.getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+};
+```
+**Purpose**: Safely navigates nested object structures in the AST
+
+### 🎨 Template-Specific AST Operations
+
+#### **Node Class Customization** (`updateNodeAst`)
+```typescript
+// 🔧 Updates n8n node class definitions
+const classDecl = sourceFile.getClasses()[0];
+classDecl.rename(className);  // 🏷️ Change class name
+
+const nodeDescriptionObj = classDecl
+	.getPropertyOrThrow('description')
+	.getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+
+// 🎯 Updates specific properties in the node description
+updateStringProperty({ obj: nodeDescriptionObj, key: 'displayName', value: capitalCase(className) });
+updateStringProperty({ obj: nodeDescriptionObj, key: 'name', value: camelCase(className) });
+updateStringProperty({ obj: nodeDescriptionObj, key: 'description', value: `Interact with the ${capitalCase(className)} API` });
+```
+
+#### **Dynamic Icon Configuration**
+```typescript
+const icon = getChildObjectLiteral({ obj: nodeDescriptionObj, key: 'icon' });
+updateStringProperty({ obj: icon, key: 'light', value: `file:${camelCase(className)}.svg` });
+updateStringProperty({ obj: icon, key: 'dark', value: `file:${camelCase(className)}.dark.svg` });
+```
+
+#### **API Endpoint Configuration**
+```typescript
+const requestDefaults = getChildObjectLiteral({ obj: nodeDescriptionObj, key: 'requestDefaults' });
+updateStringProperty({ obj: requestDefaults, key: 'baseURL', value: baseUrl });
+```
+
+### 🔐 Credential Management (`updateCredentialAst`)
+```typescript
+// 🏛️ Rename credential class
+classDecl.rename(credentialClassName);
+
+// 🏷️ Update display properties
+updateStringProperty({ obj: classDecl, key: 'displayName', value: credentialDisplayName });
+updateStringProperty({ obj: classDecl, key: 'name', value: credentialName });
+
+// 📚 Dynamic documentation URL updates
+const docUrlProp = classDecl.getProperty('documentationUrl');
+if (docUrlProp) {
+	const initializer = docUrlProp.getInitializerIfKindOrThrow(SyntaxKind.StringLiteral);
+	const newUrl = initializer.getLiteralText().replace('/repo', `/${repoName}`);
+	initializer.setLiteralValue(newUrl);  // 🔗 URL template substitution
+}
+```
+
+### 🧪 Advanced AST Manipulation - Adding Elements
+```typescript
+// ➕ Dynamically add credential references to nodes
+const credentialObject = ts.factory.createObjectLiteralExpression([
+	ts.factory.createPropertyAssignment(
+		ts.factory.createIdentifier('name'),
+		ts.factory.createStringLiteral(credentialName, true)  // 🔒 Credential binding
+	),
+	ts.factory.createPropertyAssignment(
+		ts.factory.createIdentifier('required'),
+		ts.factory.createTrue()  // ✅ Mark as required
+	),
+]);
+initializer.addElement(printNode(credentialObject));  // 🔧 AST node injection
+```
+
+## 🧠 AI-Enhanced Opportunities Beyond n8n
+
+### 1. 🤖 **AI-Driven Code Generation Pipeline**
+
+#### **Intelligent Template Selection**
+```typescript
+interface AICodeGenContext {
+	domain: 'security' | 'productivity' | 'mtg' | 'infrastructure';
+	patterns: DetectedPattern[];
+	existingCode: SourceFile[];
+	userIntent: string;
+}
+
+class AIEnhancedCodeGenerator {
+	constructor(private aiService: AIService) {}
+	
+	async generateOptimalStructure(context: AICodeGenContext): Promise<GeneratedCode> {
+		// 🎯 AI analyzes patterns to suggest optimal code structure
+		const analysis = await this.aiService.analyzeCodePatterns({
+			domain: context.domain,
+			existingPatterns: this.extractPatterns(context.existingCode),
+			intent: context.userIntent
+		});
+		
+		// 🏗️ Use ts-morph to construct code based on AI recommendations
+		return this.buildFromAIRecommendations(analysis);
+	}
+}
+```
+
+#### **Domain-Specific Code Generation**
+```typescript
+// 🛡️ Security Tool Integration Generator
+async generateSecurityToolIntegration(toolSpec: SecurityToolSpec) {
+	const project = new Project();
+	const sourceFile = project.createSourceFile('generated-integration.ts', '');
+	
+	// 🤖 AI determines optimal integration patterns
+	const integrationPattern = await this.aiService.recommendIntegrationPattern({
+		toolType: toolSpec.type,
+		dataFlow: toolSpec.expectedDataFlow,
+		securityRequirements: toolSpec.securityLevel
+	});
+	
+	// 🏗️ Generate based on AI recommendations
+	const classDecl = sourceFile.addClass({
+		name: integrationPattern.className,
+		implements: integrationPattern.interfaces
+	});
+	
+	// 🔧 Add AI-optimized methods
+	integrationPattern.methods.forEach(method => {
+		classDecl.addMethod(this.generateMethodFromAI(method));
+	});
+}
+```
+
+### 2. 🔄 **Automated Refactoring with AI Guidance**
+
+#### **Intelligent Code Modernization**
+```typescript
+class AIRefactoringEngine {
+	async modernizeLegacyCode(sourceFiles: SourceFile[]): Promise<RefactoringPlan> {
+		const analysis = await Promise.all(sourceFiles.map(async file => {
+			// 🔍 AI identifies modernization opportunities
+			const antipatterns = await this.aiService.detectAntipatterns(file.getFullText());
+			const modernizationOpps = await this.aiService.suggestModernization({
+				code: file.getFullText(),
+				targetVersion: 'ES2023',
+				framework: 'React 18'
+			});
+			
+			return { file, antipatterns, modernizationOpps };
+		}));
+		
+		// 🛠️ Apply AI-recommended transformations using ts-morph
+		return this.generateRefactoringPlan(analysis);
+	}
+	
+	private applyAIRecommendedTransforms(file: SourceFile, recommendations: AIRecommendation[]) {
+		recommendations.forEach(rec => {
+			switch (rec.type) {
+				case 'convert-to-arrow-function':
+					this.convertFunctionDeclarations(file, rec.locations);
+					break;
+				case 'extract-interface':
+					this.extractInterfaces(file, rec.patterns);
+					break;
+				case 'optimize-imports':
+					this.optimizeImportStatements(file, rec.suggestions);
+					break;
+			}
+		});
+	}
+}
+```
+
+### 3. 📊 **Cross-Domain Pattern Analysis**
+
+#### **Mental Prosthetic Platform Integration**
+```typescript
+class CrossDomainPatternDetector {
+	async analyzeWorkflowPatterns(domains: DomainCodebase[]): Promise<UnifiedPatterns> {
+		// 🧠 AI identifies patterns across security, productivity, MTG, infrastructure
+		const patterns = await Promise.all(domains.map(async domain => {
+			const sourceFiles = domain.getAllSourceFiles();
+			
+			// 🔍 Extract AST patterns using ts-morph
+			const astPatterns = sourceFiles.map(file => ({
+				functions: file.getFunctions().map(f => this.extractFunctionSignature(f)),
+				classes: file.getClasses().map(c => this.extractClassStructure(c)),
+				imports: file.getImportDeclarations().map(i => this.extractImportPattern(i)),
+				exports: file.getExportDeclarations().map(e => this.extractExportPattern(e))
+			}));
+			
+			// 🤖 AI analyzes patterns for cross-domain similarities
+			return await this.aiService.findCrossDomainPatterns({
+				domain: domain.name,
+				astPatterns,
+				businessLogic: domain.getBusinessLogic()
+			});
+		}));
+		
+		// 🔗 Merge patterns and suggest unified architectures
+		return this.aiService.synthesizeUnifiedPatterns(patterns);
+	}
+}
+```
+
+### 4. 🎯 **Executive Function Accommodations via Code Generation**
+
+#### **ADHD-Friendly Development Tools**
+```typescript
+class AccessibilityCodeGenerator {
+	async generateAccessibleComponents(spec: ComponentSpec): Promise<AccessibleCode> {
+		// 🎨 AI generates code optimized for executive function support
+		const accessibilityFeatures = await this.aiService.recommendAccessibility({
+			userProfile: spec.userProfile,  // ADHD, focus challenges, etc.
+			interactionType: spec.interactionType,
+			responseTimeTarget: spec.responseTimeTarget  // <75ms for ADHD-friendly
+		});
+		
+		const project = new Project();
+		const componentFile = project.createSourceFile(`${spec.name}.tsx`, '');
+		
+		// 🧠 Generate with built-in executive function accommodations
+		const component = componentFile.addFunction({
+			name: spec.name,
+			parameters: [{ name: 'props', type: `${spec.name}Props` }]
+		});
+		
+		// ⚡ Add optimized interaction patterns
+		this.addOptimizedEventHandlers(component, accessibilityFeatures.interactions);
+		this.addFocusManagement(component, accessibilityFeatures.focusPatterns);
+		this.addProgressIndicators(component, accessibilityFeatures.feedbackSystems);
+		
+		return { code: componentFile.getFullText(), metadata: accessibilityFeatures };
+	}
+}
+```
+
+### 5. 🔒 **Security-First Code Generation**
+
+#### **Threat-Model Driven Development**
+```typescript
+class SecurityAwareCodeGen {
+	async generateSecureComponent(
+		threatModel: ThreatModel, 
+		businessLogic: BusinessRequirement[]
+	): Promise<SecureCode> {
+		// 🛡️ AI analyzes threat vectors and generates defensive code
+		const securityRequirements = await this.aiService.analyzeThreatModel(threatModel);
+		
+		const project = new Project();
+		const secureFile = project.createSourceFile('secure-component.ts', '');
+		
+		// 🔐 Generate with security controls baked in
+		const secureClass = secureFile.addClass({
+			name: 'SecureComponent',
+			decorators: this.generateSecurityDecorators(securityRequirements)
+		});
+		
+		// 🛡️ Add input validation methods
+		securityRequirements.inputValidation.forEach(validation => {
+			secureClass.addMethod(this.generateValidationMethod(validation));
+		});
+		
+		// 🔒 Add security middleware
+		securityRequirements.middleware.forEach(middleware => {
+			this.addSecurityMiddleware(secureClass, middleware);
+		});
+		
+		// 🚨 Add threat detection
+		this.addThreatDetection(secureClass, securityRequirements.monitoringPoints);
+		
+		return {
+			code: secureFile.getFullText(),
+			securityReport: securityRequirements,
+			threatCoverage: this.calculateThreatCoverage(threatModel, securityRequirements)
+		};
+	}
+}
+```
+
+### 6. 🎮 **Domain-Specific Language Creation**
+
+#### **MTG Rules Engine Generator**
+```typescript
+class MTGRulesEngineGenerator {
+	async generateRulesEngine(cardSpecs: MTGCardSpec[]): Promise<RulesEngine> {
+		// 🃏 AI analyzes MTG card interactions and generates rules engine
+		const rulePatterns = await this.aiService.analyzeMTGInteractions(cardSpecs);
+		
+		const project = new Project();
+		const rulesFile = project.createSourceFile('mtg-rules-engine.ts', '');
+		
+		// 🎯 Generate type-safe rule definitions
+		rulePatterns.cardTypes.forEach(cardType => {
+			const typeInterface = rulesFile.addInterface({
+				name: `${cardType.name}Rules`,
+				properties: cardType.properties.map(prop => ({
+					name: prop.name,
+					type: prop.type,
+					docs: [prop.description]
+				}))
+			});
+		});
+		
+		// ⚡ Generate interaction resolution methods
+		const rulesEngine = rulesFile.addClass({ name: 'MTGRulesEngine' });
+		rulePatterns.interactions.forEach(interaction => {
+			rulesEngine.addMethod(this.generateInteractionMethod(interaction));
+		});
+		
+		return { 
+			engine: rulesFile.getFullText(),
+			ruleCoverage: rulePatterns.coverageAnalysis 
+		};
+	}
+}
+```
+
+## 🚀 Implementation Roadmap
+
+### Phase 1: Foundation Enhancement
+1. **Extend n8n AST utilities** to support more complex transformations
+2. **Add AI integration layer** to existing ts-morph operations
+3. **Create domain-specific AST patterns** for security, productivity, MTG, infrastructure
+
+### Phase 2: Cross-Domain Intelligence
+1. **Build pattern detection engine** using AI + ts-morph
+2. **Implement unified code generation** across all 37 tools
+3. **Add executive function accommodations** to generated code
+
+### Phase 3: Advanced Capabilities
+1. **Security-first code generation** with threat modeling
+2. **Automated refactoring suggestions** based on usage patterns
+3. **Cross-tool integration optimization** using AST analysis
+
+## 🎯 Key Benefits for Mental Prosthetic Platform
+
+### 🧠 **Cognitive Load Reduction**
+- **Automated scaffolding** reduces manual setup cognitive overhead
+- **Consistent patterns** across tools reduce context switching
+- **AI-guided suggestions** minimize decision fatigue
+
+### ⚡ **Performance Optimization**
+- **Generated code** optimized for <75ms interaction targets
+- **Executive function accommodations** built into code structure
+- **Predictable patterns** support muscle memory development
+
+### 🔒 **Security by Design**
+- **Threat-model driven** code generation ensures security baseline
+- **Consistent security patterns** across all 37 tools
+- **Automated vulnerability prevention** through AST analysis
+
+### 🎯 **Domain Expertise Amplification**
+- **AI-enhanced code generation** leverages domain knowledge
+- **Cross-domain pattern recognition** identifies optimization opportunities
+- **Specialized DSLs** for security, MTG, productivity workflows
+
+This represents a significant evolution from simple template-based code generation to **AI-enhanced, domain-aware, accessibility-optimized development tooling** that directly supports the mental prosthetic platform's goals.

@@ -1,0 +1,316 @@
+name: Unified Release Management
+
+on:
+    workflow_call:
+        inputs:
+            service-name:
+                description: "Name of the service to release"
+                required: true
+                type: string
+            release-type:
+                description: "Type of release (patch, minor, major, prerelease)"
+                required: false
+                type: string
+                default: "patch"
+            working-directory:
+                description: "Working directory for the service"
+                required: false
+                type: string
+                default: "."
+            registry:
+                description: "Package registry (npm, pypi, docker, github)"
+                required: false
+                type: string
+                default: "github"
+            enable-changelog:
+                description: "Generate changelog automatically"
+                required: false
+                type: boolean
+                default: true
+            enable-github-release:
+                description: "Create GitHub release"
+                required: false
+                type: boolean
+                default: true
+            domain:
+                description: "Service domain for release strategy"
+                required: false
+                type: string
+                default: "infrastructure"
+            dry-run:
+                description: "Perform a dry run without actually releasing"
+                required: false
+                type: boolean
+                default: false
+        secrets:
+            NPM_TOKEN:
+                description: "NPM registry token"
+                required: false
+            PYPI_TOKEN:
+                description: "PyPI registry token"
+                required: false
+            DOCKER_TOKEN:
+                description: "Docker registry token"
+                required: false
+
+jobs:
+    validate-release:
+        name: Validate Release
+        runs-on: ubuntu-latest
+        outputs:
+            current-version: ${{ steps.version.outputs.current-version }}
+            next-version: ${{ steps.version.outputs.next-version }}
+            should-release: ${{ steps.validate.outputs.should-release }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup Node.js
+              if: hashFiles('**/package*.json') != ''
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20.x"
+
+            - name: Determine versions
+              id: version
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  CURRENT_VERSION=""
+
+                  if [ -f package.json ]; then
+                    CURRENT_VERSION=$(node -p "require('./package.json').version")
+                  elif [ -f pyproject.toml ]; then
+                    CURRENT_VERSION=$(grep -E '^version\s*=' pyproject.toml | sed 's/.*=\s*"\(.*\)".*/\1/' || echo "0.1.0")
+                  else
+                    CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//' || echo "0.1.0")
+                  fi
+
+                  echo "current-version=${CURRENT_VERSION}" >> $GITHUB_OUTPUT
+
+                  IFS='.' read -r -a VERSION_PARTS <<< "${CURRENT_VERSION}"
+                  MAJOR=${VERSION_PARTS[0]}
+                  MINOR=${VERSION_PARTS[1]:-0}
+                  PATCH=${VERSION_PARTS[2]:-0}
+
+                  case "${{ inputs.release-type }}" in
+                    major)
+                      NEXT_VERSION="$((MAJOR + 1)).0.0"
+                      ;;
+                    minor)
+                      NEXT_VERSION="${MAJOR}.$((MINOR + 1)).0"
+                      ;;
+                    patch)
+                      NEXT_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
+                      ;;
+                    prerelease)
+                      NEXT_VERSION="${MAJOR}.${MINOR}.${PATCH}-rc.$(date +%Y%m%d%H%M)"
+                      ;;
+                  esac
+
+                  echo "next-version=${NEXT_VERSION}" >> $GITHUB_OUTPUT
+                  echo "Version: ${CURRENT_VERSION} → ${NEXT_VERSION}"
+
+            - name: Validate release
+              id: validate
+              run: |
+                  SHOULD_RELEASE=true
+
+                  if [[ "${{ inputs.release-type }}" != "prerelease" && "${{ github.ref }}" != "refs/heads/main" ]]; then
+                    echo "❌ Releases must be from main branch"
+                    SHOULD_RELEASE=false
+                  fi
+
+                  if ! git diff-index --quiet HEAD --; then
+                    echo "❌ Uncommitted changes detected"
+                    SHOULD_RELEASE=false
+                  fi
+
+                  if [[ "${{ inputs.dry-run }}" == "true" ]]; then
+                    SHOULD_RELEASE="dry-run"
+                  fi
+
+                  echo "should-release=${SHOULD_RELEASE}" >> $GITHUB_OUTPUT
+
+    build-package:
+        name: Build Package
+        runs-on: ubuntu-latest
+        needs: validate-release
+        if: needs.validate-release.outputs.should-release != 'false'
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              if: hashFiles('**/package*.json') != ''
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20.x"
+
+            - name: Setup Python
+              if: hashFiles('**/pyproject.toml') != '' || hashFiles('**/setup.py') != ''
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install dependencies
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  if [ -f package.json ]; then
+                    npm ci
+                  fi
+
+                  if [ -f requirements.txt ] || [ -f pyproject.toml ]; then
+                    python -m pip install --upgrade pip
+                    if [ -f requirements.txt ]; then
+                      pip install -r requirements.txt
+                    fi
+                    pip install build
+                  fi
+
+            - name: Update version
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  NEW_VERSION="${{ needs.validate-release.outputs.next-version }}"
+
+                  if [ -f package.json ]; then
+                    npm version ${NEW_VERSION} --no-git-tag-version
+                  fi
+
+                  if [ -f pyproject.toml ]; then
+                    sed -i "s/^version = .*/version = \"${NEW_VERSION}\"/" pyproject.toml
+                  fi
+
+            - name: Build package
+              working-directory: ${{ inputs.working-directory }}
+              run: |
+                  if [ -f package.json ]; then
+                    npm run build || echo "No build script"
+                    npm pack
+                  fi
+
+                  if [ -f pyproject.toml ] || [ -f setup.py ]; then
+                    python -m build
+                  fi
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: release-artifacts-${{ inputs.service-name }}
+                  path: |
+                      ${{ inputs.working-directory }}/*.tgz
+                      ${{ inputs.working-directory }}/dist/
+
+    publish-npm:
+        name: Publish to NPM
+        runs-on: ubuntu-latest
+        needs: [validate-release, build-package]
+        if: |
+            needs.validate-release.outputs.should-release != 'false' && 
+            (inputs.registry == 'npm' || inputs.registry == 'all') && 
+            hashFiles('**/package*.json') != ''
+
+        steps:
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20.x"
+                  registry-url: "https://registry.npmjs.org"
+
+            - name: Download artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: release-artifacts-${{ inputs.service-name }}
+                  path: ${{ inputs.working-directory }}
+
+            - name: Publish
+              working-directory: ${{ inputs.working-directory }}
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: |
+                  if [[ "${{ needs.validate-release.outputs.should-release }}" == "dry-run" ]]; then
+                    echo "🧪 Dry run: Would publish to NPM"
+                    npm publish --dry-run
+                  else
+                    if [[ "${{ inputs.release-type }}" == "prerelease" ]]; then
+                      npm publish --tag beta
+                    else
+                      npm publish
+                    fi
+                  fi
+
+    create-release:
+        name: Create GitHub Release
+        runs-on: ubuntu-latest
+        needs: [validate-release, build-package]
+        if: |
+            always() && 
+            needs.validate-release.outputs.should-release != 'false' && 
+            inputs.enable-github-release
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Create tag
+              if: needs.validate-release.outputs.should-release != 'dry-run'
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+
+                  TAG_NAME="v${{ needs.validate-release.outputs.next-version }}"
+                  git tag -a "${TAG_NAME}" -m "Release ${TAG_NAME}"
+                  git push origin "${TAG_NAME}"
+
+            - name: Create release
+              if: needs.validate-release.outputs.should-release != 'dry-run'
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: v${{ needs.validate-release.outputs.next-version }}
+                  release_name: ${{ inputs.service-name }} v${{ needs.validate-release.outputs.next-version }}
+                  body: |
+                      ## Release ${{ needs.validate-release.outputs.next-version }}
+
+                      **Service**: ${{ inputs.service-name }}
+                      **Domain**: ${{ inputs.domain }}
+                      **Type**: ${{ inputs.release-type }}
+
+                      ### Executive Function Accommodations
+                      - Clear version numbering and release notes
+                      - Predictable release process with validation
+                      - Domain-specific performance expectations maintained
+                  draft: false
+                  prerelease: ${{ inputs.release-type == 'prerelease' }}
+
+    post-release:
+        name: Post Release Tasks
+        runs-on: ubuntu-latest
+        needs: [validate-release, create-release]
+        if: always() && needs.validate-release.outputs.should-release != 'false'
+
+        steps:
+            - name: Generate summary
+              run: |
+                  echo "## 🎉 Release Complete: ${{ inputs.service-name }} v${{ needs.validate-release.outputs.next-version }}" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "| Aspect | Details |" >> $GITHUB_STEP_SUMMARY
+                  echo "|--------|---------|" >> $GITHUB_STEP_SUMMARY
+                  echo "| Service | ${{ inputs.service-name }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Version | ${{ needs.validate-release.outputs.current-version }} → ${{ needs.validate-release.outputs.next-version }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Domain | ${{ inputs.domain }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Type | ${{ inputs.release-type }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Registry | ${{ inputs.registry }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Mode | ${{ needs.validate-release.outputs.should-release == 'dry-run' && '🧪 Dry Run' || '✅ Live Release' }} |" >> $GITHUB_STEP_SUMMARY
+
+                  if [[ "${{ needs.validate-release.outputs.should-release }}" == "dry-run" ]]; then
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "🧪 **DRY RUN COMPLETED** - No actual release was performed" >> $GITHUB_STEP_SUMMARY
+                  else
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "🎉 **RELEASE SUCCESSFUL** - Available now!" >> $GITHUB_STEP_SUMMARY
+                  fi
