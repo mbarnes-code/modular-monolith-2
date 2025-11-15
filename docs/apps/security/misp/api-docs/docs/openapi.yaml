@@ -1,0 +1,490 @@
+openapi: 3.1.0
+info:
+  title: MISP Threat Intelligence Platform API
+  description: |
+    REST API for MISP (Malware Information Sharing Platform) threat intelligence 
+    sharing platform. This API provides access to events, attributes, organizations, 
+    tags, and other threat intelligence data.
+    
+    ## Features
+    - Full MISP functionality access
+    - Multi-format responses (JSON, XML, CSV)
+    - Legacy CakePHP API compatibility
+    - Modern REST API standards
+    - Comprehensive authentication
+  version: 1.0.0
+  contact:
+    name: MISP Project
+    url: https://www.misp-project.org
+    email: info@misp-project.org
+  license:
+    name: AGPL-3.0
+    url: https://www.gnu.org/licenses/agpl-3.0.html
+  x-misp-version: 2.5.22
+  x-pymisp-version: 2.5.17.1
+
+servers:
+  - url: /api/v1
+    description: MISP API Server
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Bearer token authentication
+    AuthKeyAuth:
+      type: apiKey
+      in: header
+      name: X-MISP-AuthKey
+      description: MISP authentication key
+  
+  schemas:
+    MISPAttribute:
+      type: object
+      description: MISP attribute containing threat intelligence indicators
+      properties:
+        id:
+          type: integer
+          description: Unique attribute identifier
+        event_id:
+          type: integer
+          description: Parent event identifier
+        category:
+          type: string
+          description: Attribute category
+          example: "Network activity"
+        type:
+          type: string
+          description: Attribute type
+          example: "ip-dst"
+        value:
+          type: string
+          description: Attribute value
+          example: "192.168.1.1"
+        to_ids:
+          type: boolean
+          description: Whether attribute is used for IDS detection
+        uuid:
+          type: string
+          format: uuid
+          description: Unique attribute identifier
+        timestamp:
+          type: integer
+          description: Unix timestamp of last modification
+        distribution:
+          type: integer
+          description: Distribution level (0-3)
+          minimum: 0
+          maximum: 3
+        sharing_group_id:
+          type: integer
+          description: Sharing group identifier
+        comment:
+          type: string
+          description: Attribute comment
+        first_seen:
+          type: string
+          format: date-time
+          description: First seen timestamp
+        last_seen:
+          type: string
+          format: date-time
+          description: Last seen timestamp
+      required:
+        - type
+        - value
+
+    MISPEvent:
+      type: object
+      description: MISP event containing threat intelligence information
+      properties:
+        id:
+          type: integer
+          description: Unique event identifier
+        orgc_id:
+          type: integer
+          description: Creator organization ID
+        org_id:
+          type: integer
+          description: Owner organization ID
+        date:
+          type: string
+          format: date
+          description: Event date
+        threat_level_id:
+          type: integer
+          description: Threat level (1-4)
+          minimum: 1
+          maximum: 4
+        info:
+          type: string
+          description: Event information/title
+        published:
+          type: boolean
+          description: Publication status
+        uuid:
+          type: string
+          format: uuid
+          description: Unique event identifier
+        analysis:
+          type: integer
+          description: Analysis level (0-2)
+          minimum: 0
+          maximum: 2
+        distribution:
+          type: integer
+          description: Distribution level (0-3)
+          minimum: 0
+          maximum: 3
+        timestamp:
+          type: integer
+          description: Unix timestamp of last modification
+      required:
+        - info
+        - distribution
+
+    MISPOrganisation:
+      type: object
+      description: MISP organization
+      properties:
+        id:
+          type: integer
+          description: Organization identifier
+        name:
+          type: string
+          description: Organization name
+        uuid:
+          type: string
+          format: uuid
+          description: Organization UUID
+        local:
+          type: boolean
+          description: Whether organization is local
+        description:
+          type: string
+          description: Organization description
+      required:
+        - name
+
+    StandardResponse:
+      type: object
+      description: Standard MISP API response wrapper
+      properties:
+        response:
+          type: array
+          description: Response data array
+          items: {}
+        message:
+          type: string
+          description: Response message
+        name:
+          type: string
+          description: Response name
+        url:
+          type: string
+          description: Request URL
+        errors:
+          type: array
+          description: Error messages
+          items:
+            type: string
+
+    ErrorResponse:
+      type: object
+      description: Error response
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Error message
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+        url:
+          type: string
+          description: Request URL
+
+  responses:
+    MISPStandardResponse:
+      description: Standard MISP API response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
+        text/csv:
+          schema:
+            type: string
+
+    ValidationError:
+      description: Validation error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+security:
+  - ApiKeyAuth: []
+  - AuthKeyAuth: []
+
+tags:
+  - name: attributes
+    description: MISP Attribute operations
+  - name: events
+    description: MISP Event operations
+  - name: organisations
+    description: Organization management
+  - name: tags
+    description: Tag management
+  - name: galaxies
+    description: Galaxy and cluster operations
+
+paths:
+  /attributes/add/{event_id}:
+    post:
+      tags:
+        - attributes
+      summary: Add MISP Attribute
+      description: Create a new MISP attribute in the specified event
+      operationId: addAttribute
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Event ID to add attribute to
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: string
+                  description: Attribute value
+                type:
+                  type: string
+                  description: Attribute type
+                category:
+                  type: string
+                  description: Attribute category
+                to_ids:
+                  type: integer
+                  description: IDS flag (0 or 1)
+                distribution:
+                  type: integer
+                  description: Distribution level
+                comment:
+                  type: string
+                  description: Attribute comment
+              required:
+                - value
+                - type
+      responses:
+        '200':
+          $ref: '#/components/responses/MISPStandardResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+
+  /attributes/edit/{attribute_id}:
+    post:
+      tags:
+        - attributes
+      summary: Edit MISP Attribute
+      description: Update an existing MISP attribute
+      operationId: editAttribute
+      parameters:
+        - name: attribute_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Attribute ID to edit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MISPAttribute'
+      responses:
+        '200':
+          $ref: '#/components/responses/MISPStandardResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          description: Attribute not found
+
+  /attributes/restSearch:
+    post:
+      tags:
+        - attributes
+      summary: Search MISP Attributes
+      description: Search for attributes using various filters
+      operationId: searchAttributes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                returnFormat:
+                  type: string
+                  enum: [json, xml, csv, stix, stix2]
+                  description: Response format
+                page:
+                  type: integer
+                  description: Page number for pagination
+                limit:
+                  type: integer
+                  description: Results per page
+                value:
+                  type: string
+                  description: Attribute value to search
+                type:
+                  type: string
+                  description: Attribute type to filter
+                category:
+                  type: string
+                  description: Attribute category to filter
+              required:
+                - returnFormat
+      responses:
+        '200':
+          $ref: '#/components/responses/MISPStandardResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /events/add:
+    post:
+      tags:
+        - events
+      summary: Add MISP Event
+      description: Create a new MISP event
+      operationId: addEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MISPEvent'
+      responses:
+        '200':
+          $ref: '#/components/responses/MISPStandardResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /events/edit/{event_id}:
+    post:
+      tags:
+        - events
+      summary: Edit MISP Event
+      description: Update an existing MISP event
+      operationId: editEvent
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Event ID to edit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MISPEvent'
+      responses:
+        '200':
+          $ref: '#/components/responses/MISPStandardResponse'
+        '404':
+          description: Event not found
+
+  /events/restSearch:
+    post:
+      tags:
+        - events
+      summary: Search MISP Events
+      description: Search for events using various filters
+      operationId: searchEvents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                returnFormat:
+                  type: string
+                  enum: [json, xml, csv, stix, stix2]
+                published:
+                  type: boolean
+                  description: Filter by publication status
+                eventid:
+                  type: integer
+                  description: Specific event ID
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  description: Event tags to filter
+              required:
+                - returnFormat
+      responses:
+        '200':
+          $ref: '#/components/responses/MISPStandardResponse'
+
+  /organisations:
+    get:
+      tags:
+        - organisations
+      summary: List Organizations
+      description: Get list of MISP organizations
+      operationId: listOrganisations
+      responses:
+        '200':
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MISPOrganisation'
+
+  /tags:
+    get:
+      tags:
+        - tags
+      summary: List Tags
+      description: Get list of MISP tags
+      operationId: listTags
+      responses:
+        '200':
+          $ref: '#/components/responses/MISPStandardResponse'
+
+  /galaxies:
+    get:
+      tags:
+        - galaxies
+      summary: List Galaxies
+      description: Get list of MISP galaxies
+      operationId: listGalaxies
+      responses:
+        '200':
+          $ref: '#/components/responses/MISPStandardResponse'

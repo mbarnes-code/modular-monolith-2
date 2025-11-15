@@ -2,125 +2,107 @@
 
 An NX monorepo implementing a hybrid domain-based architecture with 4 domain services, n8n workflow orchestration, Next.js 15 + React 19 UI, and specialized LLM servers for AI-first executive function support.
 
-## Hybrid Domain-Based Architecture
+## DDD based Hybrid Domain-Based Architecture
 
-**Current State**: Skeleton structure ready for migration to hybrid architecture
+**Current State**: Active migration to hybrid architecture in progress
 **Target State**: 4 domain services + n8n orchestration + specialized AI servers
 
 ```
-jane-monorepo/
+modular-monolith-2/
 ├── .github/                 # GitHub configuration (workflows, issue templates)
 ├── apps/
-│   ├── n8n-workflow-service/     # Central orchestration with AI enhancement (NEW)
-│   ├── security-service/         # Security domain - 13 tools (NEW)
-│   ├── productivity-service/     # Productivity domain - 8 tools (NEW)
-│   ├── mtg-service/             # MTG domain - 4 tools (NEW)
-│   ├── infrastructure-service/  # Infrastructure domain - 12 tools (NEW)
-│   ├── jane-ui/                 # Next.js 15 + React 19 unified interface
-│   ├── cyber-llm-server/        # Security domain AI (Python vLLM)
-│   ├── mtg-llm-server/          # MTG domain AI (Python vLLM)
-│   ├── infrastructure-llm-server/ # Infrastructure domain AI (Python vLLM)
-│   └── jane-orchestrator/       # LEGACY: To be removed after migration
-├── docs/                    # Documentation files
-│   ├── base skeleton version docs/  # Base documentation and setup guides
-│   └── modular-analysis-repo-main/  # Analysis and architectural documentation
-├── features/                # Feature implementations and integrations
-│   ├── actual/              # Actual Budget integration
-│   ├── apiscout/            # API Scout tool
-│   ├── blackarch/           # BlackArch Linux tools
-│   ├── Brute-Ratel-C4-Community-Kit/  # Brute Ratel C4 toolkit
+│   ├── core/                # Core infrastructure applications
+│   │   ├── jane-orchestrator/       # LEGACY: Central FastAPI backend (to be phased out)
+│   │   ├── jane-ui/                 # Next.js 15 + React 19 unified interface
+│   │   └── infrastructure-service/  # Infrastructure domain - 12 tools
+│   ├── ai/                  # Specialized LLM servers
+│   │   ├── cyber-llm-server/        # Security domain AI (Python vLLM)
+│   │   ├── mtg-llm-server/          # MTG domain AI (Python vLLM)
+│   │   └── infrastructure-llm-server/ # Infrastructure domain AI (Python vLLM)
+│   ├── security/            # Security domain - 13 tools
+│   │   ├── security-service/        # Domain aggregation service
+│   │   ├── misp-service/            # Malware Information Sharing Platform
+│   │   ├── nemesis-service/         # Post-exploitation framework
+│   │   ├── nemesis-web-api/         # Nemesis web API
+│   │   ├── nemesis-frontend/        # Nemesis UI
+│   │   ├── nemesis-file-enrichment/ # Nemesis file processing
+│   │   ├── nemesis-document-conversion/ # Nemesis document processing
+│   │   ├── yara-x-service/          # YARA rule engine
+│   │   ├── cyberchef-service/       # CyberChef data operations
+│   │   ├── dispatch-service/        # Incident management
+│   │   ├── ghostwriter-service/     # Penetration testing reporting
+│   │   ├── helk-service/            # Hunting ELK stack
+│   │   ├── kasmvnc-service/         # Remote desktop solution
+│   │   ├── maltrail-service/        # Malware detection
+│   │   ├── hexstrike-service/       # AI-powered security tools
+│   │   ├── blackarch-service/       # BlackArch Linux tools
+│   │   ├── apiscout-service/        # API Scout tool
+│   │   ├── brute-ratel-service/     # Brute Ratel C4 toolkit
+│   │   ├── meterpreter-service/     # Meterpreter payloads
+│   │   └── software-forensic-kit-service/ # Digital forensics tools
+│   ├── productivity/        # Productivity domain - 8 tools
+│   │   ├── productivity-service/    # Domain aggregation service
+│   │   ├── n8n-service/             # Workflow automation
+│   │   ├── n8n-workflow-service/    # Central orchestration with AI enhancement
+│   │   ├── actual-service/          # Actual Budget integration
+│   │   ├── mealie-service/          # Recipe management
+│   │   ├── firecrawl-service/       # Web scraping service
+│   │   ├── goose-service/           # AI coding assistant
+│   │   ├── goose-ui/                # Goose frontend
+│   │   ├── goose-docs/              # Goose documentation
+│   │   ├── goose-temporal-service/  # Goose workflow engine
+│   │   ├── inspector-service/       # Code inspection tools
+│   │   └── onex-service/            # Security exploitation toolkit
+│   └── tcg/                 # Trading Card Game domain - 4 tools
+│       ├── mtg-service/             # Domain aggregation service
+│       ├── commander-spellbook-backend/ # MTG Commander Spellbook API
+│       ├── commander-spellbook-site/    # MTG Commander Spellbook UI
+│       ├── mtg-commander-map-service/   # MTG Commander mapping tools
+│       └── mtg-scripts/             # MTG scripting utilities
+├── libs/
+│   ├── shared/              # Shared utilities and types
+│   ├── ui/                  # Shared UI components and design system
+│   ├── service-adapters/    # Service integration adapters for all 37 tools
+│   ├── blackarch/           # BlackArch integration libraries
+│   ├── dispatch-core/       # Dispatch core functionality
+│   ├── dispatch-database/   # Dispatch database models
+│   ├── firecrawl-core/      # Firecrawl core functionality
+│   ├── firecrawl-types/     # Firecrawl TypeScript types
+│   ├── firecrawl-ui/        # Firecrawl UI components
+│   ├── forensic-core/       # Forensic analysis core
+│   ├── intelligence/        # Intelligence gathering utilities
+│   ├── mtg-scripting-toolkit/ # MTG scripting utilities
+│   ├── nemesis-common/      # Nemesis shared code
+│   └── nemesis-file-enrichment/ # Nemesis file processing
+├── features/                # MCP servers and standalone integrations (active migration)
 │   ├── chroma-mcp/          # Chroma MCP server
-│   ├── commander-spellbook-backend/    # MTG Commander Spellbook API
-│   ├── commander-spellbook-site/       # MTG Commander Spellbook UI
-│   ├── CyberChef/           # CyberChef data operations
-│   ├── dispatch/            # Incident management
 │   ├── FileScopeMCP/        # File scope MCP server
-│   ├── firecrawl/           # Web scraping service
-│   ├── firecrawl-mcp-server/           # Firecrawl MCP integration
-│   ├── Ghostwriter/         # Penetration testing reporting
-│   ├── goose/               # AI coding assistant
-│   ├── HELK/                # Hunting ELK stack
-│   ├── hexstrike-ai/        # AI-powered security tools
-│   ├── inspector/           # Code inspection tools
+│   ├── firecrawl-mcp-server/ # Firecrawl MCP integration
 │   ├── it-tools/            # IT utility tools
-│   ├── KasmVNC/             # Remote desktop solution
 │   ├── kong/                # API Gateway
 │   ├── lscript/             # Linux scripting tools
-│   ├── maltrail/            # Malware detection
 │   ├── MalwareBazaar_MCP/   # Malware analysis MCP
 │   ├── mcp-virustotal/      # VirusTotal MCP integration
-│   ├── mealie/              # Recipe management
-│   ├── meterpreter/         # Meterpreter payloads
-│   ├── MISP/                # Malware Information Sharing Platform
-│   ├── mtg-commander-map/   # MTG Commander mapping tools
-│   ├── mtg-scripting-toolkit/          # MTG scripting utilities
-│   ├── n8n/                # Workflow automation
 │   ├── n8n-mcp-server/      # n8n MCP integration
-│   ├── Nemesis/             # Post-exploitation framework
-│   ├── onex/                # Security exploitation toolkit
 │   ├── rita/                # Real Intelligence Threat Analytics
 │   ├── securityonion/       # Network security monitoring
-│   ├── securityonion-n8n-workflows/    # Security Onion automation
-│   ├── software-forensic-kit/          # Digital forensics tools
-│   └── yara-x/              # YARA rule engine
-├── libs/
-│   ├── shared/
-│   │   ├── types/           # Shared TypeScript types
-│   │   ├── utils/           # Shared utility functions
-│   │   └── config/          # Configuration management
-│   ├── service-adapters/    # Service integration adapters
-│   │   ├── actual-budget/   # Actual Budget adapter
-│   │   ├── commander-spellbook/        # Commander Spellbook adapter
-│   │   ├── dispatch/        # Dispatch adapter
-│   │   ├── firecrawl/       # Firecrawl adapter
-│   │   ├── ghostwriter/     # Ghostwriter adapter
-│   │   ├── goose/           # Goose adapter
-│   │   ├── helk/            # HELK adapter
-│   │   ├── kasmvnc/         # KasmVNC adapter
-│   │   ├── mealie/          # Mealie adapter
-│   │   ├── misp/            # MISP adapter
-│   │   ├── n8n/             # n8n adapter
-│   │   ├── nemesis/         # Nemesis adapter
-│   │   └── scryfall/        # Scryfall MTG API adapter
-│   └── ui/
-│       ├── core/            # Core UI components (Button, Input, Card, Modal, Table)
-│       ├── domain-security/ # Security domain UI (ThreatIndicator, SeverityBadge, IOCDisplay, IncidentCard)
-│       ├── domain-mtg/      # MTG domain UI (ComboCard, ManaSymbol, ColorIdentityBadge)
-│       ├── domain-finance/  # Finance domain UI (BudgetChart, TransactionList)
-│       ├── domain-productivity/        # Productivity domain UI components
-│       └── theme/           # Theme configuration (colors, typography, tailwind)
-├── projects/
+│   ├── securityonion-n8n-workflows/ # Security Onion automation
+│   └── spec-kit/            # Specification toolkit
+├── projects/                # Project-specific configurations and resources
 │   ├── security/            # Security project files
-│   │   ├── misp/
-│   │   ├── nemesis/
-│   │   ├── yara-x/
-│   │   ├── hexstrike-ai/
-│   │   ├── dispatch/
-│   │   ├── ghostwriter/
-│   │   ├── helk/
-│   │   ├── rita/
-│   │   ├── blackarch/
-│   │   ├── onex/
-│   │   └── software-forensic-kit/
 │   ├── mtg/                 # MTG project files
-│   │   ├── commander-spellbook-backend/
-│   │   ├── commander-spellbook-frontend/
-│   │   └── mtg-scripting-toolkit/
 │   ├── productivity/        # Productivity project files
-│   │   ├── n8n/
-│   │   ├── actual-budget/
-│   │   ├── mealie/
-│   │   └── firecrawl/
 │   ├── dev-tools/           # Developer tools
-│   │   ├── goose/
-│   │   ├── inspector/
-│   │   └── it-tools/
 │   └── infrastructure/      # Infrastructure integrations
-│       └── kasmvnc/
-└── infrastructure/
-    ├── terraform/           # Terraform IaC
-    ├── kubernetes/          # Kubernetes manifests
-    └── docker/              # Docker configurations
+├── infrastructure/
+│   ├── terraform/           # Terraform IaC
+│   ├── kubernetes/          # Kubernetes manifests
+│   └── docker/              # Docker configurations
+├── docs/                    # Documentation
+├── specs/                   # Technical specifications
+├── scripts/                 # Build and utility scripts
+├── tests/                   # Cross-cutting integration tests
+└── experimental-archive/    # Archived experimental code
 
 ```
 
@@ -131,12 +113,12 @@ jane-monorepo/
 - **TypeScript**: 5.9.3
 - **Next.js**: 15.5.4
 - **React**: 19.2.0
-- **FastAPI**: 0.119.0 
-- **Django**: 5.2.7 
-- **SQLAlchemy**: 2.0.44 
-- **Pydantic**: 2.12.0 
-- **Uvicorn**: 0.37.0 
-- **vLLM**: 0.11.0 
+- **FastAPI**: 0.119.0
+- **Django**: 5.2.7
+- **SQLAlchemy**: 2.0.44
+- **Pydantic**: 2.12.0
+- **Uvicorn**: 0.37.0
+- **vLLM**: 0.11.0
 - **NX**: 21.6.4 
 - **Rust**: 1.70+ (for specific integrations)
 - **Java**: 17 LTS (for specific integrations)
@@ -202,36 +184,68 @@ If you prefer manual installation:
 
 ## Running Applications
 
-### Hybrid Architecture Services
-
-**Central Orchestration:**
-```bash
-npx nx serve n8n-workflow-service   # Port 8010 (NEW)
-```
-
-**Domain Services:**
-```bash
-npx nx serve security-service        # Port 8011 (NEW)
-npx nx serve productivity-service    # Port 8012 (NEW)  
-npx nx serve mtg-service            # Port 8013 (NEW)
-npx nx serve infrastructure-service  # Port 8014 (NEW)
-```
+### Core Services
 
 **Frontend:**
+
 ```bash
-npx nx serve jane-ui                # Port 3000
+npx nx serve jane-ui                # Port 3000 - Unified Next.js 15 interface
 ```
 
-**AI Servers:**
+**Central Orchestration:**
+
 ```bash
-npx nx serve cyber-llm-server       # Port 8001 (Security AI)
-npx nx serve mtg-llm-server         # Port 8002 (MTG AI)
-npx nx serve infrastructure-llm-server # Port 8003 (Infrastructure AI)
+npx nx serve jane-orchestrator      # Port 8000 - FastAPI backend
+npx nx serve n8n-workflow-service   # Port 8010 - Workflow orchestration
 ```
 
-**Legacy (Remove after migration):**
+### Domain Services
+
+**Security Domain:**
+
 ```bash
-npx nx serve jane-orchestrator      # Port 8000 (DEPRECATED)
+npx nx serve security-service        # Port 8011 - Security aggregation
+npx nx serve misp-service           # MISP platform
+npx nx serve nemesis-service        # Nemesis framework
+npx nx serve cyberchef-service      # CyberChef operations
+npx nx serve dispatch-service       # Incident management
+npx nx serve ghostwriter-service    # Penetration testing
+npx nx serve helk-service           # HELK stack
+npx nx serve maltrail-service       # Malware detection
+```
+
+**Productivity Domain:**
+
+```bash
+npx nx serve productivity-service   # Port 8012 - Productivity aggregation
+npx nx serve actual-service         # Actual Budget
+npx nx serve mealie-service         # Recipe management
+npx nx serve firecrawl-service      # Web scraping
+npx nx serve goose-service          # AI coding assistant
+npx nx serve inspector-service      # Code inspection
+```
+
+**TCG Domain:**
+
+```bash
+npx nx serve mtg-service            # Port 8013 - MTG aggregation
+npx nx serve commander-spellbook-backend  # Commander Spellbook API
+npx nx serve commander-spellbook-site     # Commander Spellbook UI
+```
+
+**Infrastructure:**
+
+```bash
+npx nx serve infrastructure-service # Port 8014 - Infrastructure aggregation
+npx nx serve kasmvnc-service        # Remote desktop
+```
+
+### AI Servers
+
+```bash
+npx nx serve cyber-llm-server       # Port 8001 - Security domain AI
+npx nx serve mtg-llm-server         # Port 8002 - MTG domain AI
+npx nx serve infrastructure-llm-server # Port 8003 - Infrastructure AI
 ```
 
 ### Using Docker Compose
@@ -259,29 +273,34 @@ npx nx build jane-ui
 
 ## Migration Status
 
-**Current Phase**: Ready for hybrid architecture migration
+**Current Phase**: Active migration to hybrid domain-based architecture
 
-### Migration Steps:
+### Migration Progress
+
 1. **✅ Planning Complete**: Hybrid domain-based architecture designed
-2. **🔄 Ready to Execute**: 37 tools in `features/` directory ready for migration
-3. **⏳ Pending**: Create 5 new services (n8n-workflow + 4 domains)
-4. **⏳ Pending**: Migrate tools from `features/` to domain services
-5. **⏳ Pending**: Implement n8n orchestration with AI enhancement
-6. **⏳ Pending**: Remove legacy `jane-orchestrator`
+2. **✅ Foundation Built**: Core services and domain structure created
+3. **🔄 In Progress**: Migrating tools from `features/` to domain services
+4. **⏳ Pending**: Complete n8n orchestration with AI enhancement
+5. **⏳ Pending**: Phase out legacy `jane-orchestrator` after full migration
 
-### Success Criteria:
-- ✅ **features/ directory empty** (all 37 tools migrated)
-- ⏳ **5 services operational** (n8n + 4 domains)
-- ⏳ **AI-first workflows** executing via n8n orchestration
-- ⏳ **60/40 performance split** (AI speed prioritized over UI)
+### Success Criteria
 
-See `specs/002-mental-prosthetic-refinement/implementation-guide.md` for detailed migration commands.
+- **🔄 Tool Migration**: Most tools migrated to domain services, MCP servers remain in `features/`
+- **✅ Services Operational**: 4 domain services + n8n workflow service active
+- **⏳ AI-First Workflows**: Implementing via n8n orchestration
+- **⏳ Performance Optimization**: 60/40 performance split (AI speed prioritized over UI)
 
-## Project Structure
+See `specs/` directory for detailed technical specifications and migration documentation.
 
-This monorepo follows NX best practices with hybrid domain-based architecture:
+## Architecture Overview
 
-- **apps/**: Domain services + AI servers + unified UI
-- **libs/**: Shared libraries and domain-specific components
-- **features/**: 37 tools awaiting migration (target: empty directory)
-- **infrastructure/**: Infrastructure as Code (IaC) and deployment configurations
+This monorepo follows NX best practices with a hybrid domain-based architecture:
+
+- **apps/core/**: Core infrastructure (UI, orchestrator, infrastructure service)
+- **apps/ai/**: Specialized LLM servers for domain-specific AI capabilities
+- **apps/security/**: Security domain tools and services (13 tools)
+- **apps/productivity/**: Productivity domain tools and services (8 tools)
+- **apps/tcg/**: Trading card game domain tools and services (4 tools)
+- **libs/**: Shared libraries, UI components, and service adapters
+- **features/**: MCP servers and standalone integrations (active migration)
+- **infrastructure/**: Infrastructure as Code and deployment configurations
