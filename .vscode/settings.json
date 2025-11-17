@@ -10,6 +10,38 @@
         ".specify/scripts/bash/": true,
         ".specify/scripts/powershell/": true
     },
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    
+    // File watcher optimizations for large monorepo
+    "files.watcherExclude": {
+        "**/node_modules/**": true,
+        "**/.git/**": true,
+        "**/dist/**": true,
+        "**/build/**": true,
+        "**/coverage/**": true,
+        "**/.next/**": true,
+        "**/.nuxt/**": true,
+        "**/.nx/**": true,
+        "**/storybook-static/**": true,
+        "**/.storybook-out/**": true,
+        "**/*.log": true,
+        "**/*.tmp": true,
+        "**/*.swp": true
+    },
+    
+    // Search optimizations for executive function
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/dist": true,
+        "**/build": true,
+        "**/.next": true,
+        "**/.nx": true,
+        "**/coverage": true,
+        "**/storybook-static": true
+    },
+    
+    // Performance optimizations for ADHD-friendly development
+    "extensions.autoUpdate": false,
+    "telemetry.telemetryLevel": "off"
 }
 

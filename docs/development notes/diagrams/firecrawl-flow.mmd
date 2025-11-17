@@ -1,0 +1,9 @@
+flowchart TD;
+    scrapeURL-.->buildFallbackList;
+    buildFallbackList-.->scrapeURLWithEngine;
+    scrapeURLWithEngine-.->parseMarkdown;
+    parseMarkdown-.->wasScrapeSuccessful{{Was scrape successful?}};
+    wasScrapeSuccessful-."No".->areEnginesLeft{{Are there engines left to try?}};
+    areEnginesLeft-."Yes, try next engine".->scrapeURLWithEngine;
+    areEnginesLeft-."No".->NoEnginesLeftError[/NoEnginesLeftError/]
+    wasScrapeSuccessful-."Yes".->success[Success];

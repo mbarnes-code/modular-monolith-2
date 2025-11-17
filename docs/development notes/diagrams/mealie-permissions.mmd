@@ -1,0 +1,21 @@
+stateDiagram-v2
+  r1: Request Access
+  p1: Using Private Link?
+  p2: Is Group Private?
+  p3: Is Household Private?
+  p4: Is Recipe Private?
+  s1: Deny Access
+  n1: Allow Access
+
+  r1 --> p1
+  p1 --> p2: No
+  p1 --> n1: Yes
+
+  p2 --> s1: Yes
+  p2 --> p3: No
+
+  p3 --> s1: Yes
+  p3 --> p4: No
+
+  p4 --> s1: Yes
+  p4 --> n1: No

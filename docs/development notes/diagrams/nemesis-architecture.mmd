@@ -1,0 +1,12 @@
+graph TD
+    A[nemesis-service] --> B[nemesis-web-api]
+    A --> C[nemesis-file-enrichment]
+    A --> D[nemesis-frontend]
+    A --> E[nemesis-document-conversion]
+    
+    B --> F[nemesis-common]
+    C --> F
+    C --> G[nemesis-file-enrichment-lib]
+    E --> F
+    
+    G --> F

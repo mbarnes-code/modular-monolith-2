@@ -1,0 +1,28 @@
+# File watcher optimization for monorepo development
+
+# Exclude common directories that don't need watching
+node_modules/
+.git/
+dist/
+build/
+coverage/
+.next/
+.nuxt/
+.nx/
+*.log
+.DS_Store
+.env.local
+.env.*.local
+
+# Storybook specific exclusions
+storybook-static/
+.storybook-out/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+*.swp
+*.tmp

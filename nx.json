@@ -64,10 +64,7 @@
     }
   },
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*", 
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
@@ -76,7 +73,9 @@
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s",
-      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)"
+      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+      "!{projectRoot}/.storybook/**/*",
+      "!{projectRoot}/tsconfig.storybook.json"
     ],
     "sharedGlobals": [
       "{workspaceRoot}/.github/workflows/*.{yml,yaml}",
@@ -106,17 +105,18 @@
       "runner": "nx/tasks-runners/default",
       "options": {
         "cacheableOperations": [
-          "build", 
-          "lint", 
-          "test", 
-          "affected:build", 
-          "affected:test", 
+          "build",
+          "lint",
+          "test",
+          "affected:build",
+          "affected:test",
           "affected:lint",
           "package",
           "format:check",
           "@nx/esbuild:esbuild",
           "@nx/webpack:webpack",
-          "@nx/next:build"
+          "@nx/next:build",
+          "build-storybook"
         ],
         "parallel": 3,
         "maxParallel": 5,
@@ -195,6 +195,17 @@
         "buildDepsTargetName": "build-deps",
         "watchDepsTargetName": "watch-deps",
         "serveStaticTargetName": "serve-static"
+      }
+    },
+    {
+      "plugin": "@nx/storybook/plugin",
+      "options": {
+        "serveStorybookTargetName": "storybook",
+        "buildStorybookTargetName": "build-storybook",
+        "testStorybookTargetName": "test-storybook",
+        "staticStorybookTargetName": "static-storybook",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps"
       }
     }
   ],

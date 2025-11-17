@@ -1,0 +1,23 @@
+sequenceDiagram
+    autonumber
+    actor User
+    User->>GraphQL: Login Mutation
+    loop Authentication
+        GraphQL->>Webhook: Username & Password
+        Webhook->>Back End: Who is this user?
+        Back End->>Webhook: User Object
+        Webhook->>Webhook: Generate JSON Token
+        Webhook->>GraphQL: JSON Token
+    end
+    GraphQL->>User: Authentication Error OR Pass JSON Web Token to User
+    User->>GraphQL: GraphQL Request
+    loop Authorization
+        GraphQL->>Webhook: Request Data
+        Webhook->>Back End: Validate JSON Token
+        Back End->>Back End: JWT Validation
+        Back End->>Webhook: User Object
+        Webhook->>Webhook: Is this users role authorized for this request?
+        Webhook->>GraphQL: Authentication Result
+    end
+    Note right of GraphQL: Check Authentication header
+    GraphQL->>User: Authorization Error OR GraphQL Result
