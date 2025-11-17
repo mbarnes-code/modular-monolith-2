@@ -19,7 +19,7 @@ aiohttp>=3.8.0,<4.0.0
 python-magic>=0.4.27,<1.0.0
 
 # ZeroMQ for message queuing
-pyzmq>=25.1.1,<26.0.0
+pyzmq>=25.1.1,<28.0.0
 
 # ===== STIX/TAXII INTEGRATION =====
 
