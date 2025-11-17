@@ -12,7 +12,7 @@
   "license": "ISC",
   "private": true,
   "devDependencies": {
-    "@next/eslint-plugin-next": "^16.0.0",
+    "@next/eslint-plugin-next": "^16.0.3",
     "@nx/eslint": "22.0.2",
     "@nx/express": "22.0.2",
     "@nx/js": "22.0.2",
