@@ -1,0 +1,296 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'MCP Overview | Goose Documentation',
+  description: 'Model Context Protocol (MCP) integration with Goose - connecting extensions and expanding AI agent capabilities',
+}
+
+# Model Context Protocol (MCP) Integration
+
+Model Context Protocol (MCP) is an open standard that enables seamless interoperability between data sources and AI agents. Goose leverages MCP to connect with external services, tools, and data sources, dramatically expanding its capabilities beyond basic text processing.
+
+## What is MCP?
+
+MCP provides a standardized way for AI agents to:
+
+- **Connect to external systems** - Databases, APIs, file systems, and services
+- **Access real-time data** - Live information from various sources
+- **Perform complex operations** - Beyond simple text generation
+- **Maintain context** - Persistent state across interactions
+
+### Key MCP Concepts
+
+**Servers**: External systems that expose functionality through the MCP protocol
+**Resources**: Data sources that can be read or queried
+**Tools**: Functions that can be executed to perform actions
+**Prompts**: Template-based interactions for consistent results
+
+## MCP in Goose Architecture
+
+Goose treats MCP servers as **extensions** that provide additional capabilities:
+
+```mermaid
+graph TB
+    A[Goose Agent] --> B[MCP Client]
+    B --> C[File System Server]
+    B --> D[GitHub Server]
+    B --> E[Database Server]
+    B --> F[Custom Server]
+
+    C --> G[Local Files]
+    D --> H[GitHub API]
+    E --> I[PostgreSQL]
+    F --> J[Your Service]
+```
+
+### Benefits of MCP Integration
+
+- **Standardized Interface** - Consistent way to connect different services
+- **Real-time Data** - Access to live, up-to-date information
+- **Extensibility** - Easy to add new capabilities without core changes
+- **Community Ecosystem** - Growing library of MCP servers
+- **Security** - Controlled access to external resources
+
+## Available MCP Servers
+
+Goose supports a wide variety of MCP servers out of the box:
+
+### Development & Code
+
+- **[File System](/ai/docs/mcp/servers#filesystem)** - Local file operations and management
+- **[GitHub](/ai/docs/mcp/servers#github)** - Repository management and API access
+- **[GitMCP](/ai/docs/mcp/servers#gitmcp)** - Advanced Git operations
+- **[VS Code](/ai/docs/mcp/servers#vscode)** - IDE integration and automation
+
+### Data & Analytics
+
+- **[PostgreSQL](/ai/docs/mcp/servers#postgres)** - Database queries and management
+- **[MongoDB](/ai/docs/mcp/servers#mongodb)** - NoSQL database operations
+- **[Memory](/ai/docs/mcp/servers#memory)** - Persistent context storage
+
+### Web & Automation
+
+- **[Playwright](/ai/docs/mcp/servers#playwright)** - Web automation and testing
+- **[Puppeteer](/ai/docs/mcp/servers#puppeteer)** - Browser automation
+- **[Fetch](/ai/docs/mcp/servers#fetch)** - HTTP requests and API calls
+- **[Firecrawl](/ai/docs/mcp/servers#firecrawl)** - Web scraping and content extraction
+
+### Cloud Services
+
+- **[Google Drive](/ai/docs/mcp/servers#google-drive)** - Document management and search
+- **[Cloudflare](/ai/docs/mcp/servers#cloudflare)** - CDN and DNS management
+- **[Vercel](/ai/docs/mcp/servers#vercel)** - Deployment and hosting
+- **[Netlify](/ai/docs/mcp/servers#netlify)** - Static site deployment
+
+### Productivity
+
+- **[Asana](/ai/docs/mcp/servers#asana)** - Project management
+- **[Calendar](/ai/docs/mcp/servers#calendar)** - Schedule management
+- **[Email](/ai/docs/mcp/servers#email)** - Communication automation
+
+### Media & Content
+
+- **[YouTube Transcript](/ai/docs/mcp/servers#youtube)** - Video content analysis
+- **[PDF](/ai/docs/mcp/servers#pdf)** - Document processing
+- **[Speech](/ai/docs/mcp/servers#speech)** - Audio processing and transcription
+
+## Configuring MCP Servers
+
+### Basic Configuration
+
+Add MCP servers to your Goose configuration file (`~/.config/goose/goose.yaml`):
+
+```yaml
+mcp:
+  servers:
+    filesystem:
+      command: npx
+      args:
+        [
+          '-y',
+          '@modelcontextprotocol/server-filesystem',
+          '/path/to/allowed/directory',
+        ]
+
+    github:
+      command: npx
+      args: ['-y', '@modelcontextprotocol/server-github']
+      env:
+        GITHUB_PERSONAL_ACCESS_TOKEN: 'your-token-here'
+```
+
+### Advanced Configuration
+
+For more complex setups with multiple servers and custom environments:
+
+```yaml
+mcp:
+  servers:
+    # Local development
+    filesystem:
+      command: npx
+      args: ['-y', '@modelcontextprotocol/server-filesystem', '~/Projects']
+
+    # Database access
+    postgres:
+      command: npx
+      args: ['-y', '@modelcontextprotocol/server-postgres']
+      env:
+        POSTGRES_CONNECTION_STRING: 'postgresql://user:pass@localhost/db'
+
+    # Custom server
+    my-service:
+      command: python
+      args: ['-m', 'my_mcp_server']
+      cwd: '/path/to/server'
+      env:
+        API_KEY: 'your-api-key'
+        DEBUG: 'true'
+```
+
+### Environment Variables
+
+MCP servers often require configuration through environment variables:
+
+```bash
+# GitHub integration
+export GITHUB_PERSONAL_ACCESS_TOKEN="ghp_xxxx"
+
+# Google Drive access
+export GOOGLE_DRIVE_CLIENT_ID="client-id"
+export GOOGLE_DRIVE_CLIENT_SECRET="client-secret"
+
+# Database connections
+export POSTGRES_CONNECTION_STRING="postgresql://localhost/mydb"
+```
+
+## Using MCP Servers
+
+Once configured, MCP servers automatically extend Goose's capabilities:
+
+### File Operations
+
+```
+"Please read the README.md file and summarize the project structure"
+"Create a new Python file with a basic FastAPI setup"
+"Find all TODO comments in the codebase"
+```
+
+### GitHub Integration
+
+```
+"Create a new issue for the bug we just discussed"
+"Show me the latest pull requests on the main branch"
+"Update the repository description"
+```
+
+### Database Queries
+
+```
+"Show me the user table schema"
+"Find all orders from the last 30 days"
+"Create a new table for storing API logs"
+```
+
+### Web Automation
+
+```
+"Screenshot the homepage of example.com"
+"Fill out the contact form on the website"
+"Test the login flow and report any issues"
+```
+
+## Creating Custom MCP Servers
+
+For specialized needs, you can create custom MCP servers:
+
+### Python Example
+
+```python
+# my_mcp_server.py
+import asyncio
+from mcp.server import Server
+from mcp.server.stdio import stdio_server
+
+server = Server("my-custom-server")
+
+@server.tool("calculate_roi")
+async def calculate_roi(investment: float, returns: float) -> str:
+    """Calculate return on investment"""
+    roi = ((returns - investment) / investment) * 100
+    return f"ROI: {roi:.2f}%"
+
+async def main():
+    async with stdio_server() as streams:
+        await server.run(*streams)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### Configuration
+
+```yaml
+mcp:
+  servers:
+    roi-calculator:
+      command: python
+      args: ['-m', 'my_mcp_server']
+```
+
+### Usage
+
+```
+"Calculate the ROI for a $1000 investment that returned $1200"
+```
+
+## Best Practices
+
+### Security Considerations
+
+- **Limit file system access** to necessary directories only
+- **Use environment variables** for sensitive credentials
+- **Regular token rotation** for API keys
+- **Audit server permissions** regularly
+
+### Performance Optimization
+
+- **Cache frequently accessed data** in memory servers
+- **Batch operations** when possible to reduce API calls
+- **Monitor server response times** and optimize slow operations
+- **Use appropriate timeouts** to prevent hanging operations
+
+### Troubleshooting
+
+- **Check server logs** in `~/.config/goose/logs/`
+- **Verify environment variables** are correctly set
+- **Test servers independently** before Goose integration
+- **Use debug mode** for detailed operation traces
+
+## Community and Resources
+
+### Official Resources
+
+- [MCP Specification](https://modelcontextprotocol.io/)
+- [Server Repository](https://github.com/modelcontextprotocol/servers)
+- [Python SDK](https://github.com/modelcontextprotocol/python-sdk)
+- [TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
+
+### Community Servers
+
+- [Awesome MCP](https://github.com/modelcontextprotocol/awesome-mcp)
+- [Community Examples](https://github.com/modelcontextprotocol/examples)
+- [Server Templates](https://github.com/modelcontextprotocol/templates)
+
+## Next Steps
+
+- [Explore Available MCP Servers](/ai/docs/mcp/servers)
+- [Configure Your First Server](/ai/docs/getting-started/configuration)
+- [Build a Custom MCP Server](/ai/docs/tutorials/advanced)
+- [Join the MCP Community](https://discord.gg/mcp)
+
+export default function MCPOverviewPage() {
+  return null
+
+
+}

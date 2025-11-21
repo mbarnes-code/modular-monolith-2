@@ -128,9 +128,9 @@
 └────────────────────────────────────────────────────────────────────────────┘
 
 ┌────────────────────────────────────────────────────────────────────────────┐
-│  GROUP C: TypeScript + React + Node.js (5 Projects)                        │
+│  GROUP C: TypeScript + React + Node.js (21+ Frontend Applications)        │
 │  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                    jane-ui-platform (Next.js)                         │  │
+│  │                    jane-ui-platform (Next.js 15.5.2)                 │  │
 │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌──────────┐   │  │
 │  │  │   Actual    │  │  HexStrike  │  │  Inspector  │  │   MTG    │   │  │
 │  │  │   Budget    │  │     UI      │  │     UI      │  │ Toolkit  │   │  │
@@ -143,8 +143,18 @@
 │  │         │     └──────────┬────────┘       │               │          │  │
 │  │         └────────────────┴────────────────┴───────────────┘          │  │
 │  │                              │                                        │  │
-│  │                    Shared Component Library                           │  │
-│  │         libs/shared-ui: DataTable, Auth, Theme, API Client           │  │
+│  │  FRONTEND UI CONSOLIDATION (21+ Applications):                       │  │
+│  │  ┌──────────────────────────────────────────────────────────────┐  │  │
+│  │  │ Security Domain (7):  Nemesis, CyberChef, Dispatch, KasmVNC,  │  │  │
+│  │  │                      Ghostwriter, MISP, Maltrail              │  │  │
+│  │  │ Productivity Domain (6): Actual, n8n, Mealie, Inspector,       │  │  │
+│  │  │                         OneX, Dashboard                        │  │  │
+│  │  │ AI Domain (4):       Goose, Docs, Firecrawl, Monitoring       │  │  │
+│  │  │ TCG Domain (2):      Commander Spellbook, Client Library       │  │  │
+│  │  └──────────────────────────────────────────────────────────────┘  │  │
+│  │                              │                                        │  │
+│  │                    Unified Component Library                          │  │
+│  │   libs/ui: Domain-specific components, Auth, Theme, Navigation       │  │
 │  └──────────────────────────────┬─────────────────────────────────────┘  │
 │                                  │                                        │
 │                                  ▼                                        │
@@ -534,6 +544,313 @@
 
 ---
 
+## Frontend UI Migration Strategy
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    COMPREHENSIVE FRONTEND CONSOLIDATION                     │
+│                         (21+ Applications → 1 Unified UI)                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  1. AUTHENTICATION & AUTHORIZATION CONSOLIDATION                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  Single Sign-On (SSO) Strategy:                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Current State: 21+ Different Auth Systems                           │  │
+│  │  ├─ n8n: Built-in user management + JWT                               │  │
+│  │  ├─ Actual Budget: Local authentication                               │  │
+│  │  ├─ Nemesis: Session-based auth                                      │  │
+│  │  ├─ MISP: PHP session management                                      │  │
+│  │  ├─ Ghostwriter: Django authentication                               │  │
+│  │  └─ 16+ other individual auth systems                                │  │
+│  │                                                                       │  │
+│  │  Unified Solution:                                                    │  │
+│  │  ┌─────────────────────────────────────────────────────────────┐   │  │
+│  │  │  Jane UI Authentication Layer                                │   │  │
+│  │  │  • Next.js middleware for route protection                  │   │  │
+│  │  │  • JWT token management (NextAuth.js)                      │   │  │
+│  │  │  • Role-Based Access Control (RBAC):                       │   │  │
+│  │  │    - Security Admin: Full security domain access            │   │  │
+│  │  │    - Analyst: Read-only security tools                     │   │  │
+│  │  │    - Developer: AI domain + productivity tools             │   │  │
+│  │  │    - User: Limited productivity access                     │   │  │
+│  │  │  • Session synchronization across domains                  │   │  │
+│  │  └─────────────────────────────────────────────────────────────┘   │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  2. DATA MIGRATION & STATE SYNCHRONIZATION                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  User Preferences Migration:                                                 │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Source Systems:                                                      │  │
+│  │  ├─ n8n: User settings (workflows, credentials)                        │  │
+│  │  ├─ Actual: Budget preferences, categories                           │  │
+│  │  ├─ Nemesis: Analysis preferences, filters                           │  │
+│  │  ├─ CyberChef: Recipe bookmarks, favorites                           │  │
+│  │  └─ 17+ other preference systems                                     │  │
+│  │                                                                       │  │
+│  │  Unified Preferences Store:                                          │  │
+│  │  ┌─────────────────────────────────────────────────────────────┐   │  │
+│  │  │  PostgreSQL Schema: user_preferences                        │   │  │
+│  │  │  ┌─────────────────────────────────────────────────────┐   │   │  │
+│  │  │  │ user_id | domain    | component | key     | value   │   │   │  │
+│  │  │  │ 123     | security  | nemesis   | theme   | dark    │   │   │  │
+│  │  │  │ 123     | ai        | goose     | model   | gpt-4   │   │   │  │
+│  │  │  │ 123     | prod.     | actual    | currency| USD     │   │   │  │
+│  │  │  └─────────────────────────────────────────────────────────┘   │   │  │
+│  │  │  • Real-time sync via WebSockets                          │   │  │
+│  │  │  • Local storage fallback for offline mode                │   │  │
+│  │  │  • Migration tools for existing preferences               │   │  │
+│  │  └─────────────────────────────────────────────────────────────┘   │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  3. TESTING STRATEGY AT SCALE                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  Multi-Application Testing Framework:                                        │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Cross-Domain Integration Tests:                                      │  │
+│  │  ├─ Security → Productivity: Incident creation → n8n workflow        │  │
+│  │  ├─ AI → Security: Goose analysis → Nemesis threat detection          │  │
+│  │  └─ TCG → Productivity: Card analysis → Budget tracking               │  │
+│  │                                                                       │  │
+│  │  Visual Regression Testing:                                           │  │
+│  │  ├─ Playwright screenshots for all 21+ application UIs                │  │
+│  │  ├─ Percy.io integration for visual diff detection                    │  │
+│  │  └─ Mobile responsive testing across domains                          │  │
+│  │                                                                       │  │
+│  │  Performance Testing:                                                 │  │
+│  │  ├─ <75ms UI response time validation (ADHD accommodation)           │  │
+│  │  ├─ Lighthouse CI for Core Web Vitals                                │  │
+│  │  ├─ Load testing: 100+ concurrent users across domains               │  │
+│  │  └─ Memory leak detection for long-running sessions                  │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  4. SEARCH & NAVIGATION UNIFICATION                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  Global Search Implementation:                                               │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Unified Search Index (Elasticsearch):                               │  │
+│  │  ┌─────────────────────────────────────────────────────────────┐   │  │
+│  │  │  jane-search-*                                              │   │  │
+│  │  │  ├─ security-incidents  (Dispatch, Nemesis data)           │   │  │
+│  │  │  ├─ productivity-items  (n8n workflows, Actual transactions)│   │  │
+│  │  │  ├─ ai-conversations   (Goose chat history)                │   │  │
+│  │  │  ├─ tcg-cards         (MTG card database)                  │   │  │
+│  │  │  └─ documentation     (All tool docs, help content)        │   │  │
+│  │  └─────────────────────────────────────────────────────────────┘   │  │
+│  │                                                                       │  │
+│  │  Command Palette (Cmd/Ctrl+K):                                       │  │
+│  │  ├─ "Create incident" → /security/dispatch/incidents/new             │  │
+│  │  ├─ "Run n8n workflow" → /productivity/n8n/workflows                 │  │
+│  │  ├─ "Analyze with Goose" → /ai/goose/analyze                         │  │
+│  │  └─ "MTG card lookup" → /tcg/commander-spellbook/search              │  │
+│  │                                                                       │  │
+│  │  Breadcrumb Navigation:                                               │  │
+│  │  Jane UI → Security → Nemesis → File Analysis → Report #1234        │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  5. ASSET & RESOURCE MANAGEMENT                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  Asset Consolidation Strategy:                                               │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Font Standardization:                                                │  │
+│  │  ├─ Primary: Inter (system UI, readability for ADHD)                 │  │
+│  │  ├─ Code: JetBrains Mono (CyberChef, code analysis)                  │  │
+│  │  ├─ Data: Roboto Mono (tables, numbers in Actual)                    │  │
+│  │  └─ Fallback: System fonts (performance, offline)                    │  │
+│  │                                                                       │  │
+│  │  Icon Library Unification:                                           │  │
+│  │  ├─ Heroicons: Primary UI icons (consistent with Tailwind)           │  │
+│  │  ├─ Lucide React: Secondary icons (lightweight)                      │  │
+│  │  ├─ Custom SVGs: Tool-specific icons (security, MTG symbols)         │  │
+│  │  └─ Domain-specific: Preserved for specialized tools                 │  │
+│  │                                                                       │  │
+│  │  Large File Handling:                                                │  │
+│  │  ├─ CyberChef operations: Client-side processing (Web Workers)       │  │
+│  │  ├─ Security logs: Streaming via WebSockets                          │  │
+│  │  ├─ File uploads: Chunked upload with progress indicators             │  │
+│  │  └─ CDN integration: Static assets served from edge                  │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  6. REAL-TIME FEATURES CONSOLIDATION                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  WebSocket Management:                                                       │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Unified WebSocket Gateway (Socket.io):                              │  │
+│  │  ┌─────────────────────────────────────────────────────────────┐   │  │
+│  │  │  Connection Namespaces:                                      │   │  │
+│  │  │  ├─ /security   - Real-time threat alerts, incident updates │   │  │
+│  │  │  ├─ /ai         - Goose conversation streams, model status  │   │  │
+│  │  │  ├─ /productivity - n8n workflow execution, Actual syncing  │   │  │
+│  │  │  └─ /notifications - System-wide alerts, user messages      │   │  │
+│  │  └─────────────────────────────────────────────────────────────┘   │  │
+│  │                                                                       │  │
+│  │  Notification System:                                                 │  │
+│  │  ├─ Toast notifications: Non-intrusive, auto-dismiss                 │  │
+│  │  ├─ Desktop notifications: Critical security alerts                  │  │
+│  │  ├─ In-app badges: Unread counts per domain                          │  │
+│  │  └─ Email fallback: For offline users                                │  │
+│  │                                                                       │  │
+│  │  Background Task Management:                                          │  │
+│  │  ├─ Service Workers: Offline capability, background sync             │  │
+│  │  ├─ Web Workers: Heavy computations (CyberChef operations)           │  │
+│  │  └─ Task queues: Long-running operations with progress tracking      │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  7. ACCESSIBILITY & INTERNATIONALIZATION                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  WCAG 2.1 AA Compliance:                                                    │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Executive Function Accommodations (ADHD-friendly):                  │  │
+│  │  ├─ Enhanced focus indicators (3px outline, high contrast)            │  │
+│  │  ├─ Reduced motion options (prefers-reduced-motion)                  │  │
+│  │  ├─ Clear visual hierarchy (consistent heading levels)               │  │
+│  │  ├─ Timeout extensions (auto-save, session warnings)                 │  │
+│  │  └─ Customizable UI density (compact/comfortable/spacious)           │  │
+│  │                                                                       │  │
+│  │  Keyboard Navigation:                                                 │  │
+│  │  ├─ Tab order optimization across all 21+ applications               │  │
+│  │  ├─ Skip links for complex interfaces (security dashboards)          │  │
+│  │  ├─ Hotkey consistency (Cmd+K search, Esc close modals)              │  │
+│  │  └─ Focus management in single-page app navigation                   │  │
+│  │                                                                       │  │
+│  │  Screen Reader Support:                                               │  │
+│  │  ├─ Semantic HTML structure across all domains                       │  │
+│  │  ├─ ARIA labels for complex widgets (charts, graphs)                │  │
+│  │  ├─ Live regions for dynamic content updates                         │  │
+│  │  └─ Alternative text for security diagrams, MTG card images         │  │
+│  │                                                                       │  │
+│  │  Multi-language Support:                                             │  │
+│  │  ├─ i18next integration with namespace per domain                    │  │
+│  │  ├─ RTL language support (Arabic, Hebrew)                           │  │
+│  │  ├─ Number/date localization (currency in Actual Budget)            │  │
+│  │  └─ Dynamic language switching without page reload                   │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  8. SECURITY CONSIDERATIONS                                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  Content Security Policy (CSP):                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Domain-Specific CSP Rules:                                           │  │
+│  │  ├─ Security tools: Strict CSP, no inline scripts                     │  │
+│  │  ├─ AI domain: Allow LLM API calls, WebSocket connections            │  │
+│  │  ├─ Productivity: n8n iframe embedding with sandbox                  │  │
+│  │  └─ TCG domain: Allow external card image CDNs                       │  │
+│  │                                                                       │  │
+│  │  Cross-Origin Resource Sharing (CORS):                               │  │
+│  │  ├─ API Gateway: Centralized CORS configuration                      │  │
+│  │  ├─ Development: Permissive for localhost                            │  │
+│  │  ├─ Production: Strict origin validation                             │  │
+│  │  └─ Embedded tools: PostMessage API for secure communication        │  │
+│  │                                                                       │  │
+│  │  Secure Iframe Embedding:                                            │  │
+│  │  ├─ CyberChef: Sandboxed iframe with restricted permissions          │  │
+│  │  ├─ n8n workflows: iframe with postMessage communication             │  │
+│  │  ├─ Security tools: Read-only embedded dashboards                    │  │
+│  │  └─ File viewers: Secure preview with download restrictions          │  │
+│  │                                                                       │  │
+│  │  Vulnerability Management:                                            │  │
+│  │  ├─ Automated dependency scanning (Snyk, GitHub Security)            │  │
+│  │  ├─ Regular security audits for consolidated codebase                │  │
+│  │  ├─ Input sanitization across all 21+ application interfaces        │  │
+│  │  └─ Rate limiting per user, per domain, per API endpoint             │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  9. MONITORING & OBSERVABILITY                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  Frontend Performance Monitoring:                                            │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Real User Monitoring (RUM):                                          │  │
+│  │  ├─ Core Web Vitals tracking per domain                               │  │
+│  │  ├─ User interaction metrics (click-to-response times)                │  │
+│  │  ├─ Error boundary reporting with domain context                      │  │
+│  │  └─ Performance budget alerts (<75ms target)                          │  │
+│  │                                                                       │  │
+│  │  User Analytics:                                                      │  │
+│  │  ├─ Domain usage patterns (most/least used tools)                    │  │
+│  │  ├─ Cross-domain workflow analysis                                    │  │
+│  │  ├─ Feature adoption tracking                                         │  │
+│  │  └─ User journey mapping across 37 consolidated tools                │  │
+│  │                                                                       │  │
+│  │  Resource Utilization:                                                │  │
+│  │  ├─ Memory usage monitoring (prevent leaks in long sessions)         │  │
+│  │  ├─ Bundle size tracking per domain                                   │  │
+│  │  ├─ Asset loading performance                                         │  │
+│  │  └─ WebSocket connection health monitoring                            │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  10. DEPLOYMENT & ROLLBACK STRATEGY                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  Feature Flagging System:                                                   │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Gradual Domain Rollout:                                              │  │
+│  │  ├─ Phase 1: TCG domain (lowest risk, 2 applications)                │  │
+│  │  ├─ Phase 2: AI domain (4 applications, controlled user base)         │  │
+│  │  ├─ Phase 3: Productivity domain (6 applications, power users)        │  │
+│  │  └─ Phase 4: Security domain (7 applications, critical workflows)    │  │
+│  │                                                                       │  │
+│  │  Per-User Feature Flags:                                              │  │
+│  │  ├─ Beta users: Access to consolidated UI early                      │  │
+│  │  ├─ Domain experts: Gradual migration with feedback                   │  │
+│  │  ├─ Production users: Stable consolidated experience                  │  │
+│  │  └─ Emergency fallback: Revert to individual applications            │  │
+│  │                                                                       │  │
+│  │  Blue-Green Deployment:                                               │  │
+│  │  ├─ Blue environment: Current individual applications                 │  │
+│  │  ├─ Green environment: Consolidated jane-ui-platform                 │  │
+│  │  ├─ Traffic routing: Gradual shift via load balancer                 │  │
+│  │  └─ Instant rollback: DNS switch back to blue environment            │  │
+│  │                                                                       │  │
+│  │  Critical Application Rollback:                                       │  │
+│  │  ├─ Security tools: <30 second rollback SLA                          │  │
+│  │  ├─ Productivity tools: <5 minute rollback SLA                       │  │
+│  │  ├─ AI tools: <10 minute rollback SLA                                │  │
+│  │  └─ Automated health checks trigger emergency rollback               │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Summary: Consolidation Metrics
 
 ```
@@ -585,6 +902,16 @@
 │  ✅ Development Velocity: 2-3x faster (shared libraries + patterns)         │
 │  ✅ Data Consistency: Guaranteed by DDD boundaries + Dapr transactions      │
 │  ✅ Cloud Portability: Dapr enables multi-cloud without code changes        │
+│                                                                              │
+│  FRONTEND-SPECIFIC BENEFITS:                                                │
+│  ✅ User Experience: Single interface for all 37 tools (<75ms response)     │
+│  ✅ Authentication: Unified SSO eliminates 21+ separate login systems       │
+│  ✅ Navigation: Global search + command palette across all domains          │
+│  ✅ Accessibility: WCAG 2.1 AA + executive function accommodations          │
+│  ✅ Real-time Features: Consolidated WebSocket management + notifications    │
+│  ✅ Asset Optimization: 80% reduction in duplicate fonts, icons, styles     │
+│  ✅ Testing Efficiency: Single test suite vs. 21+ individual test setups    │
+│  ✅ Security Posture: Unified CSP, CORS, and vulnerability management       │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -625,13 +952,16 @@
 │  Docker Containers (6 total)                                                │
 ├────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
-│  [1] jane-ui-platform (Next.js)                          PORT: 3000        │
+│  [1] jane-ui-platform (Next.js 15.5.2 - Consolidated)   PORT: 3000        │
 │  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │  • React apps: Actual Budget, HexStrike UI, Inspector UI, MTG, etc.  │  │
-│  │  • Shared component library                                          │  │
-│  │  • API calls → 10.0.0.20:8000 (AMD server)                           │  │
-│  │  • WebSocket connections for real-time updates                       │  │
-│  │  • Resource: 2GB RAM, 2 CPU cores                                    │  │
+│  │  • ALL 21+ UI applications consolidated into App Router domains       │  │
+│  │  • /security/* - Nemesis, CyberChef, Dispatch, etc. (7 apps)         │  │
+│  │  • /productivity/* - Actual, n8n, Mealie, Inspector, etc. (6 apps)   │  │
+│  │  • /ai/* - Goose, Docs, Firecrawl, Monitoring (4 apps)              │  │
+│  │  • /tcg/* - Commander Spellbook, Client tools (2 apps)               │  │
+│  │  • Unified auth, navigation, search, real-time features              │  │
+│  │  • <75ms response times with executive function accommodations        │  │
+│  │  • Resource: 3GB RAM, 3 CPU cores (increased for consolidated load)  │  │
 │  └──────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
 │  [2] Kong API Gateway                                    PORT: 8080        │

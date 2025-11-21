@@ -60,7 +60,24 @@
     "@nx/next:build": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "inputs": ["production", "^production"],
+      "outputs": ["{options.outputPath}"],
+      "env": ["NEXT_PUBLIC_API_URL", "NODE_ENV"]
+    },
+    "analyze-bundle": {
+      "cache": true,
+      "dependsOn": ["build"],
+      "outputs": ["{projectRoot}/.next/analyze"]
+    },
+    "performance-audit": {
+      "cache": true,
+      "dependsOn": ["build"],
+      "outputs": ["{projectRoot}/performance-reports"]
+    },
+    "dev": {
+      "cache": false,
+      "dependsOn": ["^build"],
+      "env": ["DATABASE_URL", "REDIS_URL", "OPENAI_API_KEY"]
     }
   },
   "namedInputs": {
@@ -116,10 +133,13 @@
           "@nx/esbuild:esbuild",
           "@nx/webpack:webpack",
           "@nx/next:build",
-          "build-storybook"
+          "build-storybook",
+          "analyze-bundle",
+          "performance-audit",
+          "type-check"
         ],
-        "parallel": 3,
-        "maxParallel": 5,
+        "parallel": 5,
+        "maxParallel": 8,
         "useDaemonProcess": true,
         "cacheDirectory": ".nx/cache"
       }

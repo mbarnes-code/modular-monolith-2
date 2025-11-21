@@ -48,6 +48,25 @@ experimental-archive/
 **Size**: 4.7MB, 154 files, ~1900 LOC  
 **Time Saved**: 17-21 hours  
 
+### 2. Goose UI Electron (`goose-ui-electron/`)
+
+**Archived**: November 21, 2025  
+**Reason**: Frontend UI consolidation - migrating to web-based implementation in jane-ui  
+**Original Location**: `apps/ai/goose-ui/desktop/`  
+**Size**: ~481 files (Electron desktop application)
+
+**Description**: 
+- Vite + React 19 + TypeScript implementation
+- Electron main process and renderer
+- Desktop-specific APIs and integrations
+- E2E test suite with Playwright
+
+**Migration Notes**:
+- React components can be adapted for web implementation
+- Desktop-specific APIs need web alternatives
+- State management patterns can be preserved
+- UI/UX designs provide reference for web version
+
 **Contents**:
 - `desktop-electron/` - Electron desktop wrapper (4.4MB)
 - `plugins-service/` - Plugin system (36KB, incomplete feature)

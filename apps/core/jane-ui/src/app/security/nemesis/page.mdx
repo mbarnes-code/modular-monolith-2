@@ -1,0 +1,229 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Nemesis | Security Analysis Platform',
+  description: 'Advanced security analysis and file enrichment platform for threat hunting and incident response',
+}
+
+# Nemesis Security Analysis Platform
+
+**Comprehensive security analysis and file enrichment platform for advanced threat hunting and incident response.**
+
+Nemesis is a powerful security analysis platform that provides automated file analysis, malware detection, and comprehensive security insights to support cybersecurity professionals in threat hunting and incident response activities.
+
+## Platform Overview
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+  <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+    <h3 className="text-xl font-semibold mb-3">🔍 File Analysis</h3>
+    <p className="text-gray-600 dark:text-gray-300 mb-4">
+      Upload and analyze files for malware, suspicious patterns, and security
+      threats.
+    </p>
+    <a
+      href="/security/nemesis/analysis"
+      className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+    >
+      Start Analysis →
+    </a>
+  </div>
+
+  <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+    <h3 className="text-xl font-semibold mb-3">📊 Dashboard</h3>
+    <p className="text-gray-600 dark:text-gray-300 mb-4">
+      Monitor analysis progress, view statistics, and track security findings.
+    </p>
+    <a
+      href="/security/nemesis/dashboard"
+      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+    >
+      View Dashboard →
+    </a>
+  </div>
+
+  <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+    <h3 className="text-xl font-semibold mb-3">🔎 Search & Hunt</h3>
+    <p className="text-gray-600 dark:text-gray-300 mb-4">
+      Advanced search capabilities for threat hunting and forensic
+      investigation.
+    </p>
+    <a
+      href="/security/nemesis/search"
+      className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+    >
+      Search Platform →
+    </a>
+  </div>
+
+  <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+    <h3 className="text-xl font-semibold mb-3">🚨 Findings</h3>
+    <p className="text-gray-600 dark:text-gray-300 mb-4">
+      Review security findings, alerts, and detailed analysis results.
+    </p>
+    <a
+      href="/security/nemesis/findings"
+      className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+    >
+      View Findings →
+    </a>
+  </div>
+</div>
+
+## Analysis Capabilities
+
+### 🛡️ File Enrichment Engine
+
+- **Static Analysis** - Comprehensive file structure and metadata analysis
+- **Dynamic Analysis** - Behavioral analysis in controlled environments
+- **Signature Detection** - YARA rule matching and custom rule sets
+- **Hash Analysis** - MD5, SHA1, SHA256 verification and threat intelligence lookup
+- **Entropy Analysis** - Statistical analysis for packed or obfuscated content
+
+### 🔍 Advanced Detection Systems
+
+- **Malware Classification** - ML-powered malware family identification
+- **Behavioral Analysis** - Process monitoring and system interaction tracking
+- **Network Analysis** - Traffic pattern analysis and C2 detection
+- **Cryptographic Analysis** - Certificate validation and encryption assessment
+- **Memory Analysis** - Runtime memory inspection and artifact extraction
+
+### 📈 Intelligence Integration
+
+- **Threat Intelligence** - Integration with major threat intelligence feeds
+- **IOC Extraction** - Automated indicator of compromise identification
+- **Attribution Analysis** - Campaign and actor correlation
+- **Vulnerability Assessment** - CVE mapping and exploit detection
+- **Risk Scoring** - Automated risk assessment and prioritization
+
+## Security Workflows
+
+### 1. File Upload & Initial Analysis
+
+1. **Secure Upload** - Encrypted file transfer with integrity verification
+2. **Metadata Extraction** - File properties, timestamps, and structural analysis
+3. **Initial Triage** - Rapid assessment and risk classification
+4. **Queue Processing** - Automated analysis pipeline initiation
+
+### 2. Deep Analysis Pipeline
+
+- **Signature Scanning** - YARA, ClamAV, and custom rule execution
+- **Behavioral Monitoring** - Sandbox execution and system interaction logging
+- **Network Simulation** - Controlled network environment for communication analysis
+- **Memory Forensics** - Runtime analysis and artifact recovery
+
+### 3. Results & Reporting
+
+- **Interactive Findings** - Drill-down analysis with detailed explanations
+- **Export Formats** - JSON, XML, PDF reports for integration
+- **Timeline Analysis** - Chronological event reconstruction
+- **Evidence Chain** - Forensically sound documentation
+
+## Technical Architecture
+
+### Processing Engine
+
+- **Distributed Analysis** - Scalable worker node architecture
+- **Container Isolation** - Secure sandbox environments for safe analysis
+- **Queue Management** - Priority-based processing with load balancing
+- **Storage Layer** - Encrypted artifact storage with retention policies
+
+### Integration APIs
+
+- **REST API** - Complete platform access for automation
+- **GraphQL** - Flexible data querying and real-time updates
+- **Webhook Support** - Event-driven notifications and integrations
+- **SIEM Integration** - Direct feeds to security monitoring platforms
+
+### Security & Compliance
+
+- **Zero-Trust Architecture** - Network segmentation and access controls
+- **Data Encryption** - End-to-end encryption for sensitive artifacts
+- **Audit Logging** - Comprehensive activity tracking and forensic trails
+- **Compliance Ready** - SOC2, GDPR, and industry standard adherence
+
+## Platform Features
+
+### 🎯 Threat Hunting Tools
+
+- **Advanced Search** - Complex queries across all analyzed data
+- **Pattern Recognition** - ML-powered anomaly and pattern detection
+- **Timeline Reconstruction** - Event correlation and chronological analysis
+- **Custom Rules** - User-defined detection logic and automation
+
+### 📊 Analytics & Visualization
+
+- **Interactive Dashboards** - Real-time analysis metrics and trends
+- **Relationship Mapping** - Visual representation of connections and dependencies
+- **Trend Analysis** - Historical pattern analysis and forecasting
+- **Custom Reports** - Automated reporting with configurable templates
+
+### 🔧 Administration Tools
+
+- **User Management** - Role-based access control and team collaboration
+- **System Configuration** - Analysis engine tuning and optimization
+- **Integration Management** - Third-party tool configuration and monitoring
+- **Performance Monitoring** - System health and capacity planning
+
+## Integration with Jane Platform
+
+As part of the unified Jane security suite, Nemesis integrates with:
+
+- **🤖 AI Assistant** - Natural language queries for threat hunting
+- **📧 Alert System** - Automated notifications for critical findings
+- **📋 Case Management** - Investigation workflow integration
+- **🔗 Tool Chaining** - Seamless data flow between security tools
+
+## Getting Started
+
+### Quick Analysis
+
+1. Navigate to the [File Analysis](/security/nemesis/analysis) page
+2. Upload suspicious files or provide URLs for analysis
+3. Review automated findings and detailed reports
+4. Export results or initiate follow-up investigations
+
+### Advanced Hunting
+
+1. Access the [Search Platform](/security/nemesis/search) for complex queries
+2. Use the [Dashboard](/security/nemesis/dashboard) to monitor ongoing analyses
+3. Review [Findings](/security/nemesis/findings) for detailed investigation results
+4. Configure custom rules and automated workflows
+
+### API Integration
+
+```bash
+# Submit file for analysis
+curl -X POST https://jane-platform/api/nemesis/analyze \\
+  -H "Authorization: Bearer $API_TOKEN" \\
+  -F "file=@suspicious_file.exe"
+
+# Query analysis results
+curl -X GET https://jane-platform/api/nemesis/results/$ANALYSIS_ID \\
+  -H "Authorization: Bearer $API_TOKEN"
+```
+
+## Support & Documentation
+
+### Resources
+
+- [API Documentation](/security/nemesis/api) - Complete REST and GraphQL reference
+- [User Guide](/security/nemesis/docs) - Comprehensive platform documentation
+- [Analysis Playbooks](/security/nemesis/playbooks) - Common investigation workflows
+- [Integration Guides](/security/nemesis/integrations) - Third-party tool setup
+
+### Security & Privacy
+
+Nemesis is designed with security-first principles:
+
+- **Air-gapped Analysis** - Isolated execution environments
+- **Data Residency** - Configurable data location and retention
+- **Access Logging** - Complete audit trails for compliance
+- **Encryption** - AES-256 encryption for data at rest and in transit
+
+Start your security analysis journey with Nemesis - the comprehensive platform for advanced threat detection and investigation.
+
+export default function NemesisPage() {
+  return null
+
+
+}

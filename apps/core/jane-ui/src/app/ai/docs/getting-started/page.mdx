@@ -1,0 +1,219 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Installation Guide | Goose Documentation',
+  description: 'Complete installation guide for goose AI agent - Desktop and CLI versions for macOS, Windows, and Linux',
+}
+
+# Install Goose
+
+Choose your operating system and preferred installation method:
+
+## macOS Installation
+
+### Desktop Version (Recommended)
+
+The Goose Desktop app provides a user-friendly interface for interacting with your AI agent.
+
+#### Option 1: Direct Download
+
+1. Download the latest version from [GitHub Releases](https://github.com/block/goose/releases/latest)
+2. Unzip the downloaded zip file
+3. Run the executable to launch Goose Desktop
+4. Grant necessary permissions when prompted
+
+#### Option 2: Homebrew Installation
+
+```bash
+brew install --cask block-goose
+```
+
+Homebrew automatically manages updates and dependencies.
+
+### CLI Version
+
+For command-line enthusiasts and automation workflows.
+
+#### Option 1: Installation Script
+
+```bash
+curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | bash
+```
+
+For non-interactive installation:
+
+```bash
+curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | CONFIGURE=false bash
+```
+
+#### Option 2: Homebrew CLI
+
+```bash
+brew install block-goose-cli
+```
+
+#### Updating CLI
+
+```bash
+goose update
+```
+
+## Windows Installation
+
+### Desktop Version
+
+1. Download the Windows installer from [GitHub Releases](https://github.com/block/goose/releases/latest)
+2. Run the `.exe` installer
+3. Follow the installation wizard
+4. Launch Goose from the Start Menu
+
+### CLI Version
+
+#### PowerShell Installation
+
+```powershell
+irm https://github.com/block/goose/releases/download/stable/install.ps1 | iex
+```
+
+#### Manual Installation
+
+1. Download the Windows CLI binary from [GitHub Releases](https://github.com/block/goose/releases/latest)
+2. Extract to your preferred directory (e.g., `C:\Program Files\Goose\`)
+3. Add the directory to your PATH environment variable
+
+## Linux Installation
+
+### Desktop Version
+
+#### Ubuntu/Debian (.deb)
+
+```bash
+wget https://github.com/block/goose/releases/latest/download/goose-desktop-linux-amd64.deb
+sudo dpkg -i goose-desktop-linux-amd64.deb
+sudo apt-get install -f  # Fix any dependency issues
+```
+
+#### Red Hat/CentOS (.rpm)
+
+```bash
+wget https://github.com/block/goose/releases/latest/download/goose-desktop-linux-x86_64.rpm
+sudo rpm -i goose-desktop-linux-x86_64.rpm
+```
+
+#### AppImage (Universal)
+
+```bash
+wget https://github.com/block/goose/releases/latest/download/goose-desktop-linux-x86_64.AppImage
+chmod +x goose-desktop-linux-x86_64.AppImage
+./goose-desktop-linux-x86_64.AppImage
+```
+
+### CLI Version
+
+#### Installation Script
+
+```bash
+curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | bash
+```
+
+#### Manual Installation
+
+```bash
+# Download binary
+wget https://github.com/block/goose/releases/latest/download/goose-linux-amd64.tar.gz
+tar -xzf goose-linux-amd64.tar.gz
+
+# Move to system PATH
+sudo mv goose /usr/local/bin/
+chmod +x /usr/local/bin/goose
+```
+
+## Verify Installation
+
+After installation, verify that goose is working:
+
+### Desktop Version
+
+Launch the Goose Desktop application and check that it opens without errors.
+
+### CLI Version
+
+```bash
+goose --version
+```
+
+You should see version information displayed.
+
+## System Requirements
+
+### Minimum Requirements
+
+- **RAM**: 4GB minimum, 8GB recommended
+- **Storage**: 2GB free space
+- **Network**: Internet connection for LLM API access
+
+### Supported Platforms
+
+- **macOS**: 10.15 (Catalina) or later
+- **Windows**: Windows 10 version 1909 or later
+- **Linux**: Most modern distributions (Ubuntu 18.04+, CentOS 7+, etc.)
+
+## Troubleshooting
+
+### macOS Permission Issues
+
+If Goose Desktop won't launch on macOS (especially M3 Macs):
+
+1. Check that `~/.config` directory has read/write permissions:
+
+   ```bash
+   ls -la ~/
+   chmod 755 ~/.config
+   ```
+
+2. Allow the app in Security & Privacy settings:
+   - System Preferences → Security & Privacy → General
+   - Click "Allow" next to the blocked Goose app
+
+### Windows Antivirus Issues
+
+Some antivirus software may flag Goose. To resolve:
+
+1. Add Goose installation directory to antivirus exceptions
+2. Temporarily disable real-time protection during installation
+3. Download from official GitHub releases only
+
+### Linux Dependencies
+
+If you encounter dependency issues:
+
+```bash
+# Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install libnss3 libatk-bridge2.0-0 libdrm2 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libxss1 libasound2
+
+# CentOS/RHEL
+sudo yum install nss atk at-spi2-atk libdrm libXcomposite libXdamage libXrandr mesa-libgbm libXScrnSaver alsa-lib
+```
+
+## Next Steps
+
+After successful installation:
+
+1. [Configure your LLM provider](/ai/docs/getting-started/configuration)
+2. [Complete the quickstart tutorial](/ai/docs)
+3. [Explore advanced features](/ai/docs/tutorials)
+
+## Getting Help
+
+If you encounter issues during installation:
+
+- Check the [Troubleshooting Guide](/ai/docs/troubleshooting)
+- Search [GitHub Issues](https://github.com/block/goose/issues)
+- Join our [Discord Community](https://discord.gg/goose)
+
+export default function InstallationPage() {
+  return null
+
+
+}

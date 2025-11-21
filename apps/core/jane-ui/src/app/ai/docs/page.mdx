@@ -1,0 +1,212 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Goose Quickstart | AI Documentation',
+  description: 'Get started with goose in 5 minutes - install, configure, and build your first AI-powered app',
+}
+
+# goose in 5 minutes
+
+goose is an extensible open source AI agent that enhances your software development by automating coding tasks.
+
+This quick tutorial will guide you through:
+
+- ✅ Installing goose
+- ✅ Configuring your LLM
+- ✅ Building a small app
+- ✅ Adding an MCP server
+
+Let's begin 🚀
+
+## Install goose
+
+### Prerequisites
+
+Before installing goose, ensure you have:
+
+- Python 3.9 or higher
+- pip package manager
+- Git (for cloning repositories)
+
+### Installation Options
+
+#### Option 1: Install via pip (Recommended)
+
+```bash
+pip install goose-ai
+```
+
+#### Option 2: Install from source
+
+```bash
+git clone https://github.com/block/goose.git
+cd goose
+pip install -e .
+```
+
+### Verify Installation
+
+After installation, verify that goose is working correctly:
+
+```bash
+goose --version
+```
+
+## Configure Your LLM
+
+goose supports multiple language model providers. Choose your preferred provider and follow the setup instructions.
+
+### OpenAI Configuration
+
+1. Get your API key from [OpenAI Platform](https://platform.openai.com/)
+2. Set your API key as an environment variable:
+
+```bash
+export OPENAI_API_KEY="your-api-key-here"
+```
+
+3. Create a goose configuration file:
+
+```yaml
+# ~/.config/goose/goose.yaml
+default:
+  provider: openai
+  processor: gpt-4
+  accelerator: gpt-3.5-turbo
+```
+
+### Anthropic Configuration
+
+1. Get your API key from [Anthropic Console](https://console.anthropic.com/)
+2. Set your API key:
+
+```bash
+export ANTHROPIC_API_KEY="your-api-key-here"
+```
+
+3. Update your configuration:
+
+```yaml
+# ~/.config/goose/goose.yaml
+default:
+  provider: anthropic
+  processor: claude-3-sonnet-20240229
+  accelerator: claude-3-haiku-20240307
+```
+
+## Build Your First App
+
+Let's create a simple web application using goose to automate the development process.
+
+### 1. Initialize Your Project
+
+```bash
+mkdir my-goose-app
+cd my-goose-app
+goose session start
+```
+
+### 2. Ask goose to Create the App
+
+In the goose session, type:
+
+```
+Create a simple todo web app using HTML, CSS, and JavaScript.
+Include the ability to add, complete, and delete tasks.
+```
+
+goose will:
+
+- Generate the HTML structure
+- Create CSS styling
+- Implement JavaScript functionality
+- Set up the file structure
+
+### 3. Review and Test
+
+goose will create files like:
+
+- `index.html` - Main HTML structure
+- `styles.css` - CSS styling
+- `script.js` - JavaScript functionality
+
+Open `index.html` in your browser to test your app!
+
+## Add an MCP Server
+
+Model Context Protocol (MCP) servers extend goose's capabilities. Let's add a file system MCP server.
+
+### 1. Install MCP Server
+
+```bash
+npm install @modelcontextprotocol/server-filesystem
+```
+
+### 2. Configure MCP Server
+
+Create or update your goose configuration:
+
+```yaml
+# ~/.config/goose/goose.yaml
+default:
+  provider: openai
+  processor: gpt-4
+  accelerator: gpt-3.5-turbo
+
+mcp:
+  servers:
+    filesystem:
+      command: npx
+      args:
+        [
+          '-y',
+          '@modelcontextprotocol/server-filesystem',
+          '/path/to/allowed/directory',
+        ]
+```
+
+### 3. Restart goose
+
+```bash
+goose session start
+```
+
+### 4. Test MCP Integration
+
+Ask goose to:
+
+```
+List the files in my project directory and create a README.md file explaining what this project does.
+```
+
+goose will now have access to file system operations through the MCP server!
+
+## Next Steps
+
+Congratulations! You've successfully:
+
+- ✅ Installed goose
+- ✅ Configured your LLM
+- ✅ Built a simple web app
+- ✅ Added MCP server capabilities
+
+### Continue Learning
+
+- [Architecture Overview](/ai/docs/architecture) - Understand how goose works
+- [Advanced Tutorials](/ai/docs/tutorials/advanced) - Build more complex applications
+- [MCP Integration Guide](/ai/docs/mcp) - Explore more MCP servers
+- [Troubleshooting](/ai/docs/troubleshooting) - Solve common issues
+
+### Join the Community
+
+- [GitHub Repository](https://github.com/block/goose)
+- [Discord Community](https://discord.gg/goose)
+- [Documentation](https://block.github.io/goose/)
+
+Happy coding with goose! 🎉
+
+export default function QuickstartPage() {
+  return null
+
+
+}
