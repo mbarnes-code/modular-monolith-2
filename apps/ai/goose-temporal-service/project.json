@@ -1,13 +1,13 @@
 {
   "name": "goose-temporal-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/goose-temporal-service",
+  "sourceRoot": "apps/ai/goose-temporal-service",
   "projectType": "application",
   "tags": [
     "type:service",
     "framework:go",
     "language:go",
-    "domain:productivity",
+    "domain:ai",
     "scope:goose"
   ],
   "targets": {
@@ -22,7 +22,7 @@
       ],
       "options": {
         "command": "go build -o bin/goose-temporal .",
-        "cwd": "apps/goose-temporal-service"
+        "cwd": "apps/ai/goose-temporal-service"
       },
       "configurations": {
         "production": {
@@ -35,7 +35,7 @@
       "defaultConfiguration": "development",
       "options": {
         "command": "go run .",
-        "cwd": "apps/goose-temporal-service"
+        "cwd": "apps/ai/goose-temporal-service"
       },
       "configurations": {
         "development": {
@@ -52,7 +52,7 @@
       ],
       "options": {
         "command": "go test -v -coverprofile=coverage.out ./...",
-        "cwd": "apps/goose-temporal-service"
+        "cwd": "apps/ai/goose-temporal-service"
       }
     },
     "lint": {
@@ -65,7 +65,7 @@
           "go fmt ./...",
           "go vet ./..."
         ],
-        "cwd": "apps/goose-temporal-service",
+        "cwd": "apps/ai/goose-temporal-service",
         "parallel": false
       }
     },
@@ -73,7 +73,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "go mod tidy",
-        "cwd": "apps/goose-temporal-service"
+        "cwd": "apps/ai/goose-temporal-service"
       }
     },
     "docker:build": {
@@ -81,7 +81,7 @@
       "outputs": [],
       "options": {
         "command": "docker build -t goose-temporal-service:latest .",
-        "cwd": "apps/goose-temporal-service"
+        "cwd": "apps/ai/goose-temporal-service"
       },
       "dependsOn": ["build"]
     }

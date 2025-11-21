@@ -15,6 +15,14 @@ This directory contains all AI and machine learning services within the Mental P
 - **mtg-llm-server** - Specialized AI server for Magic: The Gathering and TCG domain
 - **infrastructure-llm-server** - Specialized AI server for infrastructure and DevOps operations
 
+### AI-Powered Services
+
+- **firecrawl-service** - AI-enhanced web scraping and data extraction service
+- **goose-service** - AI-powered coding assistant and automation engine (Rust-based)
+- **goose-docs** - Documentation and knowledge base for Goose (Docusaurus)
+- **goose-ui** - Desktop application for Goose interactions (Electron)
+- **goose-temporal-service** - Workflow orchestration service for Goose (Go-based)
+
 ## Architecture Patterns
 
 ### Service Categories

@@ -11,17 +11,12 @@ This directory contains automation, workflow management, and productivity enhanc
 
 ### Automation & Workflow
 
-- **goose-service** - AI-powered development automation agent
-- **goose-docs** - Documentation for Goose AI agent
-- **goose-ui** - User interface for Goose automation
-- **goose-temporal-service** - Temporal workflow management for Goose
 - **n8n-service** - Visual workflow automation platform
 - **n8n-workflow-service** - Workflow execution and management
 
 ### Development Tools
 
 - **inspector-service** - Code analysis and inspection tools
-- **firecrawl-service** - Web scraping and content extraction
 - **onex-service** - Development productivity utilities
 - **onex-service-e2e** - End-to-end tests for OneX service
 

@@ -1,13 +1,13 @@
 {
   "name": "goose-ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/goose-ui/src",
+  "sourceRoot": "apps/ai/goose-ui/src",
   "projectType": "application",
   "tags": [
     "type:app",
     "framework:electron",
     "language:typescript",
-    "domain:productivity",
+    "domain:ai",
     "scope:goose"
   ],
   "targets": {
@@ -25,7 +25,7 @@
           "npm install",
           "npm run build"
         ],
-        "cwd": "apps/goose-ui",
+        "cwd": "apps/ai/goose-ui",
         "parallel": false
       },
       "configurations": {
@@ -42,7 +42,7 @@
       "defaultConfiguration": "development",
       "options": {
         "command": "npm run dev",
-        "cwd": "apps/goose-ui"
+        "cwd": "apps/ai/goose-ui"
       },
       "configurations": {
         "development": {
@@ -60,7 +60,7 @@
       ],
       "options": {
         "command": "npm test",
-        "cwd": "apps/goose-ui"
+        "cwd": "apps/ai/goose-ui"
       }
     },
     "lint": {
@@ -71,7 +71,7 @@
       ],
       "options": {
         "command": "npm run lint",
-        "cwd": "apps/goose-ui"
+        "cwd": "apps/ai/goose-ui"
       }
     },
     "package": {
@@ -79,7 +79,7 @@
       "outputs": ["{projectRoot}/out"],
       "options": {
         "command": "npm run package",
-        "cwd": "apps/goose-ui"
+        "cwd": "apps/ai/goose-ui"
       },
       "dependsOn": ["build"]
     }

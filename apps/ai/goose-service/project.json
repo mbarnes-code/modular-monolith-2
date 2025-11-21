@@ -1,13 +1,13 @@
 {
   "name": "goose-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/goose-service/src",
+  "sourceRoot": "apps/ai/goose-service/src",
   "projectType": "application",
   "tags": [
     "type:app",
     "framework:rust",
     "language:rust", 
-    "domain:productivity",
+    "domain:ai",
     "scope:goose"
   ],
   "targets": {
@@ -25,7 +25,7 @@
       ],
       "options": {
         "command": "cargo build",
-        "cwd": "apps/goose-service"
+        "cwd": "apps/ai/goose-service"
       },
       "configurations": {
         "production": {
@@ -41,7 +41,7 @@
       "defaultConfiguration": "development",
       "options": {
         "command": "cargo run",
-        "cwd": "apps/goose-service"
+        "cwd": "apps/ai/goose-service"
       },
       "configurations": {
         "development": {
@@ -63,7 +63,7 @@
       ],
       "options": {
         "command": "cargo test",
-        "cwd": "apps/goose-service"
+        "cwd": "apps/ai/goose-service"
       },
       "configurations": {
         "unit": {
@@ -89,7 +89,7 @@
           "cargo clippy --all-targets --all-features -- -D warnings",
           "cargo check --all-targets --all-features"
         ],
-        "cwd": "apps/goose-service",
+        "cwd": "apps/ai/goose-service",
         "parallel": false
       }
     },
@@ -100,14 +100,14 @@
       ],
       "options": {
         "command": "cargo fmt -- --check",
-        "cwd": "apps/goose-service"
+        "cwd": "apps/ai/goose-service"
       }
     },
     "format:fix": {
       "executor": "nx:run-commands",
       "options": {
         "command": "cargo fmt",
-        "cwd": "apps/goose-service"
+        "cwd": "apps/ai/goose-service"
       }
     },
 
@@ -116,7 +116,7 @@
       "outputs": [],
       "options": {
         "command": "docker build -t goose-service:latest .",
-        "cwd": "apps/goose-service"
+        "cwd": "apps/ai/goose-service"
       },
       "dependsOn": ["build"]
     },
@@ -124,7 +124,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "docker run -p 8080:8080 goose-service:latest",
-        "cwd": "apps/goose-service"
+        "cwd": "apps/ai/goose-service"
       },
       "dependsOn": ["docker:build"]
     },
@@ -132,7 +132,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "cargo clean",
-        "cwd": "apps/goose-service"
+        "cwd": "apps/ai/goose-service"
       }
     }
   },

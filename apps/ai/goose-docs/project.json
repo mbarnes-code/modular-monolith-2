@@ -1,13 +1,13 @@
 {
   "name": "goose-docs",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/goose-docs/src",
+  "sourceRoot": "apps/ai/goose-docs/src",
   "projectType": "application",
   "tags": [
     "type:app",
     "framework:docusaurus",
     "language:typescript",
-    "domain:documentation",
+    "domain:ai",
     "scope:goose"
   ],
   "targets": {
@@ -29,7 +29,7 @@
           "npm install",
           "npm run build"
         ],
-        "cwd": "apps/goose-docs",
+        "cwd": "apps/ai/goose-docs",
         "parallel": false
       },
       "configurations": {
@@ -46,7 +46,7 @@
       "defaultConfiguration": "development",
       "options": {
         "command": "npm run start",
-        "cwd": "apps/goose-docs"
+        "cwd": "apps/ai/goose-docs"
       },
       "configurations": {
         "development": {
@@ -59,7 +59,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npm install",
-        "cwd": "apps/goose-docs"
+        "cwd": "apps/ai/goose-docs"
       }
     },
     "lint": {
@@ -73,14 +73,14 @@
         "commands": [
           "npm run lint"
         ],
-        "cwd": "apps/goose-docs"
+        "cwd": "apps/ai/goose-docs"
       }
     },
     "format": {
       "executor": "nx:run-commands",
       "options": {
         "command": "npm run format",
-        "cwd": "apps/goose-docs"
+        "cwd": "apps/ai/goose-docs"
       }
     },
     "clean": {
@@ -90,7 +90,7 @@
           "rm -rf build",
           "rm -rf node_modules"
         ],
-        "cwd": "apps/goose-docs",
+        "cwd": "apps/ai/goose-docs",
         "parallel": false
       }
     }

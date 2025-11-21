@@ -48,6 +48,14 @@ help:
 	@echo "  make docs-build       - Build documentation"
 	@echo "  make clean-services   - Clean service-specific artifacts"
 	@echo ""
+	@echo "LIBRARY MANAGEMENT:"
+	@echo "  make analyze-dependencies - Analyze dependency overlaps across monorepo"
+	@echo "  make analyze-n8n-integration - Analyze N8N monorepo integration opportunities"
+	@echo "  make setup-n8n-infrastructure - Setup infrastructure for N8N integration"
+	@echo "  make validate-hoisting - Validate environment for library hoisting"
+	@echo "  make hoist-libraries  - Hoist Phase 1 dependencies to root"
+	@echo "  make hoist-libraries-preview - Preview hoisting changes (dry run)"
+	@echo ""
 	@echo "AFFECTED OPERATIONS:"
 	@echo "  make affected-build   - Build affected projects"
 	@echo "  make affected-test    - Test affected projects"
@@ -245,3 +253,31 @@ clean-services:
 	find apps/ -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
 	find apps/ -name "*.pyc" -delete 2>/dev/null || true
 	find apps/ -name "node_modules/.cache" -type d -exec rm -rf {} + 2>/dev/null || true
+
+# Library hoisting commands
+.PHONY: hoist-libraries hoist-libraries-preview hoist-libraries-dry-run validate-hoisting analyze-dependencies analyze-n8n-integration
+analyze-dependencies:
+	@echo "🔍 Analyzing dependency overlaps..."
+	npx tsx scripts/analyze-dependencies.ts
+
+analyze-n8n-integration:
+	@echo "🔍 Analyzing N8N integration opportunities..."
+	npx tsx scripts/n8n-integration-analysis.ts
+
+setup-n8n-infrastructure:
+	@echo "🚀 Setting up N8N integration infrastructure..."
+	npx tsx scripts/n8n-infrastructure-setup.ts
+
+validate-hoisting:
+	@echo "📋 Validating hoisting prerequisites..."
+	npx tsx scripts/validate-hoisting.ts
+
+hoist-libraries: validate-hoisting
+	@echo "🚀 Starting automated library hoisting..."
+	npx tsx scripts/hoist-libraries.ts --force
+
+hoist-libraries-preview: validate-hoisting
+	@echo "🔍 Previewing library hoisting changes..."
+	npx tsx scripts/hoist-libraries.ts --dry-run
+
+hoist-libraries-dry-run: hoist-libraries-preview

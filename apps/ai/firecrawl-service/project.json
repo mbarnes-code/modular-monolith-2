@@ -1,9 +1,9 @@
 {
   "name": "firecrawl-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/firecrawl-service/src",
+  "sourceRoot": "apps/ai/firecrawl-service/src",
   "projectType": "application",
-  "tags": ["type:app", "domain:firecrawl", "framework:express"],
+  "tags": ["type:app", "domain:ai", "framework:express"],
   "implicitDependencies": ["firecrawl-core", "firecrawl-types"],
   "targets": {
     "build": {
@@ -11,12 +11,12 @@
       "outputs": ["{options.outputPath}"],
       "dependsOn": ["^build"],
       "options": {
-        "outputPath": "dist/apps/firecrawl-service",
-        "main": "apps/firecrawl-service/src/main.ts",
-        "tsConfig": "apps/firecrawl-service/tsconfig.app.json",
+        "outputPath": "dist/apps/ai/firecrawl-service",
+        "main": "apps/ai/firecrawl-service/src/main.ts",
+        "tsConfig": "apps/ai/firecrawl-service/tsconfig.app.json",
         "assets": [
-          "apps/firecrawl-service/src/assets",
-          "apps/firecrawl-service/openapi*.json"
+          "apps/ai/firecrawl-service/src/assets",
+          "apps/ai/firecrawl-service/openapi*.json"
         ],
         "generatePackageJson": true
       },

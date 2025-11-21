@@ -23,7 +23,14 @@
     "diagrams": "./generate-diagrams.sh",
     "diagrams:png": "find . -name '*.mmd' -exec npx mmdc -i {} -o {}.png \\;",
     "diagrams:svg": "find . -name '*.mmd' -exec npx mmdc -i {} -o {}.svg \\;",
-    "diagrams:list": "find . -name '*.mmd' -o -name '*diagram*.png' -o -name '*architecture*.png' | head -20"
+    "diagrams:list": "find . -name '*.mmd' -o -name '*diagram*.png' -o -name '*architecture*.png' | head -20",
+    "hoist-libraries": "tsx scripts/hoist-libraries.ts --force",
+    "hoist-libraries:dry-run": "tsx scripts/hoist-libraries.ts --dry-run",
+    "hoist-libraries:preview": "tsx scripts/hoist-libraries.ts --dry-run",
+    "validate-hoisting": "tsx scripts/validate-hoisting.ts",
+    "analyze-dependencies": "tsx scripts/analyze-dependencies.ts",
+    "analyze-n8n-integration": "tsx scripts/n8n-integration-analysis.ts",
+    "setup-n8n-infrastructure": "tsx scripts/n8n-infrastructure-setup.ts"
   },
   "keywords": [],
   "author": "",
