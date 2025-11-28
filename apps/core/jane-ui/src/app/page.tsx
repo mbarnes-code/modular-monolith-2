@@ -1,6 +1,11 @@
+'use client';
+
+import { MonitoringDashboard, ProductionAlerts, ProductionMonitorProvider } from '../components/monitoring';
+
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
+    <ProductionMonitorProvider>
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
       <div className="max-w-4xl mx-auto">
         {/* Welcome Header */}
         <div className="mb-8">
@@ -138,6 +143,11 @@ export default function Home() {
           </p>
         </div>
       </div>
+      
+      {/* Production Monitoring Components */}
+      <ProductionAlerts />
+      <MonitoringDashboard />
     </main>
+    </ProductionMonitorProvider>
   );
 }

@@ -3,7 +3,7 @@
  * Comprehensive monitoring system for production deployment
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { usePerformanceMonitor } from '../../services/performance/performanceMonitor';
 
 interface ProductionMetrics {
@@ -187,16 +187,26 @@ export function ProductionMonitor() {
       }));
     }
 
-    // Collect bundle size info
+    // Collect bundle size info with constitutional compliance checking
     if (typeof window !== 'undefined' && 'navigator' in window) {
       // Estimate bundle size from resource timing
       const resources = performance.getEntriesByType('resource');
       const jsResources = resources.filter(r => r.name.endsWith('.js'));
       const totalSize = jsResources.reduce((sum, r: any) => sum + (r.transferSize || 0), 0);
       
+      // Constitutional bundle size thresholds (bytes)
+      const BUNDLE_THRESHOLDS = {
+        maxMainBundle: 2 * 1024 * 1024,    // 2MB constitutional requirement
+        maxTotalSize: 5 * 1024 * 1024,     // 5MB platform scalability
+      };
+      
+      // Check for constitutional compliance
+      const bundleCompliance = totalSize <= BUNDLE_THRESHOLDS.maxTotalSize;
+      
       setCurrentMetrics(prev => ({
         ...prev,
-        bundleSize: totalSize
+        bundleSize: totalSize,
+        bundleCompliance
       }));
     }
   }, [getCurrentMetrics]);

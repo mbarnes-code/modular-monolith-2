@@ -1,0 +1,21 @@
+{
+  "created": "2025-11-22T06:51:29.734Z",
+  "constitutional_thresholds": {
+    "responseTime": {
+      "security": 1000,
+      "productivity": 2000,
+      "mtg": 3000,
+      "infrastructure": 5000
+    },
+    "executiveFunction": {
+      "interaction": 200,
+      "navigation": 300,
+      "dataLoad": 500,
+      "contextSwitch": 250
+    },
+    "bundleSize": {
+      "maxMainBundle": 2097152,
+      "maxTotalSize": 5242880
+    }
+  }
+}

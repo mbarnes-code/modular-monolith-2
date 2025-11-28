@@ -1,0 +1,478 @@
+[
+  {
+    "totalSize": 941973,
+    "mainBundle": {
+      "path": "main-77adbe7d32cdc7d1.js",
+      "size": 123
+    },
+    "chunks": {
+      "app/_not-found/page-023e9fb0cc43f719.js": 223,
+      "app/ai/layout-c0e368c576ab7215.js": 169,
+      "app/ai/page-c0e368c576ab7215.js": 169,
+      "app/dashboard/page-4b26e1158a2cbfd5.js": 15409,
+      "app/layout-e1a37f051dae7823.js": 3855,
+      "app/page-c0e368c576ab7215.js": 169,
+      "app/productivity/actual/app/page-3e18e8a13c7cf91b.js": 2902,
+      "app/productivity/inspector/page-daecb2f535ff87c9.js": 296,
+      "app/productivity/inspector/resources/page-c0e368c576ab7215.js": 169,
+      "app/productivity/inspector/servers/page-a1b596bb71a55a33.js": 212,
+      "app/productivity/inspector/tools/page-1e5907bbbab28533.js": 213,
+      "app/productivity/layout-c0e368c576ab7215.js": 169,
+      "app/productivity/mealie/meal-plans/page-fd8def93e71279a2.js": 1881,
+      "app/productivity/mealie/page-f35f8dc8a74f5f5d.js": 5097,
+      "app/productivity/mealie/recipes/page-acaa3c8a954f4eac.js": 1757,
+      "app/productivity/mealie/shopping-lists/page-b296a6443c0dde72.js": 1691,
+      "app/productivity/page-c0e368c576ab7215.js": 169,
+      "app/security/dispatch/cases/page-41e0d6b191016828.js": 173,
+      "app/security/dispatch/dashboard/page-c0e368c576ab7215.js": 169,
+      "app/security/dispatch/incidents/page-79c9e8f01f891e4d.js": 174,
+      "app/security/dispatch/page-2d818cc54696f5cf.js": 293,
+      "app/security/ghostwriter/findings/page-0a2c828b95f986d8.js": 213,
+      "app/security/ghostwriter/page-8f2c19943db11ba7.js": 295,
+      "app/security/ghostwriter/projects/page-aaac9df15634b8d3.js": 212,
+      "app/security/ghostwriter/reports/page-9f1a36b8489cf1a3.js": 213,
+      "app/security/layout-c0e368c576ab7215.js": 169,
+      "app/security/nemesis/dashboard/page-74570f353ecf501f.js": 3451,
+      "app/security/page-c0e368c576ab7215.js": 169,
+      "app/tcg/commander-spellbook/page-c0e368c576ab7215.js": 169,
+      "app/tcg/layout-c0e368c576ab7215.js": 169,
+      "app/tcg/page-c0e368c576ab7215.js": 169,
+      "main-77adbe7d32cdc7d1.js": 123,
+      "main-app-809acedce1d16b3c.js": 556,
+      "pages/_app-cd3be1566b74b1e7.js": 234,
+      "pages/_error-bd7827c7852ae5dd.js": 218,
+      "polyfills-42372ed130431b0a.js": 112594,
+      "productivity-tools-2546d7476018103d.js": 53816,
+      "security-tools-8af7971525f70aeb.js": 61836,
+      "vendor-ab665d53db5c12f2.js": 668204,
+      "webpack-aac1e500a0250d5b.js": 3352
+    },
+    "domainChunks": {
+      "vendor": {
+        "size": 804258,
+        "chunks": [
+          {
+            "path": "app/_not-found/page-023e9fb0cc43f719.js",
+            "size": 223
+          },
+          {
+            "path": "app/dashboard/page-4b26e1158a2cbfd5.js",
+            "size": 15409
+          },
+          {
+            "path": "app/layout-e1a37f051dae7823.js",
+            "size": 3855
+          },
+          {
+            "path": "app/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "pages/_app-cd3be1566b74b1e7.js",
+            "size": 234
+          },
+          {
+            "path": "pages/_error-bd7827c7852ae5dd.js",
+            "size": 218
+          },
+          {
+            "path": "polyfills-42372ed130431b0a.js",
+            "size": 112594
+          },
+          {
+            "path": "vendor-ab665d53db5c12f2.js",
+            "size": 668204
+          },
+          {
+            "path": "webpack-aac1e500a0250d5b.js",
+            "size": 3352
+          }
+        ]
+      },
+      "ai-tools": {
+        "size": 1017,
+        "chunks": [
+          {
+            "path": "app/ai/layout-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/ai/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "main-77adbe7d32cdc7d1.js",
+            "size": 123
+          },
+          {
+            "path": "main-app-809acedce1d16b3c.js",
+            "size": 556
+          }
+        ]
+      },
+      "productivity-tools": {
+        "size": 68372,
+        "chunks": [
+          {
+            "path": "app/productivity/actual/app/page-3e18e8a13c7cf91b.js",
+            "size": 2902
+          },
+          {
+            "path": "app/productivity/inspector/page-daecb2f535ff87c9.js",
+            "size": 296
+          },
+          {
+            "path": "app/productivity/inspector/resources/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/productivity/inspector/servers/page-a1b596bb71a55a33.js",
+            "size": 212
+          },
+          {
+            "path": "app/productivity/inspector/tools/page-1e5907bbbab28533.js",
+            "size": 213
+          },
+          {
+            "path": "app/productivity/layout-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/productivity/mealie/meal-plans/page-fd8def93e71279a2.js",
+            "size": 1881
+          },
+          {
+            "path": "app/productivity/mealie/page-f35f8dc8a74f5f5d.js",
+            "size": 5097
+          },
+          {
+            "path": "app/productivity/mealie/recipes/page-acaa3c8a954f4eac.js",
+            "size": 1757
+          },
+          {
+            "path": "app/productivity/mealie/shopping-lists/page-b296a6443c0dde72.js",
+            "size": 1691
+          },
+          {
+            "path": "app/productivity/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "productivity-tools-2546d7476018103d.js",
+            "size": 53816
+          }
+        ]
+      },
+      "security-tools": {
+        "size": 67367,
+        "chunks": [
+          {
+            "path": "app/security/dispatch/cases/page-41e0d6b191016828.js",
+            "size": 173
+          },
+          {
+            "path": "app/security/dispatch/dashboard/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/security/dispatch/incidents/page-79c9e8f01f891e4d.js",
+            "size": 174
+          },
+          {
+            "path": "app/security/dispatch/page-2d818cc54696f5cf.js",
+            "size": 293
+          },
+          {
+            "path": "app/security/ghostwriter/findings/page-0a2c828b95f986d8.js",
+            "size": 213
+          },
+          {
+            "path": "app/security/ghostwriter/page-8f2c19943db11ba7.js",
+            "size": 295
+          },
+          {
+            "path": "app/security/ghostwriter/projects/page-aaac9df15634b8d3.js",
+            "size": 212
+          },
+          {
+            "path": "app/security/ghostwriter/reports/page-9f1a36b8489cf1a3.js",
+            "size": 213
+          },
+          {
+            "path": "app/security/layout-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/security/nemesis/dashboard/page-74570f353ecf501f.js",
+            "size": 3451
+          },
+          {
+            "path": "app/security/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "security-tools-8af7971525f70aeb.js",
+            "size": 61836
+          }
+        ]
+      },
+      "mtg-tools": {
+        "size": 507,
+        "chunks": [
+          {
+            "path": "app/tcg/commander-spellbook/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/tcg/layout-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/tcg/page-c0e368c576ab7215.js",
+            "size": 169
+          }
+        ]
+      }
+    },
+    "timestamp": "2025-11-22T05:48:48.167Z",
+    "buildId": "PG6tnU7JGWQk1Bxs6Tr9J"
+  },
+  {
+    "totalSize": 941973,
+    "mainBundle": {
+      "path": "main-77adbe7d32cdc7d1.js",
+      "size": 123
+    },
+    "chunks": {
+      "app/_not-found/page-023e9fb0cc43f719.js": 223,
+      "app/ai/layout-c0e368c576ab7215.js": 169,
+      "app/ai/page-c0e368c576ab7215.js": 169,
+      "app/dashboard/page-4b26e1158a2cbfd5.js": 15409,
+      "app/layout-e1a37f051dae7823.js": 3855,
+      "app/page-c0e368c576ab7215.js": 169,
+      "app/productivity/actual/app/page-3e18e8a13c7cf91b.js": 2902,
+      "app/productivity/inspector/page-daecb2f535ff87c9.js": 296,
+      "app/productivity/inspector/resources/page-c0e368c576ab7215.js": 169,
+      "app/productivity/inspector/servers/page-a1b596bb71a55a33.js": 212,
+      "app/productivity/inspector/tools/page-1e5907bbbab28533.js": 213,
+      "app/productivity/layout-c0e368c576ab7215.js": 169,
+      "app/productivity/mealie/meal-plans/page-fd8def93e71279a2.js": 1881,
+      "app/productivity/mealie/page-f35f8dc8a74f5f5d.js": 5097,
+      "app/productivity/mealie/recipes/page-acaa3c8a954f4eac.js": 1757,
+      "app/productivity/mealie/shopping-lists/page-b296a6443c0dde72.js": 1691,
+      "app/productivity/page-c0e368c576ab7215.js": 169,
+      "app/security/dispatch/cases/page-41e0d6b191016828.js": 173,
+      "app/security/dispatch/dashboard/page-c0e368c576ab7215.js": 169,
+      "app/security/dispatch/incidents/page-79c9e8f01f891e4d.js": 174,
+      "app/security/dispatch/page-2d818cc54696f5cf.js": 293,
+      "app/security/ghostwriter/findings/page-0a2c828b95f986d8.js": 213,
+      "app/security/ghostwriter/page-8f2c19943db11ba7.js": 295,
+      "app/security/ghostwriter/projects/page-aaac9df15634b8d3.js": 212,
+      "app/security/ghostwriter/reports/page-9f1a36b8489cf1a3.js": 213,
+      "app/security/layout-c0e368c576ab7215.js": 169,
+      "app/security/nemesis/dashboard/page-74570f353ecf501f.js": 3451,
+      "app/security/page-c0e368c576ab7215.js": 169,
+      "app/tcg/commander-spellbook/page-c0e368c576ab7215.js": 169,
+      "app/tcg/layout-c0e368c576ab7215.js": 169,
+      "app/tcg/page-c0e368c576ab7215.js": 169,
+      "main-77adbe7d32cdc7d1.js": 123,
+      "main-app-809acedce1d16b3c.js": 556,
+      "pages/_app-cd3be1566b74b1e7.js": 234,
+      "pages/_error-bd7827c7852ae5dd.js": 218,
+      "polyfills-42372ed130431b0a.js": 112594,
+      "productivity-tools-2546d7476018103d.js": 53816,
+      "security-tools-8af7971525f70aeb.js": 61836,
+      "vendor-ab665d53db5c12f2.js": 668204,
+      "webpack-aac1e500a0250d5b.js": 3352
+    },
+    "domainChunks": {
+      "vendor": {
+        "size": 804258,
+        "chunks": [
+          {
+            "path": "app/_not-found/page-023e9fb0cc43f719.js",
+            "size": 223
+          },
+          {
+            "path": "app/dashboard/page-4b26e1158a2cbfd5.js",
+            "size": 15409
+          },
+          {
+            "path": "app/layout-e1a37f051dae7823.js",
+            "size": 3855
+          },
+          {
+            "path": "app/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "pages/_app-cd3be1566b74b1e7.js",
+            "size": 234
+          },
+          {
+            "path": "pages/_error-bd7827c7852ae5dd.js",
+            "size": 218
+          },
+          {
+            "path": "polyfills-42372ed130431b0a.js",
+            "size": 112594
+          },
+          {
+            "path": "vendor-ab665d53db5c12f2.js",
+            "size": 668204
+          },
+          {
+            "path": "webpack-aac1e500a0250d5b.js",
+            "size": 3352
+          }
+        ]
+      },
+      "ai-tools": {
+        "size": 1017,
+        "chunks": [
+          {
+            "path": "app/ai/layout-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/ai/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "main-77adbe7d32cdc7d1.js",
+            "size": 123
+          },
+          {
+            "path": "main-app-809acedce1d16b3c.js",
+            "size": 556
+          }
+        ]
+      },
+      "productivity-tools": {
+        "size": 68372,
+        "chunks": [
+          {
+            "path": "app/productivity/actual/app/page-3e18e8a13c7cf91b.js",
+            "size": 2902
+          },
+          {
+            "path": "app/productivity/inspector/page-daecb2f535ff87c9.js",
+            "size": 296
+          },
+          {
+            "path": "app/productivity/inspector/resources/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/productivity/inspector/servers/page-a1b596bb71a55a33.js",
+            "size": 212
+          },
+          {
+            "path": "app/productivity/inspector/tools/page-1e5907bbbab28533.js",
+            "size": 213
+          },
+          {
+            "path": "app/productivity/layout-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/productivity/mealie/meal-plans/page-fd8def93e71279a2.js",
+            "size": 1881
+          },
+          {
+            "path": "app/productivity/mealie/page-f35f8dc8a74f5f5d.js",
+            "size": 5097
+          },
+          {
+            "path": "app/productivity/mealie/recipes/page-acaa3c8a954f4eac.js",
+            "size": 1757
+          },
+          {
+            "path": "app/productivity/mealie/shopping-lists/page-b296a6443c0dde72.js",
+            "size": 1691
+          },
+          {
+            "path": "app/productivity/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "productivity-tools-2546d7476018103d.js",
+            "size": 53816
+          }
+        ]
+      },
+      "security-tools": {
+        "size": 67367,
+        "chunks": [
+          {
+            "path": "app/security/dispatch/cases/page-41e0d6b191016828.js",
+            "size": 173
+          },
+          {
+            "path": "app/security/dispatch/dashboard/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/security/dispatch/incidents/page-79c9e8f01f891e4d.js",
+            "size": 174
+          },
+          {
+            "path": "app/security/dispatch/page-2d818cc54696f5cf.js",
+            "size": 293
+          },
+          {
+            "path": "app/security/ghostwriter/findings/page-0a2c828b95f986d8.js",
+            "size": 213
+          },
+          {
+            "path": "app/security/ghostwriter/page-8f2c19943db11ba7.js",
+            "size": 295
+          },
+          {
+            "path": "app/security/ghostwriter/projects/page-aaac9df15634b8d3.js",
+            "size": 212
+          },
+          {
+            "path": "app/security/ghostwriter/reports/page-9f1a36b8489cf1a3.js",
+            "size": 213
+          },
+          {
+            "path": "app/security/layout-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/security/nemesis/dashboard/page-74570f353ecf501f.js",
+            "size": 3451
+          },
+          {
+            "path": "app/security/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "security-tools-8af7971525f70aeb.js",
+            "size": 61836
+          }
+        ]
+      },
+      "mtg-tools": {
+        "size": 507,
+        "chunks": [
+          {
+            "path": "app/tcg/commander-spellbook/page-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/tcg/layout-c0e368c576ab7215.js",
+            "size": 169
+          },
+          {
+            "path": "app/tcg/page-c0e368c576ab7215.js",
+            "size": 169
+          }
+        ]
+      }
+    },
+    "timestamp": "2025-11-22T05:52:47.276Z",
+    "buildId": "a8NQgvtix3jlU5I-_ic6Q"
+  }
+]

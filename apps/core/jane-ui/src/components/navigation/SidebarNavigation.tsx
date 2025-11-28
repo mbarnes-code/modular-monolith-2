@@ -6,24 +6,31 @@
  * - Tool quick access for reduced cognitive load
  * - Status indicators for system awareness
  * - Collapsible design for flexibility
+ * - Cognitive load-aware navigation with smart guidance
  */
 
 'use client';
 
+import { AnimatePresence, motion } from 'framer-motion';
 import {
     Activity,
+    AlertTriangle,
+    Brain,
     Briefcase,
     ChevronLeft,
     ChevronRight,
+    Clock,
     Gamepad2,
     Heart,
     HelpCircle,
     Home,
     Server,
     Settings,
-    Shield
+    Shield,
+    Zap
 } from 'lucide-react';
 import React, { useState } from 'react';
+import { useAdaptiveNavigation } from '../../services/navigation/useAdaptiveNavigation';
 
 interface Domain {
   name: string;
@@ -79,9 +86,38 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [showCognitiveDetails, setShowCognitiveDetails] = useState(false);
+  
+  // Adaptive navigation integration
+  const {
+    navigationState,
+    requestNavigation,
+    getToolComplexityPreview,
+    canNavigateDirectly,
+    getNavigationRisk
+  } = useAdaptiveNavigation();
 
   const handleSectionToggle = (section: string) => {
     setExpandedSection(expandedSection === section ? null : section);
+  };
+
+  const handleSmartToolSelect = async (tool: Tool) => {
+    if (onToolSelect) {
+      const success = await requestNavigation(tool.id);
+      if (success) {
+        onToolSelect(tool);
+      }
+    }
+  };
+
+  const getRiskColor = (risk: 'low' | 'medium' | 'high' | 'critical') => {
+    switch (risk) {
+      case 'low': return 'text-green-600';
+      case 'medium': return 'text-yellow-600';
+      case 'high': return 'text-orange-600';
+      case 'critical': return 'text-red-600';
+      default: return 'text-gray-600';
+    }
   };
 
   const sidebarWidth = isCollapsed ? 'w-16' : 'w-64';
@@ -104,18 +140,77 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       role="navigation"
       aria-label="Domain and tool navigation"
     >
-      {/* Sidebar Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
-        {!isCollapsed && (
-          <h2 className="text-lg font-semibold text-gray-900">Navigation</h2>
+      {/* Sidebar Header with Cognitive Status */}
+      <div className="p-4 border-b border-gray-200 space-y-3">
+        <div className="flex items-center justify-between">
+          {!isCollapsed && (
+            <h2 className="text-lg font-semibold text-gray-900">Navigation</h2>
+          )}
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </button>
+        </div>
+        
+        {/* Cognitive Load Status */}
+        {!isCollapsed && executiveFunctionEnabled && (
+          <div className="bg-gray-50 rounded-lg p-2">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Brain className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium text-gray-700">Smart Navigation</span>
+              </div>
+              <button
+                onClick={() => setShowCognitiveDetails(!showCognitiveDetails)}
+                className="text-xs text-blue-600 hover:text-blue-700"
+              >
+                {showCognitiveDetails ? 'Hide' : 'Info'}
+              </button>
+            </div>
+            
+            {/* Navigation Warnings */}
+            <AnimatePresence>
+              {navigationState.navigationWarnings.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mb-2"
+                >
+                  {navigationState.navigationWarnings.slice(0, 1).map((warning, index) => (
+                    <div
+                      key={index}
+                      className="flex items-start gap-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs"
+                    >
+                      <AlertTriangle className="w-3 h-3 text-yellow-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-yellow-800 text-xs leading-tight">{warning}</span>
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+            
+            {/* Pending Navigation */}
+            <AnimatePresence>
+              {navigationState.pendingNavigation && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded"
+                >
+                  <Clock className="w-3 h-3 text-blue-600" />
+                  <span className="text-xs text-blue-800">
+                    Delay: {Math.ceil(navigationState.pendingNavigation.remainingDelay / 1000)}s
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         )}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-        </button>
       </div>
 
       {/* Navigation Content */}
@@ -210,7 +305,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
           </div>
         </div>
 
-        {/* Favorite Tools - Executive Function Quick Access */}
+        {/* Favorite Tools - Executive Function Quick Access with Cognitive Awareness */}
         {favoriteTools.length > 0 && !isCollapsed && (
           <div className="px-4 mb-6">
             <button
@@ -227,26 +322,57 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
             
             {expandedSection === 'favorites' && (
               <div className="space-y-1">
-                {favoriteTools.slice(0, 5).map((tool) => (
-                  <button
-                    key={tool.id}
-                    onClick={() => onToolSelect?.(tool)}
-                    className="w-full flex items-center space-x-3 px-3 py-2 text-left text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <div className={`w-2 h-2 rounded-full ${
-                      tool.status === 'active' ? 'bg-green-400' :
-                      tool.status === 'maintenance' ? 'bg-amber-400' :
-                      'bg-gray-400'
-                    }`} />
-                    <span className="truncate">{tool.display_name}</span>
-                  </button>
-                ))}
+                {favoriteTools.slice(0, 5).map((tool) => {
+                  const canNavigate = canNavigateDirectly(tool.id);
+                  const riskLevel = getNavigationRisk(tool.id);
+                  const complexityInfo = getToolComplexityPreview(tool.id);
+                  
+                  return (
+                    <div key={tool.id} className="relative">
+                      <button
+                        onClick={() => handleSmartToolSelect(tool)}
+                        className={`
+                          w-full flex items-center space-x-3 px-3 py-2 text-left text-sm rounded-lg transition-colors 
+                          focus:outline-none focus:ring-2 focus:ring-blue-500
+                          ${
+                            canNavigate 
+                              ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                              : 'text-orange-600 hover:text-orange-700 hover:bg-orange-50'
+                          }
+                        `}
+                        title={!canNavigate ? 'Navigation may be delayed due to cognitive load' : ''}
+                      >
+                        <div className={`w-2 h-2 rounded-full ${
+                          tool.status === 'active' ? 'bg-green-400' :
+                          tool.status === 'maintenance' ? 'bg-amber-400' :
+                          'bg-gray-400'
+                        }`} />
+                        <div className="flex-1 min-w-0">
+                          <div className="truncate">{tool.display_name}</div>
+                          {executiveFunctionEnabled && complexityInfo && showCognitiveDetails && (
+                            <div className="text-xs text-gray-500 mt-1">
+                              <div className="flex items-center gap-1">
+                                <Zap className="w-2 h-2" />
+                                <span>Load: {complexityInfo.baseComplexity}%</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        {!canNavigate && (
+                          <div className={`text-xs px-1 py-0.5 rounded ${getRiskColor(riskLevel)}`}>
+                            {riskLevel === 'critical' ? '!' : riskLevel === 'high' ? '⚠' : '•'}
+                          </div>
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
         )}
 
-        {/* System Status - Executive Function Transparency */}
+        {/* System Status - Executive Function Transparency with Cognitive Metrics */}
         {!isCollapsed && (
           <div className="px-4 mb-6">
             <button
@@ -279,10 +405,32 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                 </div>
                 
                 {executiveFunctionEnabled && (
-                  <div className="flex items-center space-x-2 text-xs text-green-600 pt-2 border-t border-gray-100">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span>EF accommodations active</span>
-                  </div>
+                  <>
+                    <div className="pt-2 border-t border-gray-100 space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-gray-500">Cognitive Trend</span>
+                        <span className={`font-medium ${
+                          navigationState.cognitiveLoadTrend === 'improving' ? 'text-green-600' :
+                          navigationState.cognitiveLoadTrend === 'declining' ? 'text-red-600' :
+                          'text-gray-600'
+                        }`}>
+                          {navigationState.cognitiveLoadTrend}
+                        </span>
+                      </div>
+                      
+                      {navigationState.isNavigationBlocked && (
+                        <div className="flex items-center space-x-2 text-xs text-red-600">
+                          <AlertTriangle className="w-3 h-3" />
+                          <span>Navigation blocked</span>
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center space-x-2 text-xs text-green-600">
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span>EF accommodations active</span>
+                      </div>
+                    </div>
+                  </>
                 )}
               </div>
             )}

@@ -234,22 +234,80 @@ See `.env.example` for all available configuration options.
 - High contrast mode
 - Focus management
 
+## Production Operations
+
+### Pre-Production Validation
+
+```bash
+npm run validate:phase4    # Validate all constitutional requirements
+```
+
+### Full Deployment Pipeline
+
+```bash
+npm run deploy:production  # Full production deployment pipeline
+```
+
+### Production Monitoring
+
+```bash
+npm run monitor:production # Start production monitoring
+```
+
+The production deployment process includes:
+
+1. Pre-deployment validation checks
+2. Bundle optimization and validation
+3. Performance threshold verification
+4. Asset optimization
+5. Constitutional compliance validation
+6. Health check verification
+
+See `/docs/PRODUCTION-MAINTENANCE.md` for detailed maintenance procedures.
+
+## Performance Monitoring
+
+The application includes built-in performance monitoring:
+
+- Bundle size tracking with constitutional limits
+- Load time monitoring with <200ms UI interaction targets
+- Memory usage tracking for executive function support
+- Real-time alerts for performance degradation
+
+### Bundle Analysis
+
+```bash
+npm run analyze-bundle     # Interactive bundle analyzer
+npm run bundle-size-check  # Check current bundle sizes
+npm run bundle-size-validate # Validate against limits
+```
+
+### Performance Auditing
+
+```bash
+npm run performance-audit  # Run Lighthouse audit
+npm run test:e2e          # End-to-end performance tests
+```
+
 ## Troubleshooting
 
 ### Common Issues
 
 **Port 3000 already in use:**
+
 ```bash
 # Change port
 PORT=3001 npm run dev
 ```
 
 **API connection errors:**
+
 - Verify `NEXT_PUBLIC_API_URL` is correct
 - Check orchestrator is running
 - Verify CORS configuration
 
 **Build errors:**
+
 - Clear `.next` directory
 - Remove `node_modules` and reinstall
 - Check TypeScript errors

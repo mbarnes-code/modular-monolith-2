@@ -1,0 +1,165 @@
+{
+  "timestamp": "2025-11-22T06:51:17.289Z",
+  "overallPass": true,
+  "results": {
+    "bundleSize": {
+      "passed": true,
+      "details": {
+        "mainBundle": {
+          "size": 556,
+          "limit": 2097152,
+          "usage": "0.0%",
+          "compliant": true
+        },
+        "totalSize": {
+          "size": 906908,
+          "limit": 5242880,
+          "usage": "17.3%",
+          "compliant": true
+        }
+      }
+    },
+    "performance": {
+      "passed": true,
+      "details": {
+        "domains": {
+          "security": {
+            "responseTime": 802,
+            "threshold": 1000,
+            "compliant": true,
+            "critical": true
+          },
+          "productivity": {
+            "responseTime": 1502,
+            "threshold": 2000,
+            "compliant": true,
+            "critical": false
+          },
+          "mtg": {
+            "responseTime": 2503,
+            "threshold": 3000,
+            "compliant": true,
+            "critical": false
+          },
+          "ai": {
+            "responseTime": 1802,
+            "threshold": 2000,
+            "compliant": true,
+            "critical": false
+          },
+          "infrastructure": {
+            "responseTime": 4004,
+            "threshold": 5000,
+            "compliant": true,
+            "critical": false
+          }
+        },
+        "executiveFunction": {
+          "interaction": {
+            "responseTime": 26,
+            "threshold": 200,
+            "compliant": true
+          },
+          "navigation": {
+            "responseTime": 33,
+            "threshold": 300,
+            "compliant": true
+          },
+          "dataLoad": {
+            "responseTime": 372,
+            "threshold": 500,
+            "compliant": true
+          },
+          "contextSwitch": {
+            "responseTime": 183,
+            "threshold": 250,
+            "compliant": true
+          }
+        },
+        "constitutional": {
+          "compliant": true,
+          "violations": 0,
+          "warnings": 0
+        },
+        "crossDomain": {
+          "correlations": {
+            "security-productivity": 0.5338609995454132,
+            "security-mtg": 0.320323829473263,
+            "security-ai": 0.44483592887001266,
+            "security-infrastructure": 0.20021062721182792,
+            "productivity-mtg": 0.6000135423753021,
+            "productivity-ai": 0.8332429775705547,
+            "productivity-infrastructure": 0.3750238870835457,
+            "mtg-ai": 0.720094328457147,
+            "mtg-infrastructure": 0.6250257045848012,
+            "ai-infrastructure": 0.45007746501144763
+          },
+          "bottlenecks": [],
+          "recommendations": []
+        }
+      }
+    },
+    "ux": {
+      "passed": true,
+      "details": {
+        "components": {
+          "src/components/navigation/NavigationDashboard.tsx": {
+            "exists": true
+          },
+          "src/components/focus/AdvancedFocusMode.tsx": {
+            "exists": true
+          },
+          "src/components/workflow/WorkflowManager.tsx": {
+            "exists": true
+          },
+          "src/components/search/UnifiedSearch.tsx": {
+            "exists": true
+          }
+        },
+        "adhdOptimizations": true,
+        "accessibilityFeatures": true,
+        "cognitiveLoadManagement": true,
+        "contextSwitchPrevention": true,
+        "focusMode": true
+      }
+    },
+    "architecture": {
+      "passed": true,
+      "details": {
+        "nxCaching": true,
+        "requiredTargets": true,
+        "requiredApps": true,
+        "actualApps": [
+          "infrastructure-service",
+          "jane-orchestrator",
+          "jane-ui"
+        ]
+      }
+    },
+    "documentation": {
+      "passed": true,
+      "details": {
+        "requiredDocs": {
+          "README.md": {
+            "exists": true
+          },
+          "SETUP.md": {
+            "exists": true
+          },
+          "apps/core/jane-ui/README.md": {
+            "exists": true
+          }
+        },
+        "performanceDocs": true
+      }
+    }
+  },
+  "errors": [],
+  "warnings": [],
+  "constitutional": {
+    "bundleCompliant": true,
+    "performanceCompliant": true,
+    "uxCompliant": true,
+    "architectureCompliant": true
+  }
+}

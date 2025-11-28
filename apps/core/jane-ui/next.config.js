@@ -63,6 +63,70 @@ const nextConfig = {
             },
           },
         };
+
+        // Bundle size monitoring plugin for constitutional compliance
+        config.plugins.push({
+          apply: (compiler) => {
+            compiler.hooks.afterEmit.tap('BundleSizeMonitor', (compilation) => {
+              const assets = compilation.getAssets();
+              const THRESHOLDS = {
+                maxMainBundle: 2 * 1024 * 1024,  // 2MB constitutional requirement
+                maxTotalSize: 5 * 1024 * 1024,   // 5MB platform scalability
+                chunkWarning: 244 * 1024,        // 244KB chunk warning
+              };
+
+              let totalSize = 0;
+              let mainBundleSize = 0;
+              const warnings = [];
+
+              assets.forEach(asset => {
+                if (asset.name.endsWith('.js')) {
+                  const size = asset.source.size();
+                  totalSize += size;
+
+                  // Identify main bundle
+                  if (asset.name.includes('main') || asset.name.includes('app')) {
+                    mainBundleSize = Math.max(mainBundleSize, size);
+                  }
+
+                  // Chunk size warnings
+                  if (size > THRESHOLDS.chunkWarning) {
+                    const sizeKB = Math.round(size / 1024);
+                    warnings.push(`⚠️  Large chunk: ${asset.name} (${sizeKB}KB)`);
+                  }
+                }
+              });
+
+              // Progressive bundle size warnings
+              const mainRatio = mainBundleSize / THRESHOLDS.maxMainBundle;
+              const totalRatio = totalSize / THRESHOLDS.maxTotalSize;
+
+              if (mainRatio >= 1.0) {
+                console.error('\n🚨 CONSTITUTIONAL VIOLATION: Main bundle exceeds 2MB threshold!');
+                console.error(`   Actual: ${Math.round(mainBundleSize / 1024 / 1024 * 100) / 100}MB`);
+                console.error('   Action Required: Implement tool-level lazy loading');
+              } else if (mainRatio >= 0.8) {
+                console.warn('\n⚠️  Main bundle approaching constitutional threshold (80%)');
+                console.warn(`   Current: ${Math.round(mainBundleSize / 1024 / 1024 * 100) / 100}MB / 2MB`);
+              } else if (mainRatio >= 0.5) {
+                console.log('\nℹ️  Main bundle at 50% of constitutional threshold');
+              }
+
+              if (totalRatio >= 1.0) {
+                console.error('\n🚨 PLATFORM SCALABILITY VIOLATION: Total bundle exceeds 5MB!');
+                console.error(`   Actual: ${Math.round(totalSize / 1024 / 1024 * 100) / 100}MB`);
+              } else if (totalRatio >= 0.8) {
+                console.warn(`\n⚠️  Total bundle size at ${Math.round(totalRatio * 100)}% of 5MB limit`);
+              }
+
+              // Output warnings
+              if (warnings.length > 0) {
+                console.log('\n📦 Bundle Size Warnings:');
+                warnings.forEach(warning => console.log(`   ${warning}`));
+              }
+            });
+          }
+        });
       }
     }
     return config;

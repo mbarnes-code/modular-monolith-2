@@ -3,7 +3,13 @@
  * Constitutional compliance with domain-specific thresholds and executive function accommodations
  */
 
-import { NavigationOptimization, PerformanceConfig, PerformanceMetrics } from '../types/performance';
+import {
+    BundleAnalysis,
+    BundleSizeMetrics,
+    NavigationOptimization,
+    PerformanceConfig,
+    PerformanceMetrics
+} from '../types/performance';
 
 class PerformanceMonitor {
   private config: PerformanceConfig;
@@ -239,6 +245,75 @@ class PerformanceMonitor {
   public clearMetrics(): void {
     this.metrics = [];
   }
+
+  // Track bundle size metrics with constitutional compliance
+  public trackBundleSize(metrics: BundleAnalysis): void {
+    console.log('📦 Bundle Analysis:', {
+      main: metrics.mainBundleSize,
+      total: metrics.totalSize,
+      chunks: metrics.chunks.length,
+      warnings: metrics.warnings.length
+    });
+    
+    // Constitutional bundle size thresholds
+    const CONSTITUTIONAL_THRESHOLDS = {
+      maxMainBundle: 2 * 1024 * 1024,    // 2MB - constitutional requirement
+      maxTotalSize: 5 * 1024 * 1024,     // 5MB - platform scalability
+    };
+    
+    // Alert on main bundle size violations
+    if (metrics.mainBundleSize > CONSTITUTIONAL_THRESHOLDS.maxMainBundle) {
+      this.alertPerformanceViolation({
+        timestamp: performance.now(),
+        domain: 'infrastructure' as const,
+        operation: 'bundle-size-main',
+        duration: metrics.mainBundleSize,
+        threshold: CONSTITUTIONAL_THRESHOLDS.maxMainBundle,
+        compliant: false
+      });
+    }
+    
+    // Alert on total bundle size violations
+    if (metrics.totalSize > CONSTITUTIONAL_THRESHOLDS.maxTotalSize) {
+      this.alertPerformanceViolation({
+        timestamp: performance.now(),
+        domain: 'infrastructure' as const,
+        operation: 'bundle-size-total',
+        duration: metrics.totalSize,
+        threshold: CONSTITUTIONAL_THRESHOLDS.maxTotalSize,
+        compliant: false
+      });
+    }
+  }
+  
+  // Enhanced bundle size validation with detailed reporting
+  public async validateBundleSize(): Promise<BundleSizeMetrics | null> {
+    const bundleReport = await this.loadBundleReport();
+    
+    if (!bundleReport) {
+      console.warn('Bundle size report not available. Run build first.');
+      return null;
+    }
+    
+    return {
+      mainBundleSize: bundleReport.metrics.main_bundle_size,
+      totalBundleSize: bundleReport.metrics.total_bundle_size,
+      domainChunks: bundleReport.metrics.domain_chunks,
+      violations: bundleReport.violations,
+      recommendations: bundleReport.recommendations,
+      constitutionalCompliance: bundleReport.constitutional_compliance,
+      timestamp: bundleReport.timestamp
+    };
+  }
+  
+  private async loadBundleReport(): Promise<any> {
+    try {
+      const response = await fetch('/bundle-size-report.json');
+      return response.ok ? await response.json() : null;
+    } catch {
+      return null;
+    }
+  }
 }
 
 // Singleton instance
@@ -254,5 +329,7 @@ export function usePerformanceMonitor() {
     disableFocusMode: performanceMonitor.disableFocusMode.bind(performanceMonitor),
     getMetrics: performanceMonitor.getMetrics.bind(performanceMonitor),
     getComplianceReport: performanceMonitor.getComplianceReport.bind(performanceMonitor),
+    trackBundleSize: performanceMonitor.trackBundleSize.bind(performanceMonitor),
+    validateBundleSize: performanceMonitor.validateBundleSize.bind(performanceMonitor),
   };
 }

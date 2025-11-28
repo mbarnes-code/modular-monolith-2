@@ -1,0 +1,235 @@
+[
+  {
+    "timestamp": "2025-11-22T05:48:49.515Z",
+    "domain": "security",
+    "threshold": "constitutional",
+    "constitutional": {
+      "compliant": true,
+      "violations": 0,
+      "warnings": 0
+    },
+    "metrics": {
+      "bundleSize": {
+        "mainBundle": 123,
+        "totalSize": 941973,
+        "domains": {
+          "vendor": {
+            "size": 804258,
+            "chunks": 9,
+            "limit": null
+          },
+          "ai-tools": {
+            "size": 1017,
+            "chunks": 4,
+            "limit": 358400
+          },
+          "productivity-tools": {
+            "size": 68372,
+            "chunks": 12,
+            "limit": 409600
+          },
+          "security-tools": {
+            "size": 67367,
+            "chunks": 12,
+            "limit": 512000
+          },
+          "mtg-tools": {
+            "size": 507,
+            "chunks": 3,
+            "limit": 307200
+          }
+        },
+        "compliant": true
+      },
+      "domainPerformance": {
+        "security": {
+          "responseTime": 802.0019110000001,
+          "threshold": 1000,
+          "compliant": true,
+          "critical": true
+        }
+      },
+      "executiveFunction": {
+        "interaction": {
+          "responseTime": 9.222369999999955,
+          "threshold": 200,
+          "compliant": true
+        },
+        "navigation": {
+          "responseTime": 233.33377900000005,
+          "threshold": 300,
+          "compliant": true
+        },
+        "dataLoad": {
+          "responseTime": 139.29329900000016,
+          "threshold": 500,
+          "compliant": true
+        },
+        "contextSwitch": {
+          "responseTime": 154.3208299999999,
+          "threshold": 250,
+          "compliant": true
+        }
+      },
+      "crossDomain": {
+        "correlations": {},
+        "bottlenecks": [],
+        "recommendations": []
+      },
+      "resourceUsage": {
+        "memoryUsage": {
+          "heapUsed": 4250968,
+          "heapTotal": 4694016,
+          "external": 1553336,
+          "rss": 42729472
+        },
+        "cpuUsage": {
+          "user": 28311,
+          "system": 4175
+        },
+        "timestamp": "2025-11-22T05:48:49.515Z"
+      }
+    },
+    "summary": {
+      "totalTests": 6,
+      "passed": 6,
+      "failed": 0,
+      "warnings": 0
+    },
+    "recommendations": []
+  },
+  {
+    "timestamp": "2025-11-22T05:52:58.513Z",
+    "domain": "all",
+    "threshold": "constitutional",
+    "constitutional": {
+      "compliant": true,
+      "violations": 0,
+      "warnings": 0
+    },
+    "metrics": {
+      "bundleSize": {
+        "mainBundle": 123,
+        "totalSize": 941973,
+        "domains": {
+          "vendor": {
+            "size": 804258,
+            "chunks": 9,
+            "limit": null
+          },
+          "ai-tools": {
+            "size": 1017,
+            "chunks": 4,
+            "limit": 358400
+          },
+          "productivity-tools": {
+            "size": 68372,
+            "chunks": 12,
+            "limit": 409600
+          },
+          "security-tools": {
+            "size": 67367,
+            "chunks": 12,
+            "limit": 512000
+          },
+          "mtg-tools": {
+            "size": 507,
+            "chunks": 3,
+            "limit": 307200
+          }
+        },
+        "compliant": true
+      },
+      "domainPerformance": {
+        "security": {
+          "responseTime": 801.6956729999999,
+          "threshold": 1000,
+          "compliant": true,
+          "critical": true
+        },
+        "productivity": {
+          "responseTime": 1501.6936500000002,
+          "threshold": 2000,
+          "compliant": true,
+          "critical": false
+        },
+        "mtg": {
+          "responseTime": 2502.766261,
+          "threshold": 3000,
+          "compliant": true,
+          "critical": false
+        },
+        "ai": {
+          "responseTime": 1802.22779,
+          "threshold": 2000,
+          "compliant": true,
+          "critical": false
+        },
+        "infrastructure": {
+          "responseTime": 4004.2613329999995,
+          "threshold": 5000,
+          "compliant": true,
+          "critical": false
+        }
+      },
+      "executiveFunction": {
+        "interaction": {
+          "responseTime": 26.246197000000393,
+          "threshold": 200,
+          "compliant": true
+        },
+        "navigation": {
+          "responseTime": 33.11027599999943,
+          "threshold": 300,
+          "compliant": true
+        },
+        "dataLoad": {
+          "responseTime": 372.4928089999994,
+          "threshold": 500,
+          "compliant": true
+        },
+        "contextSwitch": {
+          "responseTime": 183.31203899999855,
+          "threshold": 250,
+          "compliant": true
+        }
+      },
+      "crossDomain": {
+        "correlations": {
+          "security-productivity": 0.5338609995454132,
+          "security-mtg": 0.320323829473263,
+          "security-ai": 0.44483592887001266,
+          "security-infrastructure": 0.20021062721182792,
+          "productivity-mtg": 0.6000135423753021,
+          "productivity-ai": 0.8332429775705547,
+          "productivity-infrastructure": 0.3750238870835457,
+          "mtg-ai": 0.720094328457147,
+          "mtg-infrastructure": 0.6250257045848012,
+          "ai-infrastructure": 0.45007746501144763
+        },
+        "bottlenecks": [],
+        "recommendations": []
+      },
+      "resourceUsage": {
+        "memoryUsage": {
+          "heapUsed": 4274416,
+          "heapTotal": 4694016,
+          "external": 1553276,
+          "rss": 42598400
+        },
+        "cpuUsage": {
+          "user": 25237,
+          "system": 6956
+        },
+        "timestamp": "2025-11-22T05:52:58.513Z"
+      }
+    },
+    "summary": {
+      "totalTests": 10,
+      "passed": 10,
+      "failed": 0,
+      "warnings": 0
+    },
+    "recommendations": []
+  }
+]

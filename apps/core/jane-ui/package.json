@@ -31,8 +31,21 @@
     "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",
     "analyze-bundle": "ANALYZE=true next build",
+    "bundle-size-check": "npm run build && node ../../../scripts/measure-bundle-size.js",
+    "bundle-size-validate": "npm run build && node ../../../scripts/measure-bundle-size.js --validate",
+    "bundle-size-ci": "node ../../../scripts/measure-bundle-size.js --validate --project=.",
     "performance-audit": "lighthouse http://localhost:3000 --output-path=./performance-reports/audit.html --view",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "test:performance": "playwright test --project=performance-chrome tests/performance/",
+    "test:performance:all": "playwright test tests/performance/",
+    "test:performance:mobile": "playwright test --project=executive-function-mobile",
+    "test:regression": "playwright test tests/performance/performance-regression.spec.ts",
+    "test:integration": "playwright test tests/integration/",
+    "test:monitoring": "playwright test tests/integration/monitoring-integration.spec.ts",
+    "performance:baseline": "npm run test:performance && cp performance-reports/results.json performance-reports/baseline-results.json",
+    "deploy:production": "node ../../../scripts/deploy-production.js",
+    "validate:phase4": "node ../../../scripts/phase4-validation.js",
+    "monitor:production": "npm run build && npm start"
   }
 }

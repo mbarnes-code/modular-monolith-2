@@ -101,6 +101,26 @@ jobs:
 
                   echo "Performance testing completed"
 
+            - name: Bundle Size Validation
+              run: |
+                  echo "📦 Validating Bundle Size Compliance"
+                  cd apps/core/jane-ui
+
+                  # Install dependencies if needed
+                  npm ci
+
+                  # Run bundle size validation with constitutional thresholds
+                  npm run bundle-size-validate
+
+                  # Check for bundle-size-report.json
+                  if [ -f "bundle-size-report.json" ]; then
+                    echo "📊 Bundle size report generated successfully"
+                    cat bundle-size-report.json | jq '.validation_summary'
+                  else
+                    echo "❌ Bundle size report not found"
+                    exit 1
+                  fi
+
             - name: Performance Regression Detection
               run: |
                   cd tests/performance

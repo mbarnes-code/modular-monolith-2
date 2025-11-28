@@ -39,6 +39,15 @@ The jane-ui application is a **Next.js 15 + React 19** frontend that serves as t
 - **Performance Monitoring**: Custom implementation with domain-specific thresholds
 - **UI Components**: Modular architecture with Storybook integration
 
+**tools availiable:**
+- ts-morph
+- babel
+- eslint
+- prettier
+- makefile 
+- webpack
+- jest
+
 **Current Performance Infrastructure:**
 
 - Domain-specific response time targets (Security: <1s, Productivity: <2s, MTG: <3s)

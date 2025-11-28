@@ -1,0 +1,129 @@
+{
+  "timestamp": "2025-11-22T06:51:09.379Z",
+  "constitutional_compliance": true,
+  "constitutional": {
+    "mainBundle": {
+      "size": 556,
+      "limit": 2097152,
+      "compliant": true
+    },
+    "totalSize": {
+      "size": 906908,
+      "limit": 5242880,
+      "compliant": true
+    }
+  },
+  "metrics": {
+    "main_bundle_size": 556,
+    "total_bundle_size": 906908,
+    "domain_chunks": {
+      "ai-tools": {
+        "size": 679,
+        "chunks": [
+          "main-77adbe7d32cdc7d1.js",
+          "main-app-809acedce1d16b3c.js"
+        ]
+      },
+      "other": {
+        "size": 112594,
+        "chunks": [
+          "polyfills-42372ed130431b0a.js"
+        ]
+      },
+      "productivity-tools": {
+        "size": 53816,
+        "chunks": [
+          "productivity-tools-2546d7476018103d.js"
+        ]
+      },
+      "security-tools": {
+        "size": 61836,
+        "chunks": [
+          "security-tools-8af7971525f70aeb.js"
+        ]
+      },
+      "vendor": {
+        "size": 677983,
+        "chunks": [
+          "vendor-21e9f3a718cbc8b1.js",
+          "webpack-1eab22e2089f8f72.js"
+        ]
+      }
+    },
+    "all_chunks": {
+      "main-77adbe7d32cdc7d1.js": 123,
+      "main-app-809acedce1d16b3c.js": 556,
+      "polyfills-42372ed130431b0a.js": 112594,
+      "productivity-tools-2546d7476018103d.js": 53816,
+      "security-tools-8af7971525f70aeb.js": 61836,
+      "vendor-21e9f3a718cbc8b1.js": 674631,
+      "webpack-1eab22e2089f8f72.js": 3352
+    }
+  },
+  "thresholds": {
+    "maxMainBundle": 2097152,
+    "maxTotalSize": 5242880,
+    "chunkSizeWarning": 249856,
+    "domainChunkLimits": {
+      "security-tools": 1572864,
+      "productivity-tools": 1048576,
+      "mtg-tools": 819200,
+      "ai-tools": 1258291.2,
+      "vendor": 2097152
+    }
+  },
+  "violations": [],
+  "recommendations": [],
+  "validation_summary": {
+    "main_bundle": {
+      "name": "Main Bundle",
+      "actualSize": 556,
+      "threshold": 2097152,
+      "ratio": 0.0002651214599609375,
+      "status": "ok",
+      "severity": "info"
+    },
+    "total_size": {
+      "name": "Total Bundle Size",
+      "actualSize": 906908,
+      "threshold": 5242880,
+      "ratio": 0.17297897338867188,
+      "status": "ok",
+      "severity": "info"
+    },
+    "domain_chunks": {
+      "ai-tools": {
+        "name": "Ai-tools Chunks",
+        "actualSize": 679,
+        "threshold": 1258291.2,
+        "ratio": 0.0005396207173665365,
+        "status": "ok",
+        "severity": "info"
+      },
+      "productivity-tools": {
+        "name": "Productivity-tools Chunks",
+        "actualSize": 53816,
+        "threshold": 1048576,
+        "ratio": 0.05132293701171875,
+        "status": "ok",
+        "severity": "info"
+      },
+      "security-tools": {
+        "name": "Security-tools Chunks",
+        "actualSize": 61836,
+        "threshold": 1572864,
+        "ratio": 0.03931427001953125,
+        "status": "ok",
+        "severity": "info"
+      },
+      "vendor": {
+        "name": "Vendor Chunks",
+        "actualSize": 677983,
+        "threshold": 2097152,
+        "ratio": 0.3232874870300293,
+        "status": "ok",
+        "severity": "info"
+      }
+    }
+  }
+}

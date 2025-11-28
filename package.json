@@ -50,6 +50,7 @@
     "@eslint/compat": "^1.1.1",
     "@eslint/eslintrc": "^2.1.1",
     "@mermaid-js/mermaid-cli": "^11.12.0",
+    "@next/bundle-analyzer": "^15.5.6",
     "@next/eslint-plugin-next": "^16.0.0",
     "@nx/esbuild": "22.0.2",
     "@nx/eslint": "22.0.2",
@@ -133,6 +134,7 @@
     "typescript-eslint": "^8.46.4",
     "vite": "^6.0.0",
     "wait-on": "^8.0.3",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {

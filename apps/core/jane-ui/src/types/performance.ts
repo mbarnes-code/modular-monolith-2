@@ -93,3 +93,30 @@ export interface BundleAnalysis {
   warnings: string[];
   recommendations: string[];
 }
+
+export interface BundleSizeMetrics {
+  mainBundleSize: number;
+  totalBundleSize: number;
+  domainChunks: Record<string, { size: number; chunks: string[] }>;
+  violations: BundleSizeViolation[];
+  recommendations: BundleOptimization[];
+  constitutionalCompliance: boolean;
+  timestamp: string;
+}
+
+export interface BundleSizeViolation {
+  type: 'bundle_size' | 'domain_chunk' | 'dependency';
+  name: string;
+  message: string;
+  actualSize: number;
+  threshold: number;
+  severity: 'info' | 'warn' | 'error' | 'critical';
+}
+
+export interface BundleOptimization {
+  type: 'optimization' | 'domain_optimization' | 'dependency_optimization';
+  priority: 'low' | 'medium' | 'high';
+  domain?: string;
+  message: string;
+  details?: string;
+}

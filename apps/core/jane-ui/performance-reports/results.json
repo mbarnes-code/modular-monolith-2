@@ -1,0 +1,608 @@
+{
+  "config": {
+    "configFile": "/workspaces/modular-monolith-2/apps/core/jane-ui/playwright.config.ts",
+    "rootDir": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/global-setup.ts",
+    "globalTeardown": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/global-teardown.ts",
+    "globalTimeout": 600000,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 7
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "performance-reports/playwright"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "performance-reports/results.json"
+        }
+      ],
+      [
+        "line",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/workspaces/modular-monolith-2/apps/core/jane-ui/performance-reports/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "performance-chrome",
+        "name": "performance-chrome",
+        "testDir": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/performance/**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/workspaces/modular-monolith-2/apps/core/jane-ui/performance-reports/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "performance-firefox",
+        "name": "performance-firefox",
+        "testDir": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/performance/**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/workspaces/modular-monolith-2/apps/core/jane-ui/performance-reports/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "performance-safari",
+        "name": "performance-safari",
+        "testDir": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/performance/**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/workspaces/modular-monolith-2/apps/core/jane-ui/performance-reports/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "executive-function-mobile",
+        "name": "executive-function-mobile",
+        "testDir": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/performance/performance-regression.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 8,
+    "webServer": {
+      "command": "npm run dev",
+      "port": 3000,
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "performance/performance-regression.spec.ts",
+      "file": "performance/performance-regression.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Performance Regression Tests",
+          "file": "performance/performance-regression.spec.ts",
+          "line": 52,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Bundle size meets constitutional requirements",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "performance-chrome",
+                  "projectName": "performance-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30",
+                        "location": {
+                          "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                          "column": 30,
+                          "line": 57
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 30,
+                            "line": 57
+                          },
+                          "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n\n\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30\u001b[22m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 19,
+                            "line": 61
+                          },
+                          "message": "TypeError: Cannot read properties of undefined (reading 'close')\n\n\u001b[0m \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 61 |\u001b[39m     \u001b[36mawait\u001b[39m browser\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 62 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 63 |\u001b[39m\n \u001b[90m 64 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:61:19\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-22T06:51:35.582Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                        "column": 30,
+                        "line": 57
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ba5944d5e46361a58695-cb67b53f8fd0320f862b",
+              "file": "performance/performance-regression.spec.ts",
+              "line": 72,
+              "column": 7
+            },
+            {
+              "title": "Page load performance meets executive function requirements",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "performance-chrome",
+                  "projectName": "performance-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30",
+                        "location": {
+                          "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                          "column": 30,
+                          "line": 57
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 30,
+                            "line": 57
+                          },
+                          "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n\n\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30\u001b[22m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 19,
+                            "line": 61
+                          },
+                          "message": "TypeError: Cannot read properties of undefined (reading 'close')\n\n\u001b[0m \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 61 |\u001b[39m     \u001b[36mawait\u001b[39m browser\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 62 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 63 |\u001b[39m\n \u001b[90m 64 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:61:19\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-22T06:51:35.533Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                        "column": 30,
+                        "line": 57
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ba5944d5e46361a58695-0f961ade2e7aec458cc2",
+              "file": "performance/performance-regression.spec.ts",
+              "line": 99,
+              "column": 7
+            },
+            {
+              "title": "UI interactions meet ADHD accommodation requirements",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "performance-chrome",
+                  "projectName": "performance-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30",
+                        "location": {
+                          "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                          "column": 30,
+                          "line": 57
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 30,
+                            "line": 57
+                          },
+                          "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n\n\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30\u001b[22m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 19,
+                            "line": 61
+                          },
+                          "message": "TypeError: Cannot read properties of undefined (reading 'close')\n\n\u001b[0m \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 61 |\u001b[39m     \u001b[36mawait\u001b[39m browser\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 62 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 63 |\u001b[39m\n \u001b[90m 64 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:61:19\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-22T06:51:35.563Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                        "column": 30,
+                        "line": 57
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ba5944d5e46361a58695-5d7bf555876ac90c3c9f",
+              "file": "performance/performance-regression.spec.ts",
+              "line": 122,
+              "column": 7
+            },
+            {
+              "title": "Domain-specific response times meet constitutional requirements",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "performance-chrome",
+                  "projectName": "performance-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30",
+                        "location": {
+                          "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                          "column": 30,
+                          "line": 57
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 30,
+                            "line": 57
+                          },
+                          "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n\n\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30\u001b[22m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 19,
+                            "line": 61
+                          },
+                          "message": "TypeError: Cannot read properties of undefined (reading 'close')\n\n\u001b[0m \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 61 |\u001b[39m     \u001b[36mawait\u001b[39m browser\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 62 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 63 |\u001b[39m\n \u001b[90m 64 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:61:19\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-22T06:51:35.518Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                        "column": 30,
+                        "line": 57
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ba5944d5e46361a58695-fb15c12d0de5bd31ba92",
+              "file": "performance/performance-regression.spec.ts",
+              "line": 156,
+              "column": 7
+            },
+            {
+              "title": "Lighthouse performance audit meets quality standards",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "performance-chrome",
+                  "projectName": "performance-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30",
+                        "location": {
+                          "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                          "column": 30,
+                          "line": 57
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 30,
+                            "line": 57
+                          },
+                          "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n\n\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30\u001b[22m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 19,
+                            "line": 61
+                          },
+                          "message": "TypeError: Cannot read properties of undefined (reading 'close')\n\n\u001b[0m \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 61 |\u001b[39m     \u001b[36mawait\u001b[39m browser\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 62 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 63 |\u001b[39m\n \u001b[90m 64 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:61:19\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-22T06:51:35.615Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                        "column": 30,
+                        "line": 57
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ba5944d5e46361a58695-b900ebe06523dfa2da9d",
+              "file": "performance/performance-regression.spec.ts",
+              "line": 191,
+              "column": 7
+            },
+            {
+              "title": "Memory usage stays within cognitive load limits",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "performance-chrome",
+                  "projectName": "performance-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30",
+                        "location": {
+                          "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                          "column": 30,
+                          "line": 57
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 30,
+                            "line": 57
+                          },
+                          "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n\n\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30\u001b[22m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 19,
+                            "line": 61
+                          },
+                          "message": "TypeError: Cannot read properties of undefined (reading 'close')\n\n\u001b[0m \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 61 |\u001b[39m     \u001b[36mawait\u001b[39m browser\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 62 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 63 |\u001b[39m\n \u001b[90m 64 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:61:19\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-22T06:51:35.500Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                        "column": 30,
+                        "line": 57
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ba5944d5e46361a58695-891b0ce664c4b47d132d",
+              "file": "performance/performance-regression.spec.ts",
+              "line": 240,
+              "column": 7
+            },
+            {
+              "title": "Performance regression detection",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "performance-chrome",
+                  "projectName": "performance-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
+                      "status": "failed",
+                      "duration": 0,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30",
+                        "location": {
+                          "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                          "column": 30,
+                          "line": 57
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 30,
+                            "line": 57
+                          },
+                          "message": "Error: browserType.launch: Executable doesn't exist at /home/codespace/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n\n\u001b[0m \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 57 |\u001b[39m     browser \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m chromium\u001b[33m.\u001b[39mlaunch()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 58 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:57:30\u001b[22m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                            "column": 19,
+                            "line": 61
+                          },
+                          "message": "TypeError: Cannot read properties of undefined (reading 'close')\n\n\u001b[0m \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m   test\u001b[33m.\u001b[39mafterAll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 61 |\u001b[39m     \u001b[36mawait\u001b[39m browser\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 62 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 63 |\u001b[39m\n \u001b[90m 64 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts:61:19\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-22T06:51:35.541Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/workspaces/modular-monolith-2/apps/core/jane-ui/tests/performance/performance-regression.spec.ts",
+                        "column": 30,
+                        "line": 57
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ba5944d5e46361a58695-c547172ad703a3f6fcfd",
+              "file": "performance/performance-regression.spec.ts",
+              "line": 291,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-11-22T06:51:27.833Z",
+    "duration": 7986.0779999999995,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 7,
+    "flaky": 0
+  }
+}

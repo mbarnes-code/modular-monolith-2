@@ -10,14 +10,54 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/jane-ui"
+        "outputPath": "dist/apps/core/jane-ui"
       },
       "configurations": {
         "development": {
-          "outputPath": "apps/jane-ui"
+          "outputPath": "apps/core/jane-ui"
         },
         "production": {}
       }
+    },
+    "bundle-size-check": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "node ../../../scripts/validate-bundle-size.js",
+        "cwd": "apps/core/jane-ui"
+      }
+    },
+    "analyze-bundle": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "ANALYZE=true npx next build",
+        "cwd": "apps/core/jane-ui"
+      },
+      "outputs": ["{projectRoot}/.next/analyze"]
+    },
+    "performance-audit": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "commands": [
+          "node ../../../scripts/validate-bundle-size.js",
+          "node ../../../scripts/measure-bundle-size.js",
+          "node ../../../scripts/performance-regression-test.js"
+        ],
+        "cwd": "apps/core/jane-ui",
+        "parallel": false
+      },
+      "outputs": ["{projectRoot}/bundle-size-report.json", "{projectRoot}/performance-reports"]
+    },
+    "performance-test": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "node ../../../scripts/performance-regression-test.js --domain=all --threshold=constitutional",
+        "cwd": "apps/core/jane-ui"
+      },
+      "outputs": ["{projectRoot}/performance-test-results.json"]
     },
     "serve": {
       "executor": "@nx/next:server",

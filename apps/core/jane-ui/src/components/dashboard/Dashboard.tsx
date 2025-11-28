@@ -21,11 +21,11 @@ import {
 } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { UnifiedSearch } from '../search/UnifiedSearch';
 import { DomainCard } from './DomainCard';
 import { ExecutiveFunctionSupport } from './ExecutiveFunctionSupport';
 import { HealthStatus } from './HealthStatus';
 import { QuickActions } from './QuickActions';
-import { SearchBar } from './SearchBar';
 import { ToolGrid } from './ToolGrid';
 import { UserPreferences } from './UserPreferences';
 
@@ -282,13 +282,19 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
 
-        {/* Search Bar - Always visible for executive function support */}
+        {/* Unified Search - Always visible for executive function support */}
         <div className="mt-4">
-          <SearchBar
-            value={state.searchQuery}
-            onChange={handleSearch}
+          <UnifiedSearch
+            onResultSelect={(result) => {
+              console.log('Search result selected:', result);
+              // Navigate to the selected tool/domain
+              if (result.domain && result.tool) {
+                handleDomainSelect(result.domain);
+              }
+            }}
             placeholder="Search across all 37 tools and 4 domains..."
-            executiveFunctionEnabled={!!executiveFunctionConfig}
+            showFilters={true}
+            maxResults={20}
           />
         </div>
       </header>

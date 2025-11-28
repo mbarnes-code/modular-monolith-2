@@ -1,0 +1,99 @@
+{
+  "timestamp": "2025-11-22T05:48:49.515Z",
+  "domain": "security",
+  "threshold": "constitutional",
+  "constitutional": {
+    "compliant": true,
+    "violations": 0,
+    "warnings": 0
+  },
+  "metrics": {
+    "bundleSize": {
+      "mainBundle": 123,
+      "totalSize": 941973,
+      "domains": {
+        "vendor": {
+          "size": 804258,
+          "chunks": 9,
+          "limit": null
+        },
+        "ai-tools": {
+          "size": 1017,
+          "chunks": 4,
+          "limit": 358400
+        },
+        "productivity-tools": {
+          "size": 68372,
+          "chunks": 12,
+          "limit": 409600
+        },
+        "security-tools": {
+          "size": 67367,
+          "chunks": 12,
+          "limit": 512000
+        },
+        "mtg-tools": {
+          "size": 507,
+          "chunks": 3,
+          "limit": 307200
+        }
+      },
+      "compliant": true
+    },
+    "domainPerformance": {
+      "security": {
+        "responseTime": 802.0019110000001,
+        "threshold": 1000,
+        "compliant": true,
+        "critical": true
+      }
+    },
+    "executiveFunction": {
+      "interaction": {
+        "responseTime": 9.222369999999955,
+        "threshold": 200,
+        "compliant": true
+      },
+      "navigation": {
+        "responseTime": 233.33377900000005,
+        "threshold": 300,
+        "compliant": true
+      },
+      "dataLoad": {
+        "responseTime": 139.29329900000016,
+        "threshold": 500,
+        "compliant": true
+      },
+      "contextSwitch": {
+        "responseTime": 154.3208299999999,
+        "threshold": 250,
+        "compliant": true
+      }
+    },
+    "crossDomain": {
+      "correlations": {},
+      "bottlenecks": [],
+      "recommendations": []
+    },
+    "resourceUsage": {
+      "memoryUsage": {
+        "heapUsed": 4250968,
+        "heapTotal": 4694016,
+        "external": 1553336,
+        "rss": 42729472
+      },
+      "cpuUsage": {
+        "user": 28311,
+        "system": 4175
+      },
+      "timestamp": "2025-11-22T05:48:49.515Z"
+    }
+  },
+  "summary": {
+    "totalTests": 6,
+    "passed": 6,
+    "failed": 0,
+    "warnings": 0
+  },
+  "recommendations": []
+}

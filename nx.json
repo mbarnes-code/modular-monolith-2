@@ -69,6 +69,16 @@
       "dependsOn": ["build"],
       "outputs": ["{projectRoot}/.next/analyze"]
     },
+    "bundle-size-check": {
+      "cache": true,
+      "dependsOn": ["build"],
+      "outputs": ["{projectRoot}/bundle-size-report.json"]
+    },
+    "performance-audit": {
+      "cache": true,
+      "dependsOn": ["build"],
+      "outputs": ["{projectRoot}/performance-reports"]
+    },
     "performance-audit": {
       "cache": true,
       "dependsOn": ["build"],
@@ -78,6 +88,32 @@
       "cache": false,
       "dependsOn": ["^build"],
       "env": ["DATABASE_URL", "REDIS_URL", "OPENAI_API_KEY"]
+    },
+    "test:performance": {
+      "cache": true,
+      "dependsOn": ["build"],
+      "inputs": ["default", "{projectRoot}/playwright.config.ts", "{projectRoot}/tests/**/*"],
+      "outputs": ["{projectRoot}/performance-reports"]
+    },
+    "test:regression": {
+      "cache": false,
+      "dependsOn": ["build"],
+      "inputs": ["default", "{projectRoot}/performance-reports/baseline.json"]
+    },
+    "validate:phase4": {
+      "cache": true,
+      "dependsOn": ["build", "bundle-size-check"],
+      "inputs": ["production", "{workspaceRoot}/scripts/phase4-validation.js"],
+      "outputs": ["{projectRoot}/phase4-validation-report.json"]
+    },
+    "deploy:production": {
+      "cache": false,
+      "dependsOn": ["validate:phase4"],
+      "inputs": ["production", "{workspaceRoot}/scripts/deploy-production.js"]
+    },
+    "monitor:production": {
+      "cache": false,
+      "dependsOn": ["build"]
     }
   },
   "namedInputs": {
@@ -136,12 +172,22 @@
           "build-storybook",
           "analyze-bundle",
           "performance-audit",
-          "type-check"
+          "type-check",
+          "bundle-size-check",
+          "bundle-size-validate",
+          "test:performance",
+          "test:regression",
+          "validate:phase4"
         ],
-        "parallel": 5,
-        "maxParallel": 8,
+        "parallel": 8,
+        "maxParallel": 12,
         "useDaemonProcess": true,
-        "cacheDirectory": ".nx/cache"
+        "cacheDirectory": ".nx/cache",
+        "remoteCache": {
+          "enabled": false
+        },
+        "skipNxCache": false,
+        "runtimeCacheInputs": ["node --version"]
       }
     }
   },
