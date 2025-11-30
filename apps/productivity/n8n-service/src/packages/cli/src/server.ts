@@ -162,12 +162,19 @@ export class Server extends AbstractServer {
 		// ----------------------------------------
 
 		try {
-			// in the short term, we load the OIDC module here to ensure it is initialized
-			// ideally we want to migrate this to a module and be able to load it dynamically
-			// when the license changes, but that requires some refactoring
+			// Initialize OIDC service
 			const { OidcService } = await import('@/sso.ee/oidc/oidc.service.ee');
 			await Container.get(OidcService).init();
 			await import('@/sso.ee/oidc/routes/oidc.controller.ee');
+			
+			// Integrate with central auth service if configured
+			try {
+				const { n8nAuthStartupHook } = await import('../../../../n8n-auth-patch');
+				await n8nAuthStartupHook();
+			} catch (authError) {
+				this.logger.debug(`Central auth integration not available: ${(authError as Error).message}`);
+				this.logger.info('N8N running with standard OIDC configuration');
+			}
 		} catch (error) {
 			this.logger.warn(`OIDC initialization failed: ${(error as Error).message}`);
 		}

@@ -26,6 +26,10 @@ dependencies = [
     # Local dependencies
     "dispatch-core",
     "dispatch-database",
+    # Central auth integration dependencies
+    "@modular-monolith/auth-core>=1.0.0",
+    "@modular-monolith/auth-clients>=1.0.0", 
+    "@modular-monolith/auth-config>=1.0.0",
 ]
 
 [project.optional-dependencies]

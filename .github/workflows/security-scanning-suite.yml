@@ -1,518 +1,550 @@
 name: Security Scanning Suite
 
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: write
+
 on:
-    workflow_call:
-        inputs:
-            service-name:
-                description: "Name of the service to scan"
-                required: true
-                type: string
-            working-directory:
-                description: "Working directory for the service"
-                required: false
-                type: string
-                default: "."
-            enable-sast:
-                description: "Enable Static Application Security Testing (SAST)"
-                required: false
-                type: boolean
-                default: true
-            enable-dependency-scan:
-                description: "Enable dependency vulnerability scanning"
-                required: false
-                type: boolean
-                default: true
-            enable-secrets-scan:
-                description: "Enable secrets detection"
-                required: false
-                type: boolean
-                default: true
-            enable-container-scan:
-                description: "Enable container security scanning"
-                required: false
-                type: boolean
-                default: false
-            container-image:
-                description: "Container image to scan (if container scanning enabled)"
-                required: false
-                type: string
-                default: ""
-            domain:
-                description: "Service domain for security requirements"
-                required: false
-                type: string
-                default: "infrastructure"
-            fail-on-severity:
-                description: "Fail build on this severity level or higher"
-                required: false
-                type: string
-                default: "high"
+  workflow_call:
+    inputs:
+      service-name:
+        description: "Name of the service to scan"
+        required: true
+        type: string
+      working-directory:
+        description: "Working directory for the service"
+        required: false
+        type: string
+        default: "."
+      enable-sast:
+        description: "Enable Static Application Security Testing (SAST)"
+        required: false
+        type: boolean
+        default: true
+      enable-dependency-scan:
+        description: "Enable dependency vulnerability scanning"
+        required: false
+        type: boolean
+        default: true
+      enable-secrets-scan:
+        description: "Enable secrets detection"
+        required: false
+        type: boolean
+        default: true
+      enable-container-scan:
+        description: "Enable container security scanning"
+        required: false
+        type: boolean
+        default: false
+      container-image:
+        description: "Container image to scan (if container scanning enabled)"
+        required: false
+        type: string
+        default: ""
+      domain:
+        description: "Service domain for security requirements"
+        required: false
+        type: string
+        default: "infrastructure"
+      fail-on-severity:
+        description: "Fail build on this severity level or higher"
+        required: false
+        type: string
+        default: "high"
 
 env:
-    # Domain-specific security requirements
-    SECURITY_DOMAIN_HIGH: ${{ inputs.domain == 'security' }}
-    SECURITY_DOMAIN_MEDIUM: ${{ inputs.domain == 'productivity' || inputs.domain == 'tcg' }}
-    SECURITY_DOMAIN_STANDARD: ${{ inputs.domain == 'infrastructure' || inputs.domain == 'ai' }}
+  # Domain-specific security requirements
+  SECURITY_DOMAIN_HIGH: ${{ inputs.domain == 'security' }}
+  SECURITY_DOMAIN_MEDIUM: ${{ inputs.domain == 'productivity' || inputs.domain == 'tcg' }}
+  SECURITY_DOMAIN_STANDARD: ${{ inputs.domain == 'infrastructure' || inputs.domain == 'ai' }}
 
 jobs:
-    security-setup:
-        name: Security Scan Setup
-        runs-on: ubuntu-latest
-        outputs:
-            scan-matrix: ${{ steps.matrix.outputs.scan-matrix }}
-            security-level: ${{ steps.level.outputs.security-level }}
+  security-setup:
+    name: Security Scan Setup
+    runs-on: ubuntu-latest
+    outputs:
+      scan-matrix: ${{ steps.matrix.outputs.scan-matrix }}
+      security-level: ${{ steps.level.outputs.security-level }}
 
-        steps:
-            - name: Determine security level
-              id: level
-              run: |
-                  case "${{ inputs.domain }}" in
-                    security)
-                      echo "security-level=high" >> $GITHUB_OUTPUT
-                      echo "🔴 High security domain detected"
-                      ;;
-                    productivity|tcg)
-                      echo "security-level=medium" >> $GITHUB_OUTPUT  
-                      echo "🟡 Medium security domain detected"
-                      ;;
-                    *)
-                      echo "security-level=standard" >> $GITHUB_OUTPUT
-                      echo "🟢 Standard security domain detected"
-                      ;;
-                  esac
+    steps:
+      - name: Determine security level
+        id: level
+        timeout-minutes: 2
+        run: |
+          case "${{ inputs.domain }}" in
+            security)
+              echo "security-level=high" >> $GITHUB_OUTPUT
+              echo "timeout-minutes=30" >> $GITHUB_OUTPUT
+              echo "🔴 High security domain detected - Enhanced scanning"
+              ;;
+            productivity|tcg)
+              echo "security-level=medium" >> $GITHUB_OUTPUT
+              echo "timeout-minutes=20" >> $GITHUB_OUTPUT  
+              echo "🟡 Medium security domain detected - Standard scanning"
+              ;;
+            *)
+              echo "security-level=standard" >> $GITHUB_OUTPUT
+              echo "timeout-minutes=15" >> $GITHUB_OUTPUT
+              echo "🟢 Standard security domain detected - Basic scanning"
+              ;;
+          esac
 
             - name: Generate scan matrix
               id: matrix
+              timeout-minutes: 2
               run: |
+                  set -euo pipefail
                   SCANS=()
 
                   if [[ "${{ inputs.enable-sast }}" == "true" ]]; then
                     SCANS+=("sast")
+                    echo "🔍 SAST scanning enabled"
                   fi
 
                   if [[ "${{ inputs.enable-dependency-scan }}" == "true" ]]; then
                     SCANS+=("dependency")
+                    echo "📦 Dependency scanning enabled"
                   fi
 
                   if [[ "${{ inputs.enable-secrets-scan }}" == "true" ]]; then
                     SCANS+=("secrets")
+                    echo "🔐 Secret scanning enabled"
                   fi
-
-                  if [[ "${{ inputs.enable-container-scan }}" == "true" && -n "${{ inputs.container-image }}" ]]; then
+                  
+                  if [[ "${{ inputs.enable-container-scan }}" == "true" ]]; then
                     SCANS+=("container")
+                    echo "📦 Container scanning enabled"
                   fi
-
-                  MATRIX=$(printf '%s\n' "${SCANS[@]}" | jq -R . | jq -s .)
-                  echo "scan-matrix=${MATRIX}" >> $GITHUB_OUTPUT
-                  echo "🔍 Enabled scans: $(echo "${SCANS[@]}" | tr ' ' ',')"
-
-    codeql-analysis:
-        name: CodeQL SAST Analysis
-        runs-on: ubuntu-latest
-        needs: security-setup
-        if: inputs.enable-sast
-        timeout-minutes: ${{ inputs.domain == 'security' && 45 || 30 }}
-
-        permissions:
-            actions: read
-            contents: read
-            security-events: write
-
-        strategy:
-            fail-fast: false
-            matrix:
-                language: ["javascript", "python", "typescript"]
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Initialize CodeQL
-              uses: github/codeql-action/init@v3
-              with:
-                  languages: ${{ matrix.language }}
-                  # Domain-specific query suites
-                  queries: |
-                      ${{ inputs.domain == 'security' && '+security-extended,security-and-quality' || 
-                          inputs.domain == 'productivity' && 'security-and-quality' || 
-                          'security-minimal' }}
-
-            - name: Setup language environment
-              if: matrix.language == 'javascript' || matrix.language == 'typescript'
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20.x"
-                  cache: "npm"
-                  cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
-
-            - name: Setup Python environment
-              if: matrix.language == 'python'
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.12"
-                  cache: "pip"
-
-            - name: Install dependencies
-              working-directory: ${{ inputs.working-directory }}
-              run: |
-                  if [ -f package.json ] && [[ "${{ matrix.language }}" == "javascript" || "${{ matrix.language }}" == "typescript" ]]; then
-                    npm ci --prefer-offline
-                  elif [ -f requirements.txt ] && [[ "${{ matrix.language }}" == "python" ]]; then
-                    python -m venv .venv
-                    source .venv/bin/activate
-                    pip install -r requirements.txt
-                  fi
-
-            - name: Perform CodeQL Analysis
-              uses: github/codeql-action/analyze@v3
-              with:
-                  category: "/language:${{ matrix.language }}"
-
-            - name: Process CodeQL results
-              run: |
-                  echo "## 🔍 CodeQL SAST Results (${{ matrix.language }})" >> $GITHUB_STEP_SUMMARY
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "**Service**: ${{ inputs.service-name }}" >> $GITHUB_STEP_SUMMARY
-                  echo "**Language**: ${{ matrix.language }}" >> $GITHUB_STEP_SUMMARY
-                  echo "**Security Domain**: ${{ inputs.domain }} (${{ needs.security-setup.outputs.security-level }})" >> $GITHUB_STEP_SUMMARY
-                  echo "**Query Suite**: ${{ inputs.domain == 'security' && 'security-extended' || 'standard' }}" >> $GITHUB_STEP_SUMMARY
-
-    dependency-scan:
-        name: Dependency Vulnerability Scan
-        runs-on: ubuntu-latest
-        needs: security-setup
-        if: inputs.enable-dependency-scan
-        timeout-minutes: 15
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Setup Node.js
-              if: hashFiles(format('{0}/**/package*.json', inputs.working-directory)) != ''
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20.x"
-
-            - name: Setup Python
-              if: hashFiles(format('{0}/**/requirements*.txt', inputs.working-directory)) != ''
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.12"
-
-            - name: Run npm audit (Node.js)
-              if: hashFiles(format('{0}/**/package*.json', inputs.working-directory)) != ''
-              working-directory: ${{ inputs.working-directory }}
-              run: |
-                  echo "🔍 Running npm audit for Node.js dependencies..."
-
-                  # Install dependencies first
-                  npm ci --prefer-offline
-
-                  # Run audit with domain-specific thresholds
+                  
+                  # Add domain-specific scans
                   if [[ "${{ inputs.domain }}" == "security" ]]; then
-                    echo "🔴 High security domain: failing on moderate+ vulnerabilities"
-                    npm audit --audit-level moderate --production
-                  elif [[ "${{ inputs.domain }}" == "productivity" || "${{ inputs.domain }}" == "tcg" ]]; then
-                    echo "🟡 Medium security domain: failing on high+ vulnerabilities"
-                    npm audit --audit-level high --production
-                  else
-                    echo "🟢 Standard security domain: failing on critical vulnerabilities"
-                    npm audit --audit-level critical --production
+                    SCANS+=("advanced-security")
+                    echo "🔴 Advanced security scanning enabled for security domain"
                   fi
-
-                  # Generate detailed report
-                  npm audit --json > npm-audit-results.json || true
-
-            - name: Run safety check (Python)
-              if: hashFiles(format('{0}/**/requirements*.txt', inputs.working-directory)) != ''
-              working-directory: ${{ inputs.working-directory }}
-              run: |
-                  echo "🐍 Running Safety check for Python dependencies..."
-
-                  # Install safety
-                  pip install safety
-
-                  # Run safety check
-                  if [ -f requirements.txt ]; then
-                    safety check -r requirements.txt --json --output safety-results.json || true
-                    
-                    # Check results based on domain
-                    VULN_COUNT=$(cat safety-results.json | jq '.vulnerabilities | length' 2>/dev/null || echo "0")
-                    echo "Found ${VULN_COUNT} vulnerabilities"
-                    
-                    if [[ "${{ inputs.domain }}" == "security" && "${VULN_COUNT}" -gt 0 ]]; then
-                      echo "❌ Security domain: No vulnerabilities allowed"
-                      exit 1
-                    elif [[ ("${{ inputs.domain }}" == "productivity" || "${{ inputs.domain }}" == "tcg") && "${VULN_COUNT}" -gt 5 ]]; then
-                      echo "⚠️ Medium security domain: Too many vulnerabilities (${VULN_COUNT} > 5)"
-                      exit 1
-                    elif [[ "${VULN_COUNT}" -gt 10 ]]; then
-                      echo "⚠️ Standard security domain: Too many vulnerabilities (${VULN_COUNT} > 10)"
-                      exit 1
-                    fi
+                  
+                  if [ ${#SCANS[@]} -eq 0 ]; then
+                    echo "⚠️  No scans enabled, adding basic dependency scan"
+                    SCANS+=("dependency")
                   fi
+                  
+                  printf -v SCAN_JSON '%s\n' "${SCANS[@]}" | jq -R . | jq -s .
+                  echo "scan-matrix=$SCAN_JSON" >> $GITHUB_OUTPUT
+                  echo "📈 Scan matrix: $SCAN_JSON"          if [[ "${{ inputs.enable-container-scan }}" == "true" && -n "${{ inputs.container-image }}" ]]; then
+            SCANS+=("container")
+          fi
 
-            - name: Run Snyk vulnerability scan
-              uses: snyk/actions/node@master
-              continue-on-error: true
-              env:
-                  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-              with:
-                  args: --severity-threshold=${{ inputs.fail-on-severity }} --file=${{ inputs.working-directory }}/package.json
+          MATRIX=$(printf '%s\n' "${SCANS[@]}" | jq -R . | jq -s .)
+          echo "scan-matrix=${MATRIX}" >> $GITHUB_OUTPUT
+          echo "🔍 Enabled scans: $(echo "${SCANS[@]}" | tr ' ' ',')"
 
-            - name: Upload dependency scan results
-              if: always()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: dependency-scan-results-${{ inputs.service-name }}
-                  path: |
-                      ${{ inputs.working-directory }}/npm-audit-results.json
-                      ${{ inputs.working-directory }}/safety-results.json
-                      ${{ inputs.working-directory }}/snyk-results.json
-                  retention-days: 30
+  codeql-analysis:
+    name: CodeQL SAST Analysis
+    runs-on: ubuntu-latest
+    needs: security-setup
+    if: inputs.enable-sast
+    timeout-minutes: ${{ inputs.domain == 'security' && 45 || 30 }}
 
-    secrets-scan:
-        name: Secrets Detection
-        runs-on: ubuntu-latest
-        needs: security-setup
-        if: inputs.enable-secrets-scan
-        timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["javascript", "python", "typescript"]
 
-            - name: Run TruffleHog secrets scan
-              uses: trufflesecurity/trufflehog@main
-              with:
-                  path: ${{ inputs.working-directory }}
-                  base: main
-                  head: HEAD
-                  extra_args: --debug --only-verified
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-            - name: Run GitLeaks secrets scan
-              uses: gitleaks/gitleaks-action@v2
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  source: ${{ inputs.working-directory }}
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          # Domain-specific query suites
+          queries: |
+            ${{ inputs.domain == 'security' && '+security-extended,security-and-quality' || 
+                inputs.domain == 'productivity' && 'security-and-quality' || 
+                'security-minimal' }}
 
-            - name: Custom secrets patterns scan
-              working-directory: ${{ inputs.working-directory }}
-              run: |
-                  echo "🔍 Running custom secrets pattern detection..."
+      - name: Setup language environment
+        if: matrix.language == 'javascript' || matrix.language == 'typescript'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
 
-                  # Domain-specific secret patterns
-                  PATTERNS=(
-                    "password\s*=\s*[\"'][^\"']{8,}[\"']"
-                    "api[_-]?key\s*=\s*[\"'][^\"']{16,}[\"']"
-                    "secret[_-]?key\s*=\s*[\"'][^\"']{16,}[\"']"
-                    "token\s*=\s*[\"'][^\"']{20,}[\"']"
-                    "private[_-]?key\s*=\s*[\"'][^\"']{32,}[\"']"
-                  )
+      - name: Setup Python environment
+        if: matrix.language == 'python'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
 
-                  SECRETS_FOUND=false
+      - name: Install dependencies
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          if [ -f package.json ] && [[ "${{ matrix.language }}" == "javascript" || "${{ matrix.language }}" == "typescript" ]]; then
+            npm ci --prefer-offline
+          elif [ -f requirements.txt ] && [[ "${{ matrix.language }}" == "python" ]]; then
+            python -m venv .venv
+            source .venv/bin/activate
+            pip install -r requirements.txt
+          fi
 
-                  for pattern in "${PATTERNS[@]}"; do
-                    if grep -r -E -i "$pattern" . --exclude-dir=node_modules --exclude-dir=.git --exclude="*.log"; then
-                      echo "⚠️ Potential secret found: $pattern"
-                      SECRETS_FOUND=true
-                    fi
-                  done
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
 
-                  if [[ "$SECRETS_FOUND" == "true" ]]; then
-                    if [[ "${{ inputs.domain }}" == "security" ]]; then
-                      echo "❌ Security domain: No secrets allowed in code"
-                      exit 1
-                    else
-                      echo "⚠️ Potential secrets detected. Please review and use proper secret management."
-                      exit 1
-                    fi
-                  else
-                    echo "✅ No secrets detected"
-                  fi
+      - name: Process CodeQL results
+        run: |
+          echo "## 🔍 CodeQL SAST Results (${{ matrix.language }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Service**: ${{ inputs.service-name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Language**: ${{ matrix.language }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Security Domain**: ${{ inputs.domain }} (${{ needs.security-setup.outputs.security-level }})" >> $GITHUB_STEP_SUMMARY
+          echo "**Query Suite**: ${{ inputs.domain == 'security' && 'security-extended' || 'standard' }}" >> $GITHUB_STEP_SUMMARY
 
-    container-scan:
-        name: Container Security Scan
-        runs-on: ubuntu-latest
-        needs: security-setup
-        if: inputs.enable-container-scan && inputs.container-image != ''
-        timeout-minutes: 15
+  dependency-scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    needs: security-setup
+    if: inputs.enable-dependency-scan
+    timeout-minutes: 15
 
-        steps:
-            - name: Run Trivy container scan
-              uses: aquasecurity/trivy-action@master
-              with:
-                  image-ref: ${{ inputs.container-image }}
-                  format: "sarif"
-                  output: "trivy-container-results.sarif"
-                  severity: ${{ inputs.domain == 'security' && 'LOW,MEDIUM,HIGH,CRITICAL' || 'HIGH,CRITICAL' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-            - name: Upload Trivy scan results
-              uses: github/codeql-action/upload-sarif@v3
-              with:
-                  sarif_file: "trivy-container-results.sarif"
+      - name: Setup Node.js
+        if: hashFiles(format('{0}/**/package*.json', inputs.working-directory)) != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
 
-            - name: Run Grype container scan
-              uses: anchore/scan-action@v3
-              with:
-                  image: ${{ inputs.container-image }}
-                  fail-build: ${{ inputs.domain == 'security' }}
-                  severity-cutoff: ${{ inputs.fail-on-severity }}
+      - name: Setup Python
+        if: hashFiles(format('{0}/**/requirements*.txt', inputs.working-directory)) != ''
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-            - name: Container security summary
-              run: |
-                  echo "## 🐳 Container Security Scan Results" >> $GITHUB_STEP_SUMMARY
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "**Image**: ${{ inputs.container-image }}" >> $GITHUB_STEP_SUMMARY
-                  echo "**Security Domain**: ${{ inputs.domain }}" >> $GITHUB_STEP_SUMMARY
-                  echo "**Severity Threshold**: ${{ inputs.fail-on-severity }}" >> $GITHUB_STEP_SUMMARY
-                  echo "**Scanners**: Trivy, Grype" >> $GITHUB_STEP_SUMMARY
+      - name: Run npm audit (Node.js)
+        if: hashFiles(format('{0}/**/package*.json', inputs.working-directory)) != ''
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          echo "🔍 Running npm audit for Node.js dependencies..."
 
-    security-report:
-        name: Security Scan Report
-        runs-on: ubuntu-latest
-        needs:
-            [
-                security-setup,
-                codeql-analysis,
-                dependency-scan,
-                secrets-scan,
-                container-scan,
-            ]
+          # Install dependencies first
+          npm ci --prefer-offline
+
+          # Run audit with domain-specific thresholds
+          if [[ "${{ inputs.domain }}" == "security" ]]; then
+            echo "🔴 High security domain: failing on moderate+ vulnerabilities"
+            npm audit --audit-level moderate --production
+          elif [[ "${{ inputs.domain }}" == "productivity" || "${{ inputs.domain }}" == "tcg" ]]; then
+            echo "🟡 Medium security domain: failing on high+ vulnerabilities"
+            npm audit --audit-level high --production
+          else
+            echo "🟢 Standard security domain: failing on critical vulnerabilities"
+            npm audit --audit-level critical --production
+          fi
+
+          # Generate detailed report
+          npm audit --json > npm-audit-results.json || true
+
+      - name: Run safety check (Python)
+        if: hashFiles(format('{0}/**/requirements*.txt', inputs.working-directory)) != ''
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          echo "🐍 Running Safety check for Python dependencies..."
+
+          # Install safety
+          pip install safety
+
+          # Run safety check
+          if [ -f requirements.txt ]; then
+            safety check -r requirements.txt --json --output safety-results.json || true
+            
+            # Check results based on domain
+            VULN_COUNT=$(cat safety-results.json | jq '.vulnerabilities | length' 2>/dev/null || echo "0")
+            echo "Found ${VULN_COUNT} vulnerabilities"
+            
+            if [[ "${{ inputs.domain }}" == "security" && "${VULN_COUNT}" -gt 0 ]]; then
+              echo "❌ Security domain: No vulnerabilities allowed"
+              exit 1
+            elif [[ ("${{ inputs.domain }}" == "productivity" || "${{ inputs.domain }}" == "tcg") && "${VULN_COUNT}" -gt 5 ]]; then
+              echo "⚠️ Medium security domain: Too many vulnerabilities (${VULN_COUNT} > 5)"
+              exit 1
+            elif [[ "${VULN_COUNT}" -gt 10 ]]; then
+              echo "⚠️ Standard security domain: Too many vulnerabilities (${VULN_COUNT} > 10)"
+              exit 1
+            fi
+          fi
+
+      - name: Run Snyk vulnerability scan
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=${{ inputs.fail-on-severity }} --file=${{ inputs.working-directory }}/package.json
+
+      - name: Upload dependency scan results
         if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-scan-results-${{ inputs.service-name }}
+          path: |
+            ${{ inputs.working-directory }}/npm-audit-results.json
+            ${{ inputs.working-directory }}/safety-results.json
+            ${{ inputs.working-directory }}/snyk-results.json
+          retention-days: 30
 
-        steps:
-            - name: Generate security report
-              run: |
-                  echo "## 🛡️ Security Scan Summary for ${{ inputs.service-name }}" >> $GITHUB_STEP_SUMMARY
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "| Scan Type | Status | Security Level | Notes |" >> $GITHUB_STEP_SUMMARY
-                  echo "|-----------|--------|----------------|-------|" >> $GITHUB_STEP_SUMMARY
+  secrets-scan:
+    name: Secrets Detection
+    runs-on: ubuntu-latest
+    needs: security-setup
+    if: inputs.enable-secrets-scan
+    timeout-minutes: 10
 
-                  # SAST Results
-                  if [[ "${{ inputs.enable-sast }}" == "true" ]]; then
-                    echo "| SAST (CodeQL) | ${{ needs.codeql-analysis.result }} | ${{ needs.security-setup.outputs.security-level }} | Multi-language analysis |" >> $GITHUB_STEP_SUMMARY
-                  fi
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-                  # Dependency Scan Results
-                  if [[ "${{ inputs.enable-dependency-scan }}" == "true" ]]; then
-                    echo "| Dependencies | ${{ needs.dependency-scan.result }} | ${{ needs.security-setup.outputs.security-level }} | npm audit, Safety, Snyk |" >> $GITHUB_STEP_SUMMARY
-                  fi
+      - name: Run TruffleHog secrets scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ${{ inputs.working-directory }}
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
 
-                  # Secrets Scan Results
-                  if [[ "${{ inputs.enable-secrets-scan }}" == "true" ]]; then
-                    echo "| Secrets Detection | ${{ needs.secrets-scan.result }} | ${{ needs.security-setup.outputs.security-level }} | TruffleHog, GitLeaks |" >> $GITHUB_STEP_SUMMARY
-                  fi
+      - name: Run GitLeaks secrets scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          source: ${{ inputs.working-directory }}
 
-                  # Container Scan Results
-                  if [[ "${{ inputs.enable-container-scan }}" == "true" && -n "${{ inputs.container-image }}" ]]; then
-                    echo "| Container Security | ${{ needs.container-scan.result }} | ${{ needs.security-setup.outputs.security-level }} | Trivy, Grype |" >> $GITHUB_STEP_SUMMARY
-                  fi
+      - name: Custom secrets patterns scan
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          echo "🔍 Running custom secrets pattern detection..."
 
-                  echo "" >> $GITHUB_STEP_SUMMARY
+          # Domain-specific secret patterns
+          PATTERNS=(
+            "password\s*=\s*[\"'][^\"']{8,}[\"']"
+            "api[_-]?key\s*=\s*[\"'][^\"']{16,}[\"']"
+            "secret[_-]?key\s*=\s*[\"'][^\"']{16,}[\"']"
+            "token\s*=\s*[\"'][^\"']{20,}[\"']"
+            "private[_-]?key\s*=\s*[\"'][^\"']{32,}[\"']"
+          )
 
-                  # Overall security assessment
-                  SECURITY_PASSED=true
+          SECRETS_FOUND=false
 
-                  # Check each scan result
-                  if [[ "${{ needs.codeql-analysis.result }}" == "failure" || 
-                        "${{ needs.dependency-scan.result }}" == "failure" || 
-                        "${{ needs.secrets-scan.result }}" == "failure" || 
-                        "${{ needs.container-scan.result }}" == "failure" ]]; then
-                    SECURITY_PASSED=false
-                  fi
+          for pattern in "${PATTERNS[@]}"; do
+            if grep -r -E -i "$pattern" . --exclude-dir=node_modules --exclude-dir=.git --exclude="*.log"; then
+              echo "⚠️ Potential secret found: $pattern"
+              SECRETS_FOUND=true
+            fi
+          done
 
-                  # Domain-specific security requirements
-                  echo "**Domain Security Requirements**:" >> $GITHUB_STEP_SUMMARY
-                  case "${{ inputs.domain }}" in
-                    security)
-                      echo "- 🔴 **High Security Domain**: Zero-tolerance for vulnerabilities" >> $GITHUB_STEP_SUMMARY
-                      echo "- Enhanced monitoring and alerting enabled" >> $GITHUB_STEP_SUMMARY
-                      echo "- All security scans required to pass" >> $GITHUB_STEP_SUMMARY
-                      ;;
-                    productivity|tcg)
-                      echo "- 🟡 **Medium Security Domain**: Balanced security and usability" >> $GITHUB_STEP_SUMMARY
-                      echo "- High+ severity vulnerabilities must be addressed" >> $GITHUB_STEP_SUMMARY
-                      echo "- Regular security review required" >> $GITHUB_STEP_SUMMARY
-                      ;;
-                    *)
-                      echo "- 🟢 **Standard Security Domain**: Essential security measures" >> $GITHUB_STEP_SUMMARY
-                      echo "- Critical vulnerabilities must be addressed" >> $GITHUB_STEP_SUMMARY
-                      echo "- Periodic security assessment" >> $GITHUB_STEP_SUMMARY
-                      ;;
-                  esac
+          if [[ "$SECRETS_FOUND" == "true" ]]; then
+            if [[ "${{ inputs.domain }}" == "security" ]]; then
+              echo "❌ Security domain: No secrets allowed in code"
+              exit 1
+            else
+              echo "⚠️ Potential secrets detected. Please review and use proper secret management."
+              exit 1
+            fi
+          else
+            echo "✅ No secrets detected"
+          fi
 
-                  echo "" >> $GITHUB_STEP_SUMMARY
+  container-scan:
+    name: Container Security Scan
+    runs-on: ubuntu-latest
+    needs: security-setup
+    if: inputs.enable-container-scan && inputs.container-image != ''
+    timeout-minutes: 15
 
-                  # Executive function accommodation: clear pass/fail indication
-                  if [[ "$SECURITY_PASSED" == "true" ]]; then
-                    echo "✅ **SECURITY SCANS PASSED** - ${{ inputs.service-name }} meets security requirements" >> $GITHUB_STEP_SUMMARY
-                  else
-                    echo "❌ **SECURITY SCANS FAILED** - Security issues must be resolved before deployment" >> $GITHUB_STEP_SUMMARY
-                  fi
+    steps:
+      - name: Run Trivy container scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ inputs.container-image }}
+          format: "sarif"
+          output: "trivy-container-results.sarif"
+          severity: ${{ inputs.domain == 'security' && 'LOW,MEDIUM,HIGH,CRITICAL' || 'HIGH,CRITICAL' }}
 
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "**Scan Configuration**:" >> $GITHUB_STEP_SUMMARY
-                  echo "- SAST: ${{ inputs.enable-sast && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- Dependencies: ${{ inputs.enable-dependency-scan && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- Secrets: ${{ inputs.enable-secrets-scan && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- Container: ${{ inputs.enable-container-scan && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- Fail Threshold: ${{ inputs.fail-on-severity }}" >> $GITHUB_STEP_SUMMARY
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-container-results.sarif"
 
-    security-notifications:
-        name: Security Notifications
-        runs-on: ubuntu-latest
-        needs: [security-setup, security-report]
-        if: always() && (needs.codeql-analysis.result == 'failure' || needs.dependency-scan.result == 'failure' || needs.secrets-scan.result == 'failure' || needs.container-scan.result == 'failure')
+      - name: Run Grype container scan
+        uses: anchore/scan-action@v3
+        with:
+          image: ${{ inputs.container-image }}
+          fail-build: ${{ inputs.domain == 'security' }}
+          severity-cutoff: ${{ inputs.fail-on-severity }}
 
-        steps:
-            - name: Create security issue
-              if: inputs.domain == 'security'
-              uses: actions/github-script@v7
-              with:
-                  script: |
-                      const issue = await github.rest.issues.create({
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        title: `🚨 Security Scan Failures in ${{ inputs.service-name }}`,
-                        body: `
-                        ## Security Scan Failures Detected
-                        
-                        **Service**: ${{ inputs.service-name }}
-                        **Domain**: ${{ inputs.domain }} (High Security)
-                        **Branch**: ${{ github.ref_name }}
-                        **Commit**: ${{ github.sha }}
-                        
-                        ### Failed Scans:
-                        ${needs['codeql-analysis'].result === 'failure' ? '❌ SAST (CodeQL)' : ''}
-                        ${needs['dependency-scan'].result === 'failure' ? '❌ Dependency Vulnerabilities' : ''}
-                        ${needs['secrets-scan'].result === 'failure' ? '❌ Secrets Detection' : ''}
-                        ${needs['container-scan'].result === 'failure' ? '❌ Container Security' : ''}
-                        
-                        ### Required Actions:
-                        1. Review security scan results in the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-                        2. Address all identified security issues
-                        3. Re-run security scans to verify fixes
-                        
-                        **Priority**: Critical - Must be resolved before deployment
-                        `,
-                        labels: ['security', 'critical', 'automated']
-                      });
+      - name: Container security summary
+        run: |
+          echo "## 🐳 Container Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Image**: ${{ inputs.container-image }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Security Domain**: ${{ inputs.domain }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Severity Threshold**: ${{ inputs.fail-on-severity }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Scanners**: Trivy, Grype" >> $GITHUB_STEP_SUMMARY
 
-                      console.log(`Created security issue #${issue.data.number}`);
+  security-report:
+    name: Security Scan Report
+    runs-on: ubuntu-latest
+    needs:
+      [
+        security-setup,
+        codeql-analysis,
+        dependency-scan,
+        secrets-scan,
+        container-scan,
+      ]
+    if: always()
 
-            - name: Send security alert notification
-              run: |
-                  echo "🚨 Security scan failures detected for ${{ inputs.service-name }}"
-                  echo "Domain: ${{ inputs.domain }}"
-                  echo "Failed scans require immediate attention"
+    steps:
+      - name: Generate security report
+        run: |
+          echo "## 🛡️ Security Scan Summary for ${{ inputs.service-name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Scan Type | Status | Security Level | Notes |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------|----------------|-------|" >> $GITHUB_STEP_SUMMARY
 
-                  # In a real implementation, this would send notifications to:
-                  # - Security team Slack channel
-                  # - Email alerts for high-severity issues
-                  # - PagerDuty for security domain failures
-                  # - JIRA ticket creation for tracking
+          # SAST Results
+          if [[ "${{ inputs.enable-sast }}" == "true" ]]; then
+            echo "| SAST (CodeQL) | ${{ needs.codeql-analysis.result }} | ${{ needs.security-setup.outputs.security-level }} | Multi-language analysis |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Dependency Scan Results
+          if [[ "${{ inputs.enable-dependency-scan }}" == "true" ]]; then
+            echo "| Dependencies | ${{ needs.dependency-scan.result }} | ${{ needs.security-setup.outputs.security-level }} | npm audit, Safety, Snyk |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Secrets Scan Results
+          if [[ "${{ inputs.enable-secrets-scan }}" == "true" ]]; then
+            echo "| Secrets Detection | ${{ needs.secrets-scan.result }} | ${{ needs.security-setup.outputs.security-level }} | TruffleHog, GitLeaks |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Container Scan Results
+          if [[ "${{ inputs.enable-container-scan }}" == "true" && -n "${{ inputs.container-image }}" ]]; then
+            echo "| Container Security | ${{ needs.container-scan.result }} | ${{ needs.security-setup.outputs.security-level }} | Trivy, Grype |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Overall security assessment
+          SECURITY_PASSED=true
+
+          # Check each scan result
+          if [[ "${{ needs.codeql-analysis.result }}" == "failure" || 
+                "${{ needs.dependency-scan.result }}" == "failure" || 
+                "${{ needs.secrets-scan.result }}" == "failure" || 
+                "${{ needs.container-scan.result }}" == "failure" ]]; then
+            SECURITY_PASSED=false
+          fi
+
+          # Domain-specific security requirements
+          echo "**Domain Security Requirements**:" >> $GITHUB_STEP_SUMMARY
+          case "${{ inputs.domain }}" in
+            security)
+              echo "- 🔴 **High Security Domain**: Zero-tolerance for vulnerabilities" >> $GITHUB_STEP_SUMMARY
+              echo "- Enhanced monitoring and alerting enabled" >> $GITHUB_STEP_SUMMARY
+              echo "- All security scans required to pass" >> $GITHUB_STEP_SUMMARY
+              ;;
+            productivity|tcg)
+              echo "- 🟡 **Medium Security Domain**: Balanced security and usability" >> $GITHUB_STEP_SUMMARY
+              echo "- High+ severity vulnerabilities must be addressed" >> $GITHUB_STEP_SUMMARY
+              echo "- Regular security review required" >> $GITHUB_STEP_SUMMARY
+              ;;
+            *)
+              echo "- 🟢 **Standard Security Domain**: Essential security measures" >> $GITHUB_STEP_SUMMARY
+              echo "- Critical vulnerabilities must be addressed" >> $GITHUB_STEP_SUMMARY
+              echo "- Periodic security assessment" >> $GITHUB_STEP_SUMMARY
+              ;;
+          esac
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Executive function accommodation: clear pass/fail indication
+          if [[ "$SECURITY_PASSED" == "true" ]]; then
+            echo "✅ **SECURITY SCANS PASSED** - ${{ inputs.service-name }} meets security requirements" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **SECURITY SCANS FAILED** - Security issues must be resolved before deployment" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Scan Configuration**:" >> $GITHUB_STEP_SUMMARY
+          echo "- SAST: ${{ inputs.enable-sast && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Dependencies: ${{ inputs.enable-dependency-scan && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Secrets: ${{ inputs.enable-secrets-scan && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Container: ${{ inputs.enable-container-scan && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Fail Threshold: ${{ inputs.fail-on-severity }}" >> $GITHUB_STEP_SUMMARY
+
+  security-notifications:
+    name: Security Notifications
+    runs-on: ubuntu-latest
+    needs: [security-setup, security-report]
+    if: always() && (needs.codeql-analysis.result == 'failure' || needs.dependency-scan.result == 'failure' || needs.secrets-scan.result == 'failure' || needs.container-scan.result == 'failure')
+
+    steps:
+      - name: Create security issue
+        if: inputs.domain == 'security'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 Security Scan Failures in ${{ inputs.service-name }}`,
+              body: `
+              ## Security Scan Failures Detected
+              
+              **Service**: ${{ inputs.service-name }}
+              **Domain**: ${{ inputs.domain }} (High Security)
+              **Branch**: ${{ github.ref_name }}
+              **Commit**: ${{ github.sha }}
+              
+              ### Failed Scans:
+              ${needs['codeql-analysis'].result === 'failure' ? '❌ SAST (CodeQL)' : ''}
+              ${needs['dependency-scan'].result === 'failure' ? '❌ Dependency Vulnerabilities' : ''}
+              ${needs['secrets-scan'].result === 'failure' ? '❌ Secrets Detection' : ''}
+              ${needs['container-scan'].result === 'failure' ? '❌ Container Security' : ''}
+              
+              ### Required Actions:
+              1. Review security scan results in the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+              2. Address all identified security issues
+              3. Re-run security scans to verify fixes
+              
+              **Priority**: Critical - Must be resolved before deployment
+              `,
+              labels: ['security', 'critical', 'automated']
+            });
+
+            console.log(`Created security issue #${issue.data.number}`);
+
+      - name: Send security alert notification
+        run: |
+          echo "🚨 Security scan failures detected for ${{ inputs.service-name }}"
+          echo "Domain: ${{ inputs.domain }}"
+          echo "Failed scans require immediate attention"
+
+          # In a real implementation, this would send notifications to:
+          # - Security team Slack channel
+          # - Email alerts for high-severity issues
+          # - PagerDuty for security domain failures
+          # - JIRA ticket creation for tracking

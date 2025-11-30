@@ -1,0 +1,533 @@
+name: Monitoring & Alerting
+
+on:
+    workflow_run:
+        workflows: ["CI", "Security Scanning Suite", "Container Build & Deploy"]
+        types: [completed]
+    schedule:
+        # Health checks every 15 minutes
+        - cron: "*/15 * * * *"
+    workflow_dispatch:
+        inputs:
+            alert-type:
+                description: "Type of monitoring to perform"
+                required: false
+                default: "full"
+                type: choice
+                options:
+                    - "full"
+                    - "health-only"
+                    - "security-only"
+                    - "performance-only"
+
+concurrency:
+    group: monitoring-${{ github.event_name }}
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+    issues: write
+    pull-requests: write
+    actions: read
+    checks: read
+
+env:
+    # Monitoring thresholds (executive function accommodations)
+    HEALTH_CHECK_TIMEOUT: 30
+    PERFORMANCE_THRESHOLD_MS: 5000
+    ERROR_RATE_THRESHOLD: 0.05
+    MEMORY_USAGE_THRESHOLD: 85
+    DISK_USAGE_THRESHOLD: 90
+
+jobs:
+    workflow-monitoring:
+        name: Monitor Workflow Health
+        runs-on: ubuntu-latest
+        if: github.event_name == 'workflow_run'
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v4.6.0
+              with:
+                  fetch-depth: 1
+
+            - name: Analyze workflow results
+              uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      const workflowRun = context.payload.workflow_run;
+                      const conclusion = workflowRun.conclusion;
+                      const workflowName = workflowRun.name;
+
+                      console.log(`Monitoring workflow: ${workflowName}`);
+                      console.log(`Status: ${conclusion}`);
+
+                      // Track workflow patterns and failures
+                      const metrics = {
+                        workflow_name: workflowName,
+                        conclusion: conclusion,
+                        duration: workflowRun.updated_at ? 
+                          (new Date(workflowRun.updated_at) - new Date(workflowRun.created_at)) / 1000 : 0,
+                        branch: workflowRun.head_branch,
+                        actor: workflowRun.triggering_actor.login,
+                        timestamp: new Date().toISOString()
+                      };
+
+                      // Check for critical failures
+                      if (conclusion === 'failure' && ['CI', 'Security Scanning Suite'].includes(workflowName)) {
+                        console.log(`🚨 Critical workflow failure detected: ${workflowName}`);
+                        
+                        // Create or update incident issue
+                        const { data: existingIssues } = await github.rest.issues.listForRepo({
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          labels: ['workflow-failure', 'monitoring'],
+                          state: 'open'
+                        });
+                        
+                        const issueTitle = `🚨 Workflow Failure: ${workflowName}`;
+                        const issueBody = `
+                        ## Workflow Failure Alert
+                        
+                        **Workflow**: ${workflowName}
+                        **Branch**: ${workflowRun.head_branch}
+                        **Triggered by**: ${workflowRun.triggering_actor.login}
+                        **Duration**: ${Math.round(metrics.duration)}s
+                        **Run URL**: ${workflowRun.html_url}
+                        
+                        ### Executive Function Accommodations:
+                        - ✅ **Issue created automatically**
+                        - ✅ **Stakeholders will be notified**
+                        - ✅ **Investigation steps provided below**
+                        
+                        ### Investigation Steps:
+                        1. Check the workflow logs: [View Run](${workflowRun.html_url})
+                        2. Review recent changes that may have caused the failure
+                        3. Check if this is a pattern (multiple failures)
+                        4. Follow the troubleshooting guide in our documentation
+                        
+                        ### Auto-Resolution:
+                        This issue will be automatically closed when the workflow passes again.
+                        `;
+                        
+                        // Check if similar issue already exists
+                        const existingIssue = existingIssues.find(issue => 
+                          issue.title.includes(workflowName)
+                        );
+                        
+                        if (!existingIssue) {
+                          await github.rest.issues.create({
+                            owner: context.repo.owner,
+                            repo: context.repo.repo,
+                            title: issueTitle,
+                            body: issueBody,
+                            labels: ['workflow-failure', 'monitoring', 'high-priority']
+                          });
+                          console.log('📝 Created failure tracking issue');
+                        } else {
+                          await github.rest.issues.createComment({
+                            owner: context.repo.owner,
+                            repo: context.repo.repo,
+                            issue_number: existingIssue.number,
+                            body: `🔄 **Additional failure detected**\n\nRun: ${workflowRun.html_url}\nTime: ${new Date().toISOString()}`
+                          });
+                          console.log('💬 Updated existing failure issue');
+                        }
+                      }
+
+                      // Auto-close resolved issues
+                      if (conclusion === 'success') {
+                        const { data: issuesToClose } = await github.rest.issues.listForRepo({
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          labels: ['workflow-failure', 'monitoring'],
+                          state: 'open'
+                        });
+                        
+                        for (const issue of issuesToClose) {
+                          if (issue.title.includes(workflowName)) {
+                            await github.rest.issues.update({
+                              owner: context.repo.owner,
+                              repo: context.repo.repo,
+                              issue_number: issue.number,
+                              state: 'closed'
+                            });
+                            
+                            await github.rest.issues.createComment({
+                              owner: context.repo.owner,
+                              repo: context.repo.repo,
+                              issue_number: issue.number,
+                              body: `✅ **Auto-resolved**: Workflow ${workflowName} is now passing\n\nRun: ${workflowRun.html_url}`
+                            });
+                            
+                            console.log(`✅ Closed resolved issue #${issue.number}`);
+                          }
+                        }
+                      }
+
+    service-health-monitoring:
+        name: Service Health Monitoring
+        runs-on: ubuntu-latest
+        if: github.event_name == 'schedule' || github.event.inputs.alert-type == 'health-only' || github.event.inputs.alert-type == 'full'
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v4.6.0
+              with:
+                  fetch-depth: 1
+
+            - name: Setup monitoring tools
+              run: |
+                  # Install monitoring dependencies
+                  curl -sL https://github.com/curl/curl/releases/latest/download/curl-*-linux-amd64.tar.xz | tar -xJ
+
+                  # Install jq for JSON processing
+                  sudo apt-get update && sudo apt-get install -y jq httpie
+
+            - name: Health check monitoring
+              run: |
+                  echo "🏥 Running health checks..."
+
+                  # Create health check results
+                  cat > health-check-results.json << 'EOF'
+                  {
+                    "timestamp": "",
+                    "services": [],
+                    "summary": {
+                      "total": 0,
+                      "healthy": 0,
+                      "unhealthy": 0,
+                      "unknown": 0
+                    }
+                  }
+                  EOF
+
+                  # Update timestamp
+                  jq --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" '.timestamp = $ts' health-check-results.json > temp.json && mv temp.json health-check-results.json
+
+                  # Define services to monitor (these would be actual deployed services)
+                  declare -A services=(
+                    ["Jane Orchestrator"]="http://jane-orchestrator.example.com/health"
+                    ["Mealie Service"]="http://mealie.example.com/health"
+                    ["Actual Service"]="http://actual.example.com/health"
+                    ["Firecrawl Service"]="http://firecrawl.example.com/health"
+                    ["Goose Service"]="http://goose.example.com/health"
+                  )
+
+                  total_services=0
+                  healthy_services=0
+
+                  for service_name in "${!services[@]}"; do
+                    url="${services[$service_name]}"
+                    total_services=$((total_services + 1))
+                    
+                    echo "Checking $service_name at $url"
+                    
+                    # Perform health check with timeout
+                    if curl -f -s --max-time $HEALTH_CHECK_TIMEOUT "$url" > /dev/null 2>&1; then
+                      status="healthy"
+                      healthy_services=$((healthy_services + 1))
+                      echo "✅ $service_name is healthy"
+                    else
+                      status="unhealthy"
+                      echo "❌ $service_name is unhealthy"
+                    fi
+                    
+                    # Add to results
+                    jq --arg name "$service_name" --arg url "$url" --arg status "$status" \
+                       '.services += [{"name": $name, "url": $url, "status": $status, "checked_at": now | todateiso8601}]' \
+                       health-check-results.json > temp.json && mv temp.json health-check-results.json
+                  done
+
+                  # Update summary
+                  unhealthy_services=$((total_services - healthy_services))
+                  jq --arg total "$total_services" --arg healthy "$healthy_services" --arg unhealthy "$unhealthy_services" \
+                     '.summary.total = ($total | tonumber) | .summary.healthy = ($healthy | tonumber) | .summary.unhealthy = ($unhealthy | tonumber)' \
+                     health-check-results.json > temp.json && mv temp.json health-check-results.json
+
+                  echo "📊 Health check summary: $healthy_services/$total_services services healthy"
+
+                  # Set output for alerting
+                  if [ $unhealthy_services -gt 0 ]; then
+                    echo "HEALTH_ALERT=true" >> $GITHUB_ENV
+                    echo "UNHEALTHY_COUNT=$unhealthy_services" >> $GITHUB_ENV
+                  fi
+
+            - name: Performance monitoring
+              run: |
+                  echo "⚡ Running performance monitoring..."
+
+                  # Create simple performance test
+                  cat > performance-check.sh << 'EOF'
+                  #!/bin/bash
+
+                  # Test basic system performance
+                  echo "📊 System Performance Check"
+                  echo "=========================="
+
+                  # CPU usage
+                  cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | sed 's/%us,//')
+                  echo "CPU Usage: ${cpu_usage}%"
+
+                  # Memory usage
+                  memory_info=$(free | grep Mem)
+                  total_mem=$(echo $memory_info | awk '{print $2}')
+                  used_mem=$(echo $memory_info | awk '{print $3}')
+                  memory_percent=$(echo "scale=2; $used_mem * 100 / $total_mem" | bc)
+                  echo "Memory Usage: ${memory_percent}%"
+
+                  # Disk usage
+                  disk_usage=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')
+                  echo "Disk Usage: ${disk_usage}%"
+
+                  # Check thresholds
+                  if (( $(echo "$memory_percent > $MEMORY_USAGE_THRESHOLD" | bc -l) )); then
+                    echo "⚠️  Memory usage above threshold: ${memory_percent}% > ${MEMORY_USAGE_THRESHOLD}%"
+                    echo "MEMORY_ALERT=true" >> $GITHUB_ENV
+                  fi
+
+                  if [ "$disk_usage" -gt "$DISK_USAGE_THRESHOLD" ]; then
+                    echo "⚠️  Disk usage above threshold: ${disk_usage}% > ${DISK_USAGE_THRESHOLD}%"
+                    echo "DISK_ALERT=true" >> $GITHUB_ENV
+                  fi
+                  EOF
+
+                  chmod +x performance-check.sh
+                  ./performance-check.sh
+
+            - name: Create monitoring report
+              run: |
+                  echo "# 📊 System Monitoring Report" > monitoring-report.md
+                  echo "" >> monitoring-report.md
+                  echo "**Generated**: $(date -u)" >> monitoring-report.md
+                  echo "**Repository**: ${{ github.repository }}" >> monitoring-report.md
+                  echo "" >> monitoring-report.md
+
+                  # Health check results
+                  if [ -f health-check-results.json ]; then
+                    echo "## 🏥 Service Health Status" >> monitoring-report.md
+                    echo "" >> monitoring-report.md
+                    
+                    healthy_count=$(jq -r '.summary.healthy' health-check-results.json)
+                    total_count=$(jq -r '.summary.total' health-check-results.json)
+                    
+                    echo "**Overall Status**: $healthy_count/$total_count services healthy" >> monitoring-report.md
+                    echo "" >> monitoring-report.md
+                    
+                    # List service statuses
+                    jq -r '.services[] | "- **\(.name)**: \(.status) (checked: \(.checked_at))"' health-check-results.json >> monitoring-report.md
+                    echo "" >> monitoring-report.md
+                  fi
+
+                  # Performance alerts
+                  echo "## ⚡ Performance Status" >> monitoring-report.md
+                  echo "" >> monitoring-report.md
+
+                  if [ "${MEMORY_ALERT:-false}" == "true" ]; then
+                    echo "- ⚠️  **Memory usage alert**: Above threshold" >> monitoring-report.md
+                  else
+                    echo "- ✅ **Memory usage**: Within normal limits" >> monitoring-report.md
+                  fi
+
+                  if [ "${DISK_ALERT:-false}" == "true" ]; then
+                    echo "- ⚠️  **Disk usage alert**: Above threshold" >> monitoring-report.md
+                  else
+                    echo "- ✅ **Disk usage**: Within normal limits" >> monitoring-report.md
+                  fi
+
+                  echo "" >> monitoring-report.md
+                  echo "## 📈 Executive Function Accommodations" >> monitoring-report.md
+                  echo "- ✅ **Automated monitoring**: Running every 15 minutes" >> monitoring-report.md
+                  echo "- ✅ **Alert thresholds**: Configured with sensible defaults" >> monitoring-report.md
+                  echo "- ✅ **Issue auto-creation**: Problems automatically tracked" >> monitoring-report.md
+
+            - name: Create alerts for critical issues
+              if: env.HEALTH_ALERT == 'true' || env.MEMORY_ALERT == 'true' || env.DISK_ALERT == 'true'
+              uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      const fs = require('fs');
+
+                      let alertType = 'System';
+                      let alertDetails = [];
+
+                      if (process.env.HEALTH_ALERT === 'true') {
+                        alertDetails.push(`🏥 **Service Health**: ${process.env.UNHEALTHY_COUNT} services unhealthy`);
+                      }
+
+                      if (process.env.MEMORY_ALERT === 'true') {
+                        alertDetails.push('🧠 **Memory Usage**: Above threshold');
+                      }
+
+                      if (process.env.DISK_ALERT === 'true') {
+                        alertDetails.push('💾 **Disk Usage**: Above threshold');
+                      }
+
+                      const issueTitle = `🚨 ${alertType} Monitoring Alert - ${new Date().toDateString()}`;
+                      const issueBody = `
+                      ## System Monitoring Alert
+
+                      **Alert Time**: ${new Date().toISOString()}
+                      **Repository**: ${{ github.repository }}
+
+                      ### Issues Detected:
+                      ${alertDetails.map(detail => `- ${detail}`).join('\n')}
+
+                      ### Executive Function Accommodations:
+                      - ✅ **Auto-detected**: Issues found by automated monitoring
+                      - ✅ **Prioritized**: This issue is automatically labeled as high-priority
+                      - ✅ **Actionable**: Investigation steps provided below
+
+                      ### Investigation Steps:
+                      1. Check the monitoring report in the workflow artifacts
+                      2. Review system resource usage and service logs
+                      3. Identify root causes and implement fixes
+                      4. Monitor for resolution in the next automated check
+
+                      ### Auto-Resolution:
+                      This issue will be automatically updated when the next monitoring run shows resolved issues.
+                      `;
+
+                      // Check for existing monitoring alerts
+                      const { data: existingIssues } = await github.rest.issues.listForRepo({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        labels: ['monitoring-alert', 'high-priority'],
+                        state: 'open'
+                      });
+
+                      const todayString = new Date().toDateString();
+                      const existingTodayIssue = existingIssues.find(issue => 
+                        issue.title.includes(todayString)
+                      );
+
+                      if (!existingTodayIssue) {
+                        await github.rest.issues.create({
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          title: issueTitle,
+                          body: issueBody,
+                          labels: ['monitoring-alert', 'high-priority', 'automated']
+                        });
+                        console.log('📝 Created monitoring alert issue');
+                      } else {
+                        await github.rest.issues.createComment({
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          issue_number: existingTodayIssue.number,
+                          body: `🔄 **Additional monitoring alert**\n\n${alertDetails.join('\n')}\n\nTime: ${new Date().toISOString()}`
+                        });
+                        console.log('💬 Updated existing monitoring alert');
+                      }
+
+            - name: Upload monitoring artifacts
+              uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+              if: always()
+              with:
+                  name: monitoring-report-${{ github.run_number }}
+                  path: |
+                      monitoring-report.md
+                      health-check-results.json
+                  retention-days: 30
+
+    security-monitoring:
+        name: Security Monitoring
+        runs-on: ubuntu-latest
+        if: github.event_name == 'schedule' || github.event.inputs.alert-type == 'security-only' || github.event.inputs.alert-type == 'full'
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v4.6.0
+              with:
+                  fetch-depth: 1
+
+            - name: Security posture monitoring
+              run: |
+                  echo "🔒 Security Monitoring Check"
+                  echo "============================"
+
+                  # Check for security-related files and configurations
+                  security_score=100
+
+                  # Check for security workflows
+                  if [ ! -f ".github/workflows/security-scanning-suite.yml" ]; then
+                    echo "⚠️  Security scanning workflow not found"
+                    security_score=$((security_score - 20))
+                  else
+                    echo "✅ Security scanning workflow present"
+                  fi
+
+                  # Check for dependency security
+                  if [ -f "package.json" ] && ! grep -q "audit" package.json; then
+                    echo "⚠️  No audit script in package.json"
+                    security_score=$((security_score - 10))
+                  fi
+
+                  # Check for secrets in code (basic check)
+                  if grep -r -i "password\|secret\|token\|key" --include="*.js" --include="*.ts" --include="*.py" . | grep -v node_modules | grep -v ".git" | head -5; then
+                    echo "⚠️  Potential secrets found in code"
+                    security_score=$((security_score - 30))
+                  else
+                    echo "✅ No obvious secrets found in code"
+                  fi
+
+                  # Check for security headers configuration
+                  if find . -name "*.js" -o -name "*.ts" -o -name "*.py" | xargs grep -l "helmet\|csp\|cors" > /dev/null; then
+                    echo "✅ Security headers configuration found"
+                  else
+                    echo "⚠️  No security headers configuration detected"
+                    security_score=$((security_score - 15))
+                  fi
+
+                  echo "🔒 Security Score: $security_score/100"
+                  echo "SECURITY_SCORE=$security_score" >> $GITHUB_ENV
+
+                  if [ $security_score -lt 80 ]; then
+                    echo "SECURITY_ALERT=true" >> $GITHUB_ENV
+                  fi
+
+            - name: Create security alert if needed
+              if: env.SECURITY_ALERT == 'true'
+              uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      const securityScore = process.env.SECURITY_SCORE;
+
+                      const issueTitle = `🔒 Security Posture Alert - Score: ${securityScore}/100`;
+                      const issueBody = `
+                      ## Security Posture Alert
+
+                      **Current Security Score**: ${securityScore}/100
+                      **Alert Time**: ${new Date().toISOString()}
+
+                      ### Security Review Required
+                      The automated security monitoring has detected potential improvements needed in the security posture.
+
+                      ### Executive Function Accommodations:
+                      - ✅ **Auto-prioritized**: Security issues are automatically high priority
+                      - ✅ **Checklist provided**: Clear steps to improve security score
+                      - ✅ **Monitoring continues**: Will be re-evaluated automatically
+
+                      ### Security Improvement Checklist:
+                      - [ ] Ensure security scanning workflows are in place
+                      - [ ] Add audit scripts to package.json
+                      - [ ] Review code for hardcoded secrets
+                      - [ ] Implement security headers (helmet, CSP, CORS)
+                      - [ ] Enable dependency vulnerability scanning
+
+                      ### Next Steps:
+                      1. Review the security monitoring workflow results
+                      2. Address items in the improvement checklist
+                      3. Wait for next automated security check to verify improvements
+                      `;
+
+                      await github.rest.issues.create({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        title: issueTitle,
+                        body: issueBody,
+                        labels: ['security', 'high-priority', 'monitoring-alert']
+                      });

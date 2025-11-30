@@ -1,0 +1,256 @@
+environment:
+  name: production
+  debug: false
+  logLevel: warn
+
+jwt:
+  issuer: https://auth.yourdomain.com
+  audience: modular-monolith
+  algorithm: RS256
+  publicKey: secret:jwt-public-key
+  privateKey: secret:jwt-private-key
+  accessTokenTTL: 900  # 15 minutes
+  refreshTokenTTL: 86400  # 24 hours
+  clockTolerance: 30
+
+redis:
+  cluster:
+    - host: redis-1.cluster.local
+      port: 6379
+      password: secret:redis-password
+      database: 0
+    - host: redis-2.cluster.local
+      port: 6379
+      password: secret:redis-password
+      database: 0
+    - host: redis-3.cluster.local
+      port: 6379
+      password: secret:redis-password
+      database: 0
+  keyPrefix: mm-auth
+  ttl:
+    session: 14400  # 4 hours
+    tokenBlacklist: 86400  # 24 hours
+    rateLimitWindow: 900  # 15 minutes
+
+database:
+  primary:
+    host: postgres-primary.db.local
+    port: 5432
+    database: modular_monolith_auth
+    username: ${DB_USERNAME}
+    password: secret:database-password
+    ssl: true
+  replicas:
+    - host: postgres-replica-1.db.local
+      port: 5432
+      database: modular_monolith_auth
+      username: ${DB_READONLY_USERNAME}
+      password: secret:database-readonly-password
+      ssl: true
+    - host: postgres-replica-2.db.local
+      port: 5432
+      database: modular_monolith_auth
+      username: ${DB_READONLY_USERNAME}
+      password: secret:database-readonly-password
+      ssl: true
+  pool:
+    min: 5
+    max: 50
+    idleTimeout: 30000
+
+security:
+  passwordPolicy:
+    minLength: 12
+    maxLength: 128
+    requireUppercase: true
+    requireLowercase: true
+    requireNumbers: true
+    requireSpecialChars: true
+    preventReuse: 10
+    maxAge: 90  # 3 months
+    bcryptRounds: 14
+  rateLimiting:
+    login:
+      maxAttempts: 3
+      windowMs: 900000  # 15 minutes
+      blockDuration: 1800000  # 30 minutes
+    api:
+      maxRequests: 100
+      windowMs: 60000  # 1 minute
+    passwordReset:
+      maxAttempts: 2
+      windowMs: 3600000  # 1 hour
+  csrf:
+    enabled: true
+    tokenLength: 32
+    cookieName: _csrf
+    headerName: X-CSRF-Token
+  cors:
+    allowedOrigins:
+      - https://app.yourdomain.com
+      - https://admin.yourdomain.com
+      - https://api.yourdomain.com
+    allowedMethods: [GET, POST, PUT, DELETE, OPTIONS]
+    allowedHeaders: [Authorization, Content-Type, X-Requested-With, X-CSRF-Token]
+    credentials: true
+    maxAge: 86400
+  encryption:
+    algorithm: aes-256-gcm
+    keySize: 32
+    ivSize: 16
+    saltRounds: 14
+
+organizations:
+  - id: acme-corp
+    name: ACME Corporation
+    slug: acme
+    domain: acme.com
+    settings:
+      sessionTimeout: 14400  # 4 hours
+      maxConcurrentSessions: 3
+      mfaRequired: true
+      ssoEnabled: true
+      allowedEmailDomains: [acme.com, acme.org]
+      customFields:
+        companySize: enterprise
+        industry: technology
+        compliance: [sox, pci]
+  - id: beta-systems
+    name: Beta Systems Inc
+    slug: beta
+    domain: betasystems.com
+    settings:
+      sessionTimeout: 28800  # 8 hours
+      maxConcurrentSessions: 5
+      mfaRequired: false
+      ssoEnabled: true
+      allowedEmailDomains: [betasystems.com]
+      customFields:
+        companySize: medium
+        industry: consulting
+
+providers:
+  - id: local
+    name: local
+    type: local
+    enabled: true
+    config: {}
+    displayName: Username/Password
+    order: 0
+
+  - id: google-workspace-acme
+    name: google-workspace
+    type: oidc
+    enabled: true
+    organizationIds: [acme-corp]
+    config:
+      issuer: https://accounts.google.com
+      clientId: ${GOOGLE_CLIENT_ID}
+      clientSecret: secret:google-client-secret
+      scope: [openid, profile, email]
+      redirectUri: https://auth.yourdomain.com/callback/google
+      additionalParams:
+        hd: acme.com
+    displayName: Google Workspace
+    icon: https://cdn.yourdomain.com/icons/google.svg
+    order: 1
+
+  - id: azure-ad-beta
+    name: azure-ad
+    type: oidc
+    enabled: true
+    organizationIds: [beta-systems]
+    config:
+      issuer: https://login.microsoftonline.com/${AZURE_TENANT_ID}/v2.0
+      clientId: ${AZURE_CLIENT_ID}
+      clientSecret: secret:azure-client-secret
+      scope: [openid, profile, email]
+      redirectUri: https://auth.yourdomain.com/callback/azure
+    displayName: Microsoft Azure AD
+    icon: https://cdn.yourdomain.com/icons/microsoft.svg
+    order: 2
+
+  - id: enterprise-saml
+    name: enterprise-saml
+    type: saml
+    enabled: true
+    organizationIds: [acme-corp]
+    config:
+      entityId: https://auth.yourdomain.com/saml/metadata
+      ssoUrl: https://sso.acme.com/saml/sso
+      certificate: secret:saml-certificate
+      attributeMapping:
+        email: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+        firstName: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname
+        lastName: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname
+        groups: http://schemas.xmlsoap.org/claims/Group
+      signRequests: true
+      wantAssertionsSigned: true
+    displayName: Enterprise SSO
+    icon: https://cdn.yourdomain.com/icons/saml.svg
+    order: 3
+
+services:
+  - name: Jane Orchestrator Production
+    clientId: jane-orchestrator-prod
+    clientSecret: secret:jane-orchestrator-secret
+    redirectUris:
+      - https://jane.yourdomain.com/auth/callback
+      - https://jane.yourdomain.com/api/auth/callback
+    allowedScopes: [openid, profile, email, jane:read, jane:write, jane:admin]
+    tokenEndpointAuthMethod: client_secret_post
+    grantTypes: [authorization_code, refresh_token]
+    responseTypes: [code]
+    isPublic: false
+    pkceRequired: true
+
+  - name: N8N Production
+    clientId: n8n-prod
+    clientSecret: secret:n8n-secret
+    redirectUris:
+      - https://n8n.yourdomain.com/rest/oauth2-credential/callback
+      - https://workflows.yourdomain.com/rest/oauth2-credential/callback
+    allowedScopes: [openid, profile, email, workflows:execute]
+    tokenEndpointAuthMethod: client_secret_post
+    grantTypes: [authorization_code, refresh_token, client_credentials]
+    responseTypes: [code]
+    isPublic: false
+    pkceRequired: true
+
+  - name: Dispatch Production
+    clientId: dispatch-prod
+    clientSecret: secret:dispatch-secret
+    redirectUris:
+      - https://dispatch.yourdomain.com/auth/oidc/callback
+      - https://incidents.yourdomain.com/auth/oidc/callback
+    allowedScopes: [openid, profile, email, dispatch:read, dispatch:write, dispatch:admin]
+    tokenEndpointAuthMethod: client_secret_post
+    grantTypes: [authorization_code, refresh_token]
+    responseTypes: [code]
+    isPublic: false
+    pkceRequired: true
+
+  - name: Security Dashboard
+    clientId: security-dashboard-prod
+    clientSecret: secret:security-dashboard-secret
+    redirectUris:
+      - https://security.yourdomain.com/auth/callback
+    allowedScopes: [openid, profile, email, security:read, security:analyze]
+    tokenEndpointAuthMethod: client_secret_post
+    grantTypes: [authorization_code, refresh_token]
+    responseTypes: [code]
+    isPublic: false
+    pkceRequired: true
+
+  - name: Admin Portal
+    clientId: admin-portal-prod
+    clientSecret: secret:admin-portal-secret
+    redirectUris:
+      - https://admin.yourdomain.com/auth/callback
+    allowedScopes: [openid, profile, email, admin:read, admin:write, admin:super]
+    tokenEndpointAuthMethod: client_secret_post
+    grantTypes: [authorization_code, refresh_token]
+    responseTypes: [code]
+    isPublic: false
+    pkceRequired: true

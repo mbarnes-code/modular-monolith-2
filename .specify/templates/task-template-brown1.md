@@ -42,6 +42,16 @@ description: "Task list template for feature integration"
   ============================================================================
 -->
 
+Task ID: T###[a-z]
+Type: [EXTRACT|MIGRATE|VALIDATE|INTEGRATE]
+Input: Specific file/system/dataset
+Tools: 1-2 tools maximum
+Output: Structured artifact with schema
+Verification: Automated test with pass/fail criteria
+Duration: 30 minutes - 4 hours maximum
+Rollback: Specific undo procedure
+Dependencies: Explicit task prerequisites
+
 ## Phase 1: Setup (New Project & Legacy Testbed)
 
 **Purpose**: Initialize the new project and an environment to test the old one.

@@ -1,6 +1,7 @@
 For other high-level merges, you could consider:
 
 Authentication/authorization consolidation - single sign-on across all 37 tools instead of separate login systems
+    - fragmentation across 15+ authentication technologies (JWT, OAuth2, SAML, LDAP, API Keys) currently implemented inconsistently throughout the modular monolith.
 Data pipeline integration - shared event streaming so tools can react to each other's actions automatically
 Unified configuration management - one place to configure all domain settings instead of scattered config files
 Cross-domain search/indexing - search across all your tools from one interface

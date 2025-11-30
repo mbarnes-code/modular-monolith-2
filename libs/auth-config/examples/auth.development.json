@@ -1,0 +1,203 @@
+{
+  "environment": {
+    "name": "development",
+    "debug": true,
+    "logLevel": "debug"
+  },
+  "jwt": {
+    "issuer": "https://auth.localhost:3000",
+    "audience": "modular-monolith",
+    "algorithm": "HS256",
+    "accessTokenTTL": 3600,
+    "refreshTokenTTL": 604800,
+    "clockTolerance": 30
+  },
+  "redis": {
+    "cluster": [
+      {
+        "host": "localhost",
+        "port": 6379,
+        "database": 0
+      }
+    ],
+    "keyPrefix": "mm-auth-dev",
+    "ttl": {
+      "session": 28800,
+      "tokenBlacklist": 86400,
+      "rateLimitWindow": 900
+    }
+  },
+  "database": {
+    "primary": {
+      "host": "localhost",
+      "port": 5432,
+      "database": "mm_auth_dev",
+      "username": "dev_user",
+      "password": "dev_password",
+      "ssl": false
+    },
+    "pool": {
+      "min": 2,
+      "max": 5,
+      "idleTimeout": 30000
+    }
+  },
+  "security": {
+    "passwordPolicy": {
+      "minLength": 8,
+      "maxLength": 128,
+      "requireUppercase": false,
+      "requireLowercase": true,
+      "requireNumbers": false,
+      "requireSpecialChars": false,
+      "preventReuse": 3,
+      "maxAge": 365,
+      "bcryptRounds": 10
+    },
+    "rateLimiting": {
+      "login": {
+        "maxAttempts": 10,
+        "windowMs": 900000,
+        "blockDuration": 300000
+      },
+      "api": {
+        "maxRequests": 1000,
+        "windowMs": 60000
+      },
+      "passwordReset": {
+        "maxAttempts": 5,
+        "windowMs": 3600000
+      }
+    },
+    "csrf": {
+      "enabled": false,
+      "tokenLength": 32,
+      "cookieName": "_csrf",
+      "headerName": "X-CSRF-Token"
+    },
+    "cors": {
+      "allowedOrigins": [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://localhost:8080"
+      ],
+      "allowedMethods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      "allowedHeaders": ["Authorization", "Content-Type", "X-Requested-With"],
+      "credentials": true,
+      "maxAge": 86400
+    },
+    "encryption": {
+      "algorithm": "aes-256-gcm",
+      "keySize": 32,
+      "ivSize": 16,
+      "saltRounds": 10
+    }
+  },
+  "organizations": [
+    {
+      "id": "default",
+      "name": "Default Organization",
+      "slug": "default",
+      "settings": {
+        "sessionTimeout": 28800,
+        "maxConcurrentSessions": 10,
+        "mfaRequired": false,
+        "ssoEnabled": false,
+        "allowedEmailDomains": [],
+        "customFields": {}
+      }
+    },
+    {
+      "id": "dev-team",
+      "name": "Development Team",
+      "slug": "dev",
+      "settings": {
+        "sessionTimeout": 43200,
+        "maxConcurrentSessions": 5,
+        "mfaRequired": false,
+        "ssoEnabled": false,
+        "allowedEmailDomains": ["localhost", "dev.local"],
+        "customFields": {
+          "environment": "development",
+          "team": "engineering"
+        }
+      }
+    }
+  ],
+  "providers": [
+    {
+      "id": "local",
+      "name": "local",
+      "type": "local",
+      "enabled": true,
+      "config": {},
+      "displayName": "Username/Password",
+      "order": 0
+    },
+    {
+      "id": "dev-oauth",
+      "name": "oauth2-dev",
+      "type": "oauth2",
+      "enabled": true,
+      "organizationIds": ["dev-team"],
+      "config": {
+        "clientId": "dev-oauth-client",
+        "clientSecret": "dev-oauth-secret",
+        "authorizeUrl": "http://localhost:4000/oauth/authorize",
+        "tokenUrl": "http://localhost:4000/oauth/token",
+        "userInfoUrl": "http://localhost:4000/oauth/userinfo",
+        "scope": ["openid", "profile", "email"],
+        "redirectUri": "http://localhost:3000/auth/callback/oauth"
+      },
+      "displayName": "Development OAuth",
+      "order": 1
+    }
+  ],
+  "services": [
+    {
+      "name": "Jane Orchestrator Dev",
+      "clientId": "jane-orchestrator-dev",
+      "clientSecret": "jane-dev-secret-12345",
+      "redirectUris": [
+        "http://localhost:3000/auth/callback",
+        "http://localhost:3001/auth/callback"
+      ],
+      "allowedScopes": ["openid", "profile", "email", "jane:read", "jane:write"],
+      "tokenEndpointAuthMethod": "client_secret_post",
+      "grantTypes": ["authorization_code", "refresh_token"],
+      "responseTypes": ["code"],
+      "isPublic": false,
+      "pkceRequired": false
+    },
+    {
+      "name": "N8N Dev",
+      "clientId": "n8n-dev",
+      "clientSecret": "n8n-dev-secret-67890",
+      "redirectUris": [
+        "http://localhost:5678/rest/oauth2-credential/callback",
+        "http://localhost:5679/rest/oauth2-credential/callback"
+      ],
+      "allowedScopes": ["openid", "profile", "email"],
+      "tokenEndpointAuthMethod": "client_secret_post",
+      "grantTypes": ["authorization_code", "refresh_token"],
+      "responseTypes": ["code"],
+      "isPublic": false,
+      "pkceRequired": false
+    },
+    {
+      "name": "Dispatch Dev",
+      "clientId": "dispatch-dev",
+      "clientSecret": "dispatch-dev-secret-abcde",
+      "redirectUris": [
+        "http://localhost:8080/auth/oidc/callback",
+        "http://localhost:8081/auth/oidc/callback"
+      ],
+      "allowedScopes": ["openid", "profile", "email", "dispatch:admin"],
+      "tokenEndpointAuthMethod": "client_secret_post",
+      "grantTypes": ["authorization_code", "refresh_token"],
+      "responseTypes": ["code"],
+      "isPublic": false,
+      "pkceRequired": false
+    }
+  ]
+}

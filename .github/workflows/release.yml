@@ -3,55 +3,126 @@ name: Release
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  packages: write
+  attestations: write
+  id-token: write
 
 jobs:
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: write
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v4.6.0
         with:
           fetch-depth: 0
-      
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: 20.x
-          cache: 'npm'
-      
+          cache: "pnpm"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          version: 8
+
+      - name: Cache dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        with:
+          path: |
+            ~/.pnpm-store
+            ~/.nx
+          key: ${{ runner.os }}-release-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-release-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-release-
+
       - name: Install dependencies
-        run: npm ci
-      
+        run: pnpm install --frozen-lockfile
+
+      - name: Install semantic release tools
+        run: |
+          pnpm add -D @semantic-release/changelog @semantic-release/git conventional-changelog-conventionalcommits
+
       - name: Build applications
-        run: npx nx run-many --target=build --all
-      
+        run: npx nx run-many --target=build --all --parallel=3
+
+      - name: Run semantic release
+        if: github.ref == 'refs/heads/main'
+        run: |
+          # Check if we have semantic release config
+          if [ -f .releaserc.json ] || [ -f .releaserc.yml ] || [ -f release.config.js ]; then
+            echo "🚀 Running semantic release"
+            npx semantic-release
+          else
+            echo "ℹ️  No semantic release config found, skipping automated release"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Generate changelog
         id: changelog
+        timeout-minutes: 5
         run: |
+          set -euo pipefail
           # Extract version from tag
           VERSION=${GITHUB_REF#refs/tags/}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          
-          # Generate changelog (simplified)
-          echo "## Changes" > CHANGELOG.md
-          git log --pretty=format:"- %s (%h)" $(git describe --tags --abbrev=0 HEAD^)..HEAD >> CHANGELOG.md
-      
+          echo "Release version: $VERSION"
+
+          # Generate comprehensive changelog
+          {
+            echo "## Release $VERSION"
+            echo ""
+            echo "### Changes in this release:"
+            
+            # Get previous tag for comparison
+            PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+            if [ -n "$PREV_TAG" ]; then
+              echo "Comparing with previous release: $PREV_TAG"
+              git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" "$PREV_TAG"..HEAD
+            else
+              echo "Initial release"
+              git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))"
+            fi
+            
+            echo ""
+            echo "### Build Information"
+            echo "- Built from commit: [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})"
+            echo "- Build date: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            echo "- Runner: ${{ runner.os }}"
+          } > CHANGELOG.md
+
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@c062e08bd532815e2082a85e87e3ef29c3e6d191 # v2.0.8
         with:
           name: Release ${{ steps.changelog.outputs.version }}
           body_path: CHANGELOG.md
           draft: false
+          generate_release_notes: true
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           prerelease: false
           generate_release_notes: true
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Build and push release images
         run: |
           echo "Building release images for ${{ steps.changelog.outputs.version }}"
@@ -61,23 +132,23 @@ jobs:
     name: Publish Artifacts
     needs: create-release
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
-          cache: 'npm'
-      
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Build libraries
         run: npx nx run-many --target=build --projects=tag:type:lib
-      
+
       - name: Publish to npm (if applicable)
         run: |
           echo "Publishing libraries to npm..."

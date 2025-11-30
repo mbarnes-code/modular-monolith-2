@@ -5,11 +5,21 @@ from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
+from ..config.auth_config import get_auth_config
 # Import MISP-compatible middleware and plugins
 from .middleware import (AccessLogMiddleware, AuthMiddleware,
                          CompressionMiddleware)
 from .middleware import CorsMiddleware as MispCorsMiddleware
 from .middleware import RateLimitMiddleware, SecurityMiddleware
+# Import authentication routes and config
+from .routes.auth import router as auth_router
+
+# Import startup initialization
+try:
+    from .startup import initialize_auth_system, shutdown_auth_system
+except ImportError:
+    initialize_auth_system = None
+    shutdown_auth_system = None
 # Import MISP API routers
 from .misp.events import router as misp_events_router
 from .plugins import PluginManager
@@ -76,6 +86,35 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Startup and shutdown event handlers
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize services on startup."""
+    logger.info("Starting Jane Orchestrator service...")
+
+    # Initialize authentication system
+    if initialize_auth_system:
+        try:
+            await initialize_auth_system(app)
+        except Exception as e:
+            logger.warning("Auth system initialization failed: %s", str(e))
+
+    logger.info("Jane Orchestrator startup complete")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Cleanup on shutdown."""
+    logger.info("Shutting down Jane Orchestrator service...")
+
+    if shutdown_auth_system:
+        try:
+            await shutdown_auth_system()
+        except Exception as e:
+            logger.warning("Auth system shutdown failed: %s", str(e))
+
 # Configure MISP-compatible middleware stack
 # Order matters - middleware is applied in reverse order of addition
 
@@ -83,12 +122,15 @@ app = FastAPI(
 app.add_middleware(AccessLogMiddleware)
 
 # 2. CORS handling
+# Use auth configuration for CORS settings
+auth_config = get_auth_config()
+security_config = auth_config.get_security_config()
 app.add_middleware(
     MispCorsMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=security_config.get("cors_origins", ["*"]),
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
+    allow_methods=security_config.get("cors_methods", ["*"]),
+    allow_headers=security_config.get("cors_headers", ["*"])
 )
 
 # 3. Security middleware
@@ -110,13 +152,21 @@ app.add_middleware(
 )
 
 # 6. Authentication middleware (innermost)
+# Note: Auth providers will be initialized during startup
+# and added to app.state for middleware access
 app.add_middleware(
     AuthMiddleware,
-    exempt_paths=["/", "/health", "/ready", "/docs", "/openapi.json"]
+    exempt_paths=[
+        "/", "/health", "/ready", "/docs", "/openapi.json",
+        "/auth/login", "/auth/callback", "/auth/login/direct"
+    ]
 )
 
 # Initialize plugin manager
 plugin_manager = PluginManager(app)
+
+# Include authentication routes
+app.include_router(auth_router, prefix="/api")
 
 # Include MISP API routes
 app.include_router(misp_auth_router, prefix="/api/misp")

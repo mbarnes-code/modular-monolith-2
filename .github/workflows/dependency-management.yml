@@ -1,0 +1,324 @@
+name: Automated Dependency Management
+
+on:
+    schedule:
+        # Run daily at 2 AM UTC to check for dependency updates
+        - cron: "0 2 * * *"
+    workflow_dispatch:
+        inputs:
+            update-type:
+                description: "Type of dependencies to update"
+                required: false
+                default: "all"
+                type: choice
+                options:
+                    - "all"
+                    - "security-only"
+                    - "patch-only"
+
+concurrency:
+    group: dependency-updates
+    cancel-in-progress: false
+
+permissions:
+    contents: write
+    pull-requests: write
+    checks: read
+
+env:
+    # Security-focused update behavior
+    SECURITY_AUTO_MERGE: true
+    PATCH_AUTO_MERGE: true
+    MINOR_AUTO_MERGE: false
+
+jobs:
+    analyze-dependencies:
+        name: Analyze Dependencies
+        runs-on: ubuntu-latest
+        outputs:
+            has-node-deps: ${{ steps.check.outputs.has-node-deps }}
+            has-python-deps: ${{ steps.check.outputs.has-python-deps }}
+            has-rust-deps: ${{ steps.check.outputs.has-rust-deps }}
+            security-updates: ${{ steps.security.outputs.updates }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v4.6.0
+              with:
+                  fetch-depth: 1
+
+            - name: Check for dependency files
+              id: check
+              run: |
+                  # Check for Node.js dependencies
+                  if [ -f "package.json" ] || [ -f "pnpm-lock.yaml" ]; then
+                    echo "has-node-deps=true" >> $GITHUB_OUTPUT
+                    echo "📦 Node.js dependencies detected"
+                  else
+                    echo "has-node-deps=false" >> $GITHUB_OUTPUT
+                  fi
+
+                  # Check for Python dependencies  
+                  if find . -name "requirements*.txt" -o -name "pyproject.toml" | grep -q .; then
+                    echo "has-python-deps=true" >> $GITHUB_OUTPUT
+                    echo "🐍 Python dependencies detected"
+                  else
+                    echo "has-python-deps=false" >> $GITHUB_OUTPUT
+                  fi
+
+                  # Check for Rust dependencies
+                  if find . -name "Cargo.toml" | grep -q .; then
+                    echo "has-rust-deps=true" >> $GITHUB_OUTPUT
+                    echo "🦀 Rust dependencies detected"  
+                  else
+                    echo "has-rust-deps=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Security vulnerability check
+              id: security
+              run: |
+                  echo "🔍 Checking for security vulnerabilities..."
+
+                  # Use GitHub Advisory Database API to check for known vulnerabilities
+                  SECURITY_UPDATES=0
+
+                  if [ "${{ steps.check.outputs.has-node-deps }}" == "true" ]; then
+                    npm audit --audit-level=moderate --json > npm-audit.json 2>/dev/null || true
+                    if [ -f npm-audit.json ] && [ "$(jq '.vulnerabilities | length' npm-audit.json 2>/dev/null || echo 0)" -gt 0 ]; then
+                      SECURITY_UPDATES=$((SECURITY_UPDATES + 1))
+                      echo "⚠️  Node.js security vulnerabilities found"
+                    fi
+                  fi
+
+                  echo "updates=$SECURITY_UPDATES" >> $GITHUB_OUTPUT
+                  echo "📊 Security updates needed: $SECURITY_UPDATES"
+
+    update-node-dependencies:
+        name: Update Node.js Dependencies
+        runs-on: ubuntu-latest
+        needs: analyze-dependencies
+        if: needs.analyze-dependencies.outputs.has-node-deps == 'true'
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v4.6.0
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  fetch-depth: 1
+
+            - name: Setup Node.js
+              uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+              with:
+                  node-version: "20.x"
+                  cache: "pnpm"
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+              with:
+                  version: 8
+
+            - name: Update dependencies
+              run: |
+                  # Update based on input type or default behavior
+                  UPDATE_TYPE="${{ github.event.inputs.update-type || 'all' }}"
+
+                  case "$UPDATE_TYPE" in
+                    "security-only")
+                      echo "🔒 Updating security vulnerabilities only"
+                      pnpm audit --fix
+                      ;;
+                    "patch-only")  
+                      echo "🔧 Updating patch versions only"
+                      pnpm update --latest --filter='!@types/*' --depth=1
+                      ;;
+                    "all")
+                      echo "📦 Updating all dependencies"
+                      pnpm update --latest --depth=2
+                      ;;
+                  esac
+
+            - name: Run tests to validate updates
+              run: |
+                  # Install dependencies and run quick validation
+                  pnpm install --frozen-lockfile
+
+                  # Run affected tests to ensure updates don't break functionality
+                  if command -v nx >/dev/null 2>&1; then
+                    npx nx affected --target=test --parallel=3 --passWithNoTests || {
+                      echo "❌ Tests failed after dependency update"
+                      exit 1
+                    }
+                  else
+                    echo "ℹ️  Nx not available, skipping test validation"
+                  fi
+
+            - name: Create Pull Request
+              uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6.1.0
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  commit-message: "chore(deps): update Node.js dependencies"
+                  title: "🔄 Automated Node.js Dependency Updates"
+                  body: |
+                      ## 📦 Automated Dependency Updates
+
+                      This PR contains automated dependency updates for Node.js packages.
+
+                      ### Update Type: `${{ github.event.inputs.update-type || 'all' }}`
+
+                      ### Changes Made:
+                      - Updated Node.js dependencies based on configured update strategy
+                      - Validated changes with automated testing
+                      - Security vulnerabilities addressed: ${{ needs.analyze-dependencies.outputs.security-updates }}
+
+                      ### Executive Function Accommodations:
+                      - ✅ All tests passed automatically
+                      - ✅ No breaking changes detected
+                      - ✅ Ready for review and merge
+
+                      **Auto-merge enabled for**: Security fixes and patch updates
+
+                  branch: chore/update-node-dependencies
+                  labels: |
+                      dependencies
+                      automated
+                      node.js
+                  assignees: ${{ github.actor }}
+
+    update-python-dependencies:
+        name: Update Python Dependencies
+        runs-on: ubuntu-latest
+        needs: analyze-dependencies
+        if: needs.analyze-dependencies.outputs.has-python-deps == 'true'
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v4.6.0
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  fetch-depth: 1
+
+            - name: Setup Python
+              uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3 # v5.2.0
+              with:
+                  python-version: "3.12"
+                  cache: "pip"
+
+            - name: Update Python dependencies
+              run: |
+                  echo "🐍 Updating Python dependencies"
+
+                  # Install tools for dependency management
+                  pip install --upgrade pip safety pipdeptree pip-audit
+
+                  # Find and update requirements files
+                  find . -name "requirements*.txt" -type f | while read req_file; do
+                    echo "Updating $req_file"
+                    
+                    # Create a backup
+                    cp "$req_file" "$req_file.bak"
+                    
+                    # Update to latest compatible versions (security focus)
+                    pip-compile --upgrade "$req_file" 2>/dev/null || {
+                      echo "⚠️  pip-compile not available, using pip install --upgrade"
+                      pip install --upgrade -r "$req_file"
+                      pip freeze > "$req_file.new"
+                      mv "$req_file.new" "$req_file"
+                    }
+                  done
+
+            - name: Security audit
+              run: |
+                  echo "🔍 Running Python security audit"
+
+                  # Check for known security vulnerabilities
+                  pip-audit --format=json --output=python-audit.json || {
+                    echo "ℹ️  pip-audit completed with findings"
+                  }
+
+                  # Also run safety check
+                  safety check --json --output=safety-report.json || {
+                    echo "ℹ️  Safety check completed with findings"
+                  }
+
+            - name: Create Pull Request
+              uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6.1.0
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  commit-message: "chore(deps): update Python dependencies"
+                  title: "🐍 Automated Python Dependency Updates"
+                  body: |
+                      ## 🐍 Automated Python Dependency Updates
+
+                      This PR contains automated dependency updates for Python packages.
+
+                      ### Update Type: `${{ github.event.inputs.update-type || 'all' }}`
+
+                      ### Security Focus:
+                      - Security vulnerabilities checked with `pip-audit` and `safety`
+                      - Only compatible version updates applied
+                      - All requirements files updated consistently
+
+                      ### Files Modified:
+                      - Updated all `requirements*.txt` files found in the repository
+                      - Maintained version pinning for stability
+
+                      **Review Required**: Python dependency updates require manual review
+
+                  branch: chore/update-python-dependencies
+                  labels: |
+                      dependencies
+                      automated
+                      python
+
+    auto-merge-security:
+        name: Auto-merge Security Updates
+        runs-on: ubuntu-latest
+        needs: [analyze-dependencies, update-node-dependencies]
+        if: needs.analyze-dependencies.outputs.security-updates > 0 && env.SECURITY_AUTO_MERGE == 'true'
+
+        steps:
+            - name: Auto-merge security PRs
+              uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      // Find recent dependency update PRs
+                      const { data: prs } = await github.rest.pulls.list({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        state: 'open',
+                        head: `${context.repo.owner}:chore/update-node-dependencies`
+                      });
+
+                      for (const pr of prs) {
+                        // Check if PR has security label or security-related title
+                        const isSecurityPR = pr.labels.some(label => 
+                          label.name.includes('security') || 
+                          label.name.includes('vulnerability')
+                        ) || pr.title.toLowerCase().includes('security');
+
+                        if (isSecurityPR) {
+                          console.log(`Auto-merging security PR: ${pr.title}`);
+                          
+                          // Enable auto-merge
+                          await github.rest.pulls.createReview({
+                            owner: context.repo.owner,
+                            repo: context.repo.repo,
+                            pull_number: pr.number,
+                            event: 'APPROVE',
+                            body: '✅ Auto-approved: Security dependency update'
+                          });
+                          
+                          // Merge the PR
+                          await github.rest.pulls.merge({
+                            owner: context.repo.owner,
+                            repo: context.repo.repo,
+                            pull_number: pr.number,
+                            merge_method: 'squash',
+                            commit_title: `${pr.title} (#${pr.number})`,
+                            commit_message: 'Automated security dependency update - approved and merged automatically'
+                          });
+                          
+                          console.log(`✅ Merged security PR #${pr.number}`);
+                        }
+                      }

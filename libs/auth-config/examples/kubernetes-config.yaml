@@ -1,0 +1,101 @@
+# Example Kubernetes ConfigMap for production deployment
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-config
+  namespace: modular-monolith
+data:
+  config.yaml: |
+    environment:
+      name: production
+      debug: false
+      logLevel: warn
+
+    jwt:
+      issuer: https://auth.yourdomain.com
+      audience: modular-monolith
+      algorithm: RS256
+      publicKey: secret:jwt-public-key
+      privateKey: secret:jwt-private-key
+      accessTokenTTL: 900
+      refreshTokenTTL: 86400
+
+    redis:
+      cluster:
+        - host: redis-cluster.redis.svc.cluster.local
+          port: 6379
+          password: secret:redis-password
+      keyPrefix: mm-auth
+
+    database:
+      primary:
+        host: postgres-primary.database.svc.cluster.local
+        port: 5432
+        database: modular_monolith_auth
+        username: ${DB_USERNAME}
+        password: secret:database-password
+        ssl: true
+
+    security:
+      passwordPolicy:
+        minLength: 12
+        requireUppercase: true
+        requireLowercase: true
+        requireNumbers: true
+        requireSpecialChars: true
+        bcryptRounds: 14
+      cors:
+        allowedOrigins:
+          - https://app.yourdomain.com
+          - https://admin.yourdomain.com
+
+    organizations:
+      - id: default
+        name: Default Organization
+        slug: default
+        settings:
+          sessionTimeout: 14400
+          mfaRequired: true
+          ssoEnabled: true
+
+    providers:
+      - id: local
+        name: local
+        type: local
+        enabled: true
+        config: {}
+        displayName: Username/Password
+
+    services:
+      - name: Jane Orchestrator
+        clientId: jane-orchestrator-k8s
+        clientSecret: secret:jane-orchestrator-secret
+        redirectUris:
+          - https://jane.yourdomain.com/auth/callback
+        allowedScopes: [openid, profile, email, jane:read, jane:write]
+        pkceRequired: true
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: auth-secrets
+  namespace: modular-monolith
+type: Opaque
+data:
+  # Base64 encoded secrets
+  jwt-public-key: <base64-encoded-public-key>
+  jwt-private-key: <base64-encoded-private-key>
+  redis-password: <base64-encoded-redis-password>
+  database-password: <base64-encoded-db-password>
+  jane-orchestrator-secret: <base64-encoded-jane-secret>
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-env
+  namespace: modular-monolith
+data:
+  DB_USERNAME: "auth_user"
+  DB_READONLY_USERNAME: "auth_readonly"
