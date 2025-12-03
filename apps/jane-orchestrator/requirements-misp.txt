@@ -56,7 +56,7 @@ pyyaml>=6.0.0,<7.0.0
 # ===== CRYPTOGRAPHIC DEPENDENCIES =====
 
 # Cryptography support for secure operations
-cryptography>=41.0.0,<42.0.0
+cryptography>=41.0.0,<47.0.0
 
 # Additional hash functions
 hashlib-compat>=1.0.0,<2.0.0
