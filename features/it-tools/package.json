@@ -61,7 +61,7 @@
     "cronstrue": "^2.26.0",
     "crypto-js": "^4.1.1",
     "date-fns": "^2.29.3",
-    "dompurify": "^3.0.6",
+    "dompurify": "^3.4.12",
     "email-normalizer": "^1.0.0",
     "emojilib": "^3.0.10",
     "figlet": "^1.7.0",
