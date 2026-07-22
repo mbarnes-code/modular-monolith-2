@@ -27,7 +27,7 @@
     "cookies-next": "^6.0.0",
     "debounce": "^2.2.0",
     "markdown-to-jsx": "^7.7.4",
-    "next": "^15.5.2",
+    "next": "^15.5.21",
     "nextjs-progressbar": "^0.0.16",
     "pluralize": "^8.0.0",
     "react": "^19.1.0",
@@ -41,7 +41,7 @@
     "remark-gfm": "^4.0.1",
     "remark-rehype": "^11.1.2",
     "scryfall-client": "^0.24.8",
-    "sharp": "^0.34.2",
+    "sharp": "^0.35.0",
     "use-debounce": "^10.0.6"
   },
   "devDependencies": {
