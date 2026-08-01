@@ -34,7 +34,7 @@ defusedxml==0.7.1
     #   social-auth-core
 discord-webhook==1.4.1
     # via -r requirements.in
-django==5.2.7
+django==5.2.15
     # via
     #   -r requirements.in
     #   django-admin-sortable2
@@ -84,7 +84,7 @@ oauthlib==3.2.2
     #   social-auth-core
 pycparser==2.21
     # via cffi
-pyjwt==2.8.0
+pyjwt==2.13.0
     # via
     #   djangorestframework-simplejwt
     #   social-auth-core
