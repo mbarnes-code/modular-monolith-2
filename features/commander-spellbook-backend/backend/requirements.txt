@@ -26,7 +26,7 @@ cffi==2.0.0
     # via cryptography
 charset-normalizer==3.2.0
     # via requests
-cryptography==46.0.3
+cryptography==50.0.0
     # via social-auth-core
 defusedxml==0.7.1
     # via
@@ -84,7 +84,7 @@ oauthlib==3.2.2
     #   social-auth-core
 pycparser==2.21
     # via cffi
-pyjwt==2.8.0
+pyjwt==2.13.0
     # via
     #   djangorestframework-simplejwt
     #   social-auth-core
