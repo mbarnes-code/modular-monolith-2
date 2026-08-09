@@ -7712,12 +7712,12 @@ __metadata:
   linkType: hard
 
 "brace-expansion@npm:^1.1.7":
-  version: 1.1.12
-  resolution: "brace-expansion@npm:1.1.12"
+  version: 1.1.18
+  resolution: "brace-expansion@npm:1.1.18"
   dependencies:
     balanced-match: "npm:^1.0.0"
     concat-map: "npm:0.0.1"
-  checksum: 10/12cb6d6310629e3048cadb003e1aca4d8c9bb5c67c3c321bafdd7e7a50155de081f78ea3e0ed92ecc75a9015e784f301efc8132383132f4f7904ad1ac529c562
+  checksum: 10/b55a3c03239b8d2127c7cbb3408c9ad3a556a8c303bf3064df78bfb7c093160fc8f6e0a32e42a850a78eba12f29ccf6ef997690b9acf945d242c56c61c4aa977
   languageName: node
   linkType: hard
 
@@ -9407,7 +9407,7 @@ __metadata:
     better-sqlite3: "npm:^12.4.1"
     copyfiles: "npm:^2.4.1"
     cross-env: "npm:^10.1.0"
-    electron: "npm:38.3.0"
+    electron: "npm:39.8.10"
     electron-builder: "npm:26.0.12"
     fs-extra: "npm:^11.3.2"
     promise-retry: "npm:^2.0.1"
@@ -9760,16 +9760,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:38.3.0":
-  version: 38.3.0
-  resolution: "electron@npm:38.3.0"
+"electron@npm:39.8.10":
+  version: 39.8.10
+  resolution: "electron@npm:39.8.10"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^22.7.7"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10/e605348760a682e8052d316051290128f9eee956d27757ab77d6672436d6dc15885a86b2bfff64b7e03a6ecfd1c7be055ad4a25c03e6c156a7adae4fa136d3b0
+  checksum: 10/d85c8a86d6213885a8b0f22e8d18ad28147913510d0c89838567e9f7a244538945c292724ede3e5110b49a7ae71430600e181709cdbc37decdb4a0197d5394aa
   languageName: node
   linkType: hard
 
@@ -14714,12 +14714,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.3.11":
-  version: 3.3.11
-  resolution: "nanoid@npm:3.3.11"
+"nanoid@npm:^3.3.17":
+  version: 3.3.18
+  resolution: "nanoid@npm:3.3.18"
   bin:
     nanoid: bin/nanoid.cjs
-  checksum: 10/73b5afe5975a307aaa3c95dfe3334c52cdf9ae71518176895229b8d65ab0d1c0417dd081426134eb7571c055720428ea5d57c645138161e7d10df80815527c48
+  checksum: 10/1b3b4fdac831b92b56d1dbe8b1e63a372432faf86ea383134e3b53141ef8108a60b7f84343b5cefecac9550bb74edf8164da93ea07d1c4f757039bc75d8a5d9e
   languageName: node
   linkType: hard
 
@@ -15734,13 +15734,13 @@ __metadata:
   linkType: hard
 
 "postcss@npm:^8.5.6":
-  version: 8.5.6
-  resolution: "postcss@npm:8.5.6"
+  version: 8.5.26
+  resolution: "postcss@npm:8.5.26"
   dependencies:
-    nanoid: "npm:^3.3.11"
+    nanoid: "npm:^3.3.17"
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
-  checksum: 10/9e4fbe97574091e9736d0e82a591e29aa100a0bf60276a926308f8c57249698935f35c5d2f4e80de778d0cbb8dcffab4f383d85fd50c5649aca421c3df729b86
+  checksum: 10/842a624f822f77cb37264cc24f0cf97c0a69dd8d6f7b4a6d76b5a8dc95355899dd044f33a2d4e890da858293de570fce18dff453f3b629ff14cac67a3591895a
   languageName: node
   linkType: hard
 
